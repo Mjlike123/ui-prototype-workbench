@@ -85,11 +85,11 @@ export function AppShell({
   return (
     <div className="appShell">
       <aside className="sidebar">
-        <Link href="/" className="brand" aria-label="TopTop Design 首页">
+        <Link href="/" className="brand" aria-label="TopTop UI 原型工作台 首页">
           <span className="brandMark">T</span>
           <span>
             <strong>TopTop Design</strong>
-            <small>System Portal</small>
+            <small>UI 原型工作台</small>
           </span>
         </Link>
 

@@ -1,7 +1,7 @@
 ---
 name: page-canvas-vision
 description: |
-  页面画布照片参考 → 设计系统组件映射。在 ui-audit-tool Portal 上传 UI 截图后，用视觉能力读取原图像素尺寸，输出 PageCanvasPlan + Yueban layers.manifest（source_bbox 必须在原图坐标系测量）。
+  页面画布照片参考 → 设计系统组件映射。在 UI 原型工作台 Portal 上传 UI 截图后，用视觉能力读取原图像素尺寸，输出 PageCanvasPlan + Yueban layers.manifest（source_bbox 必须在原图坐标系测量）。
   触发：用户粘贴 Portal「Cursor 视觉分析」指令、或要求从截图还原 TopTop 组件栈。
 ---
 

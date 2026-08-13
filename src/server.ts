@@ -80,7 +80,7 @@ if (
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
 ) {
   createAuditServer().listen(4317, "127.0.0.1", () => {
-    console.log("UI Audit Tool running at http://127.0.0.1:4317");
+    console.log("UI 原型工作台 · 验收服务 running at http://127.0.0.1:4317");
   });
 }
 

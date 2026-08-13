@@ -5,11 +5,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "TopTop Design System",
-    template: "%s · TopTop Design System",
+    default: "TopTop UI 原型工作台",
+    template: "%s · TopTop UI 原型工作台",
   },
   description:
-    "TopTop 团队内部视觉、组件、交互与多端验收规范门户。",
+    "TopTop 团队 UI 原型工作台：组件、Token、交互规则、原型预览与验收闭环。",
 };
 
 export default async function RootLayout({

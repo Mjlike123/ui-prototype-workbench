@@ -25,7 +25,7 @@ export function findRepositoryRoot(start = process.cwd()): string {
     const parent = dirname(current);
     if (parent === current) {
       throw new Error(
-        `Unable to locate ui-audit-tool repository from ${start}`,
+        `Unable to locate ui-prototype-workbench repository from ${start}`,
       );
     }
     current = parent;

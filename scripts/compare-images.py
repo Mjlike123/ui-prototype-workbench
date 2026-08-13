@@ -2,7 +2,7 @@
 """Compare two rendered images for high-fidelity checks.
 
 Adapted from SemineChen/yueban-image-to-code (MIT-compatible workflow utility).
-Used by ui-audit-tool Design MVP for reference vs implementation screenshots.
+Used by ui-prototype-workbench for reference vs implementation screenshots.
 """
 
 from __future__ import annotations

@@ -407,7 +407,7 @@ int main(int argc, const char * argv[]) {
         continue;
       }
 
-      id hierarchyResponse = [collector requestType:LookinRequestTypeHierarchy data:@{@"clientVersion": @"ui-audit-tool"} channel:channel timeout:8.0 error:&error];
+      id hierarchyResponse = [collector requestType:LookinRequestTypeHierarchy data:@{@"clientVersion": @"ui-prototype-workbench"} channel:channel timeout:8.0 error:&error];
       if (!hierarchyResponse || error) {
         [channel close];
         [errors addObject:error.localizedDescription ?: @"hierarchy failed"];

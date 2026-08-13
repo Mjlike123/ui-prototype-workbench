@@ -1,7 +1,7 @@
 {
-  "name": "ui-audit-tool",
+  "name": "ui-prototype-workbench",
   "version": "1.0.0",
-  "description": "MVP CLI for auditing iOS UI fidelity against Figma designs.",
+  "description": "TopTop UI 原型工作台：Kit、原型预览、Agent 协作与 iOS 视觉验收闭环。",
   "type": "module",
   "bin": {
     "ui-audit": "./src/cli.ts"

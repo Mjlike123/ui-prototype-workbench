@@ -1,4 +1,6 @@
-# TopTop Agent Design Kit
+# TopTop UI 原型工作台
+
+> 仓库名：`ui-prototype-workbench`（原 `ui-audit-tool`）
 
 Kit 定义边界，本地 Agent 搭建功能原型，Skills 负责视觉、设计和交互验收，H5 与 iOS 运行时审计完成后续闭环。
 

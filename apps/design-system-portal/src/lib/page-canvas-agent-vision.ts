@@ -321,7 +321,7 @@ export function buildCursorVisionAnalysisPrompt(input: {
     "你是 Cursor 内置视觉 Agent。请**直接查看用户附件中的 UI 截图**（不要用像素启发式或比例猜测）。",
     "",
     "## 任务",
-    "将截图映射为 ui-audit-tool **设计系统组件栈**（Portal `/canvas`），并给出 Yueban 兼容的 `yuebanLayers`（在原图像素坐标系测量 `source_bbox`）。",
+    "将截图映射为 **UI 原型工作台**（`ui-prototype-workbench`）设计系统组件栈（Portal `/canvas`），并给出 Yueban 兼容的 `yuebanLayers`（在原图像素坐标系测量 `source_bbox`）。",
     "",
     "## 源图",
     `- 文件：${input.referenceFileName}`,

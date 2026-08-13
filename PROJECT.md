@@ -1,6 +1,6 @@
-# TopTop Agent Design Kit
+# TopTop UI 原型工作台
 
-> 使命：Kit 定义边界，本地 Agent 搭建原型，Skills 负责验收，运行时审计完成落地闭环。
+> 仓库名：`ui-prototype-workbench` · 使命：Kit 定义边界，本地 Agent 搭建原型，Skills 负责验收，运行时审计完成落地闭环。
 
 本仓库不是一个低配 Figma，也不在 Portal 服务器内托管大模型。Portal 可以部署到外网，向设计师、研发和本地 Agent 提供同一套设计资源；推理和代码修改由用户自己的 Cursor 等 Agent IDE 完成。
 
