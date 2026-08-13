@@ -1,0 +1,70 @@
+schemaVersion: 1
+id: icons
+title: 图标系统
+category: icon
+description: 语义单色图标统一使用 24px Frame 的 SVG，默认使用一级文字色，并由业务场景通过语义颜色 Token 覆盖；彩色业务图标、身份标签与 PAG 动画图标使用正式资源，并保持原始配色与比例。
+tokens:
+  - id: icon.frame.default
+    name: 默认图标框
+    value: 24
+    description: 导航、按钮和列表中的常规图标统一放入 24px × 24px Frame；H5 原型通过 SystemIcon 选择规范资产，不直接拼接资源路径。
+    platforms:
+      ios: 24pt
+      android: 24dp
+      h5: 24px
+  - id: icon.spacing.inline
+    name: 图标文字间距
+    value: 4
+    description: 图标与同组文字默认保持 4pt/dp 间距。
+    platforms:
+      ios: 4pt
+      android: 4dp
+      h5: 4px
+  - id: icon.color.default
+    name: 默认图标颜色
+    value: color.text.primary
+    description: 新增语义单色图标默认使用一级文字色；SVG 使用 currentColor，H5 SystemIcon 默认映射 var(--color-text-primary)。
+    platforms:
+      ios: TTColor.textPrimary
+      android: TopColor.TextPrimary
+      h5: var(--color-text-primary)
+  - id: icon.color.semantic
+    name: 业务语义图标颜色
+    value: semantic color token
+    description: 仅在明确的业务语义下覆盖默认色，例如聊天使用 color.brand.primary、品牌色按钮上的发布使用 color.text.white-primary；禁止在组件内写死色值。
+    platforms:
+      ios: semantic TTColor token
+      android: semantic TopColor token
+      h5: var(--system-icon-color)
+  - id: icon.asset.product
+    name: 彩色业务图标资源
+    value: PNG
+    description: 签到、排行、礼物、金币等不可通过语义色重绘的业务图标，统一收录透明 PNG 切图。
+    platforms:
+      ios: PNG asset
+      android: PNG drawable
+      h5: PNG
+  - id: icon.asset.animated-pag
+    name: PAG 动画图标资源
+    value: PAG
+    description: 需要复杂矢量动效的业务状态使用 PAG 源文件；按组件规定尺寸显示，H5 通过 PagIcon 播放，并必须提供静态 SVG fallback、离屏暂停和减少动态效果支持。
+    platforms:
+      ios: libpag PAGView
+      android: libpag PAGView
+      h5: libpag PagIcon
+  - id: icon.asset.identity-tag
+    name: 身份标签资源
+    value: SVG + PNG
+    description: 性别标签使用白色 SVG 图标，会员 V1–V18 与 V99 使用完整 PNG 切图，由列表标签组件统一控制尺寸。
+    platforms:
+      ios: SVG/PDF + PNG asset
+      android: VectorDrawable + PNG drawable
+      h5: SVG + PNG
+  - id: icon.asset.ios-status-bar
+    name: iOS 状态栏资源
+    value: SVG
+    description: 蜂窝信号、Wi-Fi 与电池均提供黑色和白色正式 SVG；由 iOS 时间状态栏组件按背景统一切换。
+    platforms:
+      ios: System status bar
+      android: Not applicable
+      h5: SVG

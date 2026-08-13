@@ -1,0 +1,22 @@
+schemaVersion: 1
+id: button-mapping
+componentId: button
+platforms:
+  ios:
+    componentName: TTButton
+    package: TopTopUIKit
+    codeExample: "TTButton(title: title, size: .height48, appearance: .primary, isEnabled: isEnabled, action: action)"
+    identifiers:
+      - audit.button
+      - audit.button.label
+    status: planned
+  android:
+    componentName: TopButton
+    package: top.ui.components
+    codeExample: "TopButton(text = text, size = TopButtonSize.Height48, appearance = TopButtonAppearance.Primary, enabled = enabled, onClick = onClick)"
+    status: planned
+  h5:
+    componentName: Button
+    package: "@toptop/ui"
+    codeExample: "<Button size=\"height48\" appearance=\"primary\" disabled={disabled} onClick={onClick}>Confirm</Button>"
+    status: planned

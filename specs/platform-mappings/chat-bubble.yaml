@@ -1,0 +1,25 @@
+schemaVersion: 1
+id: chat-bubble-mapping
+componentId: chat-bubble
+platforms:
+  ios:
+    componentName: TTChatBubble
+    package: TopTopUIKit
+    codeExample: "TTChatBubble(kind: kind, direction: direction, deliveryStatus: status, replyPreview: replyPreview, content: content)"
+    identifiers:
+      - audit.chat-bubble
+      - audit.chat-bubble.content
+      - audit.chat-bubble.status
+      - audit.chat-bubble.action
+      - audit.chat-bubble.reply-preview
+    status: planned
+  android:
+    componentName: TopChatBubble
+    package: top.ui.components
+    codeExample: "TopChatBubble(kind = kind, direction = direction, deliveryStatus = status, replyPreview = replyPreview, content = content)"
+    status: planned
+  h5:
+    componentName: ChatBubble
+    package: "@toptop/ui"
+    codeExample: '<ChatBubble kind="text" direction="incoming" text={message.text} quote={<ChatReplyPreview sender={sender} text={preview} />} />'
+    status: planned

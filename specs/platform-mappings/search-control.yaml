@@ -1,0 +1,24 @@
+schemaVersion: 1
+id: search-control-mapping
+componentId: search-control
+platforms:
+  ios:
+    componentName: TTSearchControl
+    package: TopTopUIKit
+    codeExample: "TTSearchControl(value: value, placeholder: placeholder, isActive: isActive, onChange: onChange, onCancel: onCancel, onSubmit: onSubmit)"
+    identifiers:
+      - audit.search-control
+      - audit.search-control.field
+      - audit.search-control.clear
+      - audit.search-control.cancel
+    status: planned
+  android:
+    componentName: TopSearchControl
+    package: top.ui.components
+    codeExample: "TopSearchControl(value = value, placeholder = placeholder, active = active, onValueChange = onValueChange, onCancel = onCancel, onSearch = onSearch)"
+    status: planned
+  h5:
+    componentName: SearchControl
+    package: "@toptop/ui"
+    codeExample: "<SearchControl value={value} placeholder={placeholder} active={active} onChange={onChange} onCancel={onCancel} onSubmit={onSubmit} />"
+    status: planned

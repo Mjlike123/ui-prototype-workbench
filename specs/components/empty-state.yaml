@@ -1,0 +1,130 @@
+schemaVersion: 1
+id: empty-state
+version: 1.1.0
+title: 页面空状态
+owner: TopTop Design System
+category: Data Display
+status: review
+since: 1.0.0
+tags:
+  - empty
+  - placeholder
+  - illustration
+  - action
+platforms:
+  - ios
+  - android
+  - h5
+description: 列表、Tab 或页面暂无数据时的居中空状态，包含 160pt 插画、16pt 说明文案和可选 48pt 主题色主按钮。
+previewKey: empty-state
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=4417-21995
+  nodeId: "4417:21995"
+  observations:
+    - 内容区最大宽 240pt，整体居中；插画与文案间距 8pt，文案与按钮间距 20pt
+    - 插画固定 160×160pt，opacity 50%；默认使用榜单空态切图
+    - 说明文案 SF Pro Regular 16pt，颜色 #868B94，居中换行
+    - 可选主按钮使用 48pt 主题色胶囊按钮，水平内边距 24pt
+    - 业务插画切图统一 480×480 @3x，展示 160pt、50% 不透明度；覆盖没有榜单、没有内容、没有网络、没有消息、没有好友等 13 类场景
+anatomy:
+  - id: container
+    label: 空状态容器
+    description: 垂直居中排列插画、说明与可选操作。
+  - id: icon
+    label: 插画
+    description: 160pt 业务空态切图，默认 50% 不透明度。
+  - id: label
+    label: 说明文案
+    description: 解释当前为空的原因或下一步。
+  - id: trailingAction
+    label: 主操作
+    description: 可选 48pt 主题色按钮，引导用户完成设置或补充信息。
+variants:
+  - name: action
+    values:
+      - none
+      - primary
+    defaultValue: none
+  - name: illustration
+    values:
+      - no-list
+      - no-content
+      - no-content-3x
+      - no-network
+      - no-news
+      - no-friends
+      - no-game-friends
+      - no-gift
+      - no-recharge
+      - no-vehicle
+      - no-positioning
+      - no-attention-room
+      - list-not-found
+    defaultValue: no-list
+props:
+  - name: description
+    type: string
+    required: true
+    description: 空状态说明文案。
+  - name: illustration
+    type: no-list|no-content|no-content-3x|no-network|no-news|no-friends|no-game-friends|no-gift|no-recharge|no-vehicle|no-positioning|no-attention-room|list-not-found
+    defaultValue: no-list
+    description: 业务空状态插画切图；默认 no-list（没有榜单）。
+  - name: illustrationSrc
+    type: string
+    description: 自定义 160pt 插画资源；传入后覆盖 illustration。
+  - name: illustrationNode
+    type: ReactNode
+    description: 自定义插画插槽；传入后替代 illustration 与 illustrationSrc。
+  - name: actionLabel
+    type: string
+    description: 主按钮文案；需与 onAction 同时传入。
+  - name: onAction
+    type: () => void
+    description: 主按钮点击回调。
+  - name: aria-label
+    type: string
+    description: 可选区域标签，用于补充页面语义。
+tokenRefs:
+  - color.brand.primary
+  - color.text.white-primary
+  - color.empty-state.description
+accessibility:
+  - 说明文案必须使用可读文本表达空状态原因，不能只依赖插画。
+  - 主按钮在 disabled 或缺少回调时不得渲染为可点击控件。
+  - 插画为装饰层，对辅助技术隐藏；必要时通过 aria-label 补充区域语义。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "4417:21995"
+    - "13868:240358"
+  nameAliases:
+    - 页面空状态
+    - 空状态
+    - empty state
+    - 没有榜单
+roles:
+  - container
+  - icon
+  - label
+  - trailingAction
+rules:
+  - id: icon.width
+    title: 插画宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: icon.height
+    title: 插画高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: container.gap
+    title: 文案与按钮间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule

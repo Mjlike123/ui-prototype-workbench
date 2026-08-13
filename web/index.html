@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UI Audit Tool</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>UI Audit Tool</h1>
+        <p id="status">等待加载</p>
+      </div>
+      <form id="sourceForm" class="source-form">
+        <label>
+          Figma JSON
+          <input id="figmaJson" name="figmaJson" value="samples/figma-page.json" />
+        </label>
+        <label>
+          Lookin JSON
+          <input id="uiJson" name="uiJson" value="samples/lookin-page.json" />
+        </label>
+        <label>
+          Bundle ID
+          <input id="bundleId" name="bundleId" placeholder="可选，如 com.taptap.toptop" />
+        </label>
+        <label>
+          设备
+          <select id="collectorMode" name="collectorMode">
+            <option value="both">自动</option>
+            <option value="usb">真机 USB</option>
+            <option value="simulator">模拟器</option>
+          </select>
+        </label>
+        <button id="connectButton" type="button">连接手机</button>
+        <button type="submit">刷新页面</button>
+        <button id="compareButton" type="button">比较选中模块</button>
+        <button id="exportButton" type="button" class="primary">导出问题</button>
+      </form>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel tree-panel">
+        <div class="panel-title">UI 层级</div>
+        <div id="tree" class="tree"></div>
+      </aside>
+
+      <section class="canvas-panel">
+        <div class="canvas-toolbar">
+          <div id="pageTitle">未加载页面</div>
+          <div id="exportResult"></div>
+        </div>
+        <div class="phone-stage">
+          <div id="phoneCanvas" class="phone-canvas"></div>
+        </div>
+      </section>
+
+      <aside class="panel issue-panel">
+        <div class="panel-title">问题列表</div>
+        <div id="issueSummary" class="issue-summary"></div>
+        <div id="issues" class="issues"></div>
+      </aside>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

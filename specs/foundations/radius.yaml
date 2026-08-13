@@ -1,0 +1,46 @@
+schemaVersion: 1
+id: radius
+title: 圆角系统
+category: radius
+description: 除标签外，圆角以 4pt/dp 为基础步长；按控件体量和容器层级选择，不使用任意数值。
+tokens:
+  - id: radius.full
+    name: 全圆角
+    value: 999
+    description: 大小按钮、独立输入控件及胶囊标签；实际半径取控件高度的一半。
+    platforms:
+      ios: Capsule()
+      android: RoundedCornerShape(percent = 50)
+      h5: var(--radius-full)
+  - id: radius.16
+    name: 弹窗圆角
+    value: 16
+    description: 中间弹窗、动作面板，以及底部 Sheet 的顶部圆角。
+    platforms:
+      ios: 16pt
+      android: 16dp
+      h5: var(--radius-16)
+  - id: radius.12
+    name: 容器圆角
+    value: 12
+    description: 大卡片背板、模块容器、搜索框及列表外框。
+    platforms:
+      ios: 12pt
+      android: 12dp
+      h5: var(--radius-12)
+  - id: radius.8
+    name: 小卡片圆角
+    value: 8
+    description: 房间封面、缩略图和小型卡片背板。
+    platforms:
+      ios: 8pt
+      android: 8dp
+      h5: var(--radius-8)
+  - id: radius.4
+    name: 标签圆角
+    value: 4
+    description: 小型状态标签和紧凑标识；标签可按视觉需要使用独立的小步长。
+    platforms:
+      ios: 4pt
+      android: 4dp
+      h5: var(--radius-4)

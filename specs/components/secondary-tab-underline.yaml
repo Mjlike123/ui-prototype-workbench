@@ -1,0 +1,147 @@
+schemaVersion: 1
+id: secondary-tab-underline
+version: 1.1.0
+title: 二级 Tab（下划线）
+owner: TopTop Design System
+category: Navigation
+status: stable
+since: 1.0.0
+tags:
+  - tab
+  - navigation
+  - underline
+platforms:
+  - ios
+  - android
+  - h5
+description: 双等分的下划线二级标签；允许标签文案带动态计数，不按文字宽度审计水平内边距。
+previewKey: secondary-tab-underline
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=13468-186532
+  nodeId: "13468:186532"
+  observations:
+    - 基准画布宽 375pt，组件高度 40pt，左右内容边距各 16pt
+    - 两个 Tab 等分可用宽度，Tab 间距为 0
+    - 选中态底部指示线高 2pt，颜色为 #181923
+    - 文本为 SF Pro Semibold 14pt；选中态 #181923，未选中态 rgba(24,25,35,0.3)
+anatomy:
+  - id: container
+    label: 容器
+    description: 375pt 基准宽度下保留 16pt 左右内容边距。
+  - id: tabItem
+    label: 等分标签
+    description: 两个标签等分可用宽度，动态计数不改变等分关系。
+  - id: label
+    label: 标签文字
+    description: 使用 14pt Semibold，并通过透明度区分文字层级。
+  - id: indicator
+    label: 选中指示线
+    description: 紧贴组件底部，高 2pt，与当前标签同宽。
+variants:
+  - name: selectedIndex
+    values:
+      - first
+      - second
+    defaultValue: first
+  - name: count
+    values:
+      - hidden
+      - visible
+    defaultValue: hidden
+props:
+  - name: items
+    type: "[TabItem, TabItem]"
+    required: true
+    description: 固定两个等分标签，文案允许携带动态计数。
+  - name: selectedIndex
+    type: 0|1
+    required: true
+    defaultValue: 0
+    description: 当前选中项索引。
+  - name: onChange
+    type: (index:number)=>void
+    required: true
+    description: 选择变化回调。
+  - name: swipeEnabled
+    type: boolean
+    defaultValue: true
+    description: 是否允许在内容列表上左右滑动切换相邻 Tab。
+tokenRefs:
+  - color.text.primary
+  - color.text.tertiary
+  - typography.body.semibold
+  - spacing.4
+  - motion.duration.standard
+interactionIds:
+  - tab-selection
+platformMappingIds:
+  - secondary-tab-underline-mapping
+accessibility:
+  - 除颜色外使用 2pt 指示线表达选中态。
+  - 每个标签可单独聚焦，并播报当前选中状态和动态计数。
+  - 滑动切换后必须同步 aria-selected；键盘用户使用左右方向键获得等价能力。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "13468:186532"
+  nameAliases:
+    - 下划线二级tab
+    - underline secondary tab
+    - underline tab
+    - equal width tab
+  selectedStateAliases:
+    - selected
+    - active
+    - on
+    - 选中
+  unselectedStateAliases:
+    - unselected
+    - inactive
+    - off
+    - 未选中
+roles:
+  - container
+  - tabItem
+  - label
+  - selectedItem
+  - unselectedItem
+rules:
+  - id: container.height
+    title: 整体高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: item.width
+    title: 等分按钮宽度
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: item.height
+    title: 按钮高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: item.gap
+    title: Tab 之间的间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: selected.textColor
+    title: 选中态文字颜色
+    category: selected
+    metric: textColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: unselected.textColor
+    title: 未选中态文字颜色
+    category: unselected
+    metric: textColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule

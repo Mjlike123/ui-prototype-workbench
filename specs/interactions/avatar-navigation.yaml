@@ -1,0 +1,62 @@
+schemaVersion: 1
+id: avatar-navigation
+title: 头像点击进入个人主页
+status: review
+description: 头像作为可点击入口时进入对应用户的个人主页；纯展示头像不参与交互，装饰层不影响触达区域与可访问名称。
+componentIds:
+  - avatar
+states:
+  - static
+  - default
+  - pressed
+  - navigating
+  - unavailable
+transitions:
+  - from: static
+    to: default
+    trigger: profile-entry-enabled
+    feedback: 由外层原生控件承载点击能力，头像本身的视觉不发生变化。
+    duration: 0ms
+    easing: standard
+  - from: default
+    to: pressed
+    trigger: pointer-down-inside
+    feedback: 在 100ms 内提供按压反馈，头像尺寸、中心位置和相邻文字起点保持不变。
+    duration: 100ms
+    easing: standard
+  - from: pressed
+    to: navigating
+    trigger: pointer-up-inside
+    feedback: 进入对应用户的个人主页；页面切换完成前忽略重复触发。
+    duration: 200ms
+    easing: standard
+  - from: pressed
+    to: default
+    trigger: pointer-cancel-or-leave
+    feedback: 取消本次激活，不发生跳转。
+    duration: 100ms
+    easing: standard
+  - from: navigating
+    to: default
+    trigger: navigation-completed-or-returned
+    feedback: 恢复可点击状态，不重复播放按压反馈。
+    duration: 0ms
+    easing: standard
+  - from: default
+    to: unavailable
+    trigger: profile-target-unavailable
+    feedback: 移除跳转能力并退出焦点顺序；不保留看起来可点击的按压效果。
+    duration: 0ms
+    easing: standard
+accessibility:
+  - 可点击头像必须由外层原生 button 或链接承载，支持 Enter 与 Space。
+  - 可访问名称描述目标而不是图片本身，例如「查看 Nada 的个人主页」，不使用「头像」。
+  - 视觉尺寸小于 44pt 的头像仍需由外层控件提供至少 44×44pt 的触达区域。
+  - 头像框与状态徽标为装饰层，对辅助技术隐藏，不参与可访问名称。
+  - 纯展示头像不得进入焦点顺序，也不提供按压反馈。
+edgeCases:
+  - 头像与用户名指向同一目标时合并为一个控件，不产生两个焦点停留点。
+  - 匿名用户、系统通知和非用户实体不提供跳转，保持 static 状态。
+  - 头像图片加载失败时保留跳转能力，不因资源缺失移除入口。
+  - 装饰头像框超出头像区域时不得扩大或偏移实际触达区域。
+  - 快速连续点击由业务导航层防止重复入栈。

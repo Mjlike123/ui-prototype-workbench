@@ -1,0 +1,77 @@
+{
+  "fileKey": "sample",
+  "nodeId": "secondary-tab",
+  "frameName": "Secondary Tab",
+  "frame": { "x": 0, "y": 0, "width": 300, "height": 48 },
+  "root": {
+    "id": "figma-tab-root",
+    "name": "二级Tab",
+    "type": "INSTANCE",
+    "componentId": "component-secondary-tab",
+    "componentName": "Secondary Tab",
+    "frame": { "x": 0, "y": 0, "width": 300, "height": 48 },
+    "children": [
+      {
+        "id": "figma-vehicles",
+        "name": "Tab Item",
+        "type": "INSTANCE",
+        "componentName": "Secondary Tab Item",
+        "componentProperties": { "State": "Selected" },
+        "frame": { "x": 8, "y": 8, "width": 88, "height": 32 },
+        "backgroundColor": { "r": 32, "g": 201, "b": 183, "a": 1 },
+        "cornerRadius": 16,
+        "children": [
+          {
+            "id": "figma-vehicles-label",
+            "name": "Label",
+            "type": "TEXT",
+            "frame": { "x": 20, "y": 16, "width": 64, "height": 16 },
+            "text": "Vehicles(0)",
+            "color": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "fontSize": 12
+          }
+        ]
+      },
+      {
+        "id": "figma-gifts",
+        "name": "Tab Item",
+        "type": "INSTANCE",
+        "componentName": "Secondary Tab Item",
+        "componentProperties": { "State": "Unselected" },
+        "frame": { "x": 104, "y": 8, "width": 72, "height": 32 },
+        "backgroundColor": { "r": 255, "g": 255, "b": 255, "a": 0 },
+        "children": [
+          {
+            "id": "figma-gifts-label",
+            "name": "Label",
+            "type": "TEXT",
+            "frame": { "x": 116, "y": 16, "width": 48, "height": 16 },
+            "text": "Gifts(12)",
+            "color": { "r": 100, "g": 106, "b": 115, "a": 1 },
+            "fontSize": 12
+          }
+        ]
+      },
+      {
+        "id": "figma-set",
+        "name": "Tab Item",
+        "type": "INSTANCE",
+        "componentName": "Secondary Tab Item",
+        "componentProperties": { "State": "Unselected" },
+        "frame": { "x": 184, "y": 8, "width": 64, "height": 32 },
+        "backgroundColor": { "r": 255, "g": 255, "b": 255, "a": 0 },
+        "children": [
+          {
+            "id": "figma-set-label",
+            "name": "Label",
+            "type": "TEXT",
+            "frame": { "x": 196, "y": 16, "width": 40, "height": 16 },
+            "text": "Set(0)",
+            "color": { "r": 100, "g": 106, "b": 115, "a": 1 },
+            "fontSize": 12
+          }
+        ]
+      }
+    ]
+  }
+}

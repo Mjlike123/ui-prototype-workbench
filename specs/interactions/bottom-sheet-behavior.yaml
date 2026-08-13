@@ -1,0 +1,73 @@
+schemaVersion: 1
+id: bottom-sheet-behavior
+title: 半屏弹窗呈现、关闭与嵌套
+status: stable
+description: 半屏弹窗以直观、安全、高效为原则，根据任务属性选择关闭控件，并统一处理系统返回、蒙层关闭、未保存内容和多层嵌套。
+states:
+  - closed
+  - open-root
+  - open-nested
+  - open-dirty
+  - dismiss-confirmation
+transitions:
+  - from: closed
+    to: open-root
+    trigger: present-bottom-sheet
+    feedback: 半屏从底部进入；将焦点移入标题或首个可操作元素，背景页面不可误触。
+    duration: 200ms
+    easing: standard
+  - from: open-root
+    to: closed
+    trigger: explicit-close-or-cancel
+    feedback: 关闭当前半屏并将焦点恢复到触发元素；无未保存内容时不追加确认。
+    duration: 200ms
+    easing: standard
+  - from: open-root
+    to: closed
+    trigger: scrim-tap-or-system-back
+    feedback: 关闭当前半屏；显式关闭控件仍是信息阅读和任务型半屏的主要退出方式。
+    duration: 200ms
+    easing: standard
+  - from: open-root
+    to: open-nested
+    trigger: open-child-sheet
+    feedback: 子层从底部进入，父层增加 10% 黑色蒙层；子层高度不得超过父层。
+    duration: 200ms
+    easing: standard
+  - from: open-nested
+    to: open-root
+    trigger: leading-back-or-scrim-tap-or-system-back
+    feedback: 仅退出当前子层并返回上一级，不一次关闭全部半屏。
+    duration: 200ms
+    easing: standard
+  - from: open-dirty
+    to: dismiss-confirmation
+    trigger: any-dismiss-attempt
+    feedback: 保留当前输入并询问是否放弃未保存的重要内容。
+    duration: 100ms
+    easing: standard
+  - from: dismiss-confirmation
+    to: open-dirty
+    trigger: continue-editing
+    feedback: 关闭确认对话框，返回原半屏并恢复此前焦点和输入。
+    duration: 100ms
+    easing: standard
+  - from: dismiss-confirmation
+    to: closed
+    trigger: confirm-discard
+    feedback: 放弃未保存内容并关闭当前根层半屏；嵌套场景则只返回上一级。
+    duration: 200ms
+    easing: standard
+accessibility:
+  - 模态半屏使用 dialog 语义、可感知标题和模态状态；打开后约束焦点，关闭后恢复焦点。
+  - 信息阅读和任务型半屏必须提供可聚焦、可读出名称的关闭或取消控件，不能只依赖蒙层、拖拽手柄或手势。
+  - Web 支持 Escape，移动端支持系统返回；它们与当前层级的关闭或返回语义一致。
+  - 关闭、取消、确认和返回不得只用位置或图形区分，图标按钮必须提供可访问名称。
+edgeCases:
+  - 根层半屏使用关闭语义；只有嵌套子层使用返回语义，禁止把两者混为同一操作。
+  - 信息展示和阅读浏览默认右上角关闭；右侧存在更高优先级操作时，可将关闭放在左侧。
+  - 仅轻量、频繁、可逆且无未保存内容的操作可以省略关闭按钮，同时必须保留蒙层和系统返回关闭。
+  - 多步骤、需保存或容易误解的流程使用 Cancel 与 Confirm 或 Save 等文字操作，不用含义模糊的 X 代替。
+  - 任一关闭路径遇到未保存的重要内容都必须先确认；二次确认不得清空当前输入。
+  - 半屏叠加最多三层；预计超过三层时改用完整页面、单层内容替换或重新设计信息架构。
+  - 子层高度应小于或等于父层，避免遮蔽层级关系；点击蒙层始终只返回一层。

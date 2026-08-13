@@ -1,0 +1,23 @@
+schemaVersion: 1
+id: secondary-tab-mapping
+componentId: secondary-tab
+platforms:
+  ios:
+    componentName: TTSecondaryTabView
+    package: TopTopUIKit
+    codeExample: "TTSecondaryTabView(items: items, selectedIndex: $selectedIndex)"
+    identifiers:
+      - audit.secondaryTab
+      - "audit.secondaryTab.{key}"
+      - "audit.secondaryTab.{key}.label"
+    status: partial
+  android:
+    componentName: TopSecondaryTab
+    package: top.ui.components
+    codeExample: "TopSecondaryTab(items = items, selectedIndex = selectedIndex)"
+    status: planned
+  h5:
+    componentName: SecondaryTab
+    package: "@toptop/ui"
+    codeExample: "<SecondaryTab items={items} value={value} onChange={setValue} />"
+    status: partial

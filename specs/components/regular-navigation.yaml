@@ -1,0 +1,168 @@
+schemaVersion: 1
+id: regular-navigation
+version: 1.0.0
+title: 常规导航栏
+owner: TopTop Design System
+category: Navigation
+status: review
+since: 1.0.0
+tags:
+  - navigation
+  - secondary-page
+  - title-bar
+  - app-bar
+platforms:
+  - ios
+  - android
+  - h5
+description: 二级页面顶部的常规标题栏，支持返回或关闭、居中主副标题，以及图标、操作文案或按钮等尾部操作。
+previewKey: regular-navigation
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=723-7161
+  nodeId: "723:7161"
+  observations:
+    - 设计总览画布宽 375pt，所有导航栏变体高度均为 44pt
+    - 左右内容安全边距为 16pt，返回、关闭和常规操作图标均为 24pt
+    - 主标题使用 SF Pro Semibold 16pt/19pt，始终相对整个导航栏水平居中
+    - 无副标题时主标题允许折成两行，超过两行后省略
+    - 有副标题时主标题与副标题各占一行，超出各自区域时分别省略
+    - 左右操作内容不得覆盖标题，标题区与操作区至少保留 8pt 间距
+    - 操作文案区域最大宽 130pt；超过限制时应修改文案，不能继续挤压标题区
+    - 尾部按钮基准尺寸为 63×32pt，主色背景；半弹层使用关闭而不是返回
+anatomy:
+  - id: container
+    label: 导航容器
+    description: 固定高 44pt、宽度跟随页面，背景使用页面内容面板色。
+  - id: leadingAction
+    label: 前置操作
+    description: 可选返回、关闭或无操作；返回表达页面层级回退，关闭用于半弹层等临时容器。
+  - id: titleArea
+    label: 居中标题区
+    description: 以整条导航栏中心为基准，不以左右剩余空间的中心为基准。
+  - id: title
+    label: 主标题
+    description: 无副标题时最多两行；有副标题时固定单行省略。
+  - id: subtitle
+    label: 副标题
+    description: 可选辅助说明；存在时固定单行并独立省略。
+  - id: trailingAction
+    label: 尾部操作
+    description: 支持单图标、多图标、操作文案或 63×32pt 按钮，必须与标题区保持至少 8pt。
+variants:
+  - name: leadingAction
+    values:
+      - none
+      - back
+      - close
+    defaultValue: back
+  - name: titleMode
+    values:
+      - title
+      - title-wrap
+      - title-subtitle
+    defaultValue: title
+  - name: trailingAction
+    values:
+      - none
+      - icon
+      - multiple-icons
+      - text
+      - button
+    defaultValue: none
+props:
+  - name: title
+    type: string
+    required: true
+    description: 二级页面主标题；无副标题时最多两行，有副标题时单行省略。
+  - name: subtitle
+    type: string
+    description: 可选副标题；存在时与主标题各占一行。
+  - name: leadingAction
+    type: none|back|close
+    defaultValue: back
+    description: 前置层级操作；半弹层使用 close，普通二级页面使用 back。
+  - name: trailingActions
+    type: NavigationAction[]
+    defaultValue: "[]"
+    description: 尾部图标、操作文案或按钮；操作文案区域最大宽 130pt。
+  - name: onBack
+    type: () => void
+    description: 用户触发返回操作时调用。
+  - name: onClose
+    type: () => void
+    description: 用户关闭半弹层或临时容器时调用。
+  - name: onAction
+    type: (action:string) => void
+    description: 用户触发尾部操作时调用。
+tokenRefs:
+  - color.text.primary
+  - color.text.primary-a50
+  - color.text.tertiary
+  - color.surface.panel
+  - color.brand.primary
+  - typography.navigation.regular-title
+  - typography.navigation.regular-subtitle
+  - typography.navigation.regular-action
+  - spacing.2
+  - spacing.4
+interactionIds:
+  - regular-navigation-actions
+platformMappingIds:
+  - regular-navigation-mapping
+accessibility:
+  - 导航栏使用具名的 navigation 或 header 语义，页面主标题使用可识别的 heading。
+  - 返回、关闭及尾部图标必须是独立按钮，并提供准确的无障碍名称。
+  - 返回和关闭语义不可互换；读屏文案必须与实际结果一致。
+  - 视觉省略不应改变完整可访问名称，辅助技术仍应获得完整标题。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "710:12619"
+  nameAliases:
+    - 常规导航栏
+    - 二级页面导航
+    - 页面标题栏
+    - navigation bar
+    - regular navigation
+    - title bar
+roles:
+  - container
+  - label
+rules:
+  - id: container.height
+    title: 导航栏高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: container.horizontalPadding
+    title: 左右安全边距
+    category: spacing
+    metric: horizontalPadding
+    tolerance: 2
+    aggregate: rule
+  - id: leadingAction.width
+    title: 前置操作尺寸
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: title.height
+    title: 主标题单行高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: title.textColor
+    title: 主标题颜色
+    category: structure
+    metric: textColor
+    tolerance: 12
+    aggregate: rule
+  - id: title.actionGap
+    title: 标题与操作区最小间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule

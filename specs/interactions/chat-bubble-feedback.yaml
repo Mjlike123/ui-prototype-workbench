@@ -1,0 +1,115 @@
+schemaVersion: 1
+id: chat-bubble-feedback
+title: 私聊气泡状态与动作反馈
+status: stable
+description: 私聊气泡在发送、播放、回复引用、预览和业务操作中的状态变化与可见反馈。
+componentIds:
+  - chat-bubble
+states:
+  - sent
+  - sending
+  - failed
+  - voice-unread
+  - voice-playing
+  - action-default
+  - action-pressed
+  - action-loading
+  - action-disabled
+  - action-expired
+  - reply-active
+  - reply-unavailable
+  - message-menu-closed
+  - message-menu-open
+transitions:
+  - from: sent
+    to: sending
+    trigger: outbound-submit
+    feedback: 发出气泡左侧显示带文本语义的发送中指示，避免重复提交同一消息。
+    duration: 160ms
+    easing: standard
+  - from: sending
+    to: sent
+    trigger: delivery-success
+    feedback: 移除发送中指示并保持消息位置稳定。
+    duration: 160ms
+    easing: standard
+  - from: sending
+    to: failed
+    trigger: delivery-failure
+    feedback: 显示消息发送失败状态；业务层应提供重试入口或错误提示。
+    duration: 160ms
+    easing: standard
+  - from: voice-unread
+    to: voice-playing
+    trigger: voice-press
+    feedback: 移除未播放状态点，显示播放波形并通过 aria-pressed 暴露状态。
+    duration: 160ms
+    easing: standard
+  - from: voice-playing
+    to: sent
+    trigger: playback-complete-or-pause
+    feedback: 停止波形动画并保留已播放状态。
+    duration: 160ms
+    easing: standard
+  - from: action-default
+    to: action-pressed
+    trigger: pointer-down-or-key-activate
+    feedback: 品牌色加深并轻微缩放，确认动作已注册。
+    duration: 160ms
+    easing: standard
+  - from: action-pressed
+    to: action-loading
+    trigger: asynchronous-action-start
+    feedback: 禁用按钮，显示 Loading… 和旋转指示，阻止重复触发。
+    duration: 160ms
+    easing: standard
+  - from: action-loading
+    to: action-default
+    trigger: asynchronous-action-success-or-error
+    feedback: 恢复操作；业务层通过页面、Toast 或内联错误展示结果。
+    duration: 160ms
+    easing: standard
+  - from: action-default
+    to: action-expired
+    trigger: business-validity-expired
+    feedback: 操作文案切换为 Expired，使用禁用语义并说明原因。
+    duration: 160ms
+    easing: standard
+  - from: reply-active
+    to: reply-active
+    trigger: reply-preview-activate
+    feedback: 定位原消息并短暂高亮；引用预览保持在当前回复上方。
+    duration: 180ms
+    easing: standard
+  - from: reply-active
+    to: reply-unavailable
+    trigger: source-delete-or-recall
+    feedback: 原内容替换为删除、撤回或不可用占位，并移除点击定位能力。
+    duration: 160ms
+    easing: standard
+  - from: message-menu-closed
+    to: message-menu-open
+    trigger: long-press-or-context-menu
+    feedback: 背景叠加 30% 黑色遮罩和 20pt 高斯模糊，当前气泡保持清晰并在旁侧展开操作菜单。
+    duration: 200ms
+    easing: emphasized-decelerate
+  - from: message-menu-open
+    to: message-menu-closed
+    trigger: dismiss-action-or-escape
+    feedback: 关闭菜单和背景模糊，将焦点恢复到对应消息的快捷回复入口。
+    duration: 160ms
+    easing: standard
+accessibility:
+  - 所有业务操作和媒体操作使用原生 button，支持 Enter、Space 与 focus-visible。
+  - 发送中、发送失败、未播放和播放中均同时具备文本或 ARIA 状态，不只依赖颜色与动画。
+  - loading、disabled 与 expired 状态不可点击，禁用原因由 title 或邻近说明提供。
+  - 可用引用使用原生 button 并以可访问名称描述发送者和内容；不可用引用保留 disabled 语义。
+  - 长按菜单打开后焦点进入首个操作；点击模糊背景或按 Escape 可关闭并恢复焦点。
+  - prefers-reduced-motion 下停止循环播放波形和旋转动画，仅保留静态状态。
+edgeCases:
+  - 图片资源失败时保留固定尺寸占位与替代文本，避免消息流跳动。
+  - 发送失败不自动移除消息；重试策略由业务层定义并提供可见结果。
+  - 语音时长超过 60 秒时仍使用稳定宽度，不用长度映射挤压消息流。
+  - 业务操作完成后必须有成功或失败反馈，不允许静默结束。
+  - 过期礼物不得通过视觉恢复 hover 或 active 效果暗示仍可点击。
+  - 长标题、链接和群聊内容单行截断；文字引用可换行，但不可挤压外侧 3pt 定位线。

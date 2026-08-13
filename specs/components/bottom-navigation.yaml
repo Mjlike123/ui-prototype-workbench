@@ -1,0 +1,180 @@
+schemaVersion: 1
+id: bottom-navigation
+version: 1.0.0
+title: 底部导航
+owner: TopTop Design System
+category: Navigation
+status: stable
+since: 1.0.0
+tags:
+  - navigation
+  - bottom-bar
+  - app-destinations
+  - safe-area
+platforms:
+  - ios
+  - android
+  - h5
+description: App 一级目的地的五等分底部导航，支持东南亚浅色与中东深色主题、业务选中态和底部安全区。
+previewKey: bottom-navigation
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=209-13859
+  nodeId: "209:13859"
+  observations:
+    - Kit 实机验收引用单变体实例（默认 TopTop 选中）；446:3523 为 12 变体总览，不用于 Lookin 对比
+    - 基准画布宽 375pt，变体高度均为 86pt
+    - 固定展示 5 个一级目的地，每项等分 75pt，不通过压缩间距增加第六项
+    - 组件包含导航内容区与底部安全区，Home Indicator 保持水平居中
+    - 东南亚使用浅色背景，中东使用深色背景；选中态统一使用品牌色 #16D8C8
+    - 导航背景顶部左右圆角均为 16pt，底部保持直角以贴合设备底边
+    - 未选中图标与文案使用 #8B8C91，文案为 SF Pro Regular 12pt/16pt
+    - 选中文案使用 SF Pro Semibold 12pt/16pt，图标与文案同步切换品牌色
+    - 默认目的地为 TopTop、Room、Feed、Message、Me；首项可切换为 Refresh
+    - Room 始终使用默认图标；未选中使用线性图标，选中后切换为品牌色实心图标
+anatomy:
+  - id: container
+    label: 底部导航容器
+    description: 基准尺寸 375×86pt，顶部左右圆角 16pt，包含导航内容区和设备底部安全区。
+  - id: destinationList
+    label: 目的地列表
+    description: 固定五等分，每项占 75pt；目的地顺序由业务规范统一管理。
+  - id: destinationItem
+    label: 导航项
+    description: 图标和文案作为一个点击目标，选中态同步更新两者。
+  - id: label
+    label: 目的地文案
+    description: 使用 12pt/16pt，选中态 Semibold，未选中态 Regular。
+  - id: safeArea
+    label: 底部安全区
+    description: 适配设备 Home Indicator，不把业务点击内容放入系统手势区域。
+  - id: homeIndicator
+    label: Home Indicator
+    description: 仅作为设备预览与安全区参考；业务实现不得自行覆盖系统指示条。
+variants:
+  - name: selectedDestination
+    values:
+      - toptop
+      - room
+      - feed
+      - message
+      - me
+      - refresh
+    defaultValue: toptop
+  - name: regionTheme
+    values:
+      - southeast-asia
+      - middle-east
+    defaultValue: southeast-asia
+  - name: firstDestination
+    values:
+      - toptop
+      - refresh
+    defaultValue: toptop
+props:
+  - name: items
+    type: "[BottomNavigationItem, BottomNavigationItem, BottomNavigationItem, BottomNavigationItem, BottomNavigationItem]"
+    required: true
+    description: 固定五个一级目的地；每项必须提供稳定 key、图标、文案和可访问名称。
+  - name: value
+    type: string
+    required: true
+    description: 当前一级目的地 key。
+  - name: regionTheme
+    type: southeast-asia|middle-east
+    defaultValue: southeast-asia
+    description: 控制浅色或深色底部导航背景，不改变目的地语义和顺序。
+  - name: safeAreaInsetBottom
+    type: number
+    defaultValue: 34
+    description: 由设备环境提供的底部安全区高度，业务层不得写死为所有设备通用值。
+  - name: onChange
+    type: (key:string) => void
+    required: true
+    description: 用户选择另一个一级目的地时触发。
+tokenRefs:
+  - color.brand.primary
+  - color.text.navigation-inactive
+  - color.surface.panel
+  - color.package.ksa-me-chat-bottom-bar
+  - color.package.teami-chat-bottom-bar
+  - typography.navigation.bottom-selected
+  - typography.navigation.bottom-unselected
+  - spacing.1
+  - radius.16
+interactionIds:
+  - bottom-navigation-selection
+platformMappingIds:
+  - bottom-navigation-mapping
+accessibility:
+  - Web 使用 navigation 与具名链接，并通过 aria-current=page 表达当前目的地；不要使用页面内 tablist 语义。
+  - 图标与文案共同构成至少 44pt 高的点击目标，完整区域均可点击。
+  - 选中态同时使用颜色、图标状态和字重，不只依赖单一颜色差异。
+  - Room 使用默认图标并保留可见文案与可访问名称，不使用业务封面替代。
+  - 底部安全区只处理系统手势避让，不放置新的业务按钮或提示。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "209:13859"
+    - "209:13846"
+    - "209:13809"
+    - "209:13796"
+    - "209:13783"
+    - "218:14189"
+    - "349:5046"
+    - "430:5475"
+    - "430:5862"
+    - "430:5991"
+    - "436:6706"
+    - "9806:251910"
+  nameAliases:
+    - 底部导航
+    - App 底部导航
+    - bottom navigation
+    - bottom nav
+    - app tab bar
+roles:
+  - container
+  - tabItem
+  - label
+  - selectedItem
+  - unselectedItem
+rules:
+  - id: container.height
+    title: 底部导航总高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: item.width
+    title: 五等分导航项宽度
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: item.height
+    title: 导航项点击区域高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: item.gap
+    title: 导航项内部图文间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: selected.textColor
+    title: 选中目的地文案颜色
+    category: selected
+    metric: textColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: unselected.textColor
+    title: 未选中目的地文案颜色
+    category: unselected
+    metric: textColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule

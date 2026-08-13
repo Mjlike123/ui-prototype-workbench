@@ -1,0 +1,46 @@
+{
+  "fileKey": "sample",
+  "nodeId": "1:1",
+  "frameName": "TopTop Detail",
+  "frame": { "x": 0, "y": 0, "width": 390, "height": 844 },
+  "root": {
+    "id": "1:1",
+    "name": "TopTop Detail",
+    "type": "FRAME",
+    "frame": { "x": 0, "y": 0, "width": 390, "height": 844 },
+    "children": [
+      {
+        "id": "1:2",
+        "name": "Back Icon",
+        "type": "VECTOR",
+        "frame": { "x": 16, "y": 56, "width": 24, "height": 24 },
+        "color": { "r": 31, "g": 35, "b": 41, "a": 1 }
+      },
+      {
+        "id": "1:3",
+        "name": "Title",
+        "type": "TEXT",
+        "frame": { "x": 56, "y": 54, "width": 120, "height": 28 },
+        "text": "游戏详情",
+        "fontSize": 20,
+        "color": { "r": 31, "g": 35, "b": 41, "a": 1 }
+      },
+      {
+        "id": "1:4",
+        "name": "Cover",
+        "type": "RECTANGLE",
+        "frame": { "x": 16, "y": 104, "width": 96, "height": 96 },
+        "cornerRadius": 16
+      },
+      {
+        "id": "1:5",
+        "name": "Game Name",
+        "type": "TEXT",
+        "frame": { "x": 128, "y": 112, "width": 180, "height": 24 },
+        "text": "TopTop 测试游戏",
+        "fontSize": 17,
+        "color": { "r": 31, "g": 35, "b": 41, "a": 1 }
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+schemaVersion: 1
+id: search-control-input
+title: 搜索输入、清除与取消
+status: stable
+description: 搜索控件在待输入、输入中和已输入状态间切换，并提供清除、提交及取消搜索流程。
+componentIds:
+  - search-control
+states:
+  - idle
+  - editing-empty
+  - editing-filled
+  - submitted
+transitions:
+  - from: idle
+    to: editing-empty
+    trigger: focus-or-activate
+    feedback: 输入框获得焦点并显示 Cancel；插入光标使用品牌色。
+    duration: 0ms
+    easing: standard
+  - from: editing-empty
+    to: editing-filled
+    trigger: input-non-empty-value
+    feedback: 显示一级文字色输入内容和清除按钮。
+    duration: 0ms
+    easing: standard
+  - from: editing-filled
+    to: editing-empty
+    trigger: clear-button-press
+    feedback: 清空关键词、隐藏清除按钮并保持输入焦点。
+    duration: 0ms
+    easing: standard
+  - from: editing-filled
+    to: submitted
+    trigger: keyboard-search-or-enter
+    feedback: 保留当前关键词并触发一次 onSubmit。
+    duration: 0ms
+    easing: standard
+  - from: editing-empty
+    to: idle
+    trigger: cancel-press
+    feedback: 退出输入流程并触发 onCancel。
+    duration: 0ms
+    easing: standard
+  - from: editing-filled
+    to: idle
+    trigger: cancel-press
+    feedback: 清空关键词、退出输入流程并触发 onCancel。
+    duration: 0ms
+    easing: standard
+accessibility:
+  - 输入框提供 searchbox 语义、可读标签和完整当前值。
+  - 清除按钮在出现时可单独聚焦，激活后焦点返回输入框。
+  - Enter 或移动键盘 Search 触发提交；Escape 可作为 Cancel 的键盘等价操作。
+  - 不依赖光标或颜色单独表达输入状态，辅助技术应能读取当前焦点和值。
+edgeCases:
+  - 超长关键词保持单行并截断显示，不能挤压清除按钮和 Cancel。
+  - 连续点击清除只触发一次有效的空值变更，不提交搜索。
+  - 输入法组合期间不得提前提交或过滤未完成字符。
+  - Cancel 文案本地化后保持单行；空间不足时优先保证输入框可用宽度和操作可辨识性。
+  - 搜索控件位于带进入转场的二级页时，转场期间保持未聚焦，目标页稳定后再聚焦并唤起键盘；不得通过重挂载触发第二次聚焦。

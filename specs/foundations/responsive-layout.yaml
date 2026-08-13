@@ -1,0 +1,34 @@
+schemaVersion: 1
+id: responsive-layout
+title: 宽屏与多尺寸适配
+category: grid
+description: H5 与 Native 功能页面按元素属性选择固定、延展或等比缩放策略，保持跨尺寸视觉与操作一致。
+tokens:
+  - id: layout.adaptation.fixed
+    name: 固定尺寸策略
+    value: fixed-size
+    description: 间距、图标、非大图头像和非通栏按钮保持设计尺寸，优先保证与屏幕或模块边缘的固定间距。
+  - id: layout.adaptation.stretch
+    name: 弹性延展策略
+    value: stretch-range
+    description: 文字字号、底部大按钮高度和分割线粗细保持不变，可用宽度、字符展示量和线段长度随容器延展。
+  - id: layout.adaptation.scale
+    name: 等比缩放策略
+    value: proportional-scale
+    description: 背景与大模块图片随可用区域等比缩放，保持宽高比并避免图像变形。
+  - id: layout.spacing.edge-priority
+    name: 边缘间距优先
+    value: fixed-gutter
+    description: 模块与模块、模块与屏幕的边距优先保持固定，模块内容在剩余空间内延展。
+  - id: layout.dialog.max-height
+    name: 对话框最大高度
+    value: 70vh
+    description: 对话框高度不超过视口的 70%；内容超出时使用内部滚动、查看更多或分页。
+  - id: layout.dialog.width-policy
+    name: 对话框限宽策略
+    value: bounded-center
+    description: 对话框保持内容可读宽度、居中并避让 Safe Area，不因宽屏无限横向扩展；具体最大宽度由对话框组件契约定义。
+  - id: layout.image.large-module-fit
+    name: 大模块图片适配
+    value: contain
+    description: 保持固定外边距与图片宽高比；只有设计明确标注固定高度时才允许按宽度裁切。

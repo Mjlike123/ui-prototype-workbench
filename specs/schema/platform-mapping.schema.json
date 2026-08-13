@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://toptop.local/schemas/platform-mapping.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "id", "componentId", "platforms"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "componentId": { "type": "string" },
+    "platforms": {
+      "type": "object",
+      "propertyNames": { "enum": ["ios", "android", "h5"] },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["componentName", "codeExample", "status"],
+        "properties": {
+          "componentName": { "type": "string" },
+          "package": { "type": "string" },
+          "codeExample": { "type": "string" },
+          "identifiers": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "status": {
+            "enum": ["planned", "partial", "ready"]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

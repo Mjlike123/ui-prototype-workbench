@@ -1,0 +1,24 @@
+schemaVersion: 1
+id: avatar-mapping
+componentId: avatar
+platforms:
+  ios:
+    componentName: TTAvatar
+    package: TopTopUIKit
+    codeExample: "TTAvatar(image: image, size: .size48, decoration: frameImage, badge: badgeImage, accessibilityLabel: userName)"
+    identifiers:
+      - audit.avatar
+      - audit.avatar.image
+      - audit.avatar.decoration
+      - audit.avatar.badge
+    status: planned
+  android:
+    componentName: TopAvatar
+    package: top.ui.components
+    codeExample: "TopAvatar(image = image, size = TopAvatarSize.Size48, decoration = frame, badge = badgeImage, contentDescription = userName)"
+    status: planned
+  h5:
+    componentName: Avatar
+    package: "@toptop/ui"
+    codeExample: "<Avatar src={src} alt={userName} size={48} frameSrc={frameSrc} badgeSrc={badgeSrc} />"
+    status: planned

@@ -1,0 +1,23 @@
+schemaVersion: 1
+id: primary-navigation-mapping
+componentId: primary-navigation
+platforms:
+  ios:
+    componentName: TTPrimaryNavigationView
+    package: TopTopUIKit
+    codeExample: "TTPrimaryNavigationView(items: items, selection: $selection, actions: actions)"
+    identifiers:
+      - audit.primaryNavigation
+      - "audit.primaryNavigation.{key}"
+      - "audit.primaryNavigation.{key}.label"
+    status: planned
+  android:
+    componentName: TopPrimaryNavigation
+    package: top.ui.components
+    codeExample: "TopPrimaryNavigation(items = items, selectedKey = selectedKey, actions = actions)"
+    status: planned
+  h5:
+    componentName: PrimaryNavigation
+    package: "@toptop/ui"
+    codeExample: "<PrimaryNavigation items={items} value={value} actions={actions} onChange={setValue} />"
+    status: planned

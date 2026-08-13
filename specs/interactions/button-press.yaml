@@ -1,0 +1,51 @@
+schemaVersion: 1
+id: button-press
+title: 按钮按压与禁用
+status: review
+description: 按钮在默认、按下和禁用状态之间切换，并在一次有效释放后触发操作。
+componentIds:
+  - button
+states:
+  - default
+  - pressed
+  - disabled
+transitions:
+  - from: default
+    to: pressed
+    trigger: pointer-down-inside
+    feedback: 在 100ms 内切换到按下态，保持原有尺寸、文案和布局位置。
+    duration: 100ms
+    easing: standard
+  - from: pressed
+    to: default
+    trigger: pointer-up-inside
+    feedback: 恢复默认视觉并触发一次 onPress。
+    duration: 100ms
+    easing: standard
+  - from: pressed
+    to: default
+    trigger: pointer-cancel-or-leave
+    feedback: 取消本次操作，不触发 onPress。
+    duration: 100ms
+    easing: standard
+  - from: default
+    to: disabled
+    trigger: disabled-property-true
+    feedback: 切换置灰视觉并停止响应指针与键盘激活。
+    duration: 0ms
+    easing: standard
+  - from: disabled
+    to: default
+    trigger: disabled-property-false
+    feedback: 恢复默认视觉和交互能力。
+    duration: 0ms
+    easing: standard
+accessibility:
+  - 键盘 Space 与 Enter 必须产生与指针按压等价的状态和回调。
+  - 焦点样式独立于按下态，不能通过移除 outline 隐藏键盘焦点。
+  - disabled 状态不可聚焦或激活，并由辅助技术读取为不可用。
+edgeCases:
+  - 指针按下后移出按钮再释放时取消操作。
+  - 异步提交期间由业务切换 disabled，避免重复触发；不要自行永久保持 pressed。
+  - 32px 与 24px 长文案优先扩宽；空间不足时修改文案，不压缩到小于 4px 水平边距。
+  - 同行双按钮始终保持 16px 间距，不因按下或禁用状态改变宽度。

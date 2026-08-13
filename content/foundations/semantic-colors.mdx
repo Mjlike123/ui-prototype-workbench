@@ -1,0 +1,56 @@
+## 按语义选色，不按色值选色
+
+先确定这块内容在页面中的角色，再选 Token。不要从设计稿吸色后直接写死数值。
+
+同一个色值可能对应多个语义。`color.text.secondary` 与 `color.text.navigation-inactive` 在 Light 下都是 `#8B8C91`，但前者是正文层级，后者是导航未选中态，Dark 下取值并不相同。`color.text.tertiary` 在 Dark 下是 `#8B8C91`，恰好等于 Light 下的二级正文。按色值复制会在暗色模式下失去层级。
+
+## 文字层级
+
+- 一级标题与主要内容用 `color.text.primary`。
+- 正文、说明和次要信息用 `color.text.secondary`。
+- 引用预览、占位、弱化辅助文案和其中的图标用 `color.text.tertiary`。
+- 时间戳、陌生人标记和灰色辅助图标用 `color.text.auxiliary`。
+
+一个信息块内最多同时出现三层文字色。如果需要第四层，通常说明信息结构本身需要拆分。
+
+## 有底色和图片上的文字
+
+浅色背景上的层级 Token 不能直接搬到彩色块、图片或深色蒙层上。
+
+- 内容在浅色背景之上但带底纹时，使用 `color.text.primary-a50`、`color.text.primary-a30` 等透明变体。
+- 内容在图片、深色蒙层或品牌色块之上时，使用 `color.text.white-primary`、`color.white.primary-a80`、`color.white.primary-a50`、`color.white.primary-a30`。
+- 深色背景上的头像描边使用 `color.white.primary-a10`。
+
+## 品牌色与业务包
+
+主色不是唯一值，按业务包区分：
+
+- 其他包使用 `color.brand.primary`。
+- Teami 包使用 `color.brand.tw-primary`。
+- KU 包使用 `color.ku.brand-primary` 及其 hover、pressed、light 系列。
+
+包级背景同理，例如 `color.package.ksa-me-background`、`color.package.teami-chat-bottom-bar`。组件内不得写死某一个包的主色；差异通过 Token 表达，由主题决定取值。
+
+浅色主题按钮的三个状态各有 Token：背景用 `color.brand.primary-a10`，按下态背景与禁用态文字用 `color.brand.primary-a50`，按下态文字用 `color.brand.primary-dark`。
+
+## 表面、边框与按钮
+
+- 页面底色用 `color.surface.canvas`，卡片和面板用 `color.surface.panel`。两者不可互换，否则暗色模式下卡片会与背景融合。
+- 分割线和间隔线用 `color.border.subtle`，头像与图片描边用 `color.border.image`。描边比分割线更重，是为了在浅色图片上仍能看到边界。
+- 通用浅色按钮用 `color.button.primary`；已经处于有底色区域的未选中按钮用 `color.button.secondary`。
+
+## 语义状态色
+
+`color.state.like` 同时承担点赞和警示，使用时需确认上下文不会产生歧义。金币按场景明暗选择 `color.coin.light` 或 `color.coin.dark`，不要在浅色背景上使用深色场景的金币色。超链接用 `color.brand.link`，与辅助蓝 `color.brand.secondary` 区分开。
+
+## 暗色模式
+
+每个 Token 自带 Light 与 Dark 取值，业务不需要也不应该手写第二套色值。如果某个场景在暗色下表现不佳，应回到 Token 定义讨论，而不是在组件里加条件分支。
+
+## 交付前检查
+
+- 每个颜色是否都能说出对应的语义 Token ID，而不是十六进制值？
+- 文字层级是否在 Light 和 Dark 下都保持可区分？
+- 图片和品牌色块上的文字是否改用了白色透明系列？
+- 主色是否通过 Token 表达业务包差异，而不是写死某一个包的值？
+- 卡片与页面背景是否使用了不同的 surface Token？

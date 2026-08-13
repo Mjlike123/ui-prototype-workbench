@@ -1,0 +1,57 @@
+{
+  "pageName": "TopTop Detail",
+  "device": {
+    "name": "iPhone 15",
+    "width": 390,
+    "height": 844,
+    "scale": 3,
+    "safeAreaTop": 0,
+    "safeAreaBottom": 34
+  },
+  "screenshotPath": "samples/current-page.png",
+  "root": {
+    "id": "root",
+    "name": "UIWindow",
+    "type": "UIWindow",
+    "frame": { "x": 0, "y": 0, "width": 390, "height": 844 },
+    "children": [
+      {
+        "id": "back",
+        "name": "Back Icon",
+        "type": "UIImageView",
+        "accessibilityIdentifier": "back_icon",
+        "frame": { "x": 16, "y": 56, "width": 20, "height": 20 },
+        "color": { "r": 31, "g": 35, "b": 41, "a": 1 },
+        "visible": true
+      },
+      {
+        "id": "title",
+        "name": "Title",
+        "type": "UILabel",
+        "frame": { "x": 60, "y": 54, "width": 120, "height": 28 },
+        "text": "游戏详情",
+        "fontSize": 20,
+        "color": { "r": 31, "g": 35, "b": 41, "a": 1 },
+        "visible": true
+      },
+      {
+        "id": "cover",
+        "name": "Cover",
+        "type": "UIImageView",
+        "frame": { "x": 16, "y": 114, "width": 96, "height": 96 },
+        "cornerRadius": 16,
+        "visible": true
+      },
+      {
+        "id": "gameName",
+        "name": "Game Name",
+        "type": "UILabel",
+        "frame": { "x": 128, "y": 112, "width": 180, "height": 24 },
+        "text": "TopTop 游戏",
+        "fontSize": 17,
+        "color": { "r": 80, "g": 80, "b": 80, "a": 1 },
+        "visible": true
+      }
+    ]
+  }
+}

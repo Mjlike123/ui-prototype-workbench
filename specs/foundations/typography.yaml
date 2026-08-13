@@ -1,0 +1,90 @@
+schemaVersion: 1
+id: typography
+title: 字体层级
+category: typography
+description: 字号、字重和行高使用完整组合 Token，避免跨端自由拼装。
+tokens:
+  - id: typography.heading.page
+    name: 页面标题
+    value: "600 28px/36px Inter, PingFang SC, sans-serif"
+    description: Portal 与业务 B 端一级页面标题。
+  - id: typography.heading.section
+    name: 分区标题
+    value: "600 18px/26px Inter, PingFang SC, sans-serif"
+    description: 页面内部模块标题。
+  - id: typography.body.regular
+    name: 正文
+    value: "400 14px/22px Inter, PingFang SC, sans-serif"
+    description: 默认说明和数据内容。
+  - id: typography.body.semibold
+    name: 正文强调
+    value: "600 14px/20px SF Pro, PingFang SC, sans-serif"
+    description: Tab、按钮和需要强调的正文。
+  - id: typography.button.large
+    name: 大中型按钮文案
+    value: "590 16px/16px SF Pro, PingFang SC, sans-serif"
+    description: 48px 与 40px 实体按钮文案。
+  - id: typography.button.small
+    name: 小型按钮文案
+    value: "400 14px/14px SF Pro, PingFang SC, sans-serif"
+    description: 32px 自适应宽度按钮文案。
+  - id: typography.button.mini
+    name: Mini 按钮文案
+    value: "400 12px/12px SF Pro, PingFang SC, sans-serif"
+    description: 24px 自适应宽度按钮文案。
+  - id: typography.input.search
+    name: 搜索输入文字
+    value: "400 16px/20px SF Pro, PingFang SC, sans-serif"
+    description: 搜索控件的占位、输入内容和取消操作文案。
+  - id: typography.input.chat
+    name: 私聊输入文字
+    value: "400 16px/20px SF Pro, PingFang SC, sans-serif"
+    description: 私聊底部输入模块的占位、消息正文和按住说话状态文案。
+  - id: typography.list.title
+    name: 列表主标题
+    value: "590 16px/20px SF Pro, PingFang SC, sans-serif"
+    description: 常规列表标题与消息列表用户名。
+  - id: typography.list.body
+    name: 列表副文案
+    value: "400 14px/18px SF Pro, PingFang SC, sans-serif"
+    description: 常规列表副文案、消息摘要与文字操作。
+  - id: typography.list.metadata
+    name: 列表辅助信息
+    value: "400 12px/16px SF Pro, PingFang SC, sans-serif"
+    description: 消息列表时间与未读辅助信息。
+  - id: typography.list.tag
+    name: 消息列表标签文字
+    value: "590 9px/9px SF Pro, PingFang SC, sans-serif"
+    description: 性别年龄、等级等 14pt 高小标签内部文字。
+  - id: typography.navigation.primary-selected
+    name: 一级导航选中标题
+    value: "590 22px/26px SF Pro, PingFang SC, sans-serif"
+    description: 一级导航当前选中项，使用 Figma 定义的强调字号和行高。
+  - id: typography.navigation.primary-unselected
+    name: 一级导航未选中标题
+    value: "590 16px/19px SF Pro, PingFang SC, sans-serif"
+    description: 一级导航其他可选项，保持标题层级但弱于当前项。
+  - id: typography.navigation.regular-title
+    name: 常规导航栏主标题
+    value: "590 16px/19px SF Pro, PingFang SC, sans-serif"
+    description: 二级页面标题栏主标题；无副标题时最多两行，有副标题时保持单行。
+  - id: typography.navigation.regular-subtitle
+    name: 常规导航栏副标题
+    value: "400 12px/14px SF Pro, PingFang SC, sans-serif"
+    description: 常规导航栏可选副标题，与主标题同时存在时单行省略。
+  - id: typography.navigation.regular-action
+    name: 常规导航栏操作文案
+    value: "400 16px/19px SF Pro, PingFang SC, sans-serif"
+    description: 导航栏左右操作文案，区域宽度不得超过 130px。
+  - id: typography.navigation.bottom-selected
+    name: 底部导航选中文案
+    value: "590 12px/16px SF Pro, PingFang SC, sans-serif"
+    description: App 底部导航当前目的地文案，与品牌色图标同步使用。
+  - id: typography.navigation.bottom-unselected
+    name: 底部导航未选中文案
+    value: "400 12px/16px SF Pro, PingFang SC, sans-serif"
+    description: App 底部导航其他目的地文案，使用次级灰色。
+  - id: typography.caption
+    name: 辅助文字
+    value: "400 12px/18px Inter, PingFang SC, sans-serif"
+    description: 标签、元数据与补充提示。

@@ -1,0 +1,25 @@
+schemaVersion: 1
+id: regular-navigation-mapping
+componentId: regular-navigation
+platforms:
+  ios:
+    componentName: TTRegularNavigationBar
+    package: TopTopUIKit
+    codeExample: "TTRegularNavigationBar(title: title, subtitle: subtitle, leadingAction: leadingAction, trailingActions: actions)"
+    identifiers:
+      - audit.regularNavigation
+      - audit.regularNavigation.title
+      - audit.regularNavigation.subtitle
+      - audit.regularNavigation.leadingAction
+      - audit.regularNavigation.trailingActions
+    status: planned
+  android:
+    componentName: TopRegularNavigationBar
+    package: top.ui.components
+    codeExample: "TopRegularNavigationBar(title = title, subtitle = subtitle, leadingAction = leadingAction, trailingActions = actions)"
+    status: planned
+  h5:
+    componentName: RegularNavigation
+    package: "@toptop/ui"
+    codeExample: "<RegularNavigation title={title} subtitle={subtitle} leadingAction={leadingAction} trailingActions={actions} />"
+    status: planned

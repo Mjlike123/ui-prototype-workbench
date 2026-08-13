@@ -1,0 +1,57 @@
+{
+  "name": "ui-audit-tool",
+  "version": "1.0.0",
+  "description": "MVP CLI for auditing iOS UI fidelity against Figma designs.",
+  "type": "module",
+  "bin": {
+    "ui-audit": "./src/cli.ts"
+  },
+  "main": "dist/cli.js",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "audit": "tsx src/cli.ts",
+    "ui": "tsx src/server.ts",
+    "contract:build": "npm run build --workspace @toptop/design-system-contract",
+    "portal:dev": "npm run contract:build && npm run dev --workspace design-system-portal",
+    "portal:build": "npm run contract:build && npm run build --workspace design-system-portal",
+    "portal:lint": "npm run lint --workspace design-system-portal",
+    "portal:test": "npm run test --workspace design-system-portal",
+    "portal:e2e": "npm run portal:build && npm run test:e2e --workspace design-system-portal",
+    "specs:validate": "npm run contract:build && tsx scripts/validate-design-system.ts",
+    "skill:sync-specs": "node scripts/sync-skill-specs.mjs",
+    "skill:check": "node scripts/check-skill-specs-drift.mjs",
+    "check:kit": "npm run specs:validate && npm run skill:check && npm run portal:test",
+    "verify:mvp": "bash scripts/verify-design-mvp.sh",
+    "verify:screenshot": "python3 scripts/compare-images.py",
+    "yueban:preview-bboxes": "python3 scripts/yueban/preview_bboxes.py",
+    "yueban:extract-png": "python3 scripts/yueban/extract_png_asset.py",
+    "yueban:audit-png": "python3 scripts/yueban/audit_png_assets.py",
+    "figma:sync": "npm run contract:build && tsx scripts/sync-design-system.ts",
+    "collector:build": "bash scripts/build-lookin-collector.sh",
+    "lookin:build": "bash scripts/build-lookin-fork.sh",
+    "lookin:open": "bash scripts/open-lookin-fork.sh",
+    "lookin:test": "bash scripts/test-lookin-fork.sh",
+    "build": "npm run contract:build && tsc --noEmit",
+    "test": "npm run contract:build && vitest run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "yaml": "^2.9.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
+  }
+}

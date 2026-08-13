@@ -1,0 +1,97 @@
+schemaVersion: 1
+id: ios-status-bar
+version: 1.0.0
+title: iOS 时间状态栏
+owner: TopTop Design System
+category: System UI
+status: stable
+since: 1.0.0
+tags:
+  - ios
+  - status-bar
+  - system-ui
+  - time
+platforms:
+  - ios
+  - h5
+description: iPhone X 及后续全面屏机型使用的 375×44pt 时间状态栏，提供黑色内容与白色内容两种外观。
+previewKey: ios-status-bar
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=13624-186208
+  nodeId: "13624:186208"
+  observations:
+    - 基准尺寸为 375×44pt，组件自身不提供背景，由页面决定承载背景
+    - 时间区域宽 42pt，中心位于 x=48pt、y=23pt，使用 SF Pro Text Semibold 15pt/18pt
+    - 信号图标位于右侧 64pt、顶部 18pt，尺寸约 17×11pt
+    - Wi-Fi 图标位于右侧 43.73pt、顶部 17pt，尺寸约 15×11pt
+    - 电池图标位于右侧 14.67pt、顶部 17pt，尺寸约 24×11pt
+    - 黑色内容用于浅色背景，白色内容用于深色或图片背景
+anatomy:
+  - id: container
+    label: 状态栏容器
+    description: 固定 44pt 高，宽度随设备画布等比适配。
+  - id: label
+    label: 时间
+    description: 默认显示 9:41，保持系统状态栏的固定位置与字重。
+  - id: icon
+    label: 系统状态图标
+    description: 依次展示蜂窝信号、Wi-Fi 与电池的正式 SVG 资源。
+variants:
+  - name: appearance
+    values:
+      - dark-content
+      - light-content
+    defaultValue: dark-content
+props:
+  - name: appearance
+    type: dark-content|light-content
+    defaultValue: dark-content
+    description: 根据承载背景选择黑色或白色状态内容。
+  - name: time
+    type: string
+    defaultValue: "9:41"
+    description: 原型中的状态栏时间；生产 iOS 应由系统状态栏提供。
+tokenRefs:
+  - color.text.primary
+  - color.text.white-primary
+  - icon.asset.ios-status-bar
+accessibility:
+  - H5 原型中的状态栏为系统界面模拟层，默认对辅助技术隐藏，避免重复朗读时间与设备状态。
+  - 不把状态栏图标作为网络、电量或业务状态的唯一可访问反馈。
+  - iOS 生产实现优先使用系统状态栏，不使用静态图片覆盖真实设备状态。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "13624:186208"
+    - "13624:186173"
+    - "13624:186190"
+  nameAliases:
+    - iOS 时间状态栏
+    - iOS 状态栏
+    - 状态栏黑色
+    - 状态栏白色
+    - ios status bar
+roles:
+  - container
+  - label
+  - icon
+rules:
+  - id: container.height
+    title: 状态栏高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: container.width
+    title: 基准状态栏宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: content.textColor
+    title: 状态内容颜色
+    category: selected
+    metric: textColor
+    tolerance: 4
+    aggregate: rule

@@ -1,0 +1,24 @@
+schemaVersion: 1
+id: chat-input-mapping
+componentId: chat-input
+platforms:
+  ios:
+    componentName: TTChatInput
+    package: TopTopUIKit
+    codeExample: "TTChatInput(value: value, mode: mode, onChange: onChange, onSubmit: onSubmit, onModeChange: onModeChange)"
+    identifiers:
+      - audit.chat-input
+      - audit.chat-input.field
+      - audit.chat-input.mode
+      - audit.chat-input.trailing
+    status: planned
+  android:
+    componentName: TopChatInput
+    package: top.ui.components
+    codeExample: "TopChatInput(value = value, mode = mode, onValueChange = onValueChange, onSubmit = onSubmit, onModeChange = onModeChange)"
+    status: planned
+  h5:
+    componentName: ChatInput
+    package: "@toptop/ui"
+    codeExample: "<ChatInput value={value} mode={mode} onChange={onChange} onSubmit={onSubmit} onModeChange={onModeChange} />"
+    status: planned

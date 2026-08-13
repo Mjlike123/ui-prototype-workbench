@@ -1,0 +1,180 @@
+schemaVersion: 1
+id: primary-navigation
+version: 1.0.0
+title: 一级导航
+owner: TopTop Design System
+category: Navigation
+status: stable
+since: 1.0.0
+tags:
+  - navigation
+  - primary
+  - top-bar
+  - scrollable
+platforms:
+  - ios
+  - android
+  - h5
+description: 页面顶部的一级内容导航，支持 1–5 个标题、当前项强调、长文案渐隐及 0/1/3 个尾部操作图标。
+previewKey: primary-navigation
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=753-6872
+  nodeId: "753:6872"
+  observations:
+    - Kit 实机验收引用单变体实例（2 个标题、第 1 项选中）；743:6003 为 36 变体总览，不用于 Lookin 对比
+    - 基准画布宽 375pt，变体高度均为 44pt
+    - 容器上下内边距 6pt、左右内边距 16pt，标题间距 16pt
+    - 选中标题使用 SF Pro 22pt/26pt、字重 590、颜色 #181923
+    - 未选中标题使用 SF Pro 16pt/19pt、字重 590、颜色 #8B8C91
+    - 标题支持 1–5 项；尾部操作支持无图标、单个搜索图标或三个 28pt 图标
+    - 标题超出可用宽度时在操作区前使用白色渐隐，不允许覆盖尾部图标
+    - 导航容器固定在页面顶部安全区下方，不参与下方内容列表的纵向滚动；列表使用独立滚动容器
+anatomy:
+  - id: container
+    label: 导航容器
+    description: 固定在页面顶部安全区下方，高 44pt，使用 16pt 水平安全边距和 6pt 垂直内边距，不随内容列表滚动。
+  - id: tabItem
+    label: 导航标题
+    description: 支持 1–5 项，选中项通过字号和颜色共同提升层级。
+  - id: label
+    label: 标题文字
+    description: 标题之间保持 16pt；超出可用宽度时允许横向滚动并在尾端渐隐。
+  - id: trailingActions
+    label: 尾部操作
+    description: 可配置 0、1 或 3 个 28pt 操作图标，图标之间保持 16pt。
+  - id: overflowMask
+    label: 渐隐遮罩
+    description: 仅作用于标题区域，提示后方仍有内容，并保护操作区可读性。
+variants:
+  - name: itemCount
+    values:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+    defaultValue: "3"
+  - name: selectedPosition
+    values:
+      - first
+      - second
+      - third
+      - fourth
+      - fifth
+    defaultValue: first
+  - name: trailingActions
+    values:
+      - none
+      - search
+      - news-activity-search
+    defaultValue: search
+props:
+  - name: items
+    type: PrimaryNavigationItem[]
+    required: true
+    description: 1–5 个一级导航标题；每项必须提供稳定 key。
+  - name: value
+    type: string
+    required: true
+    description: 当前选中项 key。
+  - name: actions
+    type: NavigationAction[]
+    defaultValue: "[]"
+    description: 尾部操作，仅支持规范定义的 0、1、3 项组合。
+  - name: onChange
+    type: "(key:string)=>void"
+    required: true
+    description: 用户选择其他一级导航项时触发。
+  - name: onAction
+    type: "(action:string)=>void"
+    description: 用户点击尾部操作图标时触发。
+tokenRefs:
+  - color.text.primary
+  - color.text.navigation-inactive
+  - typography.navigation.primary-selected
+  - typography.navigation.primary-unselected
+  - spacing.4
+  - motion.duration.standard
+interactionIds:
+  - primary-navigation-selection
+platformMappingIds:
+  - primary-navigation-mapping
+accessibility:
+  - Web 使用 tablist、tab 和 aria-selected；移动端暴露等价的可选择语义。
+  - 键盘左右方向键移动选择，焦点跟随当前项；选中项进入可视区域。
+  - 尾部图标是独立按钮，必须提供可读名称，不能并入 tablist。
+  - 选中态同时使用字号和颜色，不只依赖单一颜色差异。
+  - 导航与内容滚动区域必须保持独立；内容滚动或焦点移动不得将当前一级标题移出视口。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "743:6003"
+  nameAliases:
+    - 一级导航
+    - 导航栏
+    - primary navigation
+    - top navigation
+    - primary tabs
+  selectedStateAliases:
+    - selected
+    - active
+    - 选中位置
+    - 当前
+  unselectedStateAliases:
+    - unselected
+    - inactive
+    - 未选中
+roles:
+  - container
+  - tabItem
+  - label
+  - selectedItem
+  - unselectedItem
+rules:
+  - id: container.height
+    title: 导航整体高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: container.horizontalPadding
+    title: 左右安全边距
+    category: spacing
+    metric: horizontalPadding
+    tolerance: 2
+    aggregate: rule
+  - id: item.gap
+    title: 标题之间的间距
+    category: spacing
+    metric: gap
+    tolerance: 2
+    aggregate: rule
+  - id: selected.itemHeight
+    title: 选中标题行高
+    category: selected
+    metric: height
+    state: selected
+    tolerance: 2
+    aggregate: rule
+  - id: unselected.itemHeight
+    title: 未选中标题行高
+    category: unselected
+    metric: height
+    state: unselected
+    tolerance: 2
+    aggregate: rule
+  - id: selected.textColor
+    title: 选中标题颜色
+    category: selected
+    metric: textColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: unselected.textColor
+    title: 未选中标题颜色
+    category: unselected
+    metric: textColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule

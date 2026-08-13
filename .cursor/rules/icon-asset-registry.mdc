@@ -1,0 +1,17 @@
+---
+description: Keep every newly added icon asset registered in the visual icon kit
+alwaysApply: true
+---
+
+# Icon Asset Registry
+
+When adding or replacing an icon cut:
+
+1. Register the canonical asset under `apps/design-system-portal/public/icons/`.
+2. Put semantic monochrome vectors in `icons/svg/`; put transparent colorful business icons in `icons/product/`.
+3. Reference the canonical Kit path from prototypes and pages. Do not keep duplicate component-local copies.
+4. Ensure “视觉基础 → 图标系统” displays the asset.
+5. Do not register backgrounds, avatars, photos, tags, or game-cover artwork as icons.
+6. Keep `specs/foundations/icons.yaml` consistent when supported icon formats or usage rules change.
+7. Give every new semantic monochrome icon a 24 × 24 canonical frame and use `currentColor` instead of a hard-coded fill or stroke.
+8. Default icon components to `color.text.primary`; apply another color only through the semantic Token required by the business state or surface.

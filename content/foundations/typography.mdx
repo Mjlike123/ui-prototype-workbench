@@ -1,0 +1,52 @@
+## 使用完整组合，不要自由拼装
+
+每个 Token 是字重、字号、行高和字族的完整组合。不要只取字号再自行决定字重和行高，跨端会立刻出现差异。
+
+App 内组件沿用 Figma 的 SF Pro 组合，Portal 与 B 端页面使用 Inter 组合。SF Pro 的 `590` 字重不要替换成 `600`，两者在真机上并不等价。
+
+## 按角色选择
+
+先判断这段文字在结构中的角色，再选 Token，不要按视觉大小挑。
+
+- 页面级标题用 `typography.heading.page`，模块标题用 `typography.heading.section`。
+- 正文用 `typography.body.regular`；需要强调的正文、Tab 文案用 `typography.body.semibold`。
+- 标签、元数据和补充提示用 `typography.caption`。
+
+## 列表的三层结构
+
+常规列表和消息列表共用同一套层级，不要为单个业务另造字号：
+
+- 主标题和用户名用 `typography.list.title`。
+- 副文案、消息摘要和文字操作用 `typography.list.body`。
+- 时间与未读等辅助信息用 `typography.list.metadata`。
+- 性别年龄、等级等 14pt 高小标签内部文字用 `typography.list.tag`。
+
+## 按钮按控件高度选
+
+- 48px 与 40px 按钮用 `typography.button.large`。
+- 32px 自适应宽度按钮用 `typography.button.small`。
+- 24px 自适应宽度按钮用 `typography.button.mini`。
+
+按钮文案行高等于字号，垂直居中由控件高度控制，不要靠行高撑开按钮。
+
+## 导航
+
+一级导航的选中态通过字号和字重同时表达：选中用 `typography.navigation.primary-selected`，未选中用 `typography.navigation.primary-unselected`。只改颜色不改字号会削弱层级。
+
+常规导航栏主标题用 `typography.navigation.regular-title`，无副标题时最多两行，有副标题时保持单行；副标题用 `typography.navigation.regular-subtitle` 并单行省略。左右操作文案用 `typography.navigation.regular-action`，区域宽度不得超过 130px。
+
+底部导航选中与未选中分别使用 `typography.navigation.bottom-selected` 和 `typography.navigation.bottom-unselected`，与图标状态同步切换。
+
+## 多语言与长文案
+
+行高固定，不随语言变化。阿拉伯语、英语和动态数字都需要实际验证：优先允许换行，其次由产品定义截断策略，不要缩小字号来塞下内容。
+
+宽屏不放大字号。屏幕变宽只增加可展示的字符或行内空间，具体规则见宽屏适配。
+
+## 交付前检查
+
+- 每处文字是否引用了完整组合 Token，而不是拆开的字号或字重？
+- 同一层级的信息在不同页面是否使用了相同 Token？
+- 按钮文案是否按控件高度选择，而不是按视觉习惯？
+- 一级导航选中态是否同时改变了字号与字重？
+- 长文案和多语言下是否仍然可读、不截断关键信息？

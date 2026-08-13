@@ -1,0 +1,99 @@
+{
+  "pageName": "TopTop Secondary Tab",
+  "device": {
+    "name": "iPhone",
+    "width": 390,
+    "height": 844,
+    "scale": 3
+  },
+  "root": {
+    "id": "lookin-tab-root",
+    "lookinOid": "100",
+    "name": "SecondaryTabView",
+    "type": "UIView",
+    "classChain": ["SecondaryTabView", "UIView"],
+    "frame": { "x": 20, "y": 200, "width": 300, "height": 52 },
+    "children": [
+      {
+        "id": "lookin-vehicles",
+        "lookinOid": "101",
+        "name": "SecondaryTabButton",
+        "type": "UIButton",
+        "classChain": ["UIButton", "UIControl", "UIView"],
+        "accessibilityIdentifier": "audit.secondaryTab.vehicles",
+        "selected": true,
+        "frame": { "x": 28, "y": 208, "width": 96, "height": 36 },
+        "backgroundColor": { "r": 24, "g": 190, "b": 170, "a": 1 },
+        "cornerRadius": 18,
+        "children": [
+          {
+            "id": "lookin-vehicles-decoration",
+            "name": "DecorationLayer",
+            "type": "CALayer",
+            "frame": { "x": 28, "y": 208, "width": 96, "height": 36 }
+          },
+          {
+            "id": "lookin-vehicles-label",
+            "lookinOid": "102",
+            "name": "TitleLabel",
+            "type": "UILabel",
+            "classChain": ["UILabel", "UIView"],
+            "accessibilityIdentifier": "audit.secondaryTab.vehicles.label",
+            "frame": { "x": 40, "y": 218, "width": 72, "height": 16 },
+            "text": "Vehicle(1209)",
+            "color": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "fontSize": 12
+          }
+        ]
+      },
+      {
+        "id": "lookin-gifts",
+        "lookinOid": "103",
+        "name": "SecondaryTabButton",
+        "type": "UIButton",
+        "classChain": ["UIButton", "UIControl", "UIView"],
+        "accessibilityIdentifier": "audit.secondaryTab.gifts",
+        "selected": false,
+        "frame": { "x": 132, "y": 208, "width": 78, "height": 36 },
+        "backgroundColor": { "r": 0, "g": 0, "b": 0, "a": 0 },
+        "children": [
+          {
+            "id": "lookin-gifts-label",
+            "lookinOid": "104",
+            "name": "TitleLabel",
+            "type": "UILabel",
+            "classChain": ["UILabel", "UIView"],
+            "frame": { "x": 146, "y": 218, "width": 50, "height": 16 },
+            "text": "Gift(120909)",
+            "color": { "r": 120, "g": 126, "b": 135, "a": 1 },
+            "fontSize": 12
+          }
+        ]
+      },
+      {
+        "id": "lookin-set",
+        "lookinOid": "105",
+        "name": "SecondaryTabButton",
+        "type": "UIButton",
+        "classChain": ["UIButton", "UIControl", "UIView"],
+        "accessibilityIdentifier": "audit.secondaryTab.set",
+        "selected": false,
+        "frame": { "x": 218, "y": 208, "width": 70, "height": 36 },
+        "backgroundColor": { "r": 0, "g": 0, "b": 0, "a": 0 },
+        "children": [
+          {
+            "id": "lookin-set-label",
+            "lookinOid": "106",
+            "name": "TitleLabel",
+            "type": "UILabel",
+            "classChain": ["UILabel", "UIView"],
+            "frame": { "x": 231, "y": 218, "width": 42, "height": 16 },
+            "text": "Set(2)",
+            "color": { "r": 100, "g": 106, "b": 115, "a": 1 },
+            "fontSize": 12
+          }
+        ]
+      }
+    ]
+  }
+}

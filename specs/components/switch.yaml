@@ -1,0 +1,104 @@
+schemaVersion: 1
+id: switch
+version: 1.0.0
+title: 开关
+owner: TopTop Design System
+category: Input
+status: stable
+since: 1.0.0
+tags:
+  - switch
+  - toggle
+  - settings
+  - boolean
+platforms:
+  - ios
+  - android
+  - h5
+description: 44×27pt 胶囊开关，用于设置项中即时切换二元状态；开启时使用系统绿色轨道，关闭时使用浅灰轨道。
+previewKey: switch
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=1356-11898
+  nodeId: "1356:11898"
+  observations:
+    - 轨道固定 44×27pt，圆角为高度的一半
+    - 开启态轨道使用 #34C759；关闭态轨道使用 #CFCFCF
+    - 滑块为白色圆形，带 0 0 2.5px rgba(0,0,0,0.25) 阴影
+    - 关闭时滑块靠左；开启时滑块靠右，左右留白约为轨道宽度的 3.92%
+anatomy:
+  - id: track
+    label: 开关轨道
+    description: 承载开启与关闭背景色，并保持胶囊轮廓。
+  - id: thumb
+    label: 滑块
+    description: 白色圆形指示当前状态，随 checked 在轨道内水平移动。
+variants:
+  - name: state
+    values:
+      - off
+      - on
+    defaultValue: off
+  - name: interaction
+    values:
+      - default
+      - disabled
+    defaultValue: default
+props:
+  - name: checked
+    type: boolean
+    required: true
+    description: 当前是否开启；受控实现必须由业务层同步更新。
+  - name: onChange
+    type: (checked:boolean)=>void
+    required: true
+    description: 用户切换开关时回调新的布尔值。
+  - name: disabled
+    type: boolean
+    defaultValue: false
+    description: 禁用时不响应点击并保持半透明视觉。
+  - name: aria-label
+    type: string
+    description: 独立使用时的可访问名称；嵌入带文案的 label 时可省略。
+tokenRefs:
+  - color.switch.track-on
+  - color.switch.track-off
+  - color.surface.panel
+accessibility:
+  - 使用 role="switch" 的原生 checkbox 实现，保证键盘 Space 可切换。
+  - 与设置行文案组合时，应通过 label 或 aria-labelledby 关联完整含义，不能只依赖颜色区分状态。
+  - 禁用态必须同步暴露 disabled 并移除指针交互。
+  - 焦点可见时使用品牌色描边，outline-offset 为 2px。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "1356:11898"
+    - "1356:11897"
+    - "1277:10183"
+  nameAliases:
+    - 开关
+    - Switch
+    - toggle
+    - settings switch
+roles:
+  - container
+  - trailing
+rules:
+  - id: container.width
+    title: 开关轨道宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: container.height
+    title: 开关轨道高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: container.backgroundColor
+    title: 开启态轨道颜色
+    category: selected
+    metric: backgroundColor
+    tolerance: 8
+    aggregate: rule

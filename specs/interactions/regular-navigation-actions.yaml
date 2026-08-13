@@ -1,0 +1,47 @@
+schemaVersion: 1
+id: regular-navigation-actions
+title: 常规导航栏层级与操作行为
+status: review
+description: 处理二级页面返回、半弹层关闭和尾部操作；标题仅表达当前位置，不承担可选择的 Tab 行为。
+componentIds:
+  - regular-navigation
+states:
+  - idle
+  - pressed
+  - navigating
+  - dismissed
+  - disabled
+transitions:
+  - from: idle
+    to: pressed
+    trigger: leading-action-pointer-down
+    feedback: 返回或关闭按钮在 100ms 内提供按压反馈，标题位置保持不变。
+    duration: 100ms
+    easing: standard
+  - from: pressed
+    to: navigating
+    trigger: back-pointer-up-inside
+    feedback: 返回上一页面；重复触发在页面切换完成前被忽略。
+    duration: 200ms
+    easing: standard
+  - from: pressed
+    to: dismissed
+    trigger: close-pointer-up-inside
+    feedback: 关闭当前半弹层或临时容器，不解释为页面返回。
+    duration: 200ms
+    easing: standard
+  - from: idle
+    to: pressed
+    trigger: trailing-action-pointer-down
+    feedback: 仅当前尾部操作进入按压态，其他操作和标题保持稳定。
+    duration: 100ms
+    easing: standard
+accessibility:
+  - 返回、关闭和尾部操作均支持键盘聚焦与 Enter/Space 激活。
+  - 页面切换或容器关闭后，将焦点恢复到合理的上游触发元素。
+  - 不把标题区暴露为 tablist；标题不是可选择控件。
+edgeCases:
+  - 根层半弹层必须使用关闭语义；只有嵌套子层使用返回图标，具体退出和逐层返回规则见 bottom-sheet-behavior。
+  - 操作文案超过 130pt 时修改文案，不缩小标题字号或取消 8pt 安全间距。
+  - 网络请求期间可禁用提交按钮，但返回或关闭策略由业务场景明确决定。
+  - 多个尾部图标必须分别提供名称，不能合并成一个无语义点击区。

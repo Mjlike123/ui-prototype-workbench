@@ -1,0 +1,47 @@
+{
+  "name": "toptop-agent-design-kit",
+  "version": "0.2.0",
+  "entrySkill": "toptop-design-bundle",
+  "subSkills": [
+    "toptop-prototype-studio",
+    "toptop-design-system",
+    "toptop-design-review"
+  ],
+  "description": "TopTop Kit + 本地 Agent 原型搭建 + 多维验收工作流",
+  "license": "Proprietary",
+  "targetAgents": [
+    "cursor",
+    "agent-ide"
+  ],
+  "contents": {
+    "skills": [
+      ".agents/skills/toptop-design-bundle/",
+      ".agents/skills/toptop-prototype-studio/",
+      ".agents/skills/toptop-design-system/",
+      ".agents/skills/toptop-design-review/"
+    ],
+    "docs": {
+      "PROJECT.md": "PROJECT.md",
+      "docs/design-mvp-verification.md": "WORKFLOW.md"
+    },
+    "specs": [
+      ".agents/skills/toptop-design-bundle/specs/",
+      ".agents/skills/toptop-prototype-studio/specs/",
+      ".agents/skills/toptop-design-system/specs/",
+      ".agents/skills/toptop-design-review/specs/"
+    ]
+  },
+  "sourceOfTruth": {
+    "foundations": "specs/foundations/",
+    "components": "specs/components/",
+    "interactions": "specs/interactions/",
+    "guidance": "content/"
+  },
+  "exclude": [
+    "node_modules/",
+    ".next/",
+    "dist/",
+    "out/",
+    ".git/"
+  ]
+}

@@ -1,0 +1,14 @@
+---
+description: Complete component specifications and promote validated components to Stable
+alwaysApply: true
+---
+
+# Component Stability Workflow
+
+When the requested work for a new or updated UI Kit component is complete:
+
+1. Check that its YAML contract, MDX guidance, tokens, variants, interaction behavior, and reference preview are consistent.
+2. Run the relevant specification validation and component tests.
+3. If the checks pass and there are no known unresolved design or engineering decisions, update the component YAML to `status: stable`.
+4. Do not promote an incomplete component or one with known blockers. Report the blocker and keep it in `review`.
+5. Include the final lifecycle status and validation result in the handoff.

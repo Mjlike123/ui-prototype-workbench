@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://toptop.local/schemas/foundation.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "id", "title", "category", "tokens"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string" },
+    "category": {
+      "enum": ["color", "typography", "spacing", "radius", "shadow", "grid", "motion", "icon"]
+    },
+    "description": { "type": "string" },
+    "tokens": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "value", "description"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "value": { "type": ["string", "number"] },
+          "modes": {
+            "type": "object",
+            "properties": {
+              "light": { "type": ["string", "number"] },
+              "dark": { "type": ["string", "number"] }
+            },
+            "required": ["light", "dark"],
+            "additionalProperties": false
+          },
+          "description": { "type": "string" },
+          "figmaVariableId": { "type": "string" },
+          "platforms": {
+            "type": "object",
+            "properties": {
+              "ios": { "type": "string" },
+              "android": { "type": "string" },
+              "h5": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

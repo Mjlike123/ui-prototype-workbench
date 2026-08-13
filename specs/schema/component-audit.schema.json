@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://toptop.local/schemas/component-audit.schema.json",
+  "title": "UI Audit Component Profile",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "title",
+    "platforms",
+    "detection",
+    "roles",
+    "rules"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "version": { "type": "string" },
+    "title": { "type": "string" },
+    "owner": { "type": "string" },
+    "category": { "type": "string" },
+    "status": {
+      "enum": ["draft", "review", "stable", "deprecated"]
+    },
+    "since": { "type": "string" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "description": { "type": "string" },
+    "previewKey": { "type": "string" },
+    "reference": {
+      "type": "object",
+      "required": ["figmaUrl", "nodeId"],
+      "properties": {
+        "figmaUrl": { "type": "string" },
+        "nodeId": { "type": "string" },
+        "observations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "anatomy": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "description"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "values"],
+        "properties": {
+          "name": { "type": "string" },
+          "values": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "defaultValue": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "required": { "type": "boolean" },
+          "defaultValue": {
+            "type": ["string", "number", "boolean"]
+          },
+          "description": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "tokenRefs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "interactionIds": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "platformMappingIds": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "accessibility": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "platforms": {
+      "type": "array",
+      "items": { "enum": ["ios", "android", "h5"] }
+    },
+    "detection": {
+      "type": "object",
+      "required": ["figmaComponentIds", "nameAliases"],
+      "properties": {
+        "figmaFileKeys": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "figmaComponentIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "nameAliases": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "selectedStateAliases": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "unselectedStateAliases": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "container",
+          "tabItem",
+          "label",
+          "selectedItem",
+          "unselectedItem",
+          "field",
+          "searchIcon",
+          "input",
+          "clearButton",
+          "cancelAction",
+          "listItem",
+          "leading",
+          "content",
+          "title",
+          "subtitle",
+          "tagList",
+          "trailing",
+          "avatarImage",
+          "decorationFrame",
+          "statusBadge",
+          "icon",
+          "value",
+          "membershipAsset",
+          "modeAction",
+          "photoAction",
+          "emojiAction",
+          "voiceHold",
+          "gameAction",
+          "trailingAction",
+          "replyPreview",
+          "readStatusUpsell"
+        ]
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "category",
+          "metric",
+          "tolerance",
+          "aggregate"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "category": {
+            "enum": ["structure", "spacing", "selected", "unselected"]
+          },
+          "metric": {
+            "enum": [
+              "height",
+              "width",
+              "horizontalPadding",
+              "gap",
+              "textColor",
+              "backgroundColor",
+              "iconSize",
+              "aspectRatio"
+            ]
+          },
+          "state": { "enum": ["selected", "unselected"] },
+          "tolerance": { "type": "number", "minimum": 0 },
+          "aggregate": { "const": "rule" }
+        }
+      }
+    }
+  }
+}

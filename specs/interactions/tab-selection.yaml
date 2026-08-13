@@ -1,0 +1,48 @@
+schemaVersion: 1
+id: tab-selection
+title: Tab 选中切换
+status: stable
+description: 用户切换同一上下文中的并列内容，选择立即生效并保留清晰的当前状态。
+componentIds:
+  - secondary-tab
+  - secondary-tab-underline
+states:
+  - unselected
+  - pressed
+  - selected
+  - disabled
+transitions:
+  - from: unselected
+    to: pressed
+    trigger: pointer-down
+    feedback: 降低表面亮度或文字透明度，必须在 100ms 内反馈。
+    duration: 100ms
+    easing: standard
+  - from: pressed
+    to: selected
+    trigger: pointer-up-inside
+    feedback: 更新内容并移动选中态标识；不重复播放页面级转场。
+    duration: 200ms
+    easing: standard
+  - from: selected
+    to: unselected
+    trigger: another-tab-selected
+    feedback: 与新选中项同步完成，避免双选中帧。
+    duration: 200ms
+    easing: standard
+  - from: selected
+    to: selected
+    trigger: content-swipe-horizontal
+    feedback: 内容列表跟随手指移动；水平位移达到 48pt 后切换相邻 Tab，否则回弹到当前项。
+    duration: 200ms
+    easing: standard
+accessibility:
+  - 使用 tablist、tab 和 aria-selected 表达结构与状态。
+  - 键盘左右方向键移动选择，焦点始终可见。
+  - 不只依赖颜色区分选中态。
+edgeCases:
+  - 文案包含动态计数时保持组件宽度策略，不因数字变化导致整体跳动。
+  - 内容加载失败时保留当前 Tab，并在内容区域提供可恢复错误状态。
+  - 超长文案按产品约定截断，不能挤压相邻 Tab 的最小可点击区域。
+  - 首项向右滑或末项向左滑时只提供阻尼反馈，不循环切换。
+  - 垂直滚动意图优先于水平切换，避免列表滚动过程中误触。

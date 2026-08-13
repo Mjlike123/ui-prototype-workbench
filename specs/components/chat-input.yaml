@@ -1,0 +1,231 @@
+schemaVersion: 1
+id: chat-input
+version: 1.0.0
+title: 私聊底部输入模块
+owner: TopTop Design System
+category: Input
+status: stable
+since: 1.0.0
+tags:
+  - chat
+  - message
+  - input
+  - voice
+  - composer
+platforms:
+  - ios
+  - android
+  - h5
+description: 私聊页底部的消息输入模块，支持文字、长文案、语音按住说话及照片、表情、游戏、礼物和发送操作。
+previewKey: chat-input
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=1356-10112
+  nodeId: "1356:10112"
+  observations:
+    - 消息模块以 375pt 为基准宽度，底栏最小高度 60pt，使用 12pt 水平边距和 8pt 垂直边距
+    - 五列内容依次为输入模式、照片、输入区、游戏及礼物或发送，列间距为 16pt
+    - 操作图标使用 24pt 规范切图；输入框默认宽 191pt、高 44pt，并使用 22pt 胶囊圆角
+    - 未输入时展示 Say something...、表情与礼物；存在有效文字后末项替换为品牌色发送图标
+    - 长文案输入框最大视觉高度 144pt，文字换行，操作图标保持与输入框底部对齐
+    - 语音模式使用 Hold to talk；按住后背景切为 10% 黑色并显示 Release to end
+anatomy:
+  - id: container
+    label: 输入模块容器
+    description: 使用聊天底栏语义背景，最小高度 60pt，内容随长文案向上扩展。
+  - id: modeAction
+    label: 输入模式操作
+    description: 文字模式显示麦克风，语音模式显示语音图标。
+  - id: photoAction
+    label: 照片操作
+    description: 使用 24pt 照片图标，触发业务层照片选择流程。
+  - id: field
+    label: 消息输入区
+    description: 默认高 44pt、圆角 22pt；长文案最大视觉高度 144pt。
+  - id: emojiAction
+    label: 表情操作
+    description: 固定在文字输入区右下侧，不覆盖正文可读区域。
+  - id: voiceHold
+    label: 按住说话区域
+    description: 语音模式下替换文字输入区，并明确显示按住与释放状态。
+  - id: gameAction
+    label: 游戏操作
+    description: 触发业务层游戏邀请流程。
+  - id: trailingAction
+    label: 尾部操作
+    description: 空值时为礼物，存在有效文字时为发送；语音模式展示发送操作。
+variants:
+  - name: mode
+    values:
+      - text
+      - voice
+    defaultValue: text
+  - name: state
+    values:
+      - empty
+      - editing
+      - filled
+      - multiline
+      - voice-idle
+      - voice-holding
+    defaultValue: empty
+props:
+  - name: value
+    type: string
+    required: true
+    defaultValue: ""
+    description: 当前消息草稿；受控实现由业务层保存。
+  - name: mode
+    type: text|voice
+    defaultValue: text
+    description: 当前输入模式。
+  - name: placeholder
+    type: string
+    defaultValue: Say something...
+    description: 空草稿时显示的单行提示。
+  - name: disabled
+    type: boolean
+    defaultValue: false
+    description: 禁用全部输入与操作。
+  - name: ariaLabel
+    type: string
+    defaultValue: 发送私聊消息
+    description: 整个消息输入表单的可访问名称。
+  - name: onChange
+    type: (value:string)=>void
+    required: true
+    description: 草稿变化时触发。
+  - name: onSubmit
+    type: (value:string)=>void
+    required: true
+    description: 用户发送非空消息时触发，参数为去除首尾空白后的内容。
+  - name: onFocus
+    type: () => void
+    description: 文字输入框获得焦点时触发；消息页可用于回到最新一条消息。
+  - name: onModeChange
+    type: (mode:text|voice)=>void
+    description: 用户切换文字或语音输入时触发。
+  - name: onPhoto
+    type: () => void
+    description: 点击照片操作时触发。
+  - name: onEmoji
+    type: () => void
+    description: 点击表情操作时触发。
+  - name: onGame
+    type: () => void
+    description: 点击游戏操作时触发。
+  - name: onGift
+    type: () => void
+    description: 空草稿状态点击礼物操作时触发。
+  - name: onVoiceHoldStart
+    type: () => void
+    description: 开始按住说话时触发。
+  - name: onVoiceHoldEnd
+    type: () => void
+    description: 释放或取消按住说话时触发。
+tokenRefs:
+  - color.package.teami-chat-bottom-bar
+  - color.surface.canvas
+  - color.surface.panel
+  - color.text.primary
+  - color.text.tertiary
+  - color.text.primary-a30
+  - color.border.image
+  - color.brand.primary
+  - typography.input.chat
+  - spacing.2
+  - spacing.3
+  - spacing.4
+interactionIds:
+  - chat-input-compose
+platformMappingIds:
+  - chat-input-mapping
+accessibility:
+  - Web 使用带可访问名称的 form 和原生 textarea，不用 contenteditable 模拟输入。
+  - 所有纯图标按钮提供描述具体结果的可访问名称，并保留至少 44×44pt 可触达区域。
+  - Enter 发送，Shift+Enter 换行；输入法组合期间不得提前发送。
+  - 空白草稿不触发发送；长文案视觉滚动或扩展时保留完整输入值。
+  - 按住说话必须同时支持释放和取消，并通过文案而非仅颜色表达当前状态。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "1356:10112"
+    - "2488:17246"
+    - "2488:17262"
+    - "2488:17272"
+    - "2488:17282"
+    - "2488:17307"
+    - "2488:17441"
+  nameAliases:
+    - 私聊底部输入模块
+    - 消息模块
+    - 输入控件
+    - chat input
+    - message composer
+    - chat composer
+  selectedStateAliases:
+    - editing
+    - filled
+    - voice-holding
+    - 输入中
+    - 输入完成
+    - 按住说话
+  unselectedStateAliases:
+    - empty
+    - voice-idle
+    - 未输入
+    - 未说话
+roles:
+  - container
+  - modeAction
+  - photoAction
+  - field
+  - emojiAction
+  - voiceHold
+  - gameAction
+  - trailingAction
+rules:
+  - id: container.minHeight
+    title: 底栏最小高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: container.horizontalPadding
+    title: 底栏水平边距
+    category: spacing
+    metric: horizontalPadding
+    tolerance: 1
+    aggregate: rule
+  - id: container.gap
+    title: 主列间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: field.minHeight
+    title: 输入区默认高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: field.backgroundColor
+    title: 输入区背景色
+    category: structure
+    metric: backgroundColor
+    tolerance: 12
+    aggregate: rule
+  - id: empty.textColor
+    title: 占位文字颜色
+    category: unselected
+    metric: textColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule
+  - id: filled.textColor
+    title: 输入文字颜色
+    category: selected
+    metric: textColor
+    state: selected
+    tolerance: 12
+    aggregate: rule

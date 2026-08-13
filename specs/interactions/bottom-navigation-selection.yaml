@@ -1,0 +1,47 @@
+schemaVersion: 1
+id: bottom-navigation-selection
+title: 底部导航目的地切换
+status: review
+description: 用户在五个 App 一级目的地之间切换；导航栏保持固定，选中状态与页面内容同步更新。
+componentIds:
+  - bottom-navigation
+states:
+  - unselected
+  - pressed
+  - selected
+  - loading
+  - disabled
+transitions:
+  - from: unselected
+    to: pressed
+    trigger: destination-pointer-down
+    feedback: 整个图文点击区域在 100ms 内提供按压反馈，不改变五项顺序。
+    duration: 100ms
+    easing: standard
+  - from: pressed
+    to: selected
+    trigger: destination-pointer-up-inside
+    feedback: 同步更新图标、品牌色与 Semibold 文案，并切换对应一级页面。
+    duration: 200ms
+    easing: standard
+  - from: selected
+    to: loading
+    trigger: selected-destination-reselected
+    feedback: 仅在业务明确支持时刷新当前一级页面；默认不重复创建页面实例。
+    duration: 200ms
+    easing: standard
+  - from: loading
+    to: selected
+    trigger: refresh-completed
+    feedback: 保留当前目的地选中态，结束刷新反馈。
+    duration: 200ms
+    easing: standard
+accessibility:
+  - Web 使用具名链接和 aria-current=page，移动端暴露等价的已选中目的地语义。
+  - 目的地名称不能只依赖图标识别，Room 默认图标仍需提供可见文案和可访问名称。
+  - 键盘焦点顺序与视觉顺序一致，RTL 场景由平台导航方向规则统一处理。
+edgeCases:
+  - 业务页面加载失败时保留当前选中目的地，不自动跳回 TopTop。
+  - Room 始终使用规范默认图标，不接受业务封面或头像覆盖。
+  - 安全区高度变化时只调整底部留白，不压缩五个导航项的点击高度。
+  - 不允许业务临时插入第六个目的地；新增入口应通过信息架构评审。

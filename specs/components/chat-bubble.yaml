@@ -1,0 +1,292 @@
+schemaVersion: 1
+id: chat-bubble
+version: 1.2.0
+title: 私聊消息气泡
+owner: TopTop Design System
+category: Messaging
+status: stable
+since: 1.0.0
+tags:
+  - chat
+  - message
+  - bubble
+  - voice
+  - media
+  - business-card
+platforms:
+  - ios
+  - android
+  - h5
+description: 私聊消息流中的可复用消息行，覆盖收发文字、语音、图片、礼物、业务行动卡片、文章、关系卡片和多类型回复引用，以及发送中、失败、未读、播放、禁用和过期状态。
+previewKey: chat-bubble
+reference:
+  figmaUrl: https://www.figma.com/design/GQAC7GUTofQV64CNR7IfE8/V3.26.0?node-id=444-63706
+  nodeId: "444:63706"
+  observations:
+    - 基准画布宽 375pt；消息行左右边距 12pt，头像 30pt，头像与气泡间距 8pt
+    - 普通气泡最大宽 275pt，水平内边距 12pt、垂直内边距 10pt，正文为 SF Pro Regular 16pt/20pt
+    - 收到消息使用白色背景和左上 4pt 小圆角；发出消息使用品牌色背景和右上 4pt 小圆角，其余圆角 16pt
+    - 发出消息左侧可显示 #868B94 的发送中指示或 24pt 失败警告图标；8pt 红点仅表示收到的语音未播放，自己发出的消息不显示未读红点
+    - 语音气泡为 204×56pt，四周内边距 16pt、图标与时长间距 12pt；图片气泡最大 202×202pt，发出窄图可裁切至 110pt 宽
+    - 送装扮卡宽 140pt，顶部使用 140×100pt 业务切图；业务行动和文章卡宽 275pt
+    - 关系卡为 275×72pt、圆角 12pt、内边距 12pt；双头像 40pt 并重叠 8pt，关系标签覆盖头像底部，正文与头像组间距 8pt
+    - 长按气泡时使用 30% 黑色遮罩和 20pt 高斯模糊弱化背景；当前气泡保持清晰，操作菜单从气泡下方缩放展开；若菜单会被底部裁切，则将消息上顶到列表可视区，保证菜单完整可见
+    - 右滑回复：从气泡内容区起手，意图锁定 abs(dx)>abs(dy)×1.2，反馈起点 8–12pt，提交阈值 44–56pt，最大视觉位移 64pt；头像保持固定，Reply 图标出现在气泡起始侧；收发消息均向右滑回复
+    - 回复引用独立显示在正文上方；标题与外侧 3pt 灰色定位线随收发方向镜像，正文不嵌入品牌色气泡
+    - 引用内容最大宽 264pt；图片为 84×84pt、纵图为 46×84pt、GIF 为 60×60pt，业务缩略图为 32×32pt
+    - 引用覆盖文字、链接、图片、语音、GIF、游戏、装扮、信物、活动、群聊 @、群聊礼物及删除、撤回、内容不存在状态
+    - 非会员发出文字消息后，气泡下方展示 275pt 宽的已读状态会员引导；说明文案 14pt 使用 color.text.secondary，Activate 与 12pt 右箭头使用 color.brand.link，区块上内边距 12pt、下内边距 4pt、两行间距 2pt
+anatomy:
+  - id: container
+    label: 消息行
+    description: 负责收发方向、头像、发送状态、气泡内容和时间信息的排列。
+  - id: avatarImage
+    label: 头像插槽
+    description: 可选 30pt 头像；收到消息在左侧，发出消息在右侧。
+  - id: content
+    label: 气泡内容
+    description: 根据 kind 呈现文字、语音、图片或业务卡片。
+  - id: statusBadge
+    label: 状态指示
+    description: 呈现发送中、发送失败和语音未播放状态，不仅依赖颜色传达。
+  - id: title
+    label: 卡片标题
+    description: 文章或关系卡片的主要标题。
+  - id: subtitle
+    label: 卡片说明
+    description: 文章摘要、业务说明或关系卡片补充信息。
+  - id: trailingAction
+    label: 业务操作
+    description: 礼物和业务卡片内的行动按钮，支持默认、按下、禁用、加载和过期状态。
+  - id: replyPreview
+    label: 回复引用
+    description: 正文上方的独立引用预览，按内容类型呈现文字、图标、媒体或不可用占位；图标与辅助文案统一使用 color.text.tertiary。
+  - id: readStatusUpsell
+    label: 已读状态引导
+    description: 非会员发出文字消息时，气泡下方居中展示会员开通引导与 Activate 操作。
+variants:
+  - name: direction
+    values:
+      - incoming
+      - outgoing
+    defaultValue: incoming
+  - name: kind
+    values:
+      - text
+      - voice
+      - image
+      - gift
+      - action
+      - article
+      - relationship
+    defaultValue: text
+  - name: deliveryStatus
+    values:
+      - sent
+      - sending
+      - failed
+    defaultValue: sent
+  - name: voiceState
+    values:
+      - played
+      - unread
+      - playing
+    defaultValue: played
+  - name: actionState
+    values:
+      - default
+      - pressed
+      - disabled
+      - loading
+      - expired
+    defaultValue: default
+props:
+  - name: kind
+    type: text|voice|image|gift|action|article|relationship
+    defaultValue: text
+    description: 消息内容类型。
+  - name: direction
+    type: incoming|outgoing
+    defaultValue: incoming
+    description: 消息收发方向，决定排列、颜色和特殊圆角。
+  - name: text
+    type: string
+    defaultValue: ""
+    description: 文字消息或业务卡片正文。
+  - name: title
+    type: string
+    description: 文章或关系卡片标题。
+  - name: description
+    type: string
+    description: 文章摘要或关系补充信息。
+  - name: avatar
+    type: ReactNode
+    description: 可选头像插槽；图片与装饰由调用方按 Avatar 契约提供。
+  - name: timestamp
+    type: string
+    description: 可选消息时间。
+  - name: deliveryStatus
+    type: sent|sending|failed
+    defaultValue: sent
+    description: 发出消息的投递状态。
+  - name: voiceDuration
+    type: number
+    defaultValue: 18
+    description: 语音时长，单位秒。
+  - name: voiceState
+    type: played|unread|playing
+    defaultValue: played
+    description: 语音未播放、已播放或播放中状态。
+  - name: mediaSrc
+    type: string
+    description: 图片消息或送装扮卡的长期资源地址，不接受临时 Figma 资源作为生产值。
+  - name: mediaAlt
+    type: string
+    defaultValue: ""
+    description: 图片内容替代文本。
+  - name: actionLabel
+    type: string
+    description: 礼物或业务卡片操作文案。
+  - name: actionState
+    type: default|pressed|disabled|loading|expired
+    defaultValue: default
+    description: 业务操作的可用性和反馈状态。
+  - name: actionDisabledReason
+    type: string
+    description: 禁用或过期原因，同时写入 title 与操作的可访问名称。
+  - name: relationshipLevel
+    type: number
+    defaultValue: 4
+    description: 关系卡 CP 标签等级，显示为 IV 加等级数字。
+  - name: quote
+    type: ReactNode
+    description: 可选引用摘要插槽；推荐使用 ChatReplyPreview，并放置在正文气泡上方。
+  - name: onAction
+    type: () => void
+    description: 业务卡片或关系卡片操作。
+  - name: onMediaOpen
+    type: () => void
+    description: 打开图片预览。
+  - name: onVoicePlay
+    type: () => void
+    description: 播放或暂停语音。
+  - name: readStatusUpsell
+    type: boolean
+    defaultValue: false
+    description: 非会员发出文字消息时，在气泡下方展示已读状态会员引导。
+  - name: onReadStatusActivate
+    type: () => void
+    description: 已读状态会员引导中的 Activate 操作。
+tokenRefs:
+  - color.surface.canvas
+  - color.surface.panel
+  - color.chat.peer-bubble-background
+  - color.brand.primary
+  - color.brand.primary-dark
+  - color.brand.primary-a10
+  - color.brand.link
+  - color.text.primary
+  - color.text.secondary
+  - color.text.tertiary
+  - color.text.white-primary
+  - color.border.image
+  - color.state.like
+  - typography.body.regular
+  - typography.body.semibold
+  - spacing.2
+  - spacing.3
+  - spacing.4
+interactionIds:
+  - chat-bubble-feedback
+platformMappingIds:
+  - chat-bubble-mapping
+accessibility:
+  - 消息列表项语义由调用方提供；组件根节点通过 group 和收发方向描述内容类别。
+  - 图片必须提供能描述内容或目的的 mediaAlt；装饰图才允许空替代文本。
+  - 语音播放使用原生按钮并通过 aria-pressed 暴露播放状态；未播放状态同时提供可访问名称。
+  - 发送中和发送失败使用 role=status 与明确文本，不仅使用旋转图标或红点。
+  - 卡片操作的 disabled、loading 和 expired 状态不可重复触发；禁用原因由业务层提供。
+  - 所有可点击内容使用 focus-visible 2pt 焦点环，动效遵循 prefers-reduced-motion。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+    - GQAC7GUTofQV64CNR7IfE8
+  figmaComponentIds:
+    - "13667:240539"
+  nameAliases:
+    - 私聊消息气泡
+    - 私聊气泡
+    - 聊天气泡
+    - chat bubble
+    - message bubble
+  selectedStateAliases:
+    - outgoing
+    - playing
+    - pressed
+    - sending
+  unselectedStateAliases:
+    - incoming
+    - played
+    - default
+    - sent
+roles:
+  - container
+  - avatarImage
+  - content
+  - statusBadge
+  - title
+  - subtitle
+  - trailingAction
+  - replyPreview
+  - readStatusUpsell
+rules:
+  - id: container.avatarSize
+    title: 消息头像尺寸
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: content.maxWidth
+    title: 普通气泡最大宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: content.horizontalPadding
+    title: 普通气泡水平内边距
+    category: spacing
+    metric: horizontalPadding
+    tolerance: 1
+    aggregate: rule
+  - id: container.gap
+    title: 头像与内容间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: voice.width
+    title: 语音气泡宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: voice.height
+    title: 语音气泡高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: outgoing.backgroundColor
+    title: 发出气泡背景色
+    category: selected
+    metric: backgroundColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: incoming.backgroundColor
+    title: 收到气泡背景色
+    category: unselected
+    metric: backgroundColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule

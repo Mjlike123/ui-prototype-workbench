@@ -1,0 +1,30 @@
+schemaVersion: 1
+id: spacing
+title: 间距系统
+category: spacing
+description: 以 4pt 为最小步长，优先使用语义间距而不是任意数值。
+tokens:
+  - id: spacing.1
+    name: 细微间距
+    value: 4
+    description: 图标内部、紧凑状态间距。
+  - id: spacing.2
+    name: 紧凑间距
+    value: 8
+    description: 同组元素之间的紧凑间隔。
+  - id: spacing.3
+    name: 默认间距
+    value: 12
+    description: 标签、字段和小卡片内容间隔。
+  - id: spacing.4
+    name: 内容边距
+    value: 16
+    description: 移动端常用水平边距和卡片内边距。
+  - id: spacing.6
+    name: 分区间距
+    value: 24
+    description: 页面模块与卡片分组间距。
+  - id: spacing.8
+    name: 页面间距
+    value: 32
+    description: 大区块和桌面端页面安全边距。

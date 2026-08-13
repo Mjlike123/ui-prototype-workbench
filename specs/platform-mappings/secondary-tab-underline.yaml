@@ -1,0 +1,23 @@
+schemaVersion: 1
+id: secondary-tab-underline-mapping
+componentId: secondary-tab-underline
+platforms:
+  ios:
+    componentName: TTUnderlineTabView
+    package: TopTopUIKit
+    codeExample: "TTUnderlineTabView(items: items, selectedIndex: $selectedIndex)"
+    identifiers:
+      - audit.secondaryTabUnderline
+      - "audit.secondaryTabUnderline.{key}"
+      - "audit.secondaryTabUnderline.{key}.label"
+    status: partial
+  android:
+    componentName: TopUnderlineTab
+    package: top.ui.components
+    codeExample: "TopUnderlineTab(items = items, selectedIndex = selectedIndex)"
+    status: planned
+  h5:
+    componentName: UnderlineTab
+    package: "@toptop/ui"
+    codeExample: "<UnderlineTab items={items} value={value} onChange={setValue} />"
+    status: ready

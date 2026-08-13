@@ -1,0 +1,71 @@
+schemaVersion: 1
+id: core-design-principles
+title: 核心设计原则
+status: stable
+description: 将 M Design 的设计价值观与 TopTop Kit 的基础规范、组件契约和原型工作流融合为可执行的决策顺序。
+source:
+  title: M-Design 设计体系
+  url: https://micoworld.feishu.cn/wiki/RNbswePgRiSg1OkFP6TcGt5Wnjg
+decisionOrder:
+  - clarity
+  - consistency
+  - openness
+principles:
+  - id: clarity
+    title: 清晰简单
+    intent: 减少不确定性和判断次数，让用户快速理解当前状态、下一步操作与操作结果。
+    commitments:
+      - 一个界面优先服务一个主要任务，并用层级明确的标题、内容与操作表达。
+      - 操作使用明确文案；状态变化必须提供与结果相匹配的可见反馈。
+      - 动效用于解释关系、状态和空间，不延迟核心任务完成。
+    checks:
+      - 主要任务是否无需解释即可被识别？
+      - 主要操作是否具有可访问名称，并在触发后产生可见结果？
+      - 是否移除了不帮助理解或决策的装饰、步骤和动效？
+    foundationRefs:
+      - typography
+      - semantic-colors
+      - spacing
+      - motion
+    workflowRefs:
+      - interactions
+      - audit
+  - id: consistency
+    title: 一致规律
+    intent: 复用稳定的视觉语言和交互模型，以可预测性降低重复学习成本并建立品牌信赖。
+    commitments:
+      - 业务实现优先复用语义 Token、稳定组件和已定义交互模式。
+      - 同一状态在不同页面保持一致的命名、层级、反馈和平台语义。
+      - 规范变更通过 YAML、MDX、参考预览、测试和版本共同维护。
+    checks:
+      - 是否复用了已有 Token、组件与交互契约，而非创建近似副本？
+      - 相同操作与状态是否沿用了相同的行为和反馈？
+      - 设计来源、契约、实现和验收证据是否可以相互追溯？
+    foundationRefs:
+      - semantic-colors
+      - typography
+      - spacing
+      - radius
+      - icons
+      - motion
+    workflowRefs:
+      - components
+      - governance
+  - id: openness
+    title: 包容开放
+    intent: 在稳定基础上适配多语言、多平台、无障碍和复杂业务场景，不把一致性误解为僵化。
+    commitments:
+      - 稳定 Kit 定义不可变边界；业务差异通过受控 Variant、语义 Token 和平台映射表达。
+      - Kit 尚未覆盖时采用 Hybrid Prototype，明确标记 Prototype 模块与 kitGap。
+      - 新模式经真实场景验证并重复出现后，才进入 draft、review、stable 生命周期。
+    checks:
+      - 长文案、RTL、动态内容和辅助技术下，主要任务是否仍可完成？
+      - 差异是否通过受控扩展表达，并保留与基础规范的关系？
+      - 未覆盖区域是否被明确记录，而非伪装成已有组件？
+    foundationRefs:
+      - typography
+      - spacing
+      - motion
+    workflowRefs:
+      - canvas
+      - governance

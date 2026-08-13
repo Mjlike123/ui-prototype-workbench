@@ -1,0 +1,25 @@
+schemaVersion: 1
+id: bottom-navigation-mapping
+componentId: bottom-navigation
+platforms:
+  ios:
+    componentName: TTBottomNavigationBar
+    package: TopTopUIKit
+    codeExample: "TTBottomNavigationBar(items: items, selection: $selection, regionTheme: regionTheme)"
+    identifiers:
+      - audit.bottomNavigation
+      - "audit.bottomNavigation.{key}"
+      - "audit.bottomNavigation.{key}.icon"
+      - "audit.bottomNavigation.{key}.label"
+      - audit.bottomNavigation.safeArea
+    status: planned
+  android:
+    componentName: TopBottomNavigation
+    package: top.ui.components
+    codeExample: "TopBottomNavigation(items = items, selectedKey = selectedKey, regionTheme = regionTheme)"
+    status: planned
+  h5:
+    componentName: BottomNavigation
+    package: "@toptop/ui"
+    codeExample: "<BottomNavigation items={items} value={value} regionTheme={regionTheme} onChange={setValue} />"
+    status: planned

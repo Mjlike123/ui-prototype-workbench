@@ -1,0 +1,45 @@
+schemaVersion: 1
+id: regular-list-action
+title: 列表项与尾部操作
+status: review
+description: 处理列表主体跳转、消息会话进入和尾部独立操作，保证同一次激活只触发一个行为。
+componentIds:
+  - regular-list
+states:
+  - default
+  - pressed
+  - disabled
+transitions:
+  - from: default
+    to: pressed
+    trigger: pointer-down-inside-item
+    feedback: 列表项在 100ms 内显示按压反馈，文字、图标和尾部布局保持不变。
+    duration: 100ms
+    easing: standard
+  - from: pressed
+    to: default
+    trigger: pointer-up-inside-item
+    feedback: 恢复默认视觉并触发一次 onPress。
+    duration: 100ms
+    easing: standard
+  - from: pressed
+    to: default
+    trigger: pointer-cancel-or-leave
+    feedback: 取消本次激活，不触发 onPress。
+    duration: 100ms
+    easing: standard
+  - from: default
+    to: default
+    trigger: trailing-action-press
+    feedback: 仅触发 onTrailingPress，并阻止列表主体的 onPress。
+    duration: 0ms
+    easing: standard
+accessibility:
+  - 列表主体和尾部独立操作分别进入焦点顺序，并提供不同的可访问名称。
+  - Enter 与 Space 产生和指针点击等价的列表主体或尾部操作。
+  - 消息列表应播报用户名、消息摘要、时间与未读状态，不朗读纯装饰头像框。
+edgeCases:
+  - 快速连续点击列表项时由业务导航层防止重复入栈。
+  - 尾部无独立行为时不得渲染为可聚焦按钮。
+  - 超长标题、副文案或标签不得覆盖尾部操作区域。
+  - 消息撤回、发送中或失败状态变化时保持列表项高度稳定。

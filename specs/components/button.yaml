@@ -1,0 +1,184 @@
+schemaVersion: 1
+id: button
+version: 1.0.0
+title: 按钮
+owner: TopTop Design System
+category: Actions
+status: review
+since: 1.0.0
+tags:
+  - button
+  - action
+  - call-to-action
+  - form
+platforms:
+  - ios
+  - android
+  - h5
+description: 用于触发即时操作的实体按钮，包含 48、40、32、24 四档高度，以及默认、禁用和按下三种状态。
+previewKey: button
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=40-3514
+  nodeId: "40:3514"
+  observations:
+    - 按钮按高度分为 48、40、32、24 四档，圆角均为高度的一半
+    - 48px 大按钮用于页面底部主操作；375px 屏宽下左右边距各 16px，内容宽 343px
+    - 中间弹窗双按钮保持 16px 间距；半窗双按钮使用 15px 间距，在左右 16px 页面边距内等分可用宽度
+    - 半窗双按钮案例使用 48px 按钮和 164px 单按钮宽度，左侧为中性灰辅助操作，右侧为主题色主操作
+    - 40px 中按钮主要用于弹窗和局部操作，可按容器宽度自适应
+    - 32px 小按钮用于列表与小场景，按文字内容自适应宽度，水平内边距 16px
+    - 24px Mini 按钮用于紧凑列表和小场景，按文字内容自适应宽度，水平内边距 12px
+    - 48px 与 40px 文案使用 SF Pro Semibold 16px；32px 使用 Regular 14px；24px 使用 Regular 12px
+    - 每种视觉类型必须提供默认、禁用、按下三种状态
+    - 支持主题色、主题浅色、中性灰、15%透明底色、主色描边和中性灰描边
+    - 主题浅色禁用态使用 10% 主色背景和 #8AECE3 文字；按下态使用 #8AECE3 背景和 #12ADA0 文字
+    - 中性灰可点击态使用 color.button.primary 背景和 color.text.secondary 文字
+    - 多语言极限情况下文字与边框至少保留 4px，但 32px 与 24px 按钮优先扩宽而非折行
+anatomy:
+  - id: container
+    label: 按钮容器
+    description: 承载背景、描边、圆角和完整点击区域，圆角为按钮高度的 50%。
+  - id: label
+    label: 按钮文案
+    description: 使用动词或动宾短语，单行水平居中，不以缩小字号容纳长文案。
+variants:
+  - name: size
+    values:
+      - height48
+      - height40
+      - height32
+      - height24
+    defaultValue: height48
+  - name: appearance
+    values:
+      - primary
+      - primary-soft
+      - neutral
+      - translucent
+      - primary-outline
+      - neutral-outline
+    defaultValue: primary
+  - name: state
+    values:
+      - default
+      - disabled
+      - pressed
+    defaultValue: default
+  - name: widthBehavior
+    values:
+      - fluid
+      - hug
+    defaultValue: fluid
+props:
+  - name: label
+    type: string
+    required: true
+    description: 简短、明确的操作文案；32px 与 24px 按钮保持单行。
+  - name: size
+    type: height48|height40|height32|height24
+    defaultValue: height48
+    description: 控制按钮高度、字号、字重、圆角和水平内边距。
+  - name: appearance
+    type: primary|primary-soft|neutral|translucent|primary-outline|neutral-outline
+    defaultValue: primary
+    description: 根据操作优先级和所在背景选择视觉类型。
+  - name: disabled
+    type: boolean
+    defaultValue: false
+    description: 禁止交互并提供平台原生禁用语义。
+  - name: fullWidth
+    type: boolean
+    defaultValue: true
+    description: 48px 与页面主操作通常填满容器；32px、24px 默认按内容自适应。
+  - name: onPress
+    type: () => void
+    required: true
+    description: 完成一次有效点击或键盘激活后触发。
+tokenRefs:
+  - color.brand.primary
+  - color.brand.primary-a10
+  - color.brand.primary-a50
+  - color.brand.primary-dark
+  - color.button.primary
+  - color.button.secondary
+  - color.border.image
+  - color.surface.canvas
+  - color.text.white-primary
+  - color.text.primary
+  - color.text.secondary
+  - color.text.tertiary
+  - typography.button.large
+  - typography.button.small
+  - typography.button.mini
+  - spacing.2
+  - spacing.3
+  - spacing.4
+interactionIds:
+  - button-press
+platformMappingIds:
+  - button-mapping
+accessibility:
+  - 使用平台原生按钮语义；Web 必须渲染 button，不使用可点击 div。
+  - 禁用态同时设置 disabled 或等价平台属性，不能只降低透明度。
+  - 按下态由真实按压、键盘 Space/Enter 或平台状态驱动，不作为持久选中态。
+  - 24px 是视觉高度；移动端应通过外围布局保证至少 44×44pt 的可触达区域。
+  - 文案保持可读对比度，禁用态也不能完全不可见。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "40:3516"
+    - "40:3540"
+    - "40:3546"
+    - "40:4831"
+    - "40:3590"
+    - "40:4721"
+    - "40:3522"
+  nameAliases:
+    - 按钮
+    - 全局按钮
+    - button
+    - action button
+    - CTA
+roles:
+  - container
+  - label
+rules:
+  - id: container.height
+    title: 按钮高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: container.width
+    title: 按钮布局宽度
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: container.horizontalPadding
+    title: 按钮水平内边距
+    category: spacing
+    metric: horizontalPadding
+    tolerance: 1
+    aggregate: rule
+  - id: container.gap
+    title: 同行按钮间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: default.backgroundColor
+    title: 默认态背景色
+    category: selected
+    metric: backgroundColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: disabled.backgroundColor
+    title: 禁用态背景色
+    category: unselected
+    metric: backgroundColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule

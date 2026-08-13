@@ -1,0 +1,140 @@
+schemaVersion: 1
+id: list-tag
+version: 1.0.0
+title: 列表标签
+owner: TopTop Design System
+category: Data Display
+status: stable
+since: 1.0.0
+tags:
+  - tag
+  - gender
+  - membership
+  - identity
+platforms:
+  - ios
+  - android
+  - h5
+description: 用于用户列表中补充性别年龄与会员等级的 14pt 身份标签，保持固定高度、单行展示和稳定顺序。
+previewKey: list-tag
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=1540-12522
+  nodeId: "1540:12522"
+  observations:
+    - 性别标签固定高 14pt，支持仅图标和图标加年龄两种内容模式
+    - 女性背景使用 #FF68BF，男性背景使用 #00BFFF，均使用白色性别图标
+    - 性别加年龄标签左内边距 3pt、右内边距 4pt，8pt 性别符号位于 12pt 图标框内，与 9pt Semibold 年龄文字间距 1pt
+    - 纯性别标签固定为 14×14pt，内部 8pt 性别符号居中放置在 12×12pt 图标框中
+    - 会员标签必须使用提供的 V1–V18、V99 原始图片资产，展示高 14pt并保持原始宽高比
+    - 列表标签按业务定义排序，标签间距 4pt，超出正文可用宽度时在末端裁切且不换行
+anatomy:
+  - id: container
+    label: 标签容器
+    description: 固定 14pt 高并维持胶囊或图片资源的原始轮廓。
+  - id: icon
+    label: 性别图标
+    description: 12×12pt 图标框内居中放置约 8pt 的女性或男性白色矢量符号，纯装饰并由标签可访问名称表达。
+  - id: value
+    label: 年龄值
+    description: 可选 9pt Semibold 年龄数字，和性别图标共同构成身份信息。
+  - id: membershipAsset
+    label: 会员标资源
+    description: V1–V18 与 V99 的完整位图资源，不拆分或使用 CSS 重绘。
+variants:
+  - name: type
+    values:
+      - gender
+      - membership
+    defaultValue: gender
+  - name: gender
+    values:
+      - female
+      - male
+    defaultValue: female
+  - name: genderContent
+    values:
+      - icon
+      - icon-age
+    defaultValue: icon-age
+  - name: membershipLevel
+    values:
+      - v1-v9
+      - v10-v18
+      - v99
+    defaultValue: v9
+props:
+  - name: type
+    type: gender|membership
+    required: true
+    description: 决定渲染性别标签或会员图片标签。
+  - name: gender
+    type: female|male
+    description: type 为 gender 时必填。
+  - name: age
+    type: number
+    description: 可选年龄；不传时显示 14×14pt 纯性别标签。
+  - name: membershipLevel
+    type: 1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|99
+    description: type 为 membership 时必填，必须映射到对应正式切图。
+tokenRefs:
+  - color.identity.gender-female
+  - color.identity.gender-male
+  - color.text.white-primary
+  - typography.list.tag
+  - spacing.1
+accessibility:
+  - 性别标签提供“女性”或“男性”的可访问名称；包含年龄时合并读取完整年龄。
+  - 会员标签提供“会员 Vn”的可访问名称，内部图像使用空替代文本。
+  - 标签不承担交互，不提供焦点和点击态；需要筛选或移除时应使用独立交互组件。
+  - 列表中标签顺序应与可访问名称顺序一致，不能只依靠颜色区分性别。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "1540:12522"
+    - "1540:12531"
+    - "1542:9221"
+    - "1542:9222"
+  nameAliases:
+    - 列表标签
+    - 性别标签
+    - 年龄标签
+    - 会员标
+    - gender tag
+    - membership badge
+roles:
+  - container
+  - icon
+  - value
+  - membershipAsset
+rules:
+  - id: container.height
+    title: 标签高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: gender.iconSize
+    title: 性别图标框尺寸
+    category: structure
+    metric: iconSize
+    tolerance: 1
+    aggregate: rule
+  - id: gender.backgroundColor
+    title: 性别背景色
+    category: selected
+    metric: backgroundColor
+    tolerance: 8
+    aggregate: rule
+  - id: gender.contentGap
+    title: 图标与年龄间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: membership.aspectRatio
+    title: 会员标宽高比
+    category: structure
+    metric: aspectRatio
+    tolerance: 0.05
+    aggregate: rule

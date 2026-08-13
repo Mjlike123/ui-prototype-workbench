@@ -1,0 +1,22 @@
+schemaVersion: 1
+id: motion
+title: 动效节奏
+category: motion
+description: 动效用于解释状态变化，不延迟核心任务完成。
+tokens:
+  - id: motion.duration.instant
+    name: 即时反馈
+    value: "100ms"
+    description: 按压、高亮和微小状态反馈。
+  - id: motion.duration.standard
+    name: 标准过渡
+    value: "200ms"
+    description: Tab、折叠、透明度和位置切换。
+  - id: motion.duration.emphasized
+    name: 强调过渡
+    value: "320ms"
+    description: 弹层和较大范围的内容切换。
+  - id: motion.easing.standard
+    name: 标准缓动
+    value: "cubic-bezier(0.2, 0, 0, 1)"
+    description: 大多数进入、离开和状态变化。

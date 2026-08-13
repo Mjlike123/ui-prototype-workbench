@@ -1,0 +1,231 @@
+schemaVersion: 1
+id: regular-list
+version: 1.0.0
+title: 常规列表
+owner: TopTop Design System
+category: Data Display
+status: review
+since: 1.0.0
+tags:
+  - list
+  - action
+  - message
+  - status
+platforms:
+  - ios
+  - android
+  - h5
+description: 由常规操作列表和消息列表组成的列表 Kit，覆盖单行操作、标题副文案、头像、状态标签、时间和未读信息。
+previewKey: regular-list
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=1526-11194
+  nodeId: "1526:11194"
+  observations:
+    - 常规列表基准宽 375pt、高 72pt，使用 16pt 水平边距和 12pt 垂直边距
+    - 常规列表前置元素支持 48pt 系统图标、48pt 头像或无，前置元素与内容间距为 16pt
+    - 尾部支持未读红点、32pt 实体按钮、品牌色文字按钮、20pt 箭头和辅助文案
+    - 主标题使用 SF Pro Semibold 16pt/20pt，副文案使用 Regular 14pt/18pt
+    - 消息列表基准高 84–90pt，使用 48pt 头像；72pt 头像框允许超出列表内容区但不得改变文字起点
+    - 消息列表仅在用户已获得或已装备装饰权益且业务支持装扮时显示头像框；系统通知、默认头像和普通操作列表不显示
+    - 消息列表用户名、14pt 标签行和消息摘要垂直排列；标签行间距 4pt并在可用宽度内裁切
+    - 消息列表右侧可显示 12pt 时间、16pt 未读数或 32pt 操作按钮，右侧区域与正文相互独立
+    - 标签行复用 list-tag；当前列表仅展示会员等级与性别年龄，顺序为会员标在前、性别标签在后
+anatomy:
+  - id: container
+    label: 列表项容器
+    description: 承载完整列表点击区域，常规列表高 72pt，消息列表根据内容高 84–90pt。
+  - id: leading
+    label: 前置区域
+    description: 常规列表支持图标、头像或无；消息列表固定使用 48pt 头像并可叠加 72pt 头像框。
+  - id: content
+    label: 内容区域
+    description: 自适应占据中间剩余宽度，任何尾部元素出现时都不得与其重叠。
+  - id: title
+    label: 主标题
+    description: 使用 16pt Semibold，单行省略；消息列表中对应用户名。
+  - id: subtitle
+    label: 副文案
+    description: 使用 14pt Regular，单行省略；消息列表中对应消息摘要。
+  - id: tagList
+    label: 用户标签行
+    description: 仅用于消息列表，多枚 14pt 高标签保持 4pt 间距并在尾部裁切。
+  - id: trailing
+    label: 尾部区域
+    description: 承载未读数、按钮、箭头、时间或辅助文案，保持独立可读和可操作。
+variants:
+  - name: listType
+    values:
+      - action
+      - message
+    defaultValue: action
+  - name: leading
+    values:
+      - icon
+      - avatar
+      - none
+    defaultValue: icon
+  - name: trailing
+    values:
+      - badge
+      - button
+      - text-action
+      - chevron
+      - text
+      - none
+    defaultValue: badge
+  - name: messageDetails
+    values:
+      - basic
+      - tags
+      - rich-status
+    defaultValue: tags
+  - name: messageStatus
+    values:
+      - default
+      - stranger
+      - failed
+      - loading
+      - editing
+      - gift
+    defaultValue: default
+  - name: messageAvatar
+    values:
+      - person
+      - system
+    defaultValue: person
+  - name: avatarFrame
+    values:
+      - hidden
+      - visible
+    defaultValue: hidden
+props:
+  - name: title
+    type: string
+    required: true
+    description: 列表主标题或消息用户名，保持单行并允许尾部省略。
+  - name: subtitle
+    type: string
+    description: 可选副文案或消息摘要，保持单行并允许尾部省略。
+  - name: leading
+    type: ListLeading
+    description: 前置图标或头像配置；action 类型可为空，message 类型必须提供头像。
+  - name: tags
+    type: UserTag[]
+    defaultValue: "[]"
+    description: 消息列表用户名下方的 list-tag 有序集合；当前支持会员等级与性别年龄，超出宽度时整体裁切。
+  - name: messageStatus
+    type: default|stranger|failed|loading|editing|gift
+    defaultValue: default
+    description: 消息列表附加状态，控制陌生人标记、发送状态或礼物前缀。
+  - name: avatarFrame
+    type: ImageSource
+    description: 消息列表可选 72pt 头像框资源；不传时仅显示 48pt 头像。
+  - name: trailing
+    type: ListTrailing
+    description: 未读数、按钮、箭头、时间或辅助文案配置。
+  - name: onPress
+    type: () => void
+    required: true
+    description: 点击列表项主体时触发；消息列表通常用于进入会话。
+  - name: onTrailingPress
+    type: () => void
+    description: 尾部为独立操作时触发，不得同时触发列表项 onPress。
+tokenRefs:
+  - color.surface.panel
+  - color.surface.canvas
+  - color.text.primary
+  - color.text.primary-a30
+  - color.text.secondary
+  - color.text.auxiliary
+  - color.brand.primary
+  - color.state.like
+  - color.text.white-primary
+  - typography.list.title
+  - typography.list.body
+  - typography.list.metadata
+  - typography.list.tag
+  - spacing.3
+  - spacing.4
+interactionIds:
+  - regular-list-action
+platformMappingIds:
+  - regular-list-mapping
+accessibility:
+  - 交互列表项使用平台原生按钮、链接或列表项语义，完整行提供至少 44pt 高的点击区域。
+  - 标题、副文案、标签和未读状态按视觉顺序合并为可理解的可访问名称，不逐个朗读纯装饰勋章。
+  - 尾部独立按钮必须有明确名称并阻止事件冒泡，不能同时触发列表项跳转。
+  - 未读状态不能只依赖红色；辅助技术应读取未读数量或未读说明。
+  - 文案视觉省略时仍保留完整可访问文本，头像与头像框只暴露一次用户身份描述。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "1526:11194"
+    - "1526:11156"
+    - "1526:11195"
+    - "1526:11222"
+    - "1526:11249"
+    - "1597:10106"
+    - "1551:16948"
+  nameAliases:
+    - 常规列表
+    - 列表
+    - 操作列表
+    - 消息列表
+    - regular list
+    - action list
+    - message list
+roles:
+  - container
+  - listItem
+  - leading
+  - content
+  - title
+  - subtitle
+  - tagList
+  - trailing
+rules:
+  - id: action.height
+    title: 常规列表高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: message.height
+    title: 消息列表高度
+    category: structure
+    metric: height
+    tolerance: 3
+    aggregate: rule
+  - id: item.horizontalPadding
+    title: 列表水平边距
+    category: spacing
+    metric: horizontalPadding
+    tolerance: 1
+    aggregate: rule
+  - id: item.gap
+    title: 前置元素与内容间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: title.textColor
+    title: 主标题颜色
+    category: selected
+    metric: textColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: subtitle.textColor
+    title: 副文案颜色
+    category: unselected
+    metric: textColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule
+  - id: item.backgroundColor
+    title: 列表背景色
+    category: structure
+    metric: backgroundColor
+    tolerance: 12
+    aggregate: rule

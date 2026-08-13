@@ -1,0 +1,48 @@
+schemaVersion: 1
+id: primary-navigation-selection
+title: 一级导航选择与横向浏览
+status: stable
+description: 用户在页面的一级内容分区间切换；导航固定在页面顶部，选中标题升高视觉层级，并在标题溢出时自动进入可视区域。
+componentIds:
+  - primary-navigation
+states:
+  - unselected
+  - pressed
+  - selected
+  - overflow
+  - disabled
+transitions:
+  - from: unselected
+    to: pressed
+    trigger: pointer-down
+    feedback: 在 100ms 内提供按压反馈，不改变标题排序。
+    duration: 100ms
+    easing: standard
+  - from: pressed
+    to: selected
+    trigger: pointer-up-inside
+    feedback: 同步更新 22pt 选中文字和 16pt 未选中文字，并切换对应内容。
+    duration: 200ms
+    easing: standard
+  - from: selected
+    to: unselected
+    trigger: another-item-selected
+    feedback: 与新选中项同步完成，避免同时出现两个大字号标题。
+    duration: 200ms
+    easing: standard
+  - from: overflow
+    to: selected
+    trigger: hidden-item-selected
+    feedback: 水平滚动标题区域，使选中项完整可见；尾部操作区保持固定。
+    duration: 200ms
+    easing: standard
+accessibility:
+  - 使用 tablist、tab 和 aria-selected 表达导航结构与当前状态。
+  - 左右方向键切换标题；焦点和选中状态同步移动。
+  - 尾部搜索、活动等操作独立于 tablist，并提供无障碍名称。
+edgeCases:
+  - 内容列表纵向滚动时导航、当前标题和尾部操作保持固定可见；列表不得进入透明导航区域或遮挡导航。
+  - 五项标题与尾部图标同时存在时，标题区域可滚动，操作区不得被挤出画布。
+  - 超长标题在尾端使用渐隐提示，不用硬截断制造残缺字符。
+  - 切换后对应内容加载失败时保留当前标题，不自动回退到第一项。
+  - 本地化后重新计算可见区域，禁止通过缩小字号容纳更多标题。

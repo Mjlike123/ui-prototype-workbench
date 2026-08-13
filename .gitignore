@@ -1,0 +1,12 @@
+node_modules/
+out/
+dist/
+.build/
+bin/
+captured/
+generated/
+apps/*/.next/
+apps/*/playwright-report/
+apps/*/test-results/
+.DS_Store
+*.log

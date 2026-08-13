@@ -1,0 +1,51 @@
+schemaVersion: 1
+id: generic-ui-audit
+rules:
+  - id: size.frame
+    title: 尺寸还原
+    type: size
+    appliesTo: matched-node
+    threshold: "2pt 且超过设计值 5%"
+    description: 检查宽高，图片节点以图片尺寸问题呈现。
+  - id: alignment.edge
+    title: 边缘对齐
+    type: alignment
+    appliesTo: matched-node-and-siblings
+    threshold: 2pt
+    description: 检查节点绝对位置及同级节点左、右、顶部、底部对齐。
+  - id: spacing.siblings
+    title: 同级间距
+    type: spacing
+    appliesTo: adjacent-siblings
+    threshold: 2pt
+    description: 分别比较垂直与水平方向的相邻间距。
+  - id: color.fill
+    title: 颜色还原
+    type: color
+    appliesTo: matched-node
+    threshold: "12 channel"
+    description: 比较文本色或背景色的 RGB/Alpha 差异。
+  - id: typography.font-size
+    title: 字号
+    type: font
+    appliesTo: text-node
+    threshold: 1pt
+    description: 比较 Figma 与实机文字字号。
+  - id: typography.line-height
+    title: 行高
+    type: font
+    appliesTo: text-node
+    threshold: 2pt
+    description: 比较文字行高，仅在两端均可读取时执行。
+  - id: radius.corner
+    title: 圆角
+    type: cornerRadius
+    appliesTo: matched-node
+    threshold: 1pt
+    description: 比较容器和图片的圆角半径。
+  - id: structure.presence
+    title: 结构完整性
+    type: structure
+    appliesTo: scoped-tree
+    threshold: confidence 0.62
+    description: 仅在匹配置信度足够时报告缺失或额外节点。

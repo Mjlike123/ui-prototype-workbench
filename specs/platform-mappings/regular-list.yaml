@@ -1,0 +1,24 @@
+schemaVersion: 1
+id: regular-list-mapping
+componentId: regular-list
+platforms:
+  ios:
+    componentName: TTRegularListItem
+    package: TopTopUIKit
+    codeExample: "TTRegularListItem(type: type, title: title, subtitle: subtitle, leading: leading, tags: tags, trailing: trailing, onPress: onPress)"
+    identifiers:
+      - audit.regular-list
+      - audit.regular-list.leading
+      - audit.regular-list.content
+      - audit.regular-list.trailing
+    status: planned
+  android:
+    componentName: TopRegularListItem
+    package: top.ui.components
+    codeExample: "TopRegularListItem(type = type, title = title, subtitle = subtitle, leading = leading, tags = tags, trailing = trailing, onClick = onClick)"
+    status: planned
+  h5:
+    componentName: RegularListItem
+    package: "@toptop/ui"
+    codeExample: "<RegularListItem type={type} title={title} subtitle={subtitle} leading={leading} tags={tags} trailing={trailing} onClick={onClick} />"
+    status: planned

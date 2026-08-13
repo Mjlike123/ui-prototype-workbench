@@ -1,0 +1,168 @@
+schemaVersion: 1
+id: secondary-tab
+version: 1.2.0
+title: 二级 Tab
+owner: TopTop Design System
+category: Navigation
+status: review
+since: 1.0.0
+tags:
+  - tab
+  - navigation
+  - selection
+platforms:
+  - ios
+  - android
+  - h5
+description: 横向排列的二级标签组件，提供 28pt 与 24pt 两种视觉高度，包含选中态和未选中态。
+previewKey: secondary-tab-pill
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=13468-186458
+  nodeId: "13468:186458"
+  observations:
+    - 组件容器高 48pt，左右内容边距各 16pt
+    - 相邻 Tab 间距固定为 8pt，按钮左右内边距各 12pt
+    - 按钮根据标签内容自适应宽度，不设置统一宽度或最小宽度
+    - 未选中背景使用 color.button.secondary，文字使用 color.text.primary-a50
+anatomy:
+  - id: container
+    label: 容器
+    description: 承载并排列全部 Tab Item，相邻 Tab 间距固定为 8pt。
+  - id: tabItem
+    label: 标签按钮
+    description: 根据标签内容自适应宽度，文字左右内边距各 12pt。
+  - id: label
+    label: 标签文字
+    description: 支持动态计数，文字变化不能破坏按钮最小点击区域。
+variants:
+  - name: size
+    values:
+      - height28
+      - height24
+    defaultValue: height28
+  - name: state
+    values:
+      - selected
+      - unselected
+      - disabled
+    defaultValue: unselected
+  - name: count
+    values:
+      - hidden
+      - visible
+    defaultValue: visible
+props:
+  - name: items
+    type: TabItem[]
+    required: true
+    description: 标签项，key 必须稳定；每项宽度由内容宽度加左右各 12pt 内边距决定。
+  - name: value
+    type: string
+    required: true
+    description: 当前选中项 key。
+  - name: onChange
+    type: (key:string)=>void
+    required: true
+    description: 用户选择其他标签时触发。
+  - name: size
+    type: height28|height24
+    required: false
+    defaultValue: height28
+    description: 28pt 用于语音房、动态广场二级页面分类；24pt 用于 Profile 二级分类。
+tokenRefs:
+  - color.brand.primary
+  - color.button.secondary
+  - color.text.primary-a50
+  - color.text.secondary
+  - typography.body.semibold
+  - spacing.2
+interactionIds:
+  - tab-selection
+platformMappingIds:
+  - secondary-tab-mapping
+accessibility:
+  - 容器使用 tablist 语义，按钮使用 tab 并同步 aria-selected。
+  - 28pt 与 24pt 是视觉背景高度；点击区域不得小于 32pt 高，键盘左右方向键可切换。
+detection:
+  figmaComponentIds: []
+  nameAliases:
+    - 二级tab
+    - 二级标签
+    - secondarytab
+    - subtab
+    - segmentedtab
+  selectedStateAliases:
+    - selected
+    - active
+    - on
+    - 选中
+  unselectedStateAliases:
+    - unselected
+    - inactive
+    - off
+    - 未选中
+roles:
+  - container
+  - tabItem
+  - label
+  - selectedItem
+  - unselectedItem
+rules:
+  - id: container.height
+    title: 整体高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: item.width
+    title: 按钮宽度
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: item.height
+    title: 按钮高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: item.horizontalPadding
+    title: 文字与背景左右间距
+    category: spacing
+    metric: horizontalPadding
+    tolerance: 2
+    aggregate: rule
+  - id: item.gap
+    title: Tab 之间的间距
+    category: spacing
+    metric: gap
+    tolerance: 2
+    aggregate: rule
+  - id: selected.textColor
+    title: 选中态文字颜色
+    category: selected
+    metric: textColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: selected.backgroundColor
+    title: 选中态背景颜色
+    category: selected
+    metric: backgroundColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: unselected.textColor
+    title: 未选中态文字颜色
+    category: unselected
+    metric: textColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule
+  - id: unselected.backgroundColor
+    title: 未选中态背景颜色
+    category: unselected
+    metric: backgroundColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule

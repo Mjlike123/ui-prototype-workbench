@@ -1,0 +1,200 @@
+schemaVersion: 1
+id: search-control
+version: 1.0.0
+title: 搜索控件
+owner: TopTop Design System
+category: Input
+status: stable
+since: 1.0.0
+tags:
+  - search
+  - input
+  - query
+  - cancel
+platforms:
+  - ios
+  - android
+  - h5
+description: 40pt 高的胶囊搜索输入控件，支持外部按钮、待输入、输入中、已输入及长文案截断状态。
+previewKey: search-control
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=777-7549
+  nodeId: "777:7549"
+  observations:
+    - 组件集包含外部样式、待输入、输入中、文案过长、输入完毕和输入完毕超长六个变体
+    - 基准画布宽 375pt；输入态容器高 56pt并使用 16pt 水平边距，搜索框视觉高度 40pt
+    - 搜索框使用 #F7F8FA 背景和胶囊圆角，左右内容内边距为 8pt
+    - 搜索图标位于 24pt Frame 内；图标、文字及清除按钮之间保持 8pt
+    - 占位文案和搜索图标使用 #BABABD，输入文字和 Cancel 使用 #181923
+    - 输入文字使用 SF Pro Regular 16pt/20pt；输入态显示右侧 Cancel，间距 12pt
+    - 有内容时显示 24pt 清除按钮；超长内容保持单行并在尾部截断，不挤压 Cancel
+anatomy:
+  - id: container
+    label: 搜索控件容器
+    description: 在 375pt 基准宽度下使用 16pt 水平安全边距；输入状态整体高度为 56pt。
+  - id: field
+    label: 搜索输入框
+    description: 视觉高度 40pt，使用 #F7F8FA 背景和胶囊圆角。
+  - id: searchIcon
+    label: 搜索图标
+    description: 使用 24pt Frame，与输入文字保持 8pt 间距。
+  - id: input
+    label: 搜索文字
+    description: 单行 16pt 输入；占位态使用三级文字色，输入态使用一级文字色。
+  - id: clearButton
+    label: 清除按钮
+    description: 仅在存在输入内容时显示，点击后清空内容并保持输入焦点。
+  - id: cancelAction
+    label: 取消操作
+    description: 输入流程中显示在搜索框右侧，点击后清空内容并退出输入状态。
+variants:
+  - name: state
+    values:
+      - external
+      - idle
+      - editing
+      - editing-overflow
+      - filled
+      - filled-overflow
+    defaultValue: external
+props:
+  - name: value
+    type: string
+    required: true
+    defaultValue: ""
+    description: 当前搜索关键词；受控实现必须由业务层同步更新。
+  - name: placeholder
+    type: string
+    defaultValue: Search by Name / Userid
+    description: 无输入内容时展示的搜索提示，保持单行。
+  - name: active
+    type: boolean
+    defaultValue: false
+    description: 是否处于输入流程；激活后显示 Cancel 操作。
+  - name: ariaLabel
+    type: string
+    defaultValue: 站内搜索
+    description: 搜索区域的可访问名称，业务页面可按搜索范围覆盖。
+  - name: autoFocus
+    type: boolean
+    defaultValue: true
+    description: 激活后是否自动聚焦；搜索二级页有进入转场时应在转场完成后再设为 true，避免键盘打断动画。
+  - name: onActivate
+    type: () => void
+    required: true
+    description: 用户点击外部搜索入口时触发，由业务层进入搜索流程或打开搜索二级页面。
+  - name: onChange
+    type: (value:string)=>void
+    required: true
+    description: 输入内容或清除内容时触发。
+  - name: onCancel
+    type: () => void
+    required: true
+    description: 用户点击 Cancel 后触发，由业务层退出搜索流程。
+  - name: onSubmit
+    type: (value:string)=>void
+    description: 用户通过键盘提交搜索时触发。
+tokenRefs:
+  - color.surface.canvas
+  - color.surface.panel
+  - color.text.primary
+  - color.text.tertiary
+  - color.search-control.container-background
+  - color.search-control.field-background
+  - color.search-control.placeholder
+  - color.button.secondary
+  - color.border.image
+  - color.brand.primary
+  - typography.input.search
+  - spacing.2
+  - spacing.3
+  - spacing.4
+interactionIds:
+  - search-control-input
+platformMappingIds:
+  - search-control-mapping
+accessibility:
+  - Web 使用 search 语义和有可访问名称的 input[type=search]；不得用 contenteditable 模拟输入。
+  - 清除按钮必须提供“清除搜索内容”的可访问名称，不能只暴露叉号图形。
+  - Cancel 使用独立按钮语义；退出输入状态后焦点返回触发搜索的控件或按产品流程管理。
+  - 搜索框、清除和取消操作在移动端均应提供至少 44×44pt 的可触达区域，视觉图标仍保持 24pt。
+  - 超长关键词在视觉上截断，但辅助技术仍能读取完整输入值。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "777:7549"
+    - "777:7548"
+    - "786:13338"
+    - "786:13378"
+    - "777:7544"
+    - "777:7545"
+    - "1809:11536"
+  nameAliases:
+    - 搜索控件
+    - 搜索框
+    - 搜索输入框
+    - search control
+    - search field
+    - search bar
+  selectedStateAliases:
+    - active
+    - focused
+    - editing
+    - 输入中
+  unselectedStateAliases:
+    - idle
+    - inactive
+    - 待输入
+roles:
+  - container
+  - field
+  - searchIcon
+  - input
+  - clearButton
+  - cancelAction
+rules:
+  - id: container.height
+    title: 输入态整体高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: field.height
+    title: 搜索框视觉高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: field.horizontalPadding
+    title: 搜索框水平内边距
+    category: spacing
+    metric: horizontalPadding
+    tolerance: 1
+    aggregate: rule
+  - id: field.gap
+    title: 搜索框内部元素间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: active.textColor
+    title: 输入态文字颜色
+    category: selected
+    metric: textColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: idle.textColor
+    title: 占位态文字颜色
+    category: unselected
+    metric: textColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule
+  - id: field.backgroundColor
+    title: 搜索框背景色
+    category: structure
+    metric: backgroundColor
+    tolerance: 12
+    aggregate: rule

@@ -1,0 +1,74 @@
+schemaVersion: 1
+id: chat-input-compose
+title: 私聊消息输入与发送
+status: stable
+description: 私聊底部输入模块在空值、文字输入、长文案和语音按住状态间切换，并将焦点与各业务操作交给调用方处理。
+componentIds:
+  - chat-input
+states:
+  - text-empty
+  - text-editing
+  - text-multiline
+  - voice-idle
+  - voice-holding
+  - submitted
+transitions:
+  - from: text-empty
+    to: text-editing
+    trigger: input-non-empty-value
+    feedback: 显示一级文字色内容，尾部礼物替换为品牌色发送操作。
+    duration: 0ms
+    easing: standard
+  - from: text-editing
+    to: text-multiline
+    trigger: content-wrap
+    feedback: 输入区向上扩展，操作图标保持底部对齐。
+    duration: 0ms
+    easing: standard
+  - from: text-editing
+    to: submitted
+    trigger: send-press-or-enter
+    feedback: 以去除首尾空白后的完整消息触发一次 onSubmit。
+    duration: 0ms
+    easing: standard
+  - from: text-empty
+    to: voice-idle
+    trigger: mode-action-press
+    feedback: 文字输入区切换为 Hold to talk。
+    duration: 0ms
+    easing: standard
+  - from: text-editing
+    to: voice-idle
+    trigger: mode-action-press
+    feedback: 保留业务层草稿并切换为 Hold to talk。
+    duration: 0ms
+    easing: standard
+  - from: voice-idle
+    to: voice-holding
+    trigger: voice-hold-start
+    feedback: 输入区显示 Release to end，并触发 onVoiceHoldStart。
+    duration: 0ms
+    easing: standard
+  - from: voice-holding
+    to: voice-idle
+    trigger: voice-hold-release-or-cancel
+    feedback: 恢复 Hold to talk，并触发一次 onVoiceHoldEnd。
+    duration: 0ms
+    easing: standard
+  - from: voice-idle
+    to: text-empty
+    trigger: mode-action-press
+    feedback: 返回文字输入并恢复输入焦点。
+    duration: 0ms
+    easing: standard
+accessibility:
+  - form、textarea 和所有操作按钮均提供可访问名称。
+  - Enter 发送，Shift+Enter 换行；输入法组合期间忽略 Enter 发送。
+  - 按住说话使用状态文案表达开始和释放，不依赖背景颜色。
+  - 纯图标按钮使用 24pt 图形和至少 44×44pt 可触达区域。
+edgeCases:
+  - 仅包含空白字符的草稿视为空值，不触发发送。
+  - 长文案达到 144pt 最大视觉高度后内部滚动，业务值不截断。
+  - 指针离开、系统取消或丢失捕获时结束按住状态，不能持续录音。
+  - 切换语音模式不应清空业务层保存的文字草稿。
+  - 输入框获得焦点时触发 onFocus；消息页可平滑滚动到最新消息，但组件本身不直接控制外部列表。

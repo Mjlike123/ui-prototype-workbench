@@ -1,0 +1,21 @@
+---
+description: Require AI-designed prototypes to reuse existing TopTop Kit components
+globs: "apps/design-system-portal/src/components/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/app/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/app/prototype-runtime/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Prototype Kit Reuse
+
+When designing or implementing an AI-generated prototype:
+
+1. Inspect `specs/components/*.yaml`, matching MDX guidance, and existing `components/kit` implementations before writing UI.
+2. Reuse existing Kit components whenever the design contains their responsibility:
+   - Tags and badges → `list-tag`
+   - Action or message rows → `regular-list`
+   - Page title bars and tabs → the matching navigation component
+   - Icons → canonical assets under `public/icons/` and the existing icon/component wrapper
+3. Do not recreate Kit markup, tokens, states, or icons with prototype-local CSS, emoji, inline SVG, screenshots, or look-alike elements.
+4. Prototype layout may compose and position Kit components, but must not copy their internals.
+5. If no Kit component can express a required area, record it as a `kitGap` and isolate only that area as a clearly named `Prototype*` module.
+6. Include the component mapping and unresolved `kitGaps` in the prototype handoff.
+7. Verify reused components retain their documented accessibility, interaction states, and responsive behavior.

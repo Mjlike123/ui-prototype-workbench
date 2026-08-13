@@ -1,0 +1,478 @@
+schemaVersion: 1
+id: semantic-colors
+title: 语义色彩
+category: color
+description: 从 TOP UI kit 与组件语义中整理的 45 个颜色 token，保留 Light / Dark 双模式。
+tokens:
+  - id: color.chat.peer-bubble-background
+    name: "通用-私聊气泡背景客态"
+    value: "#FFFFFF"
+    modes:
+      light: "#FFFFFF"
+      dark: "#2F3039"
+    description: "消息气泡-客态"
+    figmaVariableId: "VariableID:9022:174173"
+  - id: color.package.teami-home-button-background
+    name: "Teami 和其他包 首页按钮模块背景色"
+    value: "#FFFFFF"
+    modes:
+      light: "#FFFFFF"
+      dark: "#46474F"
+    description: "Figma 变量：Teami 和其他包 首页按钮模块背景色"
+    figmaVariableId: "VariableID:9022:174170"
+  - id: color.package.teami-chat-bottom-bar
+    name: "Teami 和其他包 聊天下bottom bar"
+    value: "#F7F8FA"
+    modes:
+      light: "#F7F8FA"
+      dark: "#292A38"
+    description: "Figma 变量：Teami 和其他包 聊天下bottom bar"
+    figmaVariableId: "VariableID:9022:174155"
+  - id: color.package.ksa-me-chat-bottom-bar
+    name: "Ksa和me主包 聊天下bottom bar"
+    value: "#F7F8FA"
+    modes:
+      light: "#F7F8FA"
+      dark: "#242D2C"
+    description: "Figma 变量：Ksa和me主包 聊天下bottom bar"
+    figmaVariableId: "VariableID:9022:174176"
+  - id: color.package.ksa-me-home-button-background
+    name: "Ksa和me主包 首页按钮模块背景色"
+    value: "#FFFFFF"
+    modes:
+      light: "#FFFFFF"
+      dark: "#35403E"
+    description: "Figma 变量：Ksa和me主包 首页按钮模块背景色"
+    figmaVariableId: "VariableID:10232:280041"
+  - id: color.package.ksa-me-background
+    name: "ksa和me主包 背景色"
+    value: "#F7F8FA"
+    modes:
+      light: "#F7F8FA"
+      dark: "#001613"
+    description: "Figma 变量：ksa和me主包 背景色"
+    figmaVariableId: "VariableID:10232:280037"
+  - id: color.identity.gender-female
+    name: "女性身份标签"
+    value: "#FF68BF"
+    modes:
+      light: "#FF68BF"
+      dark: "#FF68BF"
+    description: "14pt 女性性别与年龄标签背景色"
+    platforms:
+      h5: var(--color-identity-gender-female)
+  - id: color.identity.gender-male
+    name: "男性身份标签"
+    value: "#00BFFF"
+    modes:
+      light: "#00BFFF"
+      dark: "#00BFFF"
+    description: "14pt 男性性别与年龄标签背景色"
+    platforms:
+      h5: var(--color-identity-gender-male)
+  - id: color.text.navigation-inactive
+    name: "白色50%（辅助色）"
+    value: "#8B8C91"
+    modes:
+      light: "#8B8C91"
+      dark: "rgba(255, 255, 255, 0.5)"
+    description: "Figma 变量：白色50%（辅助色）"
+    figmaVariableId: "VariableID:9022:174174"
+    platforms:
+      ios: TTColor.primaryNavigationInactive
+      android: TopColor.PrimaryNavigationInactive
+      h5: var(--color-primary-navigation-inactive)
+  - id: color.surface.panel
+    name: "黑白色背景/背景色-白"
+    value: "#FFFFFF"
+    modes:
+      light: "#FFFFFF"
+      dark: "#181923"
+    description: "Figma 变量：黑白色背景/背景色-白"
+    figmaVariableId: "VariableID:9278:173875"
+    platforms:
+      h5: var(--color-surface-panel)
+  - id: color.text.primary
+    name: "一级标题/textPrimary"
+    value: "#181923"
+    modes:
+      light: "#181923"
+      dark: "rgba(255, 255, 255, 0.9)"
+    description: "Figma 变量：一级标题/textPrimary"
+    figmaVariableId: "VariableID:9022:174180"
+    platforms:
+      ios: TTColor.textPrimary
+      android: TopColor.TextPrimary
+      h5: var(--color-text-primary)
+  - id: color.text.secondary
+    name: "二级正文/textSecondary"
+    value: "#8B8C91"
+    modes:
+      light: "#8B8C91"
+      dark: "#8B8C91"
+    description: "二级文案（正文）"
+    figmaVariableId: "VariableID:9022:174184"
+    platforms:
+      ios: TTColor.textSecondary
+      android: TopColor.TextSecondary
+      h5: var(--color-text-secondary)
+  - id: color.text.tertiary
+    name: "三级副文本/textTertiary"
+    value: "#BABABD"
+    modes:
+      light: "#BABABD"
+      dark: "#8B8C91"
+    description: "三级文案（副文本）"
+    figmaVariableId: "VariableID:9022:174160"
+    platforms:
+      ios: TTColor.textTertiary
+      android: TopColor.TextTertiary
+      h5: var(--color-text-tertiary)
+  - id: color.text.auxiliary
+    name: "三级辅助色/textAuxiliary"
+    value: "#A3A5B1"
+    modes:
+      light: "#A3A5B1"
+      dark: "#A3A5B1"
+    description: "时间、陌生人标记和灰色辅助图标"
+    platforms:
+      h5: var(--color-text-auxiliary)
+  - id: color.empty-state.description
+    name: "空状态说明/emptyStateDescription"
+    value: "#868B94"
+    modes:
+      light: "#868B94"
+      dark: "#868B94"
+    description: "页面空状态说明文案"
+    platforms:
+      h5: var(--color-empty-state-description)
+  - id: color.text.primary-a50
+    name: "二级正文50%透明/textPrimary_a50"
+    value: "rgba(24, 25, 35, 0.5)"
+    modes:
+      light: "rgba(24, 25, 35, 0.5)"
+      dark: "rgba(255, 255, 255, 0.5)"
+    description: "蒙层底框、二级文案\n如首页标题tab（带背景情况加透明度）"
+    figmaVariableId: "VariableID:9022:174168"
+  - id: color.text.primary-a30
+    name: "三级富文本30%透明/textPrimary_a30"
+    value: "rgba(24, 25, 35, 0.3)"
+    modes:
+      light: "rgba(24, 25, 35, 0.3)"
+      dark: "rgba(255, 255, 255, 0.5)"
+    description: "三级文案色（带背景情况加透明度）"
+    figmaVariableId: "VariableID:9022:174165"
+  - id: color.text.white-primary-a50
+    name: "二级正文50%白透/textWhitePrimary_a50"
+    value: "rgba(255, 255, 255, 0.5)"
+    modes:
+      light: "rgba(255, 255, 255, 0.5)"
+      dark: "rgba(255, 255, 255, 0.5)"
+    description: "二级文案"
+    figmaVariableId: "VariableID:9022:174178"
+  - id: color.white.primary-a4
+    name: "白透4%/whitePrimary_a4"
+    value: "rgba(255, 255, 255, 0.04)"
+    modes:
+      light: "rgba(255, 255, 255, 0.04)"
+      dark: "rgba(255, 255, 255, 0.04)"
+    description: "未选中按钮底色(暗黑）"
+    figmaVariableId: "VariableID:9022:174177"
+  - id: color.white.primary-a10
+    name: "白透10%/whitePrimary_a10"
+    value: "rgba(255, 255, 255, 0.1)"
+    modes:
+      light: "rgba(255, 255, 255, 0.1)"
+      dark: "rgba(255, 255, 255, 0.1)"
+    description: "深色背景头像框描边"
+    figmaVariableId: "VariableID:9022:174158"
+  - id: color.white.primary-a30
+    name: "白透30%/whitePrimary_a30"
+    value: "rgba(255, 255, 255, 0.3)"
+    modes:
+      light: "rgba(255, 255, 255, 0.3)"
+      dark: "rgba(255, 255, 255, 0.3)"
+    description: "三级文案"
+    figmaVariableId: "VariableID:9022:174185"
+  - id: color.white.primary-a80
+    name: "白透80%/whitePrimary_a80"
+    value: "rgba(255, 255, 255, 0.8)"
+    modes:
+      light: "rgba(255, 255, 255, 0.8)"
+      dark: "rgba(255, 255, 255, 0.8)"
+    description: "白色副文本"
+    figmaVariableId: "VariableID:9022:174162"
+  - id: color.text.white-primary
+    name: "纯白100%/textWhitePrimary"
+    value: "#FFFFFF"
+    modes:
+      light: "#FFFFFF"
+      dark: "rgba(255, 255, 255, 0.1)"
+    description: "一级文案（纯白）首页暗色标题tab"
+    figmaVariableId: "VariableID:9022:174163"
+  - id: color.brand.primary
+    name: "主色/brandPrimary"
+    value: "#16D8C8"
+    modes:
+      light: "#16D8C8"
+      dark: "#14C2B4"
+    description: "teami包以外其他包主题色"
+    figmaVariableId: "VariableID:9022:174172"
+    platforms:
+      ios: TTColor.brandPrimary
+      android: TopColor.BrandPrimary
+      h5: var(--color-brand-primary)
+  - id: color.brand.tw-primary
+    name: "TW主色/brandPrimary"
+    value: "#1677FF"
+    modes:
+      light: "#1677FF"
+      dark: "#146BE5"
+    description: "teami包主题色"
+    figmaVariableId: "VariableID:9022:174156"
+  - id: color.brand.primary-a10
+    name: "主色浅色/brandPrimary_a10"
+    value: "rgba(22, 216, 200, 0.1)"
+    modes:
+      light: "rgba(22, 216, 200, 0.1)"
+      dark: "rgba(22, 216, 200, 0.3)"
+    description: "其他区包浅色背景/按钮背景"
+    figmaVariableId: "VariableID:9022:174179"
+  - id: color.brand.primary-a50
+    name: "主色50%/brandPrimary_a50"
+    value: "#8AECE3"
+    modes:
+      light: "#8AECE3"
+      dark: "#70D8D0"
+    description: "主题浅色按钮按下态背景与禁用态文字"
+    platforms:
+      h5: var(--color-brand-primary-a50)
+  - id: color.brand.primary-dark
+    name: "主色深色/brandPrimary_dark"
+    value: "#12ADA0"
+    modes:
+      light: "#12ADA0"
+      dark: "#10A095"
+    description: "主题浅色按钮按下态文字"
+    platforms:
+      h5: var(--color-brand-primary-dark)
+  - id: color.brand.tw-primary-a10
+    name: "TW主色浅色/brandPrimary_a10"
+    value: "rgba(22, 119, 255, 0.1)"
+    modes:
+      light: "rgba(22, 119, 255, 0.1)"
+      dark: "rgba(22, 119, 255, 0.3)"
+    description: "teami包浅色背景/按钮背景"
+    figmaVariableId: "VariableID:9022:174159"
+  - id: color.switch.track-on
+    name: "开关开启轨道/switchTrackOn"
+    value: "#34C759"
+    modes:
+      light: "#34C759"
+      dark: "#34C759"
+    description: "设置开关开启态轨道"
+  - id: color.switch.track-off
+    name: "开关关闭轨道/switchTrackOff"
+    value: "#CFCFCF"
+    modes:
+      light: "#CFCFCF"
+      dark: "#CFCFCF"
+    description: "设置开关关闭态轨道"
+  - id: color.button.primary
+    name: "通用浅色灰按钮/btnPrimary"
+    value: "#F3F5F9"
+    modes:
+      light: "#F3F5F9"
+      dark: "rgba(255, 255, 255, 0.1)"
+    description: "通用浅色按钮"
+    figmaVariableId: "VariableID:9022:174157"
+  - id: color.button.secondary
+    name: "按钮透明/btnSecondary"
+    value: "rgba(24, 25, 35, 0.04)"
+    modes:
+      light: "rgba(24, 25, 35, 0.04)"
+      dark: "rgba(255, 255, 255, 0.1)"
+    description: "有底色场景未选中按钮底色"
+    figmaVariableId: "VariableID:9022:174154"
+  - id: color.search-control.container-background
+    name: "搜索控件容器/searchControlContainer"
+    value: "#FFFFFF"
+    modes:
+      light: "#FFFFFF"
+      dark: "#181923"
+    description: "搜索控件 56pt 容器背景"
+    platforms:
+      h5: var(--search-control-container-background)
+  - id: color.search-control.field-background
+    name: "搜索框背景/searchControlField"
+    value: "#F7F8FA"
+    modes:
+      light: "#F7F8FA"
+      dark: "rgba(255, 255, 255, 0.1)"
+    description: "搜索框 40pt 胶囊背景"
+    platforms:
+      h5: var(--search-control-field-background)
+  - id: color.search-control.placeholder
+    name: "搜索占位/searchControlPlaceholder"
+    value: "#BABABD"
+    modes:
+      light: "#BABABD"
+      dark: "#8B8C91"
+    description: "搜索占位文案与图标色"
+    platforms:
+      h5: var(--search-control-placeholder)
+  - id: color.border.subtle
+    name: "分割线透明/bordBg1"
+    value: "rgba(24, 25, 35, 0.04)"
+    modes:
+      light: "rgba(24, 25, 35, 0.04)"
+      dark: "rgba(255, 255, 255, 0.04)"
+    description: "边框、间隔线"
+    figmaVariableId: "VariableID:9022:174175"
+    platforms:
+      h5: var(--color-border-subtle)
+  - id: color.border.image
+    name: "描边透明/bordBg2"
+    value: "rgba(24, 25, 35, 0.1)"
+    modes:
+      light: "rgba(24, 25, 35, 0.1)"
+      dark: "rgba(255, 255, 255, 0.1)"
+    description: "头像、图片描边"
+    figmaVariableId: "VariableID:9022:174166"
+  - id: color.image-empty.background
+    name: "图片兜底背景/imageEmptyBackground"
+    value: "#E8E8E9"
+    modes:
+      light: "#E8E8E9"
+      dark: "rgba(255, 255, 255, 0.1)"
+    description: "图片空状态兜底背景"
+  - id: color.surface.canvas
+    name: "背景色/bgPrimary"
+    value: "#F7F8FA"
+    modes:
+      light: "#F7F8FA"
+      dark: "#181923"
+    description: "背景色"
+    figmaVariableId: "VariableID:9022:174181"
+    platforms:
+      h5: var(--color-surface-canvas)
+  - id: color.toast.background
+    name: "私聊气泡色90%/toastBg"
+    value: "rgba(47, 48, 57, 0.9)"
+    modes:
+      light: "rgba(47, 48, 57, 0.9)"
+      dark: "rgba(47, 48, 57, 0.9)"
+    description: "Toast底框"
+    figmaVariableId: "VariableID:9022:174182"
+  - id: color.brand.secondary
+    name: "辅色 蓝/brandSecondary"
+    value: "#638EFF"
+    modes:
+      light: "#638EFF"
+      dark: "#638EFF"
+    description: "Figma 变量：辅色 蓝/brandSecondary"
+    figmaVariableId: "VariableID:9022:174171"
+  - id: color.brand.link
+    name: "辅色超链接/brandLink"
+    value: "#597AD4"
+    modes:
+      light: "#597AD4"
+      dark: "#597AD4"
+    description: "辅助色点击/超链接色"
+    figmaVariableId: "VariableID:9022:174164"
+  - id: color.coin.dark
+    name: "金币Dark场景/coinDark"
+    value: "#FFE95B"
+    modes:
+      light: "#FFE95B"
+      dark: "#FFE95B"
+    description: "金币色（深色场景用）"
+    figmaVariableId: "VariableID:9022:174183"
+  - id: color.coin.light
+    name: "金币light场景/coinLight"
+    value: "#FF8400"
+    modes:
+      light: "#FF8400"
+      dark: "#FF8400"
+    description: "金币色（浅色场景用）"
+    figmaVariableId: "VariableID:9022:174167"
+  - id: color.state.like
+    name: "警示色/stateLike"
+    value: "#FF2E60"
+    modes:
+      light: "#FF2E60"
+      dark: "#FF2E60"
+    description: "点赞/警示色"
+    figmaVariableId: "VariableID:9022:174169"
+  - id: color.gift.giving
+    name: "送礼按钮/Gift giving color"
+    value: "#FF7CA3"
+    modes:
+      light: "#FF7CA3"
+      dark: "#FF7CA3"
+    description: "送礼按钮颜色"
+    figmaVariableId: "VariableID:9022:174161"
+  - id: color.ku.brand-primary-lighter
+    name: "KU主色/brandPrimary_Lighter"
+    value: "#FFF5F0"
+    modes:
+      light: "#FFF5F0"
+      dark: "#3D261E"
+    description: "Figma 变量：KU主色/brandPrimary_Lighter"
+    figmaVariableId: "VariableID:12410:239927"
+  - id: color.ku.brand-primary-light
+    name: "KU主色/brandPrimary_Light"
+    value: "#FFEAE1"
+    modes:
+      light: "#FFEAE1"
+      dark: "#6B3D2E"
+    description: "Figma 变量：KU主色/brandPrimary_Light"
+    figmaVariableId: "VariableID:12416:242318"
+  - id: color.ku.brand-primary-hover
+    name: "KU主色/brandPrimary_Hover"
+    value: "#FF966A"
+    modes:
+      light: "#FF966A"
+      dark: "#FFA582"
+    description: "Figma 变量：KU主色/brandPrimary_Hover"
+    figmaVariableId: "VariableID:12416:242319"
+  - id: color.ku.brand-primary
+    name: "KU主色/brandPrimary"
+    value: "#FF7A45"
+    modes:
+      light: "#FF7A45"
+      dark: "#FF8E61"
+    description: "Figma 变量：KU主色/brandPrimary"
+    figmaVariableId: "VariableID:12410:239925"
+  - id: color.ku.brand-primary-pressed
+    name: "KU主色/brandPrimary_Pressed"
+    value: "#E05D28"
+    modes:
+      light: "#E05D28"
+      dark: "#FFB394"
+    description: "Figma 变量：KU主色/brandPrimary_Pressed"
+    figmaVariableId: "VariableID:12416:242320"
+  - id: color.ku.background
+    name: "KU主色/KU_bg"
+    value: "#F7F8FA"
+    modes:
+      light: "#F7F8FA"
+      dark: "#120A07"
+    description: "Figma 变量：KU主色/KU_bg"
+    figmaVariableId: "VariableID:12440:246051"
+  - id: color.ku.chat-tab-bar
+    name: "KU主色/KU_Chat tab bar"
+    value: "#F7F8FA"
+    modes:
+      light: "#F7F8FA"
+      dark: "#1C120E"
+    description: "Figma 变量：KU主色/KU_Chat tab bar"
+    figmaVariableId: "VariableID:12510:55519"
+  - id: color.ku.tab-bar
+    name: "KU主色/KU_tab bar"
+    value: "#FFFFFF"
+    modes:
+      light: "#FFFFFF"
+      dark: "#1C120E"
+    description: "Figma 变量：KU主色/KU_tab bar"
+    figmaVariableId: "VariableID:12440:246052"

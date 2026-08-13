@@ -1,0 +1,84 @@
+schemaVersion: 1
+id: image-empty-state
+version: 1.0.0
+title: 图片空状态
+owner: TopTop Design System
+category: Data Display
+status: review
+since: 1.0.0
+tags:
+  - image
+  - empty
+  - placeholder
+  - fallback
+  - media
+platforms:
+  - ios
+  - android
+  - h5
+description: 图片加载失败、尚未上传或业务暂无图时的兜底占位，使用纯色背景与居中 picture 图标；图标按亮暗场景切换，背景为单一实色。
+previewKey: image-empty-state
+reference:
+  figmaUrl: https://www.figma.com/design/GQAC7GUTofQV64CNR7IfE8/V3.26.0?node-id=66-46250
+  nodeId: "66:46250"
+  observations:
+    - 兜底区域使用单一实色背景，不使用渐变、模糊或装饰图层
+    - 亮色场景背景为 #E8E8E9；暗色场景背景为 10% 白色 rgba(255,255,255,0.1)
+    - 居中 picture 图标固定 72×72pt，亮色与暗色各使用独立切图
+    - 参考画布 375×300pt；生产实现按容器等比填充，图标保持居中
+anatomy:
+  - id: container
+    label: 兜底容器
+    description: 承载单一背景色并占满图片占位区域。
+  - id: icon
+    label: picture 图标
+    description: 72pt 居中切图，按 theme 切换亮暗资源。
+variants:
+  - name: theme
+    values:
+      - light
+      - dark
+    defaultValue: light
+props:
+  - name: theme
+    type: light|dark
+    defaultValue: light
+    description: 按承载页面背景选择亮暗图标与对应背景色。
+  - name: aria-label
+    type: string
+    defaultValue: 暂无图片
+    description: 空状态的可访问名称。
+tokenRefs:
+  - color.image-empty.background
+  - color.white.primary-a10
+accessibility:
+  - 容器使用 role=img 与可访问名称描述当前暂无图片，不重复朗读装饰图标。
+  - 图标切图对辅助技术隐藏，含义由容器 aria-label 完整表达。
+detection:
+  figmaFileKeys:
+    - GQAC7GUTofQV64CNR7IfE8
+  figmaComponentIds:
+    - "66:46250"
+    - "66:46209"
+  nameAliases:
+    - 图片空状态
+    - 兜底图
+    - 图片占位
+    - image empty state
+    - picture placeholder
+roles:
+  - container
+  - icon
+rules:
+  - id: icon.width
+    title: picture 图标宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: icon.height
+    title: picture 图标高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule

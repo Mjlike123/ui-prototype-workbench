@@ -1,0 +1,49 @@
+## 使用场景
+
+页面空状态用于列表、Tab 或业务页暂无数据时的居中占位，例如国家榜未设置、搜索无结果、列表为空等。它解释当前为空的原因，并可选提供一步主操作。
+
+## 结构与尺寸
+
+- 内容区最大宽 **240pt**，整体居中。
+- 插画 **160×160pt**，默认 **50%** 不透明度；切图为 **480×480 @3x** PNG。
+- 说明文案 **16pt Regular**，颜色 `#868B94`，居中，支持换行。
+- 插画与文案间距 **8pt**；文案与按钮间距 **20pt**。
+- 可选主按钮为 **48pt** 主题色胶囊按钮，水平内边距 **24pt**。
+
+## 业务插画
+
+通过 `illustration` 选择 Kit 内置切图：
+
+| Key | 场景 |
+| --- | --- |
+| `no-list` | 没有榜单（默认） |
+| `no-content` | 没有内容 |
+| `no-content-3x` | 没有内容 @3x |
+| `no-network` | 没有网络 |
+| `no-news` | 没有消息 |
+| `no-friends` | 没有好友 |
+| `no-game-friends` | 没有游戏好友 |
+| `no-gift` | 没有礼物 |
+| `no-recharge` | 没有充值记录 |
+| `no-vehicle` | 没有座驾 |
+| `no-positioning` | 没有定位 |
+| `no-attention-room` | 没有关注房间 |
+| `list-not-found` | 列表未找到 |
+
+资源目录：`/icons/empty-state/`。也可通过 `illustrationSrc` 或 `illustrationNode` 传入自定义插画。
+
+## 属性
+
+- `description` — 必填说明文案。
+- `illustration` — 业务插画 key，默认 `no-list`。
+- `actionLabel` + `onAction` — 可选主操作；二者需同时传入。
+
+## 无障碍
+
+说明必须使用可读文本；插画对辅助技术隐藏。区域可通过 `aria-label` 补充语义。
+
+## 避免
+
+- 用页面装饰背景替代空状态插画。
+- 只展示按钮而不说明为空原因。
+- 在无回调时仍渲染可点击主按钮。
