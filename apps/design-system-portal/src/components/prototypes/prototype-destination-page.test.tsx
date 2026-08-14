@@ -51,8 +51,13 @@ describe("PrototypeDestinationPage", () => {
   it("renders the Feed design interactions and Message search", () => {
     const onNavigate = vi.fn();
     const onOpenSearch = vi.fn();
+    const onOpenCompose = vi.fn();
     const { container, rerender } = render(
-      <PrototypeDestinationPage screen="feed" onNavigate={onNavigate} />,
+      <PrototypeDestinationPage
+        screen="feed"
+        onNavigate={onNavigate}
+        onOpenCompose={onOpenCompose}
+      />,
     );
 
     expect(screen.getByRole("tab", { name: "Recommend" })).toHaveAttribute(
@@ -86,7 +91,7 @@ describe("PrototypeDestinationPage", () => {
       screen.getByRole("button", { name: "取消关注 Latifa Alghanim" }),
     ).toHaveAttribute("aria-pressed", "true");
     fireEvent.click(screen.getByRole("button", { name: "发布动态" }));
-    expect(screen.getByRole("status")).toHaveTextContent("创建新动态");
+    expect(onOpenCompose).toHaveBeenCalledOnce();
 
     rerender(
       <PrototypeDestinationPage

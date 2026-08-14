@@ -65,7 +65,7 @@ const prototypes = [
     title: "Private Chat · 私聊",
     route: "/prototype-runtime/app/private-chat",
     sourceRoute: "/prototypes/message",
-    description: "好友私聊、多类型气泡、投递反馈、消息引用、长按回复与可发送输入区",
+    description: "好友私聊、多类型气泡、投递反馈、消息引用、长按回复、自定义表情面板与可发送输入区",
     intent: "二级页面",
     kit: ["ios-status-bar", "avatar", "icon", "chat-bubble", "chat-input"],
     prototypeModules: [
@@ -75,6 +75,8 @@ const prototypes = [
       "PrototypeMessageQuote",
       "PrototypeQuoteLocatorHighlight",
       "PrototypeChatSystemEvent",
+      "PrototypeEmojiPanel",
+      "PrototypeCustomEmojiGrid",
     ],
   },
   {
@@ -106,6 +108,20 @@ const prototypes = [
       "ProfileV3Identity",
       "ProfileV3About",
       "ProfileV3Movement",
+    ],
+  },
+  {
+    id: "feed-compose",
+    title: "Feed · 发布动态",
+    route: "/prototype-runtime/app/feed-compose",
+    sourceRoute: "/prototypes/app",
+    description: "文案编辑、图片附件、可见范围与 Post 发布反馈",
+    intent: "二级页面",
+    kit: ["ios-status-bar", "regular-navigation", "avatar", "icon"],
+    prototypeModules: [
+      "PrototypeFeedComposeEditor",
+      "PrototypeFeedComposeMediaPicker",
+      "PrototypeFeedComposeAudienceRow",
     ],
   },
   {

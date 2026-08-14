@@ -7814,8 +7814,8 @@ kbd {
   font: 400 14px/20px "SF Pro", var(--font-sans);
 }
 
-.meMenuTrailing > img {
-  opacity: 0.35;
+.meMenuTrailing .systemIcon {
+  --system-icon-color: var(--color-text-tertiary);
 }
 
 .meMenuBadge {
@@ -11087,6 +11087,118 @@ div.chatBubbleRelationship {
   background: var(--color-surface-canvas);
 }
 
+.prototypeEmojiPanel {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-panel);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.prototypeEmojiPanelTabs {
+  flex: 0 0 auto;
+}
+
+.prototypeEmojiPanelBody {
+  min-height: 196px;
+  max-height: 196px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.prototypeEmojiPanelBody::-webkit-scrollbar {
+  display: none;
+}
+
+.prototypeEmojiPanelGrid {
+  display: grid;
+  padding: 12px 16px 16px;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.prototypeEmojiPanelCell {
+  position: relative;
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  background: var(--color-surface-canvas);
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.prototypeEmojiPanelCell:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-brand-primary) 8%, transparent);
+}
+
+.prototypeEmojiPanelCell:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.prototypeEmojiPanelCell:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+.prototypeEmojiPanelCell img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.prototypeEmojiPanelGlyph {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.prototypeEmojiPanelAdd {
+  display: grid;
+  place-items: center;
+  color: var(--color-brand-primary);
+}
+
+.prototypeEmojiPanelAdd .systemIcon {
+  --system-icon-color: var(--color-brand-primary);
+}
+
+.prototypeEmojiPanelPending {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  padding: 2px 6px;
+  color: var(--color-text-white-primary);
+  background: rgba(24, 25, 35, 0.72);
+  border-radius: 999px;
+  font: 590 10px/12px "SF Pro", var(--font-sans);
+}
+
+.prototypeEmojiPanelEmpty {
+  margin: 0;
+  padding: 48px 24px;
+  color: var(--color-text-tertiary);
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.prototypeMessageSticker {
+  display: block;
+  width: 96px;
+  height: 96px;
+}
+
+.prototypeMessageSticker img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.prototypeReplyContextThumb.isSticker img {
+  object-fit: cover;
+}
+
 .prototypeReplyContext {
   display: flex;
   min-height: 45px;
@@ -12044,6 +12156,177 @@ div.chatBubbleRelationship {
 .walletPrototypeSkuCard:focus-visible {
   outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
+}
+
+.feedComposeDevice {
+  position: relative;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+}
+
+.feedComposeDevice > .iosStatusBar,
+.feedComposeDevice .regularNavigation {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+}
+
+.feedComposeScroll {
+  display: flex;
+  min-height: 0;
+  overflow-y: auto;
+  flex: 1;
+  flex-direction: column;
+  overscroll-behavior: contain;
+}
+
+.feedComposeScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.feedComposeEditor {
+  display: grid;
+  padding: 16px 16px 8px;
+  gap: 12px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: start;
+}
+
+.feedComposeInput {
+  width: 100%;
+  min-height: 120px;
+  padding: 0;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  resize: none;
+  font: 400 16px/22px "SF Pro", var(--font-sans);
+}
+
+.feedComposeInput::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.feedComposeInput:focus {
+  outline: none;
+}
+
+.feedComposeMediaGrid {
+  display: grid;
+  padding: 0 16px 12px;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.feedComposeMediaItem {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border-radius: 12px;
+}
+
+.feedComposeMediaItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feedComposeMediaRemove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: var(--color-text-white-primary);
+  background: rgba(24, 25, 35, 0.56);
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  cursor: pointer;
+}
+
+.feedComposeMediaRemove .systemIcon {
+  --system-icon-color: var(--color-text-white-primary);
+}
+
+.feedComposeToolbar {
+  display: flex;
+  padding: 8px 16px 12px;
+  gap: 16px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.feedComposeToolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  color: var(--color-brand-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 590 14px/20px "SF Pro", var(--font-sans);
+}
+
+.feedComposeToolbar .systemIcon {
+  --system-icon-color: var(--color-brand-primary);
+}
+
+.feedComposeHashtagGlyph {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  font: 700 16px/1 "SF Pro", var(--font-sans);
+}
+
+.feedComposeMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.feedComposeAudience {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.feedComposeAudience span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feedComposeAudience .systemIcon {
+  --system-icon-color: var(--color-text-tertiary);
+  flex: 0 0 auto;
+}
+
+.feedComposeCounter {
+  color: var(--color-text-tertiary);
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+.feedComposeCounter--warn {
+  color: var(--color-state-like, #ff2e60);
+}
+
+.regularNavigationTrailing .regularNavigationActionButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
 }
 
 .profileV3Device > .iosStatusBar {

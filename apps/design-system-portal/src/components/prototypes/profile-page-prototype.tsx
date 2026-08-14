@@ -17,6 +17,7 @@ type ProfilePagePrototypeProps = {
   className?: string;
   onNavigate?: (destination: BottomNavKey) => void;
   onBack?: () => void;
+  onOpenCompose?: () => void;
 };
 
 type ProfileTab = "about" | "movement";
@@ -53,6 +54,7 @@ export function ProfilePagePrototype({
   className,
   onNavigate,
   onBack,
+  onOpenCompose,
 }: ProfilePagePrototypeProps) {
   /*
    * Screen: Profile — active room entry, without occupying the honor badge
@@ -207,7 +209,9 @@ export function ProfilePagePrototype({
             type="button"
             className="profileV3Compose"
             aria-label="发布动态"
-            onClick={() => showAction("创建新动态")}
+            onClick={() =>
+              onOpenCompose ? onOpenCompose() : showAction("创建新动态")
+            }
           >
             <SystemIcon name="publish" />
           </button>

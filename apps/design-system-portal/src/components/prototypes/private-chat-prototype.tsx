@@ -36,6 +36,13 @@ import {
   type PrototypeReplyTarget,
 } from "./prototype-chat-reply";
 import { PrivateChatSwipeReplyShell } from "./private-chat-swipe-reply";
+import {
+  DEFAULT_CUSTOM_EMOJIS,
+  PrototypeEmojiPanel,
+  pushRecentEmoji,
+  type CustomEmojiItem,
+  type EmojiSelection,
+} from "./prototype-emoji-panel";
 
 /** Matches Figma exit keyframes 1199→1411.26ms. */
 const MESSAGE_MENU_EXIT_MS = 212;
@@ -129,6 +136,7 @@ const initialMessages: ChatMessage[] = [
     sender: "You",
     kind: "emoji",
     text: "Celebration",
+    mediaSrc: "/prototypes/chat-reply/sticker.png",
     time: "14:28",
     status: "active",
     quote: {
@@ -317,6 +325,10 @@ export function PrivateChatPrototype({
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [draft, setDraft] = useState("");
   const [inputMode, setInputMode] = useState<ChatInputMode>("text");
+  const [emojiPanelOpen, setEmojiPanelOpen] = useState(false);
+  const [recentEmojis, setRecentEmojis] = useState<EmojiSelection[]>([]);
+  const [customEmojis, setCustomEmojis] =
+    useState<CustomEmojiItem[]>(DEFAULT_CUSTOM_EMOJIS);
   const [replyingTo, setReplyingTo] = useState<PrototypeReplyTarget>();
   const [menuMessageId, setMenuMessageId] = useState<string>();
   const [menuClosing, setMenuClosing] = useState(false);
@@ -427,6 +439,7 @@ export function PrivateChatPrototype({
   const appendMessage = (
     text: string,
     kind: PrototypeMessageKind = "text",
+    mediaSrc?: string,
   ) => {
     if (!text) return;
     const quote = replyingTo
@@ -440,6 +453,7 @@ export function PrivateChatPrototype({
         sender: "You",
         kind,
         text,
+        mediaSrc,
         time: "Now",
         status: "active",
         quote,
@@ -449,9 +463,36 @@ export function PrivateChatPrototype({
     setFeedback(quote ? "回复已发送" : "消息已发送");
   };
 
+  const sendEmojiSelection = (selection: EmojiSelection) => {
+    setRecentEmojis((current) => pushRecentEmoji(current, selection));
+    if (selection.type === "unicode") {
+      setDraft((current) => `${current}${selection.value}`);
+      setFeedback(`已插入 ${selection.label}`);
+      return;
+    }
+    appendMessage(selection.label, "emoji", selection.src);
+    setEmojiPanelOpen(false);
+    scrollToLatestMessage();
+  };
+
+  const requestCustomEmojiUpload = () => {
+    const pendingId = `pending-${Date.now()}`;
+    setCustomEmojis((current) => [
+      ...current,
+      {
+        id: pendingId,
+        label: "New sticker",
+        src: "/prototypes/profile-v3/supporter-card.png",
+        status: "pending",
+      },
+    ]);
+    setFeedback("已提交审核，通过后可在 Custom 使用");
+  };
+
   const sendMessage = (text: string) => {
     appendMessage(text);
     setDraft("");
+    setEmojiPanelOpen(false);
   };
 
   const clearMenuExitTimer = () => {
@@ -844,6 +885,7 @@ export function PrivateChatPrototype({
                           <PrototypeMessagePayload
                             kind={message.kind}
                             text={message.text}
+                            mediaSrc={message.mediaSrc}
                           />
                         ) : undefined}
                       </ChatBubble>
@@ -877,16 +919,27 @@ export function PrivateChatPrototype({
               }}
             />
           ) : null}
+          {emojiPanelOpen ? (
+            <PrototypeEmojiPanel
+              recent={recentEmojis}
+              customEmojis={customEmojis}
+              onSelect={sendEmojiSelection}
+              onUploadRequest={requestCustomEmojiUpload}
+            />
+          ) : null}
           <ChatInput
             value={draft}
             mode={inputMode}
             aria-label="发送私聊消息"
             onChange={setDraft}
             onSubmit={sendMessage}
-            onFocus={scrollToLatestMessage}
+            onFocus={() => {
+              setEmojiPanelOpen(false);
+              scrollToLatestMessage();
+            }}
             onModeChange={setInputMode}
             onPhoto={() => appendMessage("Photo", "image")}
-            onEmoji={() => setDraft((current) => `${current}🙂`)}
+            onEmoji={() => setEmojiPanelOpen((open) => !open)}
             onGame={() => appendMessage("Game invite")}
             onGift={() => appendMessage("Gift")}
             onVoiceHoldEnd={() => appendMessage("Voice message", "voice")}
@@ -946,7 +999,8 @@ function toReplyTarget(message: ChatMessage): PrototypeReplyTarget {
       kind: "emoji",
       preview: message.text,
       status: message.status,
-      thumbnailSrc: "/prototypes/chat-reply/sticker.png",
+      thumbnailSrc:
+        message.mediaSrc || "/prototypes/chat-reply/sticker.png",
     };
   }
   if (message.kind === "voice") {

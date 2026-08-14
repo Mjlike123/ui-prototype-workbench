@@ -10,6 +10,7 @@ import {
 } from "react";
 import { MePagePrototype } from "@/components/prototypes/me-page-prototype";
 import { MeSecondaryPrototype } from "@/components/prototypes/me-secondary-prototypes";
+import { FeedComposePagePrototype } from "@/components/prototypes/feed-compose-page-prototype";
 import { WalletPagePrototype } from "@/components/prototypes/wallet-page-prototype";
 import { PrototypeAppNavigationHost } from "@/components/prototypes/prototype-app-navigation-host";
 import {
@@ -177,6 +178,21 @@ export function PrototypeAppRouter({
       const current = stack[stack.length - 1] ?? screen;
       if (current === destination) return;
 
+      if (
+        stack.length >= 2 &&
+        stack[stack.length - 1] === current &&
+        stack[stack.length - 2] === destination
+      ) {
+        runTransition(
+          "pop",
+          current,
+          destination,
+          stack.slice(0, -1),
+          friend,
+        );
+        return;
+      }
+
       if (isPrototypeTabSwitch(current, destination)) {
         setTransition(null);
         setStack([destination]);
@@ -248,6 +264,7 @@ export function PrototypeAppRouter({
             theme={theme}
             onNavigate={navigate}
             onBack={() => navigate("me")}
+            onOpenCompose={() => navigate("feed-compose")}
           />
         );
       }
@@ -287,6 +304,19 @@ export function PrototypeAppRouter({
         );
       }
 
+      if (target === "feed-compose") {
+        const returnScreen =
+          stack.length >= 2 ? stack[stack.length - 2]! : "feed";
+        return (
+          <FeedComposePagePrototype
+            width={width}
+            height={height}
+            theme={theme}
+            onBack={() => navigate(returnScreen)}
+          />
+        );
+      }
+
       if (
         target === "community-guidelines" ||
         target === "help" ||
@@ -316,6 +346,7 @@ export function PrototypeAppRouter({
             onPrivateChatFriendChange?.(friend);
             navigate("private-chat", friend);
           }}
+          onOpenCompose={() => navigate("feed-compose")}
         />
       );
     },
@@ -328,6 +359,7 @@ export function PrototypeAppRouter({
       theme,
       transition,
       width,
+      stack,
     ],
   );
 

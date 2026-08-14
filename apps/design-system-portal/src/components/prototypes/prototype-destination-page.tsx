@@ -23,6 +23,7 @@ type PrototypeDestinationPageProps = {
   onNavigate: (destination: BottomNavKey) => void;
   onOpenSearch?: () => void;
   onOpenPrivateChat?: (friend: PrivateChatFriend) => void;
+  onOpenCompose?: () => void;
   width?: number;
   height?: number;
   theme?: "light" | "dark";
@@ -36,6 +37,7 @@ export function PrototypeDestinationPage({
   onNavigate,
   onOpenSearch,
   onOpenPrivateChat,
+  onOpenCompose,
   width = 375,
   height = 812,
   theme = "light",
@@ -82,7 +84,9 @@ export function PrototypeDestinationPage({
             type="button"
             className="prototypeFeedCompose"
             aria-label="发布动态"
-            onClick={() => setToast("创建新动态")}
+            onClick={() =>
+              onOpenCompose ? onOpenCompose() : setToast("创建新动态")
+            }
           >
             <span>
               <SystemIcon name="publish" />

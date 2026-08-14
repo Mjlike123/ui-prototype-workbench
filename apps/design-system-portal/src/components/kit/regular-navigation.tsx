@@ -8,6 +8,7 @@ export function RegularNavigation({
   subtitle,
   onBack,
   trailing,
+  trailingKind = "icon",
   backLabel = "返回",
   ariaLabel = "二级页面导航",
 }: {
@@ -15,13 +16,14 @@ export function RegularNavigation({
   subtitle?: string;
   onBack: () => void;
   trailing?: ReactNode;
+  trailingKind?: "icon" | "button" | "text";
   backLabel?: string;
   ariaLabel?: string;
 }) {
   return (
     <nav
       className={`regularNavigation regularNavigation--leading-back regularNavigation--trailing-${
-        trailing ? "icon" : "none"
+        trailing ? trailingKind : "none"
       }`}
       aria-label={ariaLabel}
     >

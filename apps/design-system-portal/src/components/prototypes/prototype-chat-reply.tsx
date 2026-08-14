@@ -52,9 +52,11 @@ export type PrototypeQuote = Omit<PrototypeReplyTarget, "kind" | "status"> & {
 export function PrototypeMessagePayload({
   kind,
   text,
+  mediaSrc,
 }: {
   kind: PrototypeMessageKind;
   text: string;
+  mediaSrc?: string;
 }) {
   if (kind === "image") {
     return (
@@ -65,8 +67,16 @@ export function PrototypeMessagePayload({
   }
 
   if (kind === "emoji") {
+    if (mediaSrc) {
+      return (
+        <span className="prototypeMessageSticker" role="img" aria-label={text}>
+          <Image src={mediaSrc} alt="" width={96} height={96} />
+        </span>
+      );
+    }
+
     return (
-      <span className="prototypeMessageEmoji" role="img" aria-label="庆祝">
+      <span className="prototypeMessageEmoji" role="img" aria-label={text}>
         🎉
       </span>
     );

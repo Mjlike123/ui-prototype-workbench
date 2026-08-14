@@ -349,4 +349,33 @@ describe("PrivateChatPrototype", () => {
     );
     vi.useRealTimers();
   });
+
+  it("opens the emoji panel and sends a custom sticker", () => {
+    render(<PrivateChatPrototype friend={friend} onBack={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "选择表情" }));
+    expect(screen.getByRole("region", { name: "表情面板" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("tab", { name: "Custom" }));
+    fireEvent.click(screen.getByRole("button", { name: "Celebration" }));
+    expect(document.querySelectorAll(".prototypeMessageSticker")).toHaveLength(2);
+    expect(screen.getByText("消息已发送")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "选择表情" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Recent" }));
+    expect(
+      screen.getByRole("button", { name: "Celebration" }),
+    ).toBeInTheDocument();
+  });
+
+  it("inserts unicode emoji into the draft from the emoji tab", () => {
+    render(<PrivateChatPrototype friend={friend} onBack={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "选择表情" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Emoji" }));
+    fireEvent.click(screen.getByRole("button", { name: "👍" }));
+
+    expect(screen.getByRole("textbox", { name: "消息内容" })).toHaveValue("👍");
+    expect(screen.getByText("已插入 👍")).toBeInTheDocument();
+  });
 });

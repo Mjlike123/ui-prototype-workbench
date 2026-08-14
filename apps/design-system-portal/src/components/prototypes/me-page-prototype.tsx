@@ -387,13 +387,7 @@ function MeMenuGroup({
             {item.dot ? (
               <span className="meMenuDot" aria-label="有新内容" />
             ) : null}
-            <Image
-              src="/icons/svg/icon=右箭头1.svg"
-              alt=""
-              width={16}
-              height={16}
-              aria-hidden="true"
-            />
+            <SystemIcon name="chevronRight" size={16} />
           </span>
         </button>
       ))}
