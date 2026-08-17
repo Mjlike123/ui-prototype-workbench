@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState, type CSSProperties } from "react";
 import { AvatarVisual } from "@/components/kit/avatar-visual";
+import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { ListTag } from "@/components/kit/list-tag";
 import { PrimaryNavigation } from "@/components/kit/primary-navigation";
@@ -726,9 +727,9 @@ function DestinationBottomNavigation({
             aria-current={selected === item.key ? "page" : undefined}
             onClick={() => onChange(item.key)}
           >
-            <span
-              className={`bottomNavigationGlyph bottomNavigationGlyph-${item.key}`}
-              aria-hidden="true"
+            <BottomNavigationIcon
+              name={item.key}
+              selected={selected === item.key}
             />
             <span className="bottomNavigationLabel">{item.label}</span>
           </button>

@@ -1,4 +1,7 @@
-const SYSTEM_ICON_ASSETS = {
+import { InlineSvgIcon } from "./inline-svg-icon";
+import { SYSTEM_ICON_SVGS } from "./generated/system-icon-svgs";
+
+export const SYSTEM_ICON_ASSETS = {
   notification: "/icons/svg/icon=通知.svg",
   like: "/icons/svg/icon=点赞.svg",
   comment: "/icons/svg/icon=消息.svg",
@@ -17,6 +20,7 @@ const SYSTEM_ICON_ASSETS = {
   guidelines: "/icons/svg/icon=规则.svg",
   help: "/icons/svg/icon=更多-横向.svg",
   settings: "/icons/svg/icon=设置.svg",
+  search: "/icons/svg/icon=搜索.svg",
   voice: "/icons/svg/icon=语音.svg",
   addCircle: "/icons/svg/icon=圆圈加号.svg",
   microphone: "/icons/svg/icon=麦克风.svg",
@@ -44,17 +48,12 @@ export function SystemIcon({
   className?: string;
 }) {
   return (
-    <span
+    <InlineSvgIcon
       className={["systemIcon", className].filter(Boolean).join(" ")}
+      markup={SYSTEM_ICON_SVGS[name]}
+      size={size}
       data-system-icon={name}
       data-system-icon-asset={SYSTEM_ICON_ASSETS[name]}
-      style={{
-        width: size,
-        height: size,
-        WebkitMask: `url("${SYSTEM_ICON_ASSETS[name]}") center / contain no-repeat`,
-        mask: `url("${SYSTEM_ICON_ASSETS[name]}") center / contain no-repeat`,
-      }}
-      aria-hidden="true"
     />
   );
 }

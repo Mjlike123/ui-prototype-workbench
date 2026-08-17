@@ -267,6 +267,84 @@ describe("PrivateChatPrototype", () => {
     vi.useRealTimers();
   });
 
+  it("scrolls a bottom message into view before spring-lifting the menu", () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    render(<PrivateChatPrototype friend={friend} onBack={vi.fn()} />);
+
+    const list = screen.getByRole("main", { name: "与 Andrew 的消息" });
+    const message = screen.getByLabelText("You 的消息，14:37");
+    Object.defineProperty(list, "scrollTop", { writable: true, value: 0 });
+    Object.defineProperty(list, "scrollHeight", { value: 1800 });
+    Object.defineProperty(list, "clientHeight", { value: 400 });
+
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
+      function mockRect(this: HTMLElement) {
+        if (this === list) {
+          return {
+            top: 100,
+            bottom: 500,
+            left: 0,
+            right: 375,
+            width: 375,
+            height: 400,
+            x: 0,
+            y: 100,
+            toJSON: () => ({}),
+          };
+        }
+        if (this === message) {
+          return {
+            top: 620,
+            bottom: 676,
+            left: 100,
+            right: 300,
+            width: 200,
+            height: 56,
+            x: 100,
+            y: 620,
+            toJSON: () => ({}),
+          };
+        }
+        if (
+          this.getAttribute("role") === "menu" ||
+          this.classList.contains("prototypeMessageMenu")
+        ) {
+          return {
+            top: 680,
+            bottom: 840,
+            left: 100,
+            right: 212,
+            width: 112,
+            height: 160,
+            x: 100,
+            y: 680,
+            toJSON: () => ({}),
+          };
+        }
+        return {
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          width: 0,
+          height: 0,
+          x: 0,
+          y: 0,
+          toJSON: () => ({}),
+        };
+      },
+    );
+
+    fireEvent.pointerDown(message, { pointerId: 1, pointerType: "touch" });
+    act(() => {
+      vi.advanceTimersByTime(520);
+    });
+
+    expect(list.scrollTop).toBeGreaterThan(0);
+    expect(screen.getByRole("menu", { name: "消息操作" })).toBeInTheDocument();
+    vi.useRealTimers();
+  });
+
   it("spring-lifts a bottom message when the action menu would be clipped", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     render(<PrivateChatPrototype friend={friend} onBack={vi.fn()} />);

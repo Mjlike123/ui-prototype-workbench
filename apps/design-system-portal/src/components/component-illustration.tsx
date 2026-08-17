@@ -1,4 +1,5 @@
 import type { ComponentSpec } from "@toptop/design-system-contract";
+import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 
 export function ComponentIllustration({
   component,
@@ -102,8 +103,9 @@ function BottomNavigationDiagram() {
           ["me", "Me"],
         ].map(([key, label], index) => (
           <span className={index === 0 ? "selected" : ""} key={key}>
-            <i
-              className={`bottomNavigationGlyph bottomNavigationGlyph-${key}`}
+            <BottomNavigationIcon
+              name={key as "toptop" | "room" | "feed" | "message" | "me"}
+              selected={index === 0}
             />
             <small>{label}</small>
           </span>
