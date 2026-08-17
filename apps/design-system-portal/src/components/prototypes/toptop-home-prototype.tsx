@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useState, type CSSProperties } from "react";
+import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { ListTag } from "@/components/kit/list-tag";
+import { SystemIcon } from "@/components/kit/system-icon";
 import {
   BOTTOM_NAV_DESTINATIONS,
   type BottomNavKey,
@@ -297,12 +299,10 @@ export function TopTopHomePrototype({
                         />
                       </span>
                     </span>
-                    <Image
-                      src="/icons/svg/icon=右箭头1.svg"
-                      alt=""
-                      width={20}
-                      height={20}
-                      aria-hidden="true"
+                    <SystemIcon
+                      name="chevronRight"
+                      size={20}
+                      className="topTopSuggestionChevron"
                     />
                   </button>
                 ))}
@@ -465,12 +465,7 @@ function TopTopHomeHeader({
             onAction("打开搜索");
           }}
         >
-          <Image
-            src="/icons/svg/icon=搜索.svg"
-            alt=""
-            width={24}
-            height={24}
-          />
+          <SystemIcon name="search" size={24} />
         </button>
       </div>
       <h1 className="srOnly">TopTop 首页</h1>
@@ -501,9 +496,9 @@ function TopTopBottomNavigation({
             aria-current={selected === item.key ? "page" : undefined}
             onClick={() => onChange(item.key)}
           >
-            <span
-              className={`bottomNavigationGlyph bottomNavigationGlyph-${item.key}`}
-              aria-hidden="true"
+            <BottomNavigationIcon
+              name={item.key}
+              selected={selected === item.key}
             />
             <span className="bottomNavigationLabel">{item.label}</span>
           </button>

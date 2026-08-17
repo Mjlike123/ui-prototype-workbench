@@ -12,6 +12,7 @@ import {
   ListTag,
   MEMBERSHIP_LEVELS,
 } from "@/components/kit/list-tag";
+import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { SystemIcon } from "@/components/kit/system-icon";
 import {
@@ -230,8 +231,17 @@ export function ComponentPreview({
                   }`}
                   key={key}
                 >
-                  <span
-                    className={`bottomNavigationGlyph bottomNavigationGlyph-${key}`}
+                  <BottomNavigationIcon
+                    name={
+                      key as
+                        | "refresh"
+                        | "toptop"
+                        | "room"
+                        | "feed"
+                        | "message"
+                        | "me"
+                    }
+                    selected={index === 0}
                   />
                   <small>{label}</small>
                 </span>
@@ -2093,9 +2103,17 @@ function BottomNavigation({
               aria-label={item.label}
               onClick={() => onChange(index)}
             >
-              <span
-                className={`bottomNavigationGlyph bottomNavigationGlyph-${item.key}`}
-                aria-hidden="true"
+              <BottomNavigationIcon
+                name={
+                  item.key as
+                    | "refresh"
+                    | "toptop"
+                    | "room"
+                    | "feed"
+                    | "message"
+                    | "me"
+                }
+                selected={selected}
               />
               <span className="bottomNavigationLabel">{item.label}</span>
             </button>

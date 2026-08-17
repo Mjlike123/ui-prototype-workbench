@@ -22,6 +22,7 @@ describe("SystemIcon", () => {
     ["guidelines", "规则"],
     ["help", "更多-横向"],
     ["settings", "设置"],
+    ["search", "搜索"],
     ["voice", "语音"],
     ["addCircle", "圆圈加号"],
     ["microphone", "麦克风"],
@@ -43,6 +44,7 @@ describe("SystemIcon", () => {
       width: "24px",
       height: "24px",
     });
+    expect(icon?.querySelector("svg")).toBeTruthy();
     expect(icon).toHaveAttribute(
       "data-system-icon-asset",
       `/icons/svg/icon=${assetName}.svg`,

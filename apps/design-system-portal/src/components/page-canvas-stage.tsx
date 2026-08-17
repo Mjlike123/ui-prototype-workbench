@@ -9,6 +9,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import type { PageCanvasBlock, PageCanvasPlan } from "@/lib/page-canvas-parser";
+import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 import { PrimaryNavigationSearchIcon } from "@/components/primary-navigation-search-icon";
 
 export type PageCanvasReferenceOverlay = {
@@ -601,9 +602,9 @@ function CanvasBottomNavigation({
             aria-current={selectedIndex === index ? "page" : undefined}
             onClick={() => onChange(index)}
           >
-            <span
-              className={`bottomNavigationGlyph bottomNavigationGlyph-${item.key}`}
-              aria-hidden="true"
+            <BottomNavigationIcon
+              name={item.key as "toptop" | "room" | "feed" | "message" | "me"}
+              selected={selectedIndex === index}
             />
             <span className="bottomNavigationLabel">{item.label}</span>
           </button>

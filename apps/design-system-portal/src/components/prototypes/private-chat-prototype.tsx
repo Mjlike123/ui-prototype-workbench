@@ -43,6 +43,10 @@ import {
   type CustomEmojiItem,
   type EmojiSelection,
 } from "./prototype-emoji-panel";
+import {
+  calculateMenuLiftPx,
+  ensureMessageMenuVisible,
+} from "@/lib/private-chat-menu-layout";
 
 /** Matches Figma exit keyframes 1199→1411.26ms. */
 const MESSAGE_MENU_EXIT_MS = 212;
@@ -379,26 +383,21 @@ export function PrivateChatPrototype({
     const menu = messageEl.querySelector<HTMLElement>(".prototypeMessageMenu");
     if (!menu) return;
 
-    const listRect = list.getBoundingClientRect();
-    const menuRect = menu.getBoundingClientRect();
-    const messageRect = messageEl.getBoundingClientRect();
     const padding = 12;
-
-    if (listRect.height <= 0 || menuRect.height <= 0) return;
-
-    // Bottom-clipped menu (Figma 298:9970): spring-lift the message upward.
-    if (menuRect.bottom <= listRect.bottom - padding) {
-      setMenuLiftPx(0);
-      menuLiftApplied.current = 0;
-      return;
-    }
-
-    const overflow = menuRect.bottom - (listRect.bottom - padding);
-    const maxLift = Math.max(
-      overflow,
-      messageRect.top - listRect.top + messageRect.height * 0.35,
+    const { listRect, messageRect, menuRect } = ensureMessageMenuVisible(
+      list,
+      messageEl,
+      menu,
+      padding,
     );
-    const neededLift = Math.min(Math.ceil(overflow), Math.ceil(maxLift));
+
+    const neededLift = calculateMenuLiftPx(
+      listRect,
+      messageRect,
+      menuRect,
+      padding,
+    );
+
     if (neededLift <= 0) {
       setMenuLiftPx(0);
       menuLiftApplied.current = 0;
