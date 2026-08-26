@@ -21,8 +21,8 @@
 
 | 入口 | 路由 | 是否提交 GitHub |
 |------|------|-----------------|
-| **核心模块** | `/canvas/core` | ✅ 验收通过后，走分支 + PR |
-| **原型创作** | `/canvas/studio` | ❌ 个人画布，历史在本浏览器，**不要 push** |
+| **核心模块** | `/canvas/core` | ✅ 验收通过后，走分支 + PR | 契约：`specs/scenes/prototype-catalog-core.yaml` |
+| **原型创作** | `/canvas/studio` | ❌ 个人画布，历史在本浏览器，**不要 push** | 契约：`specs/scenes/page-canvas-studio.yaml` |
 
 ### 应该 push / PR 的内容（核心模块）
 

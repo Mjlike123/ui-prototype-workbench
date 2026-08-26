@@ -1,6 +1,6 @@
 schemaVersion: 1
 id: avatar
-version: 1.2.0
+version: 1.3.0
 title: 头像
 owner: TopTop Design System
 category: Data Display
@@ -30,6 +30,12 @@ reference:
     - 系统通知、普通操作列表、匿名或默认头像、非用户实体不得使用头像框
     - 头像框必须覆盖在头像外层且保持头像中心不变；装饰可以超出头像尺寸，但不得改变相邻文字的对齐起点
     - 头像右下角可叠加男女、选中、闭麦、贵族、在线或游戏徽标；徽标使用独立切图资源，不由 CSS 临摹图形
+    - 徽标由 Kit `AvatarBadge` 渲染，默认锚定在头像右下角；通用偏移 right -2pt / bottom -2pt，online 与 gender 贴边为 0，game 为 right -5pt / bottom -5pt
+    - gender 徽标容器 16×16pt，圆形底 `#ff68bf`（color.identity.gender-female），1pt 白色描边，内部切图 14×14pt
+    - selected 徽标容器 24×24pt，双层切图（外圈 20×20pt + 对勾 9×6pt）
+    - muted 徽标容器 18×18pt，圆形底 rgba(0,0,0,0.8)，1pt 白色描边，内部切图 12×12pt
+    - noble 与 game 使用彩色 PNG 切图；noble 18×18pt，game 20×20pt
+    - online 徽标 12×12pt 圆点切图，贴右下角无额外偏移
     - 徽标属于瞬时状态或身份补充，不替代可读的在线、静音、性别或权益文本
     - 无用户头像时使用默认空状态切图；亮色场景为浅灰底 + 成员剪影，暗色场景为 10% 白色底 + 10% 白色剪影，按页面背景选择
     - 头像组用于在 48×48pt 占位内展示 2–6 位成员，常见于消息列表群聊行与首页在线好友区
@@ -118,9 +124,12 @@ props:
   - name: frameSrc
     type: string
     description: 用户已获得且当前装备的头像框资源；不存在时不得保留空装饰占位。Kit gap：H5 参考实现当前使用固定示例资源，尚不支持按用户传入。
+  - name: badge
+    type: gender|selected|muted|noble|online|game
+    description: Kit 内置徽标类型，由 AvatarBadge 渲染；与 badgeSrc 互斥时优先 badgeSrc。
   - name: badgeSrc
     type: string
-    description: 当前业务状态对应的徽标切图；不存在时不渲染徽标容器。也可通过 `badge` 变体使用 Kit 内置切图。
+    description: 自定义徽标切图；不存在时回退到 `badge` 变体或隐藏徽标容器。
   - name: groupLayout
     type: list-2|list-3|list-4|list-5|home-more|home-row
     defaultValue: list-4
@@ -133,6 +142,7 @@ tokenRefs:
   - color.surface.panel
   - color.brand.primary
   - color.text.primary
+  - color.identity.gender-female
   - spacing.1
 interactionIds:
   - avatar-navigation
@@ -168,6 +178,8 @@ detection:
     - profile image
     - 头像组
     - avatar group
+    - avatar badge
+    - AvatarBadge
 roles:
   - container
   - avatarImage
@@ -209,5 +221,35 @@ rules:
     title: 状态徽标高度
     category: structure
     metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: statusBadge.gender.width
+    title: 性别徽标宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: statusBadge.gender.height
+    title: 性别徽标高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: statusBadge.selected.width
+    title: 选中徽标宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: statusBadge.online.width
+    title: 在线徽标宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: statusBadge.game.width
+    title: 游戏徽标宽度
+    category: structure
+    metric: width
     tolerance: 1
     aggregate: rule

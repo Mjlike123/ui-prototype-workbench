@@ -2,6 +2,8 @@
 
 用于同一业务上下文内的二级内容切换。标签数量较少、文案较短，并且用户需要持续感知当前选择。
 
+本契约描述 **胶囊（Pill）** 形态。Kit 实现文件为 `pill-secondary-tab.tsx`；下划线与纯文字形态见 `secondary-tab-underline`、`secondary-tab-text`。
+
 ## 尺寸类型
 
 - **28pt 高**：用于语音房、动态广场二级页面的分类切换。
@@ -14,6 +16,8 @@
 - 相邻 Tab 间距固定为 8pt。
 - 按钮左右内边距各为 12pt，宽度根据标签内容自适应，不设置统一宽度或最小宽度。
 - 未选中按钮保留背景，使用 `color.button.secondary`；文字使用 `color.text.primary-a50`。
+- 选中按钮背景使用 `color.brand.primary`，文字使用 `color.text.white-primary`。
+- 胶囊圆角使用 `radius.full`（全圆角，取按钮高度一半）。
 - 标签顺序保持稳定，不能因为接口返回数量改变顺序。
 - 动态计数属于标签内容，不参与确定组件宽度。
 - 页面主导航、跨业务跳转和步骤流程不要使用二级 Tab。

@@ -1,0 +1,37 @@
+schemaVersion: 1
+id: prototype-catalog-core
+version: 1.0.0
+title: 核心模块 · 原型目录
+status: review
+description: Git 统一维护的核心交互模版预览场景；注册表驱动路由与设备内导航栈，供团队验收后合并发布。
+route: /canvas/core
+platforms:
+  - ios
+  - android
+  - h5
+storage:
+  kind: git
+  description: 模版源码、路由注册与资源随分支 PR 合并；不含浏览器 localStorage 草稿。
+shell:
+  viewportWidth: 375
+  viewportHeight: 812
+  deviceFrame: true
+  safeArea: true
+allowedBlockKinds:
+  - prototype-screen
+kitRequirements:
+  - 核心屏幕必须实现为 components/prototypes/*-prototype.tsx
+  - 路由注册于 prototype-app-routes.ts 与 prototype-app-router.tsx
+  - 目录展示于 prototype-preview-showcase.tsx
+  - 设备内导航使用 prototypeNavStack；返回由 onBack / navigate 驱动
+  - 页面块拼装不得绕过 Kit；未覆盖区域记录 kitGap
+implementationRefs:
+  - apps/design-system-portal/src/app/canvas/core/page.tsx
+  - apps/design-system-portal/src/components/prototype-preview-showcase.tsx
+  - apps/design-system-portal/src/lib/prototype-app-routes.ts
+  - docs/prototype-platform-git-workflow.md
+promotionPath:
+  - Studio 探索验收通过
+  - 实现为 *-prototype.tsx 并注册 catalog
+  - PR 合并至 main
+  - 出现在核心模块目录

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://toptop.local/schemas/scene.schema.json",
+  "title": "UI Scene / Page Contract",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "title",
+    "status",
+    "description",
+    "route",
+    "platforms"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "version": { "type": "string" },
+    "title": { "type": "string" },
+    "status": {
+      "enum": ["draft", "review", "stable", "deprecated"]
+    },
+    "description": { "type": "string" },
+    "route": { "type": "string" },
+    "platforms": {
+      "type": "array",
+      "items": { "enum": ["ios", "android", "h5"] }
+    },
+    "storage": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["git", "localStorage", "none"] },
+        "key": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "shell": {
+      "type": "object",
+      "properties": {
+        "viewportWidth": { "type": "number" },
+        "viewportHeight": { "type": "number" },
+        "deviceFrame": { "type": "boolean" },
+        "safeArea": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "allowedBlockKinds": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "kitRequirements": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "implementationRefs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "promotionPath": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

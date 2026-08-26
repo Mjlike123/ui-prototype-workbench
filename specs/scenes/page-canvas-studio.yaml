@@ -1,0 +1,42 @@
+schemaVersion: 1
+id: page-canvas-studio
+version: 1.0.0
+title: 原型创作 · Page Canvas
+status: review
+description: 个人探索画布；通过 prompt / 模板生成 PageCanvasPlan，在固定设备视口内用 Kit 块拼装页面。历史仅存浏览器，不进入 Git。
+route: /canvas/studio
+platforms:
+  - h5
+storage:
+  kind: localStorage
+  key: toptop-page-canvas-history-v1
+  description: 创作历史、参考图与 prompt 草稿；禁止 push 到 GitHub。
+shell:
+  viewportWidth: 375
+  viewportHeight: 812
+  deviceFrame: true
+  safeArea: false
+allowedBlockKinds:
+  - primary-navigation
+  - regular-navigation
+  - secondary-tab
+  - search-control
+  - regular-list
+  - button-bar
+  - bottom-navigation
+kitRequirements:
+  - PageCanvasStage 必须通过 components/kit 与 specs 已定义组件渲染块
+  - secondary-tab 块 variant pill 映射 secondary-tab / PillSecondaryTab
+  - secondary-tab 块 variant underline 映射 secondary-tab-underline
+  - 导航、搜索、列表、图标须用 Kit；禁止手写重复 Kit 标记
+  - Studio 页面壳使用 components/studio/* 与 studio-* session 键，不得写入 Core 命名空间
+implementationRefs:
+  - apps/design-system-portal/src/app/canvas/studio/page.tsx
+  - apps/design-system-portal/src/components/page-canvas-showcase.tsx
+  - apps/design-system-portal/src/components/page-canvas-stage.tsx
+  - apps/design-system-portal/src/lib/page-canvas-parser.ts
+  - apps/design-system-portal/src/lib/page-canvas-templates.ts
+promotionPath:
+  - Studio 布局与交互评审通过
+  - 下沉为 components/prototypes/*-prototype.tsx
+  - 注册 prototype-catalog-core 并 PR

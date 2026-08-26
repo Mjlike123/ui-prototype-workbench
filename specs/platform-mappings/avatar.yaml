@@ -19,6 +19,6 @@ platforms:
     status: planned
   h5:
     componentName: Avatar
-    package: "@toptop/ui"
-    codeExample: "<Avatar src={src} alt={userName} size={48} frameSrc={frameSrc} badgeSrc={badgeSrc} />"
-    status: planned
+    package: "@/components/kit/avatar-visual"
+    codeExample: "<AvatarVisual src={src} alt={userName} size={48} frameSrc={frameSrc} badge=\"online\" />"
+    status: partial

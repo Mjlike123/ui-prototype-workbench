@@ -49,6 +49,7 @@ import { ImageEmptyState } from "@/components/kit/image-empty-state";
 import { EmptyState, EMPTY_STATE_ILLUSTRATIONS } from "@/components/kit/empty-state";
 import { PrimaryNavigation } from "@/components/kit/primary-navigation";
 import { TextSecondaryTab } from "@/components/kit/text-secondary-tab";
+import { PillSecondaryTab } from "@/components/kit/pill-secondary-tab";
 import { PrimaryNavigationSearchIcon } from "./primary-navigation-search-icon";
 import {
   AvatarVisual,
@@ -654,11 +655,15 @@ export function ComponentPreview({
         ariaLabel="纯文字二级 Tab"
       />
     ) : (
-      <PillTab
-        labels={labels}
-        selectedIndex={selectedIndex}
+      <PillSecondaryTab
+        items={labels.map((label, index) => ({
+          key: String(index),
+          label,
+        }))}
+        value={String(selectedIndex)}
+        onChange={(key) => setSelectedIndex(Number(key))}
         size={pillSize}
-        onChange={setSelectedIndex}
+        ariaLabel="二级 Tab"
       />
     );
 
@@ -2230,43 +2235,6 @@ function NavigationIcon({
       height={24}
       aria-hidden="true"
     />
-  );
-}
-
-function PillTab({
-  labels,
-  selectedIndex,
-  size,
-  onChange,
-}: {
-  labels: string[];
-  selectedIndex: number;
-  size: "height28" | "height24";
-  onChange: (index: number) => void;
-}) {
-  return (
-    <div
-      className={`secondaryTabPill ${
-        size === "height24"
-          ? "secondaryTabPillHeight24"
-          : "secondaryTabPillHeight28"
-      }`}
-      role="tablist"
-      aria-label="二级 Tab"
-    >
-      {labels.map((label, index) => (
-        <button
-          key={label}
-          type="button"
-          role="tab"
-          aria-selected={selectedIndex === index}
-          className={selectedIndex === index ? "selected" : ""}
-          onClick={() => onChange(index)}
-        >
-          <span>{label}</span>
-        </button>
-      ))}
-    </div>
   );
 }
 

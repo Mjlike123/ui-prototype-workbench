@@ -17,7 +17,7 @@ platforms:
     codeExample: "TopSecondaryTab(items = items, selectedIndex = selectedIndex)"
     status: planned
   h5:
-    componentName: SecondaryTab
-    package: "@toptop/ui"
-    codeExample: "<SecondaryTab items={items} value={value} onChange={setValue} />"
+    componentName: PillSecondaryTab
+    package: "@/components/kit/pill-secondary-tab"
+    codeExample: "<PillSecondaryTab items={items} value={value} onChange={setValue} size=\"height28\" />"
     status: partial

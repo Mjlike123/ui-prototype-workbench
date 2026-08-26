@@ -36,7 +36,18 @@
 
 ## 状态徽标
 
-头像右下角可叠加一个状态徽标，覆盖男女标、选中、闭麦、贵族、在线和游戏状态。徽标必须使用设计提供的独立切图资源，不使用 CSS 临摹图形，也不能同时堆叠多个同级徽标。
+头像右下角可叠加一个状态徽标，覆盖男女标、选中、闭麦、贵族、在线和游戏状态。徽标由 Kit `AvatarBadge` 渲染，必须使用设计提供的独立切图资源，不使用 CSS 临摹图形，也不能同时堆叠多个同级徽标。
+
+| kind | 容器尺寸 | 锚点偏移 | 颜色 / Token | 切图 |
+| --- | --- | --- | --- | --- |
+| `gender` | 16×16pt | right 0 / bottom 0 | 底 `color.identity.gender-female`，描边 `#FFFFFF` | `/icons/avatar-badges/gender-female.svg` 14×14pt |
+| `selected` | 24×24pt | right -2pt / bottom -2pt | 切图自带 | 外圈 + 对勾双层 SVG |
+| `muted` | 18×18pt | right -2pt / bottom -2pt | 底 `rgba(0,0,0,0.8)`，描边 `#FFFFFF` | `/icons/avatar-badges/muted.svg` 12×12pt |
+| `noble` | 18×18pt | right -2pt / bottom -2pt | PNG 自带 | `/icons/avatar-badges/noble.png` |
+| `online` | 12×12pt | right 0 / bottom 0 | 切图自带 | `/icons/avatar-badges/online-dot.svg` |
+| `game` | 20×20pt | right -5pt / bottom -5pt | PNG 自带 | `/icons/avatar-badges/game.png` |
+
+Props：`badge` 使用上表内置 kind；`badgeSrc` 用于自定义切图，与 `badge` 互斥时优先 `badgeSrc`。
 
 徽标只补充当前业务状态，不替代可读文本。在线、静音、性别或权益含义应由头像外部状态文案、标签或控件可访问名称完整表达。切图加载失败时移除徽标，不影响头像本体展示。
 

@@ -18,6 +18,7 @@ const schemaGroups = [
   ["specs/principles", "design-principles.schema.json"],
   ["specs/interactions", "interaction.schema.json"],
   ["specs/platform-mappings", "platform-mapping.schema.json"],
+  ["specs/scenes", "scene.schema.json"],
   ["specs/audit", "audit-registry.schema.json"],
 ] as const;
 
