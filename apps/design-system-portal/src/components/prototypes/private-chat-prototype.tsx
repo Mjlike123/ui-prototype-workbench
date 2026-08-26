@@ -10,10 +10,12 @@ import {
   type PointerEvent,
 } from "react";
 import { AvatarVisual } from "@/components/kit/avatar-visual";
+import { PrototypeAvatarImage } from "@/components/kit/prototype-avatar-image";
 import {
   ChatInput,
   type ChatInputMode,
 } from "@/components/kit/chat-input";
+import { ChatEmojiGifComposerStack } from "@/components/kit/chat-emoji-gif-composer-stack";
 import {
   ChatBubble,
   type ChatBubbleActionState,
@@ -474,6 +476,15 @@ export function PrivateChatPrototype({
     scrollToLatestMessage();
   };
 
+  const trimDraftCharacter = () => {
+    setDraft((current) => {
+      const segments = [...new Intl.Segmenter().segment(current)].map(
+        (part) => part.segment,
+      );
+      return segments.slice(0, -1).join("");
+    });
+  };
+
   const requestCustomEmojiUpload = () => {
     const pendingId = `pending-${Date.now()}`;
     setCustomEmojis((current) => [
@@ -821,29 +832,26 @@ export function PrivateChatPrototype({
                           message.kind === "relationship"
                             ? undefined
                             : message.direction === "incoming" ? (
-                                <Image
+                                <PrototypeAvatarImage
                                   src={friend.avatar}
                                   alt=""
-                                  width={30}
-                                  height={30}
+                                  displaySize={30}
                                 />
                               ) : (
-                                <Image
+                                <PrototypeAvatarImage
                                   src="/icons/list/message-avatar.png"
                                   alt=""
-                                  width={30}
-                                  height={30}
+                                  displaySize={30}
                                 />
                               )
                         }
                         relationshipAvatars={
                           message.kind === "relationship" ? (
                             <>
-                              <Image
+                              <PrototypeAvatarImage
                                 src={friend.avatar}
                                 alt=""
-                                width={40}
-                                height={40}
+                                displaySize={40}
                               />
                               <AvatarVisual size={40} alt="" />
                             </>
@@ -908,42 +916,46 @@ export function PrivateChatPrototype({
           <PrototypeChatSystemEvent text="You recalled a message" />
         </main>
 
-        <div className="privateChatComposerStack">
-          {replyingTo ? (
-            <PrototypeReplyContextBar
-              target={replyingTo}
-              onClose={() => {
-                setReplyingTo(undefined);
-                setFeedback("已取消回复");
-              }}
-            />
-          ) : null}
-          {emojiPanelOpen ? (
+        <ChatEmojiGifComposerStack
+          className="privateChatComposerStack"
+          open={emojiPanelOpen}
+          panel={
             <PrototypeEmojiPanel
               recent={recentEmojis}
               customEmojis={customEmojis}
               onSelect={sendEmojiSelection}
               onUploadRequest={requestCustomEmojiUpload}
+              onDelete={trimDraftCharacter}
             />
-          ) : null}
-          <ChatInput
-            value={draft}
-            mode={inputMode}
-            aria-label="发送私聊消息"
-            onChange={setDraft}
-            onSubmit={sendMessage}
-            onFocus={() => {
-              setEmojiPanelOpen(false);
-              scrollToLatestMessage();
-            }}
-            onModeChange={setInputMode}
-            onPhoto={() => appendMessage("Photo", "image")}
-            onEmoji={() => setEmojiPanelOpen((open) => !open)}
-            onGame={() => appendMessage("Game invite")}
-            onGift={() => appendMessage("Gift")}
-            onVoiceHoldEnd={() => appendMessage("Voice message", "voice")}
-          />
-        </div>
+          }
+          input={
+            <>
+              {replyingTo ? (
+                <PrototypeReplyContextBar
+                  target={replyingTo}
+                  onClose={() => {
+                    setReplyingTo(undefined);
+                    setFeedback("已取消回复");
+                  }}
+                />
+              ) : null}
+              <ChatInput
+                value={draft}
+                mode={inputMode}
+                aria-label="发送私聊消息"
+                onChange={setDraft}
+                onSubmit={sendMessage}
+                onFocus={scrollToLatestMessage}
+                onModeChange={setInputMode}
+                onPhoto={() => appendMessage("Photo", "image")}
+                onEmoji={() => setEmojiPanelOpen((open) => !open)}
+                onGame={() => appendMessage("Game invite")}
+                onGift={() => appendMessage("Gift")}
+                onVoiceHoldEnd={() => appendMessage("Voice message", "voice")}
+              />
+            </>
+          }
+        />
         {feedback ? (
           <output className="privateChatFeedback" aria-live="polite">
             {feedback}

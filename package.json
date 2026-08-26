@@ -24,6 +24,7 @@
     "skill:sync-specs": "node scripts/sync-skill-specs.mjs",
     "skill:check": "node scripts/check-skill-specs-drift.mjs",
     "icons:generate-inline": "node scripts/generate-inline-icon-assets.mjs",
+    "avatars:generate-3x": "node scripts/generate-prototype-avatar-3x.mjs",
     "check:kit": "npm run specs:validate && npm run skill:check && npm run portal:test",
     "verify:mvp": "bash scripts/verify-design-mvp.sh",
     "verify:screenshot": "python3 scripts/compare-images.py",

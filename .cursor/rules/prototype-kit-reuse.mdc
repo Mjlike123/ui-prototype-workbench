@@ -1,6 +1,6 @@
 ---
 description: Require AI-designed prototypes to reuse existing TopTop Kit components
-globs: "apps/design-system-portal/src/components/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/app/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/app/prototype-runtime/**/*.{ts,tsx}"
+globs: "apps/design-system-portal/src/components/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/components/studio/**/*.{ts,tsx},apps/design-system-portal/src/components/page-canvas-stage.tsx,apps/design-system-portal/src/components/page-canvas-showcase.tsx,apps/design-system-portal/src/app/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/app/prototype-runtime/**/*.{ts,tsx},apps/design-system-portal/src/app/canvas/**/*.{ts,tsx}"
 alwaysApply: false
 ---
 
@@ -13,8 +13,9 @@ When designing or implementing an AI-generated prototype:
    - Tags and badges → `list-tag`
    - Action or message rows → `regular-list`
    - Page title bars and tabs → the matching navigation component
-   - Icons → canonical assets under `public/icons/` and the existing icon/component wrapper
-3. Do not recreate Kit markup, tokens, states, or icons with prototype-local CSS, emoji, inline SVG, screenshots, or look-alike elements.
+   - Icons → `SystemIcon`, `BottomNavigationIcon`, `SearchControl`, or extend `generate-inline-icon-assets.mjs`; never CSS mask or rasterized SVG `<img>` (see `prototype-asset-pipeline.mdc`)
+   - Avatars & prototype photos → `PrototypeAvatarImage` / `AvatarVisual` with @3x bitmaps registered in `generate-prototype-avatar-3x.mjs`
+3. Do not recreate Kit markup, tokens, states, or icons with prototype-local CSS, emoji, screenshots, or look-alike elements.
 4. Prototype layout may compose and position Kit components, but must not copy their internals.
 5. If no Kit component can express a required area, record it as a `kitGap` and isolate only that area as a clearly named `Prototype*` module.
 6. Include the component mapping and unresolved `kitGaps` in the prototype handoff.

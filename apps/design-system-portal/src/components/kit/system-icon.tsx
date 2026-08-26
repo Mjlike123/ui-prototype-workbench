@@ -26,13 +26,16 @@ export const SYSTEM_ICON_ASSETS = {
   microphone: "/icons/svg/icon=麦克风.svg",
   photo: "/icons/svg/icon=照片.svg",
   emoji: "/icons/svg/icon=表情.svg",
+  gif: "/icons/svg/icon=GIF.svg",
   game: "/icons/svg/icon=游戏.svg",
   gift: "/icons/svg/icon=礼物.svg",
   send: "/icons/svg/icon=发送.svg",
   keyboard: "/icons/svg/icon=键盘.svg",
+  backspace: "/icons/svg/icon=退格.svg",
   close: "/icons/svg/icon=关闭.svg",
   reply: "/icons/svg/icon=回复.svg",
   link: "/icons/svg/icon=链接.svg",
+  copy: "/icons/svg/icon=复制.svg",
   messageFailed: "/icons/svg/icon=发送失败.svg",
 } as const;
 

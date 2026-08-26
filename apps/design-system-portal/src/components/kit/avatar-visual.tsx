@@ -1,7 +1,10 @@
 import Image from "next/image";
+import { displayImagePixels } from "@/lib/display-image-density";
+import { AvatarBadge, type AvatarBadgeKind } from "@/components/kit/avatar-badge";
 
 export type AvatarSize = 72 | 60 | 48 | 40 | 36 | 24 | 20;
 export type AvatarEmptyTheme = "light" | "dark";
+export type { AvatarBadgeKind };
 
 const EMPTY_AVATAR_SRC: Record<AvatarEmptyTheme, string> = {
   light: "/icons/avatar/default-empty-light.png",
@@ -11,6 +14,7 @@ const EMPTY_AVATAR_SRC: Record<AvatarEmptyTheme, string> = {
 type AvatarVisualProps = {
   size: AvatarSize;
   framed?: boolean;
+  badge?: AvatarBadgeKind;
   src?: string;
   alt?: string;
   empty?: boolean;
@@ -20,12 +24,15 @@ type AvatarVisualProps = {
 export function AvatarVisual({
   size,
   framed = false,
+  badge,
   src = "/icons/list/message-avatar.png",
   alt = "",
   empty = false,
   emptyTheme = "light",
 }: AvatarVisualProps) {
   const frameSize = framed ? Math.round(size * 1.5) : size;
+  const pixelSize = displayImagePixels(size);
+  const framePixelSize = displayImagePixels(frameSize);
   const resolvedSrc = empty ? EMPTY_AVATAR_SRC[emptyTheme] : src;
   const imageClassName = empty
     ? "avatarVisualImage avatarVisualImage--empty"
@@ -42,18 +49,27 @@ export function AvatarVisual({
         className={imageClassName}
         style={{ width: size, height: size }}
       >
-        <Image src={resolvedSrc} alt={alt} width={size} height={size} unoptimized={empty} />
+        <Image
+          src={resolvedSrc}
+          alt={alt}
+          width={pixelSize}
+          height={pixelSize}
+          sizes={`${size}px`}
+          unoptimized={empty}
+        />
       </span>
       {framed ? (
         <Image
           className="avatarVisualFrame"
           src="/icons/list/avatar-frame.png"
           alt=""
-          width={frameSize}
-          height={frameSize}
+          width={framePixelSize}
+          height={framePixelSize}
+          sizes={`${frameSize}px`}
           aria-hidden="true"
         />
       ) : null}
+      {badge ? <AvatarBadge kind={badge} /> : null}
     </span>
   );
 }

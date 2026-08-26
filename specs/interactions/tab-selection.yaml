@@ -6,6 +6,7 @@ description: 用户切换同一上下文中的并列内容，选择立即生效�
 componentIds:
   - secondary-tab
   - secondary-tab-underline
+  - secondary-tab-text
 states:
   - unselected
   - pressed

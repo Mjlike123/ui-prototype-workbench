@@ -52,11 +52,13 @@ describe("PrototypeDestinationPage", () => {
     const onNavigate = vi.fn();
     const onOpenSearch = vi.fn();
     const onOpenCompose = vi.fn();
+    const onOpenFeedDetail = vi.fn();
     const { container, rerender } = render(
       <PrototypeDestinationPage
         screen="feed"
         onNavigate={onNavigate}
         onOpenCompose={onOpenCompose}
+        onOpenFeedDetail={onOpenFeedDetail}
       />,
     );
 
@@ -92,6 +94,10 @@ describe("PrototypeDestinationPage", () => {
     ).toHaveAttribute("aria-pressed", "true");
     fireEvent.click(screen.getByRole("button", { name: "发布动态" }));
     expect(onOpenCompose).toHaveBeenCalledOnce();
+    fireEvent.click(
+      screen.getByRole("button", { name: "查看 Latifa Alghanim 的动态详情" }),
+    );
+    expect(onOpenFeedDetail).toHaveBeenCalledOnce();
 
     rerender(
       <PrototypeDestinationPage
@@ -113,10 +119,12 @@ describe("PrototypeDestinationPage", () => {
     expect(
       container.querySelector('[data-system-icon="contacts"]'),
     ).toBeInTheDocument();
-    const onlineDots = container.querySelectorAll(".prototypeOnlineFriendDot");
-    expect(onlineDots).toHaveLength(4);
-    onlineDots.forEach((dot) => {
-      expect(dot.getAttribute("src")).toContain("online-dot.svg");
+    const onlineBadges = container.querySelectorAll(".avatarVisualBadge--online");
+    expect(onlineBadges).toHaveLength(4);
+    onlineBadges.forEach((badge) => {
+      expect(
+        badge.querySelector('img[src*="avatar-badges/online-dot.svg"]'),
+      ).not.toBeNull();
     });
     expect(
       screen.getByRole("button", { name: /❤️i980🌹Wo/ }),
@@ -137,7 +145,7 @@ describe("PrototypeDestinationPage", () => {
     expect(
       screen.getByRole("button", { name: "Cassie" }),
     ).toBeInTheDocument();
-    expect(container.querySelectorAll(".prototypeOnlineFriendDot")).toHaveLength(
+    expect(container.querySelectorAll(".avatarVisualBadge--online")).toHaveLength(
       5,
     );
     expect(screen.getByRole("button", { name: "7 more" })).toBeInTheDocument();

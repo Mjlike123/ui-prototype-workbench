@@ -20,6 +20,14 @@ import {
   SearchControlIcon,
 } from "@/components/kit/search-control";
 import {
+  ChatEmojiGifPanel,
+  demoChatEmojiGifPanelContentByTab,
+} from "@/components/kit/chat-emoji-gif-panel";
+import {
+  ChatEmojiGifTabBar,
+  DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS,
+} from "@/components/kit/chat-emoji-gif-tab-bar";
+import {
   ChatInput,
   type ChatInputMode,
 } from "@/components/kit/chat-input";
@@ -32,11 +40,21 @@ import {
   type ChatBubbleKind,
   type ChatReplyPreviewKind,
 } from "@/components/kit/chat-bubble";
+import {
+  AvatarGroupVisual,
+  type AvatarGroupVariant,
+} from "@/components/kit/avatar-group-visual";
 import { Switch } from "@/components/kit/switch";
 import { ImageEmptyState } from "@/components/kit/image-empty-state";
 import { EmptyState, EMPTY_STATE_ILLUSTRATIONS } from "@/components/kit/empty-state";
 import { PrimaryNavigation } from "@/components/kit/primary-navigation";
+import { TextSecondaryTab } from "@/components/kit/text-secondary-tab";
 import { PrimaryNavigationSearchIcon } from "./primary-navigation-search-icon";
+import {
+  AvatarVisual,
+  type AvatarBadgeKind,
+  type AvatarSize,
+} from "@/components/kit/avatar-visual";
 
 type PreviewProps = {
   component: ComponentSpec;
@@ -54,6 +72,10 @@ export function ComponentPreview({
   const isListTag = component.previewKey === "list-tag";
   const isSearchControl = component.previewKey === "search-control";
   const isChatInput = component.previewKey === "chat-input";
+  const isChatEmojiGifTabBar =
+    component.previewKey === "chat-emoji-gif-tab-bar";
+  const isChatEmojiGifPanel =
+    component.previewKey === "chat-emoji-gif-panel";
   const isChatBubble = component.previewKey === "chat-bubble";
   const isSwitch = component.previewKey === "switch";
   const isRegularList = component.previewKey === "regular-list";
@@ -66,6 +88,7 @@ export function ComponentPreview({
     component.previewKey === "primary-navigation";
   const isUnderline =
     component.previewKey === "secondary-tab-underline";
+  const isTextTab = component.previewKey === "secondary-tab-text";
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [firstLabel, setFirstLabel] = useState(
     isUnderline ? "About me" : "Vehicles",
@@ -130,6 +153,10 @@ export function ComponentPreview({
   const [chatBubbleReadStatusUpsell, setChatBubbleReadStatusUpsell] =
     useState(false);
   const [switchChecked, setSwitchChecked] = useState(true);
+  const [emojiGifTab, setEmojiGifTab] = useState(
+    DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS[0]?.key ?? "emoji",
+  );
+  const emojiGifPanelDemo = demoChatEmojiGifPanelContentByTab();
 
   const labels = [
     firstLabel,
@@ -192,6 +219,22 @@ export function ComponentPreview({
               disabled
               onChange={() => undefined}
               onSubmit={() => undefined}
+            />
+          </div>
+        ) : isChatEmojiGifTabBar ? (
+          <div className="chatEmojiGifTabBarCompact" aria-hidden="true">
+            <ChatEmojiGifTabBar
+              items={DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS}
+              value={DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS[0]?.key ?? "emoji"}
+              onChange={() => undefined}
+            />
+          </div>
+        ) : isChatEmojiGifPanel ? (
+          <div className="chatEmojiGifPanelCompact" aria-hidden="true">
+            <ChatEmojiGifPanel
+              value={DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS[0]?.key ?? "emoji"}
+              onChange={() => undefined}
+              content={emojiGifPanelDemo.emoji}
             />
           </div>
         ) : isChatBubble ? (
@@ -277,6 +320,11 @@ export function ComponentPreview({
           <div className="secondaryTabUnderline" aria-hidden="true">
             <span className="tabItem selected">About me</span>
             <span className="tabItem">Movement</span>
+          </div>
+        ) : isTextTab ? (
+          <div className="secondaryTabText secondaryTabText--capitalizeInactive" aria-hidden="true">
+            <span className="selected">Comments</span>
+            <span>like</span>
           </div>
         ) : (
           <div className="secondaryTabPill secondaryTabPillHeight28" aria-hidden="true">
@@ -402,6 +450,24 @@ export function ComponentPreview({
       onGift={() => setChatDraft("Gift")}
       onVoiceHoldStart={() => undefined}
       onVoiceHoldEnd={() => undefined}
+    />
+  ) : isChatEmojiGifTabBar ? (
+    <ChatEmojiGifTabBar
+      items={DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS}
+      value={emojiGifTab}
+      onChange={setEmojiGifTab}
+    />
+  ) : isChatEmojiGifPanel ? (
+    <ChatEmojiGifPanel
+      value={emojiGifTab}
+      onChange={setEmojiGifTab}
+      content={
+        emojiGifPanelDemo[emojiGifTab] ?? {
+          variant: "empty",
+          message: "暂无内容",
+        }
+      }
+      onVipAction={() => undefined}
     />
   ) : isChatBubble ? (
     <div className="chatBubblePreview">
@@ -577,6 +643,16 @@ export function ComponentPreview({
         selectedIndex={selectedIndex}
         onChange={setSelectedIndex}
       />
+    ) : isTextTab ? (
+      <TextSecondaryTab
+        items={[
+          { key: "comments", label: "Comments" },
+          { key: "like", label: "like" },
+        ]}
+        value={selectedIndex === 0 ? "comments" : "like"}
+        onChange={(key) => setSelectedIndex(key === "comments" ? 0 : 1)}
+        ariaLabel="纯文字二级 Tab"
+      />
     ) : (
       <PillTab
         labels={labels}
@@ -605,6 +681,10 @@ export function ComponentPreview({
               ? "体验进入搜索、输入、清除、长文案截断与取消"
               : isChatInput
               ? "体验文字、语音、长文案及礼物与发送操作切换"
+              : isChatEmojiGifTabBar
+              ? "切换 Emoji、GIF 与各贴纸包分类 Tab"
+              : isChatEmojiGifPanel
+              ? "切换分类并预览 Emoji 键盘、GIF 网格与 VIP 锁定态"
               : isChatBubble
               ? "对照文字、语音、图片和业务卡片的收发与反馈状态"
               : isSwitch
@@ -619,6 +699,8 @@ export function ComponentPreview({
               ? "切换标题数量、选中位置与尾部操作"
               : isUnderline
               ? "点击标签或左右滑动列表"
+              : isTextTab
+              ? "点击 Comments / Like 切换分区"
               : "点击标签或修改参数"}
           </p>
         </div>
@@ -628,12 +710,15 @@ export function ComponentPreview({
         <div
           className={`previewDevice${
             isUnderline ||
+            isTextTab ||
             isPrimaryNavigation ||
             isRegularNavigation ||
             isBottomNavigation ||
             isButton ||
             isSearchControl ||
             isChatInput ||
+            isChatEmojiGifTabBar ||
+            isChatEmojiGifPanel ||
             isChatBubble ||
             isRegularList ||
             isAvatar ||
@@ -648,6 +733,8 @@ export function ComponentPreview({
             isBottomNavigation ||
             isSearchControl ||
             isChatInput ||
+            isChatEmojiGifTabBar ||
+            isChatEmojiGifPanel ||
             isChatBubble ||
             isSwitch
               ? " previewDevicePrimary"
@@ -737,6 +824,36 @@ export function ComponentPreview({
               />
             </div>
           </>
+        ) : isChatEmojiGifTabBar ? (
+          <div className="controlField">
+            <label htmlFor="chat-emoji-gif-tab-demo">当前 Tab</label>
+            <select
+              id="chat-emoji-gif-tab-demo"
+              value={emojiGifTab}
+              onChange={(event) => setEmojiGifTab(event.target.value)}
+            >
+              {DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS.map((item) => (
+                <option key={item.key} value={item.key}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : isChatEmojiGifPanel ? (
+          <div className="controlField">
+            <label htmlFor="chat-emoji-gif-panel-demo">当前 Tab</label>
+            <select
+              id="chat-emoji-gif-panel-demo"
+              value={emojiGifTab}
+              onChange={(event) => setEmojiGifTab(event.target.value)}
+            >
+              {DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS.map((item) => (
+                <option key={item.key} value={item.key}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </div>
         ) : isChatBubble ? (
           <>
             <div className="controlField">
@@ -1176,7 +1293,7 @@ export function ComponentPreview({
                 <option value="hidden">隐藏</option>
               </select>
             </div>
-            {!isUnderline && (
+            {!isUnderline && !isTextTab && (
               <div className="controlField">
                 <label htmlFor="pill-size">视觉高度</label>
                 <select
@@ -1421,15 +1538,6 @@ function RegularListTrailing({
     </span>
   );
 }
-
-type AvatarSize = 72 | 60 | 48 | 40 | 36 | 24 | 20;
-type AvatarBadgeKind =
-  | "gender"
-  | "selected"
-  | "muted"
-  | "noble"
-  | "online"
-  | "game";
 
 function EmptyStateKitPreview() {
   const illustrationEntries = Object.entries(EMPTY_STATE_ILLUSTRATIONS).filter(
@@ -1708,6 +1816,19 @@ const avatarBadgeCases: Array<{
   { badge: "game", label: "游戏标" },
 ];
 
+const avatarGroupCases: Array<{
+  variant: AvatarGroupVariant;
+  label: string;
+  scene: string;
+}> = [
+  { variant: "home-more", label: "首页群聊", scene: "2×2 网格 · 28pt" },
+  { variant: "list-2", label: "消息列表 ×2", scene: "32pt 对角重叠" },
+  { variant: "list-3", label: "消息列表 ×3", scene: "28pt 上 1 下 2" },
+  { variant: "list-4", label: "消息列表 ×4", scene: "28pt 2×2 簇" },
+  { variant: "list-5", label: "消息列表 ×5", scene: "24pt 五瓣簇" },
+  { variant: "home-row", label: "一排头像组", scene: "24pt ×6 横排" },
+];
+
 function AvatarKitPreview() {
   return (
     <div className="avatarKitStage">
@@ -1801,141 +1922,26 @@ function AvatarKitPreview() {
           ))}
         </div>
       </section>
+
+      <section aria-labelledby="avatar-group-title">
+        <div className="avatarKitSectionHeader">
+          <div>
+            <h3 id="avatar-group-title">头像组</h3>
+            <p>48×48pt 占位内展示 2–6 位成员；消息列表重叠，首页区网格或横排</p>
+          </div>
+          <span>GROUP</span>
+        </div>
+        <div className="avatarGroupCaseGrid">
+          {avatarGroupCases.map(({ variant, label, scene }) => (
+            <article className="avatarGroupCase" key={variant}>
+              <AvatarGroupVisual variant={variant} />
+              <strong>{label}</strong>
+              <p>{scene}</p>
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
-  );
-}
-
-function AvatarVisual({
-  size,
-  framed = false,
-  badge,
-  empty = false,
-  emptyTheme = "light",
-}: {
-  size: AvatarSize;
-  framed?: boolean;
-  badge?: AvatarBadgeKind;
-  empty?: boolean;
-  emptyTheme?: "light" | "dark";
-}) {
-  const frameSize = framed ? Math.round(size * 1.5) : size;
-  const badgeLabel = avatarBadgeCases.find((item) => item.badge === badge)?.label;
-  const resolvedSrc = empty
-    ? emptyTheme === "dark"
-      ? "/icons/avatar/default-empty-dark.png"
-      : "/icons/avatar/default-empty-light.png"
-    : "/icons/list/message-avatar.png";
-  const imageClassName = empty
-    ? "avatarVisualImage avatarVisualImage--empty"
-    : "avatarVisualImage";
-
-  return (
-    <span
-      className={`avatarVisual${framed ? " avatarVisual--framed" : ""}${
-        empty ? " avatarVisual--empty" : ""
-      }`}
-      style={{ width: frameSize, height: frameSize }}
-      role={empty ? undefined : "img"}
-      aria-label={
-        empty
-          ? undefined
-          : `${size} 像素头像${framed ? "，带头像框" : ""}${
-              badgeLabel ? `，${badgeLabel}` : ""
-            }`
-      }
-      aria-hidden={empty ? true : undefined}
-    >
-      <span
-        className={imageClassName}
-        style={{ width: size, height: size }}
-      >
-        <Image
-          src={resolvedSrc}
-          alt=""
-          width={size}
-          height={size}
-          unoptimized={empty}
-        />
-      </span>
-      {framed && (
-        <Image
-          className="avatarVisualFrame"
-          src="/icons/list/avatar-frame.png"
-          alt=""
-          width={frameSize}
-          height={frameSize}
-          aria-hidden="true"
-        />
-      )}
-      {badge && <AvatarBadge kind={badge} />}
-    </span>
-  );
-}
-
-function AvatarBadge({ kind }: { kind: AvatarBadgeKind }) {
-  return (
-    <span
-      className={`avatarVisualBadge avatarVisualBadge--${kind}`}
-      aria-hidden="true"
-    >
-      {kind === "gender" && (
-        <Image
-          src="/icons/avatar-badges/gender-female.svg"
-          alt=""
-          width={14}
-          height={14}
-        />
-      )}
-      {kind === "selected" && (
-        <>
-          <Image
-            src="/icons/avatar-badges/selected-circle.svg"
-            alt=""
-            width={20}
-            height={20}
-          />
-          <Image
-            className="avatarVisualBadgeGlyph"
-            src="/icons/avatar-badges/selected-check.svg"
-            alt=""
-            width={9}
-            height={6}
-          />
-        </>
-      )}
-      {kind === "muted" && (
-        <Image
-          src="/icons/avatar-badges/muted.svg"
-          alt=""
-          width={12}
-          height={12}
-        />
-      )}
-      {kind === "noble" && (
-        <Image
-          src="/icons/avatar-badges/noble.png"
-          alt=""
-          width={18}
-          height={18}
-        />
-      )}
-      {kind === "online" && (
-        <Image
-          src="/icons/avatar-badges/online-dot.svg"
-          alt=""
-          width={12}
-          height={12}
-        />
-      )}
-      {kind === "game" && (
-        <Image
-          src="/icons/avatar-badges/game.png"
-          alt=""
-          width={20}
-          height={20}
-        />
-      )}
-    </span>
   );
 }
 

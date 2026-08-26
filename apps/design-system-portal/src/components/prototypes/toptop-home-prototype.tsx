@@ -5,6 +5,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { ListTag } from "@/components/kit/list-tag";
+import { PrototypeAvatarImage } from "@/components/kit/prototype-avatar-image";
 import { SystemIcon } from "@/components/kit/system-icon";
 import {
   BOTTOM_NAV_DESTINATIONS,
@@ -182,11 +183,10 @@ export function TopTopHomePrototype({
                     onClick={() => showAction(`打开 ${friend.name}`)}
                   >
                     <span className="topTopFriendAvatar">
-                      <Image
+                      <PrototypeAvatarImage
                         src={friend.image}
                         alt=""
-                        width={48}
-                        height={48}
+                        displaySize={48}
                       />
                       <Image
                         className={`topTopFriendStatus topTopFriendStatus--${friend.status}`}
@@ -207,12 +207,11 @@ export function TopTopHomePrototype({
                 >
                   <span className="topTopFriendCollage" aria-hidden="true">
                     {friendsForCollage.map((friend) => (
-                      <Image
+                      <PrototypeAvatarImage
                         key={friend.name}
                         src={friend.image}
                         alt=""
-                        width={28}
-                        height={28}
+                        displaySize={28}
                       />
                     ))}
                   </span>
@@ -277,11 +276,10 @@ export function TopTopHomePrototype({
                     }
                   >
                     <span className="topTopSuggestionAvatar">
-                      <Image
+                      <PrototypeAvatarImage
                         src={friend.avatar}
                         alt=""
-                        width={48}
-                        height={48}
+                        displaySize={48}
                         loading="eager"
                       />
                     </span>
@@ -384,11 +382,10 @@ function TopTopHomeHeader({
             onAction("打开个人资料");
           }}
         >
-          <Image
+          <PrototypeAvatarImage
             src="/prototypes/toptop-home/header-avatar.png"
             alt=""
-            width={36}
-            height={36}
+            displaySize={36}
           />
         </button>
         <button

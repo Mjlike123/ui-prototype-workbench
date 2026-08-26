@@ -1,0 +1,140 @@
+schemaVersion: 1
+id: chat-emoji-gif-panel
+version: 1.0.0
+title: 表情与 GIF 面板
+owner: TopTop Design System
+category: Input
+status: stable
+since: 1.0.0
+tags:
+  - chat
+  - emoji
+  - gif
+  - sticker
+  - panel
+platforms:
+  - ios
+  - android
+  - h5
+description: 私聊底部弹出的表情 / GIF / 大表情 / Toppy / VIP 贴纸面板，由分类 Tab 与 300pt 内容区组成。
+previewKey: chat-emoji-gif-panel
+reference:
+  figmaUrl: https://www.figma.com/design/ZYUBOkQbynQxUaxP1bw3CF/V3.27.0?node-id=82-18787
+  nodeId: "82:18787"
+  observations:
+    - 面板总内容区高 300pt；顶部分类 Tab 另计 56pt（见 chat-emoji-gif-tab-bar）
+    - 私聊 Composer 栈顺序（Figma 36:6699）：ChatInput 60pt → Tab 56pt → 面板 300pt
+    - Emoji 小表情区含「最近使用 / 所有表情」分区；退格按钮固定于 300pt 内容区右下角，不随列表滚动
+    - GIF / 大表情 / Toppy 贴纸使用 4 列 72×72pt 网格，首格可为添加按钮
+    - VIP 贴纸包展示模糊背景 + Open VIP 主按钮锁定态
+anatomy:
+  - id: tabBar
+    label: 分类 Tab 栏
+    description: 复用 chat-emoji-gif-tab-bar，切换 Emoji / GIF / 贴纸包。
+  - id: body
+    label: 内容滚动区
+    description: 300pt 高，承载 unicode 网格、媒体网格、Emoji 整页切图或 VIP 锁定态。
+  - id: mediaCell
+    label: 媒体单元
+    description: 72×72pt，圆角 12pt；支持图片、添加按钮与处理中标记。
+  - id: deleteAction
+    label: 退格操作
+    description: Emoji 分区右下角浮动按钮，删除输入框最后一个字符。
+  - id: vipOverlay
+    label: VIP 锁定层
+    description: 模糊背景 + 文案 + 40pt 主按钮。
+variants:
+  - name: content
+    values:
+      - unicode-grid
+      - emoji-sheet
+      - media-grid
+      - vip-locked
+      - empty
+    defaultValue: unicode-grid
+props:
+  - name: tabs
+    type: ChatEmojiGifTabItem[]
+    required: false
+    description: 分类 Tab 列表，默认使用 DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS。
+  - name: value
+    type: string
+    required: true
+    description: 当前选中 Tab key。
+  - name: onChange
+    type: (key:string)=>void
+    required: true
+    description: Tab 切换回调。
+  - name: content
+    type: ChatEmojiGifPanelContent
+    required: true
+    description: 当前 Tab 对应的内容区配置。
+  - name: onCellPress
+    type: (cell, tabKey)=>void
+    required: false
+    description: 用户点选 unicode / 图片 / 添加单元时触发。
+  - name: onDelete
+    type: ()=>void
+    required: false
+    description: Emoji 分区退格按钮回调。
+  - name: onVipAction
+    type: ()=>void
+    required: false
+    description: VIP 锁定态主按钮回调。
+tokenRefs:
+  - color.surface.canvas
+  - color.surface.panel
+  - color.button.secondary
+  - color.border.subtle
+  - color.text.primary
+  - color.text.secondary
+  - color.text.auxiliary
+  - color.brand.primary
+interactionIds:
+  - tab-selection
+accessibility:
+  - 面板使用 section + tablist/tabpanel 组合语义。
+  - 每个媒体 / unicode 单元必须提供 aria-label；VIP 锁定层按钮需可聚焦。
+detection:
+  figmaFileKeys:
+    - ZYUBOkQbynQxUaxP1bw3CF
+  figmaComponentIds:
+    - "82:18787"
+    - "36:6699"
+  nameAliases:
+    - 表情面板
+    - emoji gif panel
+    - sticker panel
+    - toppy emoji panel
+  selectedStateAliases:
+    - selected
+    - active
+  unselectedStateAliases:
+    - unselected
+    - inactive
+roles:
+  - container
+  - tabItem
+  - content
+  - icon
+  - trailingAction
+  - label
+rules:
+  - id: body.height
+    title: 内容区高度
+    category: structure
+    metric: height
+    tolerance: 4
+    aggregate: rule
+  - id: mediaCell.size
+    title: 媒体单元尺寸
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: mediaGrid.gap
+    title: 媒体网格间距
+    category: spacing
+    metric: gap
+    tolerance: 2
+    aggregate: rule

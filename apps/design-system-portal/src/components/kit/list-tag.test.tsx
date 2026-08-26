@@ -13,10 +13,8 @@ describe("ListTag", () => {
 
     expect(screen.getByLabelText("女性，28 岁")).toBeInTheDocument();
     expect(screen.getByLabelText("男性")).toBeInTheDocument();
-    container.querySelectorAll(".listTagGenderIcon img").forEach((icon) => {
-      expect(icon).toHaveAttribute("width", "8");
-      expect(icon).toHaveAttribute("height", "8");
-      expect(icon.parentElement).toHaveClass("listTagGenderIcon");
+    container.querySelectorAll(".listTagGenderGlyph svg").forEach((icon) => {
+      expect(icon.closest(".listTagGenderIcon")).toBeTruthy();
     });
   });
 

@@ -111,6 +111,28 @@ const prototypes = [
     ],
   },
   {
+    id: "feed-detail",
+    title: "Feed · 动态详情",
+    route: "/prototype-runtime/app/feed-detail",
+    sourceRoute: "/prototypes/app",
+    description:
+      "动态正文、Comments/Like 分区、评论线程与底部回复互动栏（Figma 856:69920）",
+    intent: "二级页面",
+    kit: [
+      "ios-status-bar",
+      "secondary-tab-text",
+      "avatar",
+      "list-tag",
+      "icon",
+    ],
+    prototypeModules: [
+      "PrototypeFeedDetailHeader",
+      "PrototypeFeedDetailPost",
+      "PrototypeFeedDetailComments",
+      "PrototypeFeedDetailComposer",
+    ],
+  },
+  {
     id: "feed-compose",
     title: "Feed · 发布动态",
     route: "/prototype-runtime/app/feed-compose",

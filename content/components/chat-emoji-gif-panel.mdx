@@ -1,0 +1,38 @@
+## 使用场景
+
+私聊输入框上方弹出的 **表情 / GIF / 大表情 / Toppy / VIP** 面板。它与 `chat-emoji-gif-tab-bar` 组合使用：Tab 负责分类切换，本组件负责 300pt 内容区渲染。
+
+## 内容变体
+
+| 变体 | 对应 Figma | 说明 |
+|------|-----------|------|
+| `unicode-grid` | 小表情 | 分区标题 + Unicode 网格，可选退格按钮 |
+| `emoji-sheet` | 小表情（整页切图） | 「最近使用」条 + 「所有表情」整页键盘切图 |
+| `media-grid` | GIF / 大表情 / Toppy | 4 列 72pt 网格，首格可为「添加」 |
+| `vip-locked` | VIP 贴纸 | 模糊背景 + 文案 + Open VIP 按钮 |
+| `empty` | — | 占位说明 |
+
+## 尺寸
+
+- 内容区：300pt 高，内部可滚动。
+- 媒体单元：72×72pt，圆角 12pt；添加单元使用 `color.button.secondary` 底。
+- Emoji 退格：右下角 56×40pt 浮动按钮。
+
+## 组合方式
+
+```tsx
+<ChatEmojiGifPanel
+  value={tab}
+  onChange={setTab}
+  content={contentForActiveTab}
+  onCellPress={(cell) => /* 发送或插入草稿 */}
+/>
+```
+
+Tab 预设与 Demo 数据见 `DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS` 与 `demoChatEmojiGifPanelContentByTab()`。
+
+## 避免
+
+- 在原型里手写 `.prototypeEmojiPanelGrid` 重复 Kit 结构。
+- 将 VIP 锁定态做成独立页面；应作为面板内容变体。
+- 使用 Figma 临时 URL 作为长期图片源。

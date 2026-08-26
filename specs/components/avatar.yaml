@@ -1,6 +1,6 @@
 schemaVersion: 1
 id: avatar
-version: 1.1.0
+version: 1.2.0
 title: 头像
 owner: TopTop Design System
 category: Data Display
@@ -25,13 +25,19 @@ reference:
     - 72pt 用于 Profile 与 mini card 大头像；60pt 用于亲密关系、权益页面大头像
     - 48pt 用于大部分列表和语音房；40pt 用于亲密关系头像；36pt 用于首页 Me 入口
     - 24pt 用于紧凑列表；20pt 仅用于弱化展示，不承担主要身份识别
-    - 无头像框时图片边缘使用 10% 一级文字色描边，避免浅色头像与背景粘连
+    - 无头像框时图片边缘使用 0.5pt 内描边，Token 为 color.border.image（描边透明/bordBg2），避免浅色头像与背景粘连
     - 头像框属于用户已获得或已装备的身份装饰，仅用于 Profile、mini card、亲密关系、权益、语音房和明确支持装扮的用户列表
     - 系统通知、普通操作列表、匿名或默认头像、非用户实体不得使用头像框
     - 头像框必须覆盖在头像外层且保持头像中心不变；装饰可以超出头像尺寸，但不得改变相邻文字的对齐起点
     - 头像右下角可叠加男女、选中、闭麦、贵族、在线或游戏徽标；徽标使用独立切图资源，不由 CSS 临摹图形
     - 徽标属于瞬时状态或身份补充，不替代可读的在线、静音、性别或权益文本
     - 无用户头像时使用默认空状态切图；亮色场景为浅灰底 + 成员剪影，暗色场景为 10% 白色底 + 10% 白色剪影，按页面背景选择
+    - 头像组用于在 48×48pt 占位内展示 2–6 位成员，常见于消息列表群聊行与首页在线好友区
+    - 消息列表头像组（list-2 / list-3 / list-4 / list-5）成员圆形重叠，使用 1px 面板色描边分隔
+    - list-2 使用 32pt 成员对角叠放；list-3 / list-4 使用 28pt；list-5 使用 24pt
+    - 首页群聊（home-more）为 2×2 网格，单头像 28pt，整体 48pt，成员不重叠
+    - 首页列表头像组（home-row）为 6 位 24pt 成员横向叠放，相邻重叠 5pt，左前右后
+    - 头像组只表达成员集合，不替代群名称或会话标题；成员身份由列表行标题与辅助技术标签完整表达
 anatomy:
   - id: container
     label: 头像容器
@@ -44,7 +50,10 @@ anatomy:
     description: 可选权益装饰层，位于头像上方并围绕头像中心等比缩放，不参与图片裁切。
   - id: statusBadge
     label: 状态徽标
-    description: 可选切图层，固定在头像右下角，用于补充性别、选中、闭麦、贵族、在线或游戏状态。Kit gap：H5 参考实现尚未提供该层，业务需要时先按原型模块处理。
+    description: 可选切图层，固定在头像右下角，用于补充性别、选中、闭麦、贵族、在线或游戏状态。
+  - id: avatarGroup
+    label: 头像组
+    description: 在固定 48×48pt 占位内排列 2–6 个成员头像，用于群聊列表与首页好友区。
 variants:
   - name: size
     values:
@@ -76,6 +85,15 @@ variants:
       - light
       - dark
     defaultValue: light
+  - name: groupLayout
+    values:
+      - list-2
+      - list-3
+      - list-4
+      - list-5
+      - home-more
+      - home-row
+    defaultValue: list-4
 props:
   - name: src
     type: string
@@ -102,10 +120,18 @@ props:
     description: 用户已获得且当前装备的头像框资源；不存在时不得保留空装饰占位。Kit gap：H5 参考实现当前使用固定示例资源，尚不支持按用户传入。
   - name: badgeSrc
     type: string
-    description: 当前业务状态对应的徽标切图；不存在时不渲染徽标容器。Kit gap：H5 参考实现尚未支持。
+    description: 当前业务状态对应的徽标切图；不存在时不渲染徽标容器。也可通过 `badge` 变体使用 Kit 内置切图。
+  - name: groupLayout
+    type: list-2|list-3|list-4|list-5|home-more|home-row
+    defaultValue: list-4
+    description: 头像组成员数量与叠放方式；消息列表用 list-*，首页在线区用 home-more 或 home-row。
+  - name: memberSrcs
+    type: string[]
+    description: 按布局所需数量提供的成员头像资源，顺序决定叠放层级。
 tokenRefs:
   - color.border.image
   - color.surface.panel
+  - color.brand.primary
   - color.text.primary
   - spacing.1
 interactionIds:
@@ -118,6 +144,8 @@ accessibility:
   - 头像框仅为装饰，必须对辅助技术隐藏；权益或身份含义由可读标签另行表达。
   - 状态徽标图片必须对辅助技术隐藏，并通过头像外部状态文本或控件可访问名称表达完整含义。
   - 点击头像时，视觉尺寸小于 44pt 的变体仍需由外层控件提供至少 44×44pt 的触达区域。
+  - 头像组在消息或好友列表中通常作为装饰，应对辅助技术隐藏；群名称或成员摘要必须由外层列表项标签表达。
+  - 头像组不得叠加头像框或状态徽标；成员个体权益信息不在组内表达。
 detection:
   figmaFileKeys:
     - tyYEbtAXWTxSLduue3ixgp
@@ -138,11 +166,14 @@ detection:
     - 头像框
     - avatar
     - profile image
+    - 头像组
+    - avatar group
 roles:
   - container
   - avatarImage
   - decorationFrame
   - statusBadge
+  - avatarGroup
 rules:
   - id: container.width
     title: 头像容器宽度

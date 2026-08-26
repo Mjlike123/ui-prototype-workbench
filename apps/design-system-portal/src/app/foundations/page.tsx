@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { ContentDocument } from "@/components/content-document";
 import { FoundationTabs } from "@/components/foundation-tabs";
+import { MotionTokenPreview } from "@/components/motion-token-preview";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { ListTag } from "@/components/kit/list-tag";
 import { PagIcon } from "@/components/kit/pag-icon";
@@ -266,15 +267,7 @@ export default async function FoundationsPage() {
                   <IconTokenPreview tokenId={token.id} />
                 )}
                 {foundation.category === "motion" && (
-                  <div
-                    style={{
-                      width: 46,
-                      height: 46,
-                      marginBottom: 18,
-                      background: "#eeeeeb",
-                      border: "8px solid #111111",
-                    }}
-                  />
+                  <MotionTokenPreview tokenId={token.id} />
                 )}
                 <strong>{token.name}</strong>
                 <code className="tokenValue">{String(token.value)}</code>
@@ -429,15 +422,22 @@ function IconFoundationShowcase({
       <div className="iconFoundationGrid">
         {listTagFiles.map((file) => {
           const name = file.replace(/\.(png|svg)$/, "");
+          const isGenderTag = file.startsWith("gender-") && file.endsWith(".svg");
           return (
             <article className="iconFoundationItem" key={file}>
-              <div className="iconFoundationFrame iconFoundationFrame--product">
+              <div
+                className={`iconFoundationFrame iconFoundationFrame--product${
+                  isGenderTag
+                    ? " iconFoundationFrame--dark iconFoundationFrame--listTagGender"
+                    : ""
+                }`}
+              >
                 <Image
                   alt=""
                   aria-hidden="true"
                   src={`/icons/list-tags/${file}`}
-                  width={48}
-                  height={18}
+                  width={isGenderTag ? 24 : 48}
+                  height={isGenderTag ? 9 : 18}
                 />
               </div>
               <strong>{name}</strong>
@@ -464,8 +464,8 @@ function IconFoundationShowcase({
                   alt=""
                   aria-hidden="true"
                   src={`/icons/avatar/${file}`}
-                  width={72}
-                  height={72}
+                  width={40}
+                  height={40}
                 />
               </div>
               <strong>{name}</strong>
@@ -492,8 +492,8 @@ function IconFoundationShowcase({
                   alt=""
                   aria-hidden="true"
                   src={`/icons/image-empty/${file}`}
-                  width={72}
-                  height={72}
+                  width={40}
+                  height={40}
                 />
               </div>
               <strong>{name}</strong>

@@ -339,6 +339,8 @@ tokens:
       dark: "rgba(255, 255, 255, 0.1)"
     description: "头像、图片描边"
     figmaVariableId: "VariableID:9022:174166"
+    platforms:
+      h5: var(--color-border-image)
   - id: color.image-empty.background
     name: "图片兜底背景/imageEmptyBackground"
     value: "#E8E8E9"

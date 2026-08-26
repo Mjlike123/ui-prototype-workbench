@@ -159,6 +159,7 @@
           "avatarImage",
           "decorationFrame",
           "statusBadge",
+          "avatarGroup",
           "icon",
           "value",
           "membershipAsset",

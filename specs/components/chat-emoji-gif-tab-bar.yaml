@@ -1,0 +1,136 @@
+schemaVersion: 1
+id: chat-emoji-gif-tab-bar
+version: 1.0.0
+title: 表情与 GIF 分类 Tab
+owner: TopTop Design System
+category: Navigation
+status: stable
+since: 1.0.0
+tags:
+  - chat
+  - emoji
+  - gif
+  - sticker
+  - tab
+platforms:
+  - ios
+  - android
+  - h5
+description: 私聊表情面板顶部的横向分类 Tab，用于在 Emoji、GIF 与各贴纸包之间切换；选中项使用 40×40pt 圆角底。
+previewKey: chat-emoji-gif-tab-bar
+reference:
+  figmaUrl: https://www.figma.com/design/ZYUBOkQbynQxUaxP1bw3CF/V3.27.0?node-id=36-6523
+  nodeId: "36:6523"
+  observations:
+    - 容器高 56pt，左右内容边距 16pt，垂直内边距 8pt，Tab 间距 12pt
+    - 单个 Tab 触控区 40×40pt，圆角 8pt；选中态背景 color.button.secondary
+    - 图标固定 24×24pt；前两项为单色 Emoji / GIF 图标，其余为彩色贴纸包封面
+    - 底部可接 1pt 分割线，与下方表情网格区隔开
+anatomy:
+  - id: container
+    label: 分类 Tab 容器
+    description: 固定在表情面板顶部，背景使用聊天底栏语义色。
+  - id: scrollRow
+    label: 横向滚动区
+    description: 承载全部 Tab；Tab 数量超出视口时可横向滚动。
+  - id: tabItem
+    label: 分类 Tab 按钮
+    description: 40×40pt 触控区，图标居中；选中态使用二级按钮透明底。
+  - id: icon
+    label: Tab 图标
+    description: 24×24pt；系统 Tab 走 SystemIcon，贴纸包 Tab 走 product 彩色切图。
+variants:
+  - name: selectedKey
+    values:
+      - emoji
+      - gif
+      - pack
+    defaultValue: emoji
+  - name: divider
+    values:
+      - visible
+      - hidden
+    defaultValue: visible
+props:
+  - name: items
+    type: ChatEmojiGifTabItem[]
+    required: true
+    description: Tab 列表；key 必须稳定，label 用于 aria-label。
+  - name: value
+    type: string
+    required: true
+    description: 当前选中 Tab key。
+  - name: onChange
+    type: (key:string)=>void
+    required: true
+    description: 用户切换 Tab 时触发。
+  - name: showDivider
+    type: boolean
+    defaultValue: true
+    description: 是否在容器底部显示 1pt 分割线。
+  - name: ariaLabel
+    type: string
+    defaultValue: 表情与 GIF 分类
+    description: tablist 的可访问名称。
+tokenRefs:
+  - color.surface.canvas
+  - color.button.secondary
+  - color.border.subtle
+  - color.text.primary
+  - spacing.3
+  - spacing.4
+interactionIds:
+  - tab-selection
+accessibility:
+  - 使用 tablist / tab 语义；除颜色外使用 8pt 圆角底表达选中态。
+  - 每个 Tab 必须提供 aria-label；键盘用户可使用方向键、Home、End 切换。
+detection:
+  figmaFileKeys:
+    - ZYUBOkQbynQxUaxP1bw3CF
+  figmaComponentIds:
+    - "36:6523"
+  nameAliases:
+    - 表情 gif tab
+    - emoji gif tab bar
+    - sticker pack tab
+    - 表情分类 tab
+  selectedStateAliases:
+    - selected
+    - active
+    - 选中
+  unselectedStateAliases:
+    - unselected
+    - inactive
+    - 未选中
+roles:
+  - container
+  - tabItem
+  - icon
+  - selectedItem
+  - unselectedItem
+rules:
+  - id: container.height
+    title: 容器高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: item.size
+    title: Tab 触控尺寸
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: item.gap
+    title: Tab 间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: selected.background
+    title: 选中态背景
+    category: selected
+    metric: backgroundColor
+    state: selected
+    tolerance: 12
+    aggregate: rule

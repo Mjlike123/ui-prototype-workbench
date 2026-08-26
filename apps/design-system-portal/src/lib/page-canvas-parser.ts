@@ -1,5 +1,7 @@
 export type PageCanvasIntent =
   | "profile"
+  | "feed-compose"
+  | "im-custom-emoji"
   | "settings"
   | "home-feed"
   | "search"
@@ -64,6 +66,8 @@ export type PageCanvasPlan = {
 
 const EXAMPLE_PROMPTS = [
   "我想要一个个人 profile 页面",
+  "发布动态：文案编辑、相册选图或拍照上传、可见范围与 Post",
+  "IM 私聊自定义表情：Recent / Emoji / Custom，点击添加图片表情",
   "首页：一级导航 Mine / Popular，底部 Tab，中间是消息列表",
   "设置页：返回 + 标题「账号与安全」，操作列表 5 行，底部主按钮「保存」",
   "搜索页：返回 + 搜索框，下方好友列表，列表项带箭头",

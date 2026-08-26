@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { InlineSvgIcon } from "./inline-svg-icon";
+import { LIST_TAG_GENDER_SVGS } from "./generated/list-tag-gender-svgs";
 
 export const MEMBERSHIP_LEVELS = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 99,
@@ -59,11 +61,11 @@ export function ListTag(props: ListTagProps) {
       aria-label={props.age === undefined ? label : `${label}，${props.age} 岁`}
     >
       <span className="listTagGenderIcon" aria-hidden="true">
-        <Image
-          src={`/icons/list-tags/gender-${props.gender}.svg`}
-          alt=""
-          width={8}
-          height={8}
+        <InlineSvgIcon
+          className="listTagGenderGlyph"
+          markup={LIST_TAG_GENDER_SVGS[props.gender]}
+          size={8}
+          data-list-tag-gender={props.gender}
         />
       </span>
       {props.age === undefined ? null : (

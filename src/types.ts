@@ -267,6 +267,7 @@ export type ComponentAuditProfile = {
     | "avatarImage"
     | "decorationFrame"
     | "statusBadge"
+    | "avatarGroup"
     | "icon"
     | "value"
     | "membershipAsset"

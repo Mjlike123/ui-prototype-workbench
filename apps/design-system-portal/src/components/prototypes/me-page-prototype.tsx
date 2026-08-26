@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState, type CSSProperties } from "react";
 import { AvatarVisual } from "@/components/kit/avatar-visual";
+import { ListTag } from "@/components/kit/list-tag";
 import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import {
@@ -275,9 +276,7 @@ function MeIdentityHeader({
       <div className="meIdentityContent">
         <div className="meIdentityNameRow">
           <h1>Lisaaaaaaaaaaaaa…</h1>
-          <span className="meGenderBadge" aria-label="女性">
-            ♀
-          </span>
+          <ListTag kind="gender" gender="female" />
         </div>
         <button
           type="button"
@@ -286,13 +285,7 @@ function MeIdentityHeader({
           aria-label="复制 ID 1234567"
         >
           ID: 1234567
-          <Image
-            src="/icons/svg/icon=复制.svg"
-            alt=""
-            width={14}
-            height={14}
-            aria-hidden="true"
-          />
+          <SystemIcon name="copy" size={14} className="meIdentityCopyIcon" />
         </button>
         <div className="meLevelRow" aria-label="等级徽章">
           <span>👑</span>

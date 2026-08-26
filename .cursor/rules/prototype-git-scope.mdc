@@ -1,0 +1,60 @@
+---
+description: Scope Git commits and PRs to core prototype templates; exclude personal studio drafts
+globs: "apps/design-system-portal/**/*.{ts,tsx,md},docs/**/*.md,specs/**/*"
+alwaysApply: true
+---
+
+# Prototype Git Scope
+
+The portal splits prototype work into two product areas:
+
+1. **核心模块** (`/canvas/core`) — Git-backed interaction templates maintained by the platform owner.
+2. **原型创作** (`/canvas/studio`) — Personal exploration canvas; history lives in browser `localStorage` only.
+
+## What belongs in GitHub (push / PR)
+
+Include when the work is reviewed and intended for the whole team:
+
+- Core prototype screens under `apps/design-system-portal/src/components/prototypes/`
+- Prototype registration: `prototype-app-routes.ts`, `prototype-app-router.tsx`, `prototype-preview-showcase.tsx`
+- Kit components, tokens, icons, and shared CSS used by core templates
+- Specs, tests, and docs for stabilized interactions
+
+## What must NOT go to GitHub
+
+Never commit or push:
+
+- Browser `localStorage` session data from **原型创作** (e.g. `toptop-page-canvas-history-v1`)
+- Unvalidated studio drafts, throwaway prompts, or experimental layouts that are not approved for core
+- Personal reference screenshots uploaded only for local studio exploration unless explicitly requested for the repo
+
+## PR hygiene
+
+- Keep PRs focused on **core templates** or **studio platform code**, not both unless clearly separated in the description.
+- Do not register a studio experiment in the core catalog until it is reviewed and implemented as a real `*-prototype.tsx`.
+- When updating core templates, note in the PR if shared Kit/CSS may affect other core screens.
+
+## Promotion path
+
+Studio exploration → review → implement as core TSX → register in catalog → PR to `main`.
+
+Until promotion, studio work stays local.
+
+## UI separation (Core vs Studio)
+
+- **Core** (`components/prototypes/*-prototype.tsx`, `.feedCompose*` CSS): Git-backed catalog screens. Do not wire Studio-only experiments here.
+- **Studio** (`components/studio/*`, `.studioFeedCompose*` CSS): Personal exploration UI in `/canvas/studio`. Iterate layout and interaction here without changing Core previews.
+- Shared Kit, media picker sheets (`.feedComposeOverlay` / sheets), and tokens may be reused; page shell layout and draft storage keys must stay split (`feed-compose-session` vs `studio-feed-compose-session`).
+
+## Studio UI Kit requirement
+
+Prompt 生成的页面块（`PageCanvasStage`、`page-canvas-parser`）和 Studio 专用页面（`components/studio/*`）必须复用 `components/kit` 与 specs 已定义的组件，不得手写重复 Kit 标记：
+
+- 导航 → `PrimaryNavigation` / `RegularNavigation` / `UnderlineSecondaryTab` / `PillSecondaryTab` / `BottomNavigation`
+- 搜索 → `SearchControl`
+- 列表 → `RegularListItem`
+- 图标 → `SystemIcon` / `BottomNavigationIcon`（禁止 `<img>` 引用 SVG 图标）
+- 状态栏 → `IosStatusBar`
+- 按钮 → `kitButton` 契约类名（见 `specs/components/button.yaml`）
+
+未覆盖区域才允许 `Prototype*` 模块，并在 handoff 中记录 `kitGap`。

@@ -1,0 +1,33 @@
+## 使用场景
+
+用于私聊底部表情 / GIF / 贴纸面板顶部的分类切换。它将 Emoji 系统键盘、GIF 库与各 IP / VIP 贴纸包入口收敛到同一行横向 Tab，不用于页面级二级导航或 Profile 分类。
+
+## 尺寸与布局
+
+- 容器：高 56pt；水平内边距 16pt，垂直内边距 8pt。
+- Tab 间距：12pt；单个 Tab 触控区 40×40pt，圆角 8pt。
+- 图标：24×24pt，居中；Tab 超出视口时可横向滚动。
+- 底部分割线：默认 1pt `color.border.subtle`，与下方表情网格区分。
+
+## 视觉状态
+
+- 未选中：透明底，图标保持原始配色。
+- 选中：`color.button.secondary` 圆角底（rgba(24,25,35,0.04)）。
+- 系统 Tab（Emoji / GIF）：使用 `SystemIcon`，遵循 `color.text.primary`。
+- 贴纸包 Tab：使用 `icons/product/` 下注册的彩色封面切图。
+
+## 交互
+
+- 点击 Tab 切换分类；切换后同步更新 `aria-selected`。
+- 键盘支持 `ArrowLeft` / `ArrowRight` / `Home` / `End`。
+- 面板内容区由业务层根据 `value` 渲染，不在组件内部耦合网格逻辑。
+
+## 默认配置
+
+Kit 提供 `DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS` 预设六项：Emoji、GIF、Grin pack、Coin pack、Heart IP pack、VIP pack，与 Figma V3.27.0 node `36:6523` 对齐。
+
+## 避免
+
+- 用下划线二级 Tab 或胶囊 Tab 替代此组件。
+- 在 Tab 内写死 `<img src="figma.com/...">` 临时 URL。
+- 将页面导航文案 Tab 与贴纸包封面 Tab 混用同一组件实例。

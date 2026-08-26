@@ -9,6 +9,7 @@ export const PROTOTYPE_APP_SCREENS = [
   "private-chat",
   "wallet",
   "feed-compose",
+  "feed-detail",
   "community-guidelines",
   "help",
   "settings",

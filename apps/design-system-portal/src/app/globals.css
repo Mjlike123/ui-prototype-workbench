@@ -1080,6 +1080,242 @@ kbd {
   border-radius: var(--radius-8);
 }
 
+.motionTokenPreview {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 88px;
+  margin-bottom: 14px;
+  padding: 10px;
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  appearance: none;
+  background: var(--color-surface-canvas);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.motionTokenPreviewDemo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  flex: 1;
+}
+
+.motionTokenPreview:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.motionTokenPreviewHint {
+  width: 100%;
+  color: var(--ink-tertiary);
+  font: 500 10px/1.4 var(--font-sans);
+  text-align: center;
+}
+
+.motionTokenInstantTarget {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 104px;
+  height: 44px;
+  padding: 0 24px;
+  margin: 0 auto;
+  color: #ffffff;
+  font: 600 12px/1 var(--font-sans);
+  text-align: center;
+  background: #111111;
+  border-radius: 999px;
+}
+
+.motionTokenInstantTarget--active {
+  background: #333333;
+}
+
+.motionTokenStandardTabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow: hidden;
+  width: min(100%, 176px);
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+
+.motionTokenStandardTabs span:not(.motionTokenStandardIndicator) {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 12px;
+  color: var(--ink-secondary);
+  font: 600 11px/1 var(--font-sans);
+  text-align: center;
+}
+
+.motionTokenStandardTabs span.is-active {
+  color: #111111;
+}
+
+.motionTokenStandardIndicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background: #eef0f2;
+  border-radius: 16px;
+}
+
+.motionTokenEmphasizedStage {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: min(100%, 176px);
+  height: 56px;
+  margin: 0 auto;
+  background: #eef0f2;
+  border-radius: 10px;
+}
+
+.motionTokenEmphasizedBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(17 17 17 / 18%);
+}
+
+.motionTokenEmphasizedSheet {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  height: 28px;
+  background: #ffffff;
+  border-radius: 8px 8px 4px 4px;
+  box-shadow: 0 -4px 16px rgb(17 17 17 / 12%);
+  opacity: 0.4;
+  transform: translateY(100%);
+}
+
+.motionTokenEmphasizedSheet--open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.motionTokenCompareTracks {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+.motionTokenCompareTrack {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.motionTokenCompareTrackLabel {
+  color: var(--ink-secondary);
+  font: 600 10px/1 var(--font-mono);
+  text-transform: lowercase;
+}
+
+.motionTokenCompareTrackBar {
+  position: relative;
+  overflow: visible;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.motionTokenCompareTrackBar--spring {
+  overflow: visible;
+}
+
+.motionTokenTrackDot {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.motionTokenTrackDot--standard {
+  left: 0;
+  background: #111111;
+}
+
+.motionTokenTrackDot--spring {
+  background: #16d8c8;
+}
+
+.motionTokenTrackDot--linear {
+  left: 0;
+  background: #111111;
+}
+
+.motionTokenSpringStage {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+.motionTokenSpringTarget {
+  display: flex;
+  justify-content: flex-end;
+  color: var(--ink-tertiary);
+  font: 600 9px/1 var(--font-mono);
+  text-transform: uppercase;
+}
+
+.motionTokenSpringTrack {
+  position: relative;
+  overflow: visible;
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.motionTokenSpringMeta {
+  color: var(--ink-secondary);
+  font: 500 9px/1.4 var(--font-mono);
+}
+
+@keyframes motionTokenTrackRun {
+  from {
+    left: 0;
+  }
+
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes motionTokenTrackRunBack {
+  from {
+    left: 100%;
+  }
+
+  to {
+    left: 0;
+  }
+}
+
 .iconTokenFrameDemo {
   display: grid;
   width: 40px;
@@ -1248,9 +1484,10 @@ kbd {
   border-color: rgba(255, 255, 255, 0.08);
 }
 
-.iconFoundationFrame--product.iconFoundationFrame--dark img {
-  width: 72px;
-  height: 72px;
+.iconFoundationFrame--listTagGender img {
+  width: 24px;
+  height: auto;
+  max-height: 24px;
 }
 
 .iconFoundationItem strong,
@@ -1761,6 +1998,7 @@ kbd {
 .listTag--iconOnly {
   width: 14px;
   padding: 1px;
+  justify-content: center;
 }
 
 .listTagGenderIcon {
@@ -1769,10 +2007,14 @@ kbd {
   height: 12px;
   flex: 0 0 12px;
   place-items: center;
-  overflow: hidden;
 }
 
-.listTagGenderIcon img {
+.listTagGenderGlyph {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.listTagGenderGlyph svg {
   display: block;
   width: 8px;
   height: 8px;
@@ -2162,6 +2404,249 @@ kbd {
   border-radius: var(--radius-12);
 }
 
+.avatarGroupCaseGrid {
+  display: grid;
+  min-width: 720px;
+  grid-template-columns: repeat(6, minmax(100px, 1fr));
+  gap: 18px;
+}
+
+.avatarGroupCase {
+  display: flex;
+  min-height: 120px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 8px;
+  background: var(--color-surface-canvas);
+  border-radius: var(--radius-12);
+  text-align: center;
+}
+
+.avatarGroupCase > strong {
+  color: var(--ink);
+  font: 650 11px/16px var(--font-sans);
+}
+
+.avatarGroupCase > p {
+  margin: 0;
+  color: var(--ink-tertiary);
+  font-size: 10px;
+  line-height: 14px;
+}
+
+.avatarGroupVisual {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+}
+
+.avatarGroupVisual > .avatarVisualImage {
+  position: absolute;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  flex: none;
+  margin: 0;
+  box-shadow: 0 0 0 1px var(--color-surface-panel);
+}
+
+.avatarGroupVisual > .avatarVisualImage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 首页群聊 — 2×2 网格，单头像 28pt */
+.avatarGroupVisual--home-more > .avatarVisualImage {
+  width: 28px;
+  height: 28px;
+}
+
+.avatarGroupVisual--home-more > .avatarVisualImage:nth-child(1) {
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.avatarGroupVisual--home-more > .avatarVisualImage:nth-child(2) {
+  top: 0;
+  left: 20px;
+  z-index: 2;
+}
+
+.avatarGroupVisual--home-more > .avatarVisualImage:nth-child(3) {
+  top: 20px;
+  left: 0;
+  z-index: 3;
+}
+
+.avatarGroupVisual--home-more > .avatarVisualImage:nth-child(4) {
+  top: 20px;
+  left: 20px;
+  z-index: 4;
+}
+
+/* 消息列表头像 ×2 — 32pt，左下在前 */
+.avatarGroupVisual--list-2 > .avatarVisualImage {
+  width: 32px;
+  height: 32px;
+}
+
+.avatarGroupVisual--list-2 > .avatarVisualImage:nth-child(1) {
+  top: 0;
+  left: 16px;
+  z-index: 1;
+}
+
+.avatarGroupVisual--list-2 > .avatarVisualImage:nth-child(2) {
+  top: 16px;
+  left: 0;
+  z-index: 2;
+}
+
+/* 消息列表头像 ×3 — 上 1 下 2 */
+.avatarGroupVisual--list-3 > .avatarVisualImage {
+  width: 28px;
+  height: 28px;
+}
+
+.avatarGroupVisual--list-3 > .avatarVisualImage:nth-child(1) {
+  top: 0;
+  left: 10px;
+  z-index: 1;
+}
+
+.avatarGroupVisual--list-3 > .avatarVisualImage:nth-child(2) {
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+}
+
+.avatarGroupVisual--list-3 > .avatarVisualImage:nth-child(3) {
+  top: 20px;
+  left: 0;
+  z-index: 3;
+}
+
+/* 消息列表头像 ×4 — 2×2 重叠簇 */
+.avatarGroupVisual--list-4 > .avatarVisualImage {
+  width: 28px;
+  height: 28px;
+}
+
+.avatarGroupVisual--list-4 > .avatarVisualImage:nth-child(1) {
+  top: 0;
+  left: 20px;
+  z-index: 2;
+}
+
+.avatarGroupVisual--list-4 > .avatarVisualImage:nth-child(2) {
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.avatarGroupVisual--list-4 > .avatarVisualImage:nth-child(3) {
+  top: 20px;
+  left: 20px;
+  z-index: 4;
+}
+
+.avatarGroupVisual--list-4 > .avatarVisualImage:nth-child(4) {
+  top: 20px;
+  left: 0;
+  z-index: 3;
+}
+
+/* 消息列表头像 ×5 — 单头像 24pt */
+.avatarGroupVisual--list-5 > .avatarVisualImage {
+  width: 24px;
+  height: 24px;
+}
+
+.avatarGroupVisual--list-5 > .avatarVisualImage:nth-child(1) {
+  top: 0;
+  left: 12px;
+  z-index: 1;
+}
+
+.avatarGroupVisual--list-5 > .avatarVisualImage:nth-child(2) {
+  top: 9px;
+  left: 0;
+  z-index: 2;
+}
+
+.avatarGroupVisual--list-5 > .avatarVisualImage:nth-child(3) {
+  top: 9px;
+  left: 24px;
+  z-index: 3;
+}
+
+.avatarGroupVisual--list-5 > .avatarVisualImage:nth-child(4) {
+  top: 24px;
+  left: 21px;
+  z-index: 4;
+}
+
+.avatarGroupVisual--list-5 > .avatarVisualImage:nth-child(5) {
+  top: 24px;
+  left: 3px;
+  z-index: 5;
+}
+
+/* 首页列表头像组 — 6 枚 24pt 横排叠放 */
+.avatarGroupVisual--home-row {
+  display: flex;
+  overflow: visible;
+  width: auto;
+  height: 24px;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.avatarGroupVisual--home-row > .avatarVisualImage {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  margin-right: -5px;
+}
+
+.avatarGroupVisual--home-row > .avatarVisualImage:last-child {
+  margin-right: 0;
+}
+
+.avatarGroupVisual--home-row > .avatarVisualImage:nth-child(1) {
+  z-index: 6;
+}
+
+.avatarGroupVisual--home-row > .avatarVisualImage:nth-child(2) {
+  z-index: 5;
+}
+
+.avatarGroupVisual--home-row > .avatarVisualImage:nth-child(3) {
+  z-index: 4;
+}
+
+.avatarGroupVisual--home-row > .avatarVisualImage:nth-child(4) {
+  z-index: 3;
+}
+
+.avatarGroupVisual--home-row > .avatarVisualImage:nth-child(5) {
+  z-index: 2;
+}
+
+.avatarGroupVisual--home-row > .avatarVisualImage:nth-child(6) {
+  z-index: 1;
+}
+
 .avatarBadgeCase > strong {
   color: var(--ink-secondary);
   font: 600 11px/16px var(--font-sans);
@@ -2176,12 +2661,19 @@ kbd {
 }
 
 .avatarVisualImage {
-  position: absolute;
+  position: relative;
   z-index: 1;
+  display: block;
   overflow: hidden;
+  flex: 0 0 auto;
   background: var(--color-surface-canvas);
-  border: 1px solid var(--color-border-image);
+  border: 0;
   border-radius: 50%;
+  box-shadow: inset 0 0 0 0.5px var(--color-border-image);
+}
+
+.avatarVisual > .avatarVisualImage {
+  position: absolute;
 }
 
 .avatarVisualImage img {
@@ -2952,7 +3444,7 @@ kbd {
   place-items: center;
 }
 
-.searchControlIcon img {
+.searchControlIcon svg {
   display: block;
   width: 21px;
   height: 21px;
@@ -2996,7 +3488,7 @@ kbd {
   cursor: pointer;
 }
 
-.searchControlClear > img:first-child {
+.searchControlClearCircle svg {
   width: 20px;
   height: 20px;
   filter: var(--search-control-clear-filter);
@@ -3004,6 +3496,11 @@ kbd {
 
 .searchControlClearGlyph {
   position: absolute;
+  width: 8px;
+  height: 8px;
+}
+
+.searchControlClearGlyph svg {
   width: 8px;
   height: 8px;
   filter: var(--search-control-clear-glyph-filter);
@@ -3148,10 +3645,6 @@ kbd {
   color: #5f6066;
   background: transparent;
   border-color: rgba(24, 25, 35, 0.1);
-}
-
-.meEditSystemIcon {
-  --system-icon-color: var(--color-text-secondary);
 }
 
 .kitButton--pressed.kitButton--primary {
@@ -3835,6 +4328,40 @@ kbd {
   content: "";
   background: var(--color-text-primary);
   transition: transform var(--motion-duration-standard) var(--motion-easing-standard);
+}
+
+.secondaryTabText {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 10px 16px;
+}
+
+.secondaryTabText button {
+  padding: 0;
+  color: var(--color-text-auxiliary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 590 15px/20px "SF Pro", var(--font-sans);
+  transition: color var(--motion-duration-standard) var(--motion-easing-standard);
+}
+
+.secondaryTabText--capitalizeInactive button:not(.selected) {
+  text-transform: capitalize;
+}
+
+.secondaryTabText button.selected {
+  color: var(--color-text-primary);
+  font-size: 16px;
+  line-height: normal;
+  text-transform: none;
+}
+
+.secondaryTabText button:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .underlineTabDemo {
@@ -6662,13 +7189,16 @@ kbd {
 }
 
 .canvasCompactControl select {
-  width: 148px;
+  width: fit-content;
+  max-width: 100%;
   height: 36px;
   padding: 0 30px 0 10px;
   color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 8px;
+  field-sizing: content;
+  white-space: nowrap;
 }
 
 .canvasShowcaseNotice {
@@ -7451,13 +7981,22 @@ kbd {
   background: transparent;
 }
 
+.meIdentityHeader > .kitButton.kitButton--neutral-outline {
+  color: var(--color-text-tertiary);
+  border-color: var(--color-border-image);
+}
+
+.meEditSystemIcon,
+.meIdentityCopyIcon {
+  --system-icon-color: var(--color-text-tertiary);
+}
+
 .meIdentityHeader > .kitButton {
   position: relative;
   z-index: 1;
   gap: 2px;
   padding-inline: 8px 10px;
   align-self: center;
-  color: var(--color-text-tertiary, #bababd);
 }
 
 .meIdentityProfileLink {
@@ -7483,10 +8022,6 @@ kbd {
   height: 60px;
   border-radius: 50%;
   pointer-events: none;
-}
-
-.meIdentityHeader > .kitButton img {
-  opacity: 0.62;
 }
 
 .meIdentityContent {
@@ -7516,20 +8051,6 @@ kbd {
   white-space: nowrap;
 }
 
-.meGenderBadge {
-  display: inline-grid;
-  width: 14px;
-  height: 14px;
-  flex: 0 0 auto;
-  place-items: center;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1;
-  background: #ff68bf;
-  border-radius: 50%;
-}
-
 .meIdentityId {
   position: relative;
   z-index: 2;
@@ -7538,16 +8059,12 @@ kbd {
   padding: 0;
   align-items: center;
   gap: 4px;
-  color: var(--color-text-tertiary, #bababd);
+  color: var(--color-text-tertiary);
   font: 400 12px/16px "SF Pro", var(--font-sans);
   background: transparent;
   border: 0;
   cursor: pointer;
   pointer-events: auto;
-}
-
-.meIdentityId img {
-  opacity: 0.55;
 }
 
 .meLevelRow {
@@ -8672,6 +9189,12 @@ kbd {
   border-radius: 50%;
 }
 
+.topTopFriendAvatar > .avatarVisualImage {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
 .topTopFriendAvatar > img:not(.topTopFriendStatus) {
   width: 48px;
   height: 48px;
@@ -8681,11 +9204,13 @@ kbd {
 
 .topTopFriendStatus {
   position: absolute;
+  z-index: 2;
   right: -1px;
   bottom: -1px;
   width: 20px;
   height: 20px;
   object-fit: contain;
+  pointer-events: none;
 }
 
 .topTopFriendCollage {
@@ -8695,31 +9220,36 @@ kbd {
   height: 52px;
 }
 
+.topTopFriendCollage .avatarVisualImage {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+}
+
 .topTopFriendCollage img {
   position: absolute;
   width: 28px;
   height: 28px;
   object-fit: cover;
-  border: 1px solid #16d8c8;
   border-radius: 50%;
 }
 
-.topTopFriendCollage img:nth-child(1) {
+.topTopFriendCollage .avatarVisualImage:nth-child(1) {
   top: 0;
   left: 0;
 }
 
-.topTopFriendCollage img:nth-child(2) {
+.topTopFriendCollage .avatarVisualImage:nth-child(2) {
   top: 0;
   right: 0;
 }
 
-.topTopFriendCollage img:nth-child(3) {
+.topTopFriendCollage .avatarVisualImage:nth-child(3) {
   bottom: 0;
   left: 0;
 }
 
-.topTopFriendCollage img:nth-child(4) {
+.topTopFriendCollage .avatarVisualImage:nth-child(4) {
   right: 0;
   bottom: 0;
 }
@@ -8819,6 +9349,11 @@ kbd {
 
 .topTopSuggestionAvatar {
   position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.topTopSuggestionAvatar > .avatarVisualImage {
   width: 48px;
   height: 48px;
 }
@@ -9271,6 +9806,23 @@ kbd {
   padding-right: 16px;
 }
 
+.prototypeFeedOpenDetail {
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.prototypeFeedOpenDetail:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
 .prototypeFeedCaption {
   margin: 8px 0 0;
   color: var(--color-text-primary, #181923);
@@ -9282,13 +9834,8 @@ kbd {
   background: transparent;
 }
 
-.prototypeFeedCaption button {
-  padding: 0;
+.prototypeFeedSeeMore {
   color: var(--color-text-secondary, #8b8c91);
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  font: inherit;
 }
 
 .prototypeFeedMedia {
@@ -9388,6 +9935,489 @@ kbd {
   transform: scale(0.96);
 }
 
+.feedDetailDevice {
+  position: relative;
+  color: var(--color-text-primary);
+  background: var(--color-surface-canvas);
+}
+
+.feedDetailDevice > .iosStatusBar,
+.feedDetailDevice .feedDetailNavigation,
+.feedDetailDevice .feedDetailComposerStack {
+  flex: 0 0 auto;
+}
+
+.feedDetailDevice .pageCanvasContentShell {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.feedDetailNavigation {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 16px;
+  background: var(--color-surface-canvas);
+}
+
+.feedDetailNavigation > button:first-child {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.feedDetailAuthor {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.feedDetailIdentity {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feedDetailIdentity strong {
+  overflow: hidden;
+  color: var(--color-text-primary);
+  font: 590 14px/18px "SF Pro", var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feedDetailTags {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.feedDetailTags > img:first-child {
+  width: 24px;
+  height: 14px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.feedDetailLevel {
+  width: 36px;
+  height: 14px;
+  object-fit: contain;
+}
+
+.feedDetailNavActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feedDetailFollow,
+.feedDetailNavActions > button:last-child {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.feedDetailFollow {
+  width: 50px;
+  height: 28px;
+  --system-icon-color: var(--color-brand-primary);
+  color: var(--color-brand-primary);
+  border: 1px solid var(--color-brand-primary);
+  border-radius: 32px;
+}
+
+.feedDetailFollow[aria-pressed="true"] {
+  --system-icon-color: var(--color-text-secondary);
+  color: var(--color-text-secondary);
+  border-color: transparent;
+  background: var(--color-button-secondary);
+}
+
+.feedDetailScroll {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.feedDetailScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.feedDetailPost {
+  padding: 8px 16px 12px;
+  border-bottom: 0.5px solid var(--color-border-subtle);
+}
+
+.feedDetailCaption {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: 400 18px/24px "SF Pro", var(--font-sans);
+}
+
+.feedDetailCaption mark {
+  color: var(--color-brand-primary);
+  background: transparent;
+}
+
+.feedDetailCaption button {
+  padding: 0;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.feedDetailMedia {
+  width: 180px;
+  height: 180px;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 0.25px solid var(--color-border-image, rgba(24, 25, 35, 0.1));
+  border-radius: var(--radius-8, 8px);
+}
+
+.feedDetailMedia img {
+  display: block;
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+}
+
+.feedDetailTime {
+  display: block;
+  margin-top: 8px;
+  color: var(--color-text-auxiliary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.feedDetailTabs {
+  flex: 0 0 auto;
+}
+
+.feedDetailComments {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0 12px;
+}
+
+.feedDetailComment {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding-right: 16px;
+}
+
+.feedDetailCommentBody {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feedDetailCommentMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.feedDetailCommentAuthor {
+  color: var(--color-text-auxiliary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.feedDetailAuthorBadge {
+  padding: 1px 4px;
+  color: #181923;
+  background: #f6f6f6;
+  border-radius: 2px;
+  font: 400 9px/12px "SF Pro", var(--font-sans);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.feedDetailCommentText {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: 400 14px/18px "SF Pro", var(--font-sans);
+}
+
+.feedDetailCommentPlaceholder {
+  display: inline-flex;
+  margin: 0;
+  padding: 2px 8px;
+  color: var(--color-text-auxiliary);
+  background: var(--color-button-secondary);
+  border-radius: 4px;
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.feedDetailCommentFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feedDetailCommentFooter time,
+.feedDetailCommentFooter button {
+  color: var(--color-text-auxiliary);
+  font: 590 12px/16px "SF Pro", var(--font-sans);
+}
+
+.feedDetailCommentFooter button {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.feedDetailMoreReplies {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 16px 4px 0;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 590 12px/16px "SF Pro", var(--font-sans);
+}
+
+.feedDetailMoreReplies .systemIcon {
+  transform: rotate(90deg);
+}
+
+.feedDetailEmptyTab {
+  padding: 24px 16px;
+  color: var(--color-text-secondary);
+  font: 400 14px/18px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.feedDetailComposer {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 8px 16px;
+  background: var(--color-surface-canvas);
+  border-top: 0.5px solid var(--color-border-subtle);
+}
+
+.feedDetailComposerStack {
+  position: relative;
+  z-index: 6;
+  flex: 0 0 auto;
+  background: var(--color-surface-canvas);
+}
+
+.feedDetailComposer--active {
+  align-items: stretch;
+  padding-bottom: 8px;
+}
+
+.feedDetailReplyComposer {
+  width: 100%;
+}
+
+.feedDetailReplyField--active {
+  width: 100%;
+  padding: 10px 8px 10px 16px;
+}
+
+.feedDetailReplyField--active textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 24px;
+  max-height: 80px;
+  padding: 0;
+  field-sizing: content;
+  resize: none;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  font: 400 15px/20px "SF Pro", var(--font-sans);
+  outline: 0;
+}
+
+.feedDetailReplyField--active textarea::placeholder {
+  color: rgb(24 25 35 / 30%);
+  text-transform: capitalize;
+}
+
+.feedDetailReplyFieldActions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.feedDetailReplyFieldActions > button {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  --system-icon-color: var(--color-text-primary);
+}
+
+.feedDetailReplyPanelDismiss {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  bottom: calc(72px + 356px + env(safe-area-inset-bottom, 0px));
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: default;
+}
+
+.feedDetailReplySend {
+  display: grid;
+  width: 48px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  color: #fff;
+  background: var(--color-brand-primary);
+  border: 0;
+  border-radius: 40px;
+  cursor: pointer;
+  --system-icon-color: #fff;
+}
+
+.feedDetailReplySend:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.feedDetailReplySend:not(:disabled):active {
+  transform: scale(0.96);
+}
+
+.feedDetailReplyField {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px 12px 10px 16px;
+  background: var(--color-button-secondary);
+  border-radius: 22px;
+}
+
+.feedDetailReplyField input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  font: 400 15px/20px "SF Pro", var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feedDetailReplyField input::placeholder {
+  color: rgb(24 25 35 / 30%);
+  text-transform: capitalize;
+}
+
+.feedDetailReplyField > button {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.feedDetailComposerActions {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.feedDetailComposerAction {
+  display: inline-flex;
+  width: 56px;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.feedDetailComposerAction--liked {
+  color: #ff2e60;
+}
+
+.feedDetailComposerAction--liked .systemIcon {
+  --system-icon-color: #ff2e60;
+}
+
+.feedDetailComposerAction--chat {
+  --system-icon-color: var(--color-brand-primary);
+  color: var(--color-brand-primary);
+  text-transform: capitalize;
+}
+
+.feedDetailFeedback {
+  position: absolute;
+  right: 16px;
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  z-index: 8;
+  max-width: calc(100% - 32px);
+  padding: 8px 12px;
+  color: #fff;
+  background: rgb(24 25 35 / 84%);
+  border-radius: 12px;
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.feedDetailDevice.hasReplyPanelOpen .feedDetailFeedback {
+  bottom: calc(72px + 356px + env(safe-area-inset-bottom, 0px));
+}
+
+.feedDetailSafeArea {
+  flex: 0 0 env(safe-area-inset-bottom, 0px);
+  min-height: 0;
+  background: var(--color-surface-canvas);
+}
+
 .prototypeDestinationDevice--message,
 .prototypeDestinationDevice--message .prototypeDestinationScroll {
   background: var(--color-surface-canvas);
@@ -9478,26 +10508,12 @@ kbd {
 }
 
 .prototypeOnlineFriendAvatar {
-  position: relative;
   display: block;
-  width: 48px;
-  height: 48px;
   flex: 0 0 auto;
 }
 
-.prototypeOnlineFriendAvatar > img:first-child {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.prototypeOnlineFriendDot {
-  position: absolute;
-  right: -1px;
-  bottom: -1px;
-  width: 12px;
-  height: 12px;
+.prototypeOnlineFriendAvatar .avatarVisual {
+  display: block;
 }
 
 .prototypeOnlineFriendList small {
@@ -9533,55 +10549,11 @@ kbd {
 
 .prototypeMessageAvatar {
   display: block;
-  width: 48px;
-  height: 48px;
-  overflow: hidden;
-  border-radius: 50%;
-}
-
-.prototypeMessageAvatar img {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.prototypeMessageGroupAvatar {
-  position: relative;
-  display: block;
-  width: 48px;
-  height: 48px;
   flex: 0 0 48px;
-  overflow: hidden;
 }
 
-.prototypeMessageGroupAvatar img {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  object-fit: cover;
-  border: 1px solid var(--color-surface-panel);
-  border-radius: 50%;
-}
-
-.prototypeMessageGroupAvatar img:nth-child(1) {
-  top: 0;
-  left: 20px;
-}
-
-.prototypeMessageGroupAvatar img:nth-child(2) {
-  top: 0;
-  left: 0;
-}
-
-.prototypeMessageGroupAvatar img:nth-child(3) {
-  top: 20px;
-  left: 20px;
-}
-
-.prototypeMessageGroupAvatar img:nth-child(4) {
-  top: 20px;
-  left: 0;
+.prototypeMessageAvatar .avatarVisual {
+  display: block;
 }
 
 .prototypeMessageCopy,
@@ -12129,6 +13101,10 @@ div.chatBubbleRelationship {
   flex: 0 0 auto;
 }
 
+.feedComposeDevice .pageCanvasContentShell {
+  min-height: 0;
+}
+
 .feedComposeScroll {
   display: flex;
   min-height: 0;
@@ -12136,6 +13112,7 @@ div.chatBubbleRelationship {
   flex: 1;
   flex-direction: column;
   overscroll-behavior: contain;
+  scrollbar-width: none;
 }
 
 .feedComposeScroll::-webkit-scrollbar {
@@ -12206,6 +13183,179 @@ div.chatBubbleRelationship {
 
 .feedComposeMediaRemove .systemIcon {
   --system-icon-color: var(--color-text-white-primary);
+}
+
+.regularNavigationActionButton--loading {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+}
+
+.regularNavigationActionButton--loading .systemIcon {
+  animation: feedComposeSpin 0.8s linear infinite;
+}
+
+@keyframes feedComposeSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.feedComposeMediaAdd {
+  display: grid;
+  aspect-ratio: 1;
+  place-items: center;
+  gap: 4px;
+  color: var(--color-brand-primary);
+  background: var(--color-surface-subtle, rgba(24, 25, 35, 0.04));
+  border: 1px dashed var(--color-border-subtle);
+  border-radius: 12px;
+  cursor: pointer;
+  font: 590 13px/18px "SF Pro", var(--font-sans);
+}
+
+.feedComposeMediaAdd .systemIcon {
+  --system-icon-color: var(--color-brand-primary);
+}
+
+.feedComposeAudienceSheet {
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+.feedComposeAudienceOptions {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 8px;
+  gap: 8px;
+}
+
+.feedComposeAudienceOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  text-align: left;
+  background: var(--color-surface-subtle, rgba(24, 25, 35, 0.04));
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.feedComposeAudienceOption--selected {
+  border-color: var(--color-brand-primary);
+}
+
+.feedComposeAudienceOptionCopy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.feedComposeAudienceOptionCopy strong {
+  color: var(--color-text-primary);
+  font: 590 15px/20px "SF Pro", var(--font-sans);
+}
+
+.feedComposeAudienceOptionCopy small {
+  color: var(--color-text-tertiary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.feedComposeAudienceOptionMark {
+  color: var(--color-brand-primary);
+  font: 700 16px/1 "SF Pro", var(--font-sans);
+}
+
+.feedComposeLeaveSheet {
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+}
+
+.feedComposeLeaveActions {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 8px;
+  gap: 8px;
+}
+
+.feedComposeLeaveActions button {
+  width: 100%;
+  padding: 12px 16px;
+  color: var(--color-text-primary);
+  background: var(--color-surface-subtle, rgba(24, 25, 35, 0.04));
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  font: 590 15px/20px "SF Pro", var(--font-sans);
+}
+
+.feedComposeLeaveActions--danger {
+  color: var(--color-state-like, #ff2e60) !important;
+}
+
+.feedComposePublishError {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 16px 12px;
+  padding: 10px 12px;
+  color: var(--color-text-primary);
+  background: rgba(255, 46, 96, 0.08);
+  border-radius: 12px;
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.feedComposePublishError button {
+  padding: 0;
+  color: var(--color-brand-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 590 13px/18px "SF Pro", var(--font-sans);
+}
+
+.feedComposePermissionActions {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 16px;
+  gap: 8px;
+}
+
+.feedComposePermissionPrimary,
+.feedComposePermissionSecondary {
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  font: 590 15px/20px "SF Pro", var(--font-sans);
+}
+
+.feedComposePermissionPrimary {
+  color: var(--color-text-white-primary);
+  background: var(--color-brand-primary);
+}
+
+.feedComposePermissionSecondary {
+  color: var(--color-text-secondary);
+  background: var(--color-surface-subtle, rgba(24, 25, 35, 0.04));
+}
+
+.prototypeFeedCard--new {
+  animation: prototypeFeedCardEnter 420ms ease;
+}
+
+@keyframes prototypeFeedCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .feedComposeToolbar {
@@ -12280,6 +13430,1013 @@ div.chatBubbleRelationship {
 
 .feedComposeCounter--warn {
   color: var(--color-state-like, #ff2e60);
+}
+
+/* Studio-only compose layout — safe to iterate without affecting Core */
+.studioFeedComposeDevice {
+  position: relative;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+}
+
+.studioFeedComposeDevice > .iosStatusBar,
+.studioFeedComposeDevice .regularNavigation {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+}
+
+.studioFeedComposeDevice .pageCanvasContentShell {
+  min-height: 0;
+}
+
+.studioFeedComposeScroll {
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+  flex: 1;
+  flex-direction: column;
+}
+
+.studioFeedComposeBody {
+  display: flex;
+  min-height: 0;
+  overflow-y: auto;
+  flex: 1;
+  flex-direction: column;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.studioFeedComposeBody::-webkit-scrollbar {
+  display: none;
+}
+
+.studioFeedComposeEditor {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  padding: 12px 16px 0;
+  gap: 12px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: start;
+}
+
+.studioFeedComposeComposer {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.studioFeedComposeInput {
+  width: 100%;
+  min-height: 168px;
+  padding: 0;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  resize: none;
+  font: 400 16px/22px "SF Pro", var(--font-sans);
+}
+
+.studioFeedComposeInput::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.studioFeedComposeInput:focus {
+  outline: none;
+}
+
+.studioFeedComposeMediaGrid {
+  display: grid;
+  width: calc(100% - 52px);
+  margin-left: 52px;
+  padding: 8px 16px 0 0;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.studioFeedComposeMediaItem {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border-radius: 12px;
+}
+
+.studioFeedComposeMediaItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.studioFeedComposeMediaRemove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: var(--color-text-white-primary);
+  background: rgba(24, 25, 35, 0.56);
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  cursor: pointer;
+}
+
+.studioFeedComposeMediaRemove .systemIcon {
+  --system-icon-color: var(--color-text-white-primary);
+}
+
+.studioFeedComposeMediaAdd {
+  display: grid;
+  aspect-ratio: 1;
+  place-items: center;
+  gap: 4px;
+  color: var(--color-brand-primary);
+  background: var(--color-surface-subtle, rgba(24, 25, 35, 0.04));
+  border: 1px dashed var(--color-border-subtle);
+  border-radius: 12px;
+  cursor: pointer;
+  font: 590 13px/18px "SF Pro", var(--font-sans);
+}
+
+.studioFeedComposeMediaAdd .systemIcon {
+  --system-icon-color: var(--color-brand-primary);
+}
+
+.studioFeedComposeToolbar {
+  display: flex;
+  padding: 12px 16px 16px 52px;
+  gap: 4px;
+}
+
+.studioFeedComposeToolButton {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  padding: 0;
+  color: var(--color-brand-primary);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  cursor: pointer;
+}
+
+.studioFeedComposeToolButton:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.studioFeedComposeToolButton .systemIcon {
+  --system-icon-color: var(--color-brand-primary);
+}
+
+.studioFeedComposeHashtagGlyph {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  font: 700 16px/1 "SF Pro", var(--font-sans);
+}
+
+.studioFeedComposeFooter {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 8px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-panel);
+}
+
+.studioFeedComposeMediaQuota {
+  margin: 0;
+  color: var(--color-text-tertiary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+.studioFeedComposeAudience {
+  display: inline-flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+  text-align: left;
+}
+
+.studioFeedComposeAudience span {
+  overflow: hidden;
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studioFeedComposeAudience .systemIcon {
+  --system-icon-color: var(--color-text-tertiary);
+  flex: 0 0 auto;
+}
+
+.studioFeedComposeCounter {
+  align-self: flex-end;
+  color: var(--color-text-tertiary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+.studioFeedComposeCounter--warn {
+  color: var(--color-state-like, #ff2e60);
+}
+
+/* Studio IM custom emoji — shell reuses privateChatDevice; overrides below */
+.studioImCustomEmojiDevice .pageCanvasContentShell {
+  flex: 1;
+  min-height: 0;
+}
+
+.studioImMessageList {
+  flex: 1;
+  min-height: 0;
+}
+
+.studioImComposerStack {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  margin-top: auto;
+  background: var(--color-surface-canvas);
+}
+
+.chatEmojiGifComposerStack {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  background: var(--color-surface-canvas);
+  overflow: hidden;
+}
+
+.chatEmojiGifComposerInput {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.chatEmojiGifComposerPanel {
+  flex: 0 0 auto;
+  transform: translateY(100%);
+  opacity: 0.88;
+  transition:
+    transform var(--motion-duration-emphasized) var(--motion-easing-standard),
+    opacity var(--motion-duration-emphasized) var(--motion-easing-standard);
+}
+
+.chatEmojiGifComposerPanel--visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.chatEmojiGifComposerStack .chatEmojiGifPanel {
+  border-top: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chatEmojiGifComposerPanel {
+    transition: none;
+  }
+}
+
+.studioImCustomEmojiDevice.hasEmojiPanelOpen .privateChatFeedback {
+  bottom: calc(60px + 56px + 300px + 20px);
+}
+
+.studioImCustomEmojiDevice .chatBubbleText:has(.prototypeMessageSticker) {
+  padding: 0;
+  background: transparent;
+}
+
+.studioImCustomEmojiDevice
+  .chatBubble--outgoing
+  .chatBubbleText:has(.prototypeMessageSticker) {
+  background: transparent;
+}
+
+.studioImEmojiPanel {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-panel);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.studioImEmojiPanelTabs {
+  flex: 0 0 auto;
+}
+
+.chatEmojiGifTabBar {
+  display: flex;
+  width: 100%;
+  height: 56px;
+  flex: 0 0 56px;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--color-surface-canvas);
+}
+
+.chatEmojiGifTabBar--divider {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.chatEmojiGifTabBarScroll {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.chatEmojiGifTabBarScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.chatEmojiGifTabBarItem {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.chatEmojiGifTabBarItem:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-brand-primary) 8%, transparent);
+}
+
+.chatEmojiGifTabBarItem:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.chatEmojiGifTabBarItem--selected {
+  background: var(--color-button-secondary);
+}
+
+.chatEmojiGifTabBarItem:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.chatEmojiGifTabBarProductIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.chatEmojiGifTabBarCompact {
+  height: 56px;
+  flex: 0 0 56px;
+}
+
+.chatEmojiGifPanel {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-canvas);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.chatEmojiGifPanelBody {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  max-height: 300px;
+  overflow: hidden;
+}
+
+.chatEmojiGifPanelScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.chatEmojiGifPanelScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.chatEmojiGifPanelBody--delete::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: min(100%, 240px);
+  height: 112px;
+  background: radial-gradient(
+    130% 115% at 100% 100%,
+    var(--color-surface-canvas) 0%,
+    color-mix(in srgb, var(--color-surface-canvas) 78%, transparent) 38%,
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+.chatEmojiGifPanelBody--delete::after {
+  content: "";
+  position: absolute;
+  right: -12px;
+  bottom: -28px;
+  z-index: 1;
+  width: 200px;
+  height: 150px;
+  border-radius: 30px;
+  background: var(--color-surface-canvas);
+  filter: blur(10px);
+  opacity: 0.96;
+  pointer-events: none;
+}
+
+.chatEmojiGifPanelSection {
+  padding: 8px 12px 0;
+}
+
+.chatEmojiGifPanelSectionTitle {
+  margin: 0 0 8px;
+  color: var(--color-text-secondary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.chatEmojiGifPanelUnicodeShell,
+.chatEmojiGifPanelEmojiSheet {
+  min-height: 100%;
+}
+
+.chatEmojiGifPanelUnicodeGrid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  padding-bottom: 12px;
+}
+
+.chatEmojiGifPanelUnicodeCell {
+  display: grid;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.chatEmojiGifPanelUnicodeCell:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-brand-primary) 8%, transparent);
+}
+
+.chatEmojiGifPanelRecentStrip,
+.chatEmojiGifPanelSheetFrame {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.chatEmojiGifPanelRecentStrip img,
+.chatEmojiGifPanelSheetFrame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chatEmojiGifPanelMediaGrid {
+  display: grid;
+  padding: 12px 16px 16px;
+  gap: 12px;
+  grid-template-columns: repeat(4, 72px);
+  justify-content: space-between;
+}
+
+.chatEmojiGifPanelMediaCell {
+  position: relative;
+  display: grid;
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  overflow: hidden;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.chatEmojiGifPanelMediaCell--add {
+  background: var(--color-button-secondary);
+}
+
+.chatEmojiGifPanelMediaCell img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+}
+
+.chatEmojiGifPanelMediaCell:hover:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.chatEmojiGifPanelMediaCell:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.chatEmojiGifPanelMediaCell:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+.chatEmojiGifPanelGlyph {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.chatEmojiGifPanelAdd {
+  display: grid;
+  place-items: center;
+  color: var(--color-text-primary);
+}
+
+.chatEmojiGifPanelPending {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  padding: 2px 6px;
+  color: #fff;
+  background: rgba(24, 25, 35, 0.72);
+  border-radius: 999px;
+  font: 400 10px/12px "SF Pro", var(--font-sans);
+}
+
+.chatEmojiGifPanelEmpty {
+  margin: 0;
+  padding: 48px 16px;
+  color: var(--color-text-auxiliary);
+  font: 400 14px/18px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.chatEmojiGifPanelDelete {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  isolation: isolate;
+  display: grid;
+  width: 56px;
+  height: 40px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+  border: 0;
+  border-radius: 24px;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.chatEmojiGifPanelDelete::after {
+  content: "";
+  position: absolute;
+  inset: -4px -8px -10px -8px;
+  z-index: -1;
+  border-radius: 28px;
+  background: rgba(24, 25, 35, 0.14);
+  filter: blur(12px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.chatEmojiGifPanelVipLocked {
+  position: relative;
+  min-height: 300px;
+}
+
+.chatEmojiGifPanelVipBackdrop {
+  opacity: 0.28;
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+.chatEmojiGifPanelVipOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+  background: color-mix(in srgb, var(--color-surface-canvas) 72%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.chatEmojiGifPanelVipOverlay p {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: 400 16px/20px "SF Pro", var(--font-sans);
+}
+
+.chatEmojiGifPanelVipAction {
+  min-width: 159px;
+}
+
+.prototypeEmojiPanel,
+.studioImEmojiPanel {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-canvas);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.studioImEmojiPanelBody {
+  min-height: 208px;
+  max-height: 208px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.studioImEmojiPanelBody::-webkit-scrollbar {
+  display: none;
+}
+
+.studioImEmojiPanelGrid {
+  display: grid;
+  padding: 12px 16px 16px;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.studioImEmojiPanelCell {
+  position: relative;
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  background: var(--color-surface-canvas);
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.studioImEmojiPanelCell:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-brand-primary) 8%, transparent);
+}
+
+.studioImEmojiPanelCell:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.studioImEmojiPanelCell:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+.studioImEmojiPanelCell img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.studioImEmojiPanelGlyph {
+  font: 400 28px/1 "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+
+.studioImEmojiPanelAdd {
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  color: var(--color-brand-primary);
+  font: 590 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioImEmojiPanelAdd .systemIcon {
+  --system-icon-color: var(--color-brand-primary);
+}
+
+.studioImEmojiPanelPending {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  padding: 2px 6px;
+  color: var(--color-text-white-primary);
+  background: rgba(24, 25, 35, 0.72);
+  border-radius: 999px;
+  font: 590 10px/12px "SF Pro", var(--font-sans);
+}
+
+.studioImEmojiPanelEmpty {
+  margin: 0;
+  padding: 24px 16px;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.studioImEmojiUploadSheet {
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+.studioImEmojiUploadPreview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px 12px;
+  gap: 12px;
+}
+
+.studioImEmojiUploadPreview img {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
+  border-radius: 16px;
+  background: var(--color-surface-canvas);
+}
+
+.studioImEmojiUploadName {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 6px;
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.studioImEmojiUploadName span {
+  color: var(--color-text-secondary);
+}
+
+.studioImEmojiUploadName input {
+  width: 100%;
+  padding: 10px 12px;
+  color: var(--color-text-primary);
+  background: var(--color-surface-canvas);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  font: inherit;
+}
+
+.feedComposeOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.feedComposeOverlayBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border: 0;
+  cursor: pointer;
+}
+
+.feedComposeMediaSheet {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  max-height: 78%;
+  flex-direction: column;
+  background: var(--color-surface-panel);
+  border-radius: 16px 16px 0 0;
+}
+
+.feedComposeMediaSheetHandle {
+  width: 36px;
+  height: 4px;
+  margin: 8px auto 0;
+  background: var(--color-border-image);
+  border-radius: var(--radius-full);
+}
+
+.feedComposeMediaSheetHeader {
+  padding: 12px 16px 8px;
+  text-align: center;
+}
+
+.feedComposeMediaSheetHeader h2 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: 590 16px/22px "SF Pro", var(--font-sans);
+}
+
+.feedComposeMediaSheetHeader p {
+  margin: 4px 0 0;
+  color: var(--color-text-tertiary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.feedComposeMediaSheetHeader--row {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  text-align: center;
+}
+
+.feedComposeMediaSheetHeader--row button {
+  padding: 4px 0;
+  color: var(--color-brand-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+}
+
+.feedComposeMediaSheetHeader--row > span {
+  width: 48px;
+}
+
+.feedComposeMediaSourceList {
+  display: grid;
+  gap: 8px;
+  padding: 8px 16px 12px;
+}
+
+.feedComposeMediaSourceList button {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  color: var(--color-text-primary);
+  background: var(--color-surface-canvas);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  font: 400 15px/20px "SF Pro", var(--font-sans);
+}
+
+.feedComposeMediaSourceList button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.feedComposeMediaSourceList .systemIcon {
+  --system-icon-color: var(--color-text-primary);
+}
+
+.feedComposeMediaCancel {
+  margin: 0 16px 16px;
+  padding: 12px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 400 15px/20px "SF Pro", var(--font-sans);
+}
+
+.feedComposeMediaConfirm:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.feedComposeMediaAlbumGrid {
+  display: grid;
+  overflow: auto;
+  padding: 0 12px 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.feedComposeMediaAlbumItem {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.feedComposeMediaAlbumItem img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feedComposeMediaAlbumItem--selected {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: -2px;
+}
+
+.feedComposeMediaAlbumItem:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.feedComposeMediaAlbumCheck {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  color: #fff;
+  background: var(--color-brand-primary);
+  border-radius: 50%;
+  font: 700 11px/1 "SF Pro", var(--font-sans);
+}
+
+.feedComposeMediaAlbumAttached {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 4px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  font: 590 10px/12px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.feedComposeMediaEmpty {
+  margin: 0 16px 16px;
+  color: var(--color-text-tertiary);
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.feedComposeMediaSheet--camera {
+  max-height: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.feedComposeCameraStage {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 32px;
+  background: #111;
+}
+
+.feedComposeCameraStage--capturing .feedComposeCameraViewfinder {
+  opacity: 0.35;
+}
+
+.feedComposeCameraViewfinder {
+  display: grid;
+  width: 100%;
+  min-height: 420px;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.72);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.08), transparent 55%),
+    linear-gradient(180deg, #2a2a2e 0%, #111 100%);
+  border-radius: 16px;
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+  transition: opacity 180ms ease;
+}
+
+.feedComposeCameraShutter {
+  width: 72px;
+  height: 72px;
+  background: #fff;
+  border: 4px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.feedComposeCameraShutter:disabled {
+  cursor: wait;
+  opacity: 0.7;
 }
 
 .regularNavigationTrailing .regularNavigationActionButton:disabled {
@@ -12498,7 +14655,7 @@ div.chatBubbleRelationship {
 }
 
 .profileV3AvatarButton .avatarVisualImage {
-  border: 0.5px solid var(--color-border-image);
+  box-shadow: inset 0 0 0 0.5px var(--color-border-image);
 }
 
 .profileV3RoomFollow {

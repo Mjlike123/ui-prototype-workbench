@@ -1,10 +1,15 @@
 "use client";
 
-import Image from "next/image";
-import { useState, type KeyboardEvent, type ReactNode } from "react";
-import { SystemIcon } from "@/components/kit/system-icon";
+import { useMemo, useState } from "react";
+import {
+  ChatEmojiGifPanel,
+  type ChatEmojiGifPanelCell,
+  type ChatEmojiGifPanelContent,
+} from "@/components/kit/chat-emoji-gif-panel";
+import { CHAT_EMOJI_GIF_PANEL_ASSETS } from "@/components/kit/chat-emoji-gif-panel-assets";
+import type { ChatEmojiGifTabKey } from "@/components/kit/chat-emoji-gif-tab-bar";
 
-export type EmojiPanelTab = "recent" | "emoji" | "custom";
+export type EmojiPanelTab = ChatEmojiGifTabKey;
 
 export type CustomEmojiItem = {
   id: string;
@@ -69,182 +74,170 @@ const SYSTEM_EMOJIS = [
   "😴",
 ] as const;
 
-const PANEL_TABS: { key: EmojiPanelTab; label: string }[] = [
-  { key: "recent", label: "Recent" },
-  { key: "emoji", label: "Emoji" },
-  { key: "custom", label: "Custom" },
-];
-
 export function PrototypeEmojiPanel({
   recent,
   customEmojis,
   onSelect,
   onUploadRequest,
+  onDelete,
+  initialTab = "emoji",
 }: {
   recent: EmojiSelection[];
   customEmojis: CustomEmojiItem[];
   onSelect: (selection: EmojiSelection) => void;
   onUploadRequest: () => void;
+  onDelete?: () => void;
+  initialTab?: EmojiPanelTab;
 }) {
-  const [tab, setTab] = useState<EmojiPanelTab>("recent");
-
-  const onTabKeyDown = (
-    event: KeyboardEvent<HTMLButtonElement>,
-    index: number,
-  ) => {
-    let nextIndex: number | undefined;
-    if (event.key === "ArrowRight") {
-      nextIndex = Math.min(PANEL_TABS.length - 1, index + 1);
-    }
-    if (event.key === "ArrowLeft") {
-      nextIndex = Math.max(0, index - 1);
-    }
-    if (nextIndex === undefined || nextIndex === index) return;
-    event.preventDefault();
-    setTab(PANEL_TABS[nextIndex].key);
-  };
+  const [tab, setTab] = useState<EmojiPanelTab>(initialTab);
+  const content = useMemo(
+    () => buildPrototypeEmojiPanelContent(tab, recent, customEmojis),
+    [tab, recent, customEmojis],
+  );
 
   return (
-    <section
+    <ChatEmojiGifPanel
       className="prototypeEmojiPanel"
-      aria-label="表情面板"
-      data-open="true"
-    >
-      <div
-        className="secondaryTabUnderline prototypeEmojiPanelTabs"
-        role="tablist"
-        aria-label="表情分类"
-      >
-        {PANEL_TABS.map((item, index) => {
-          const selected = item.key === tab;
-          return (
-            <button
-              key={item.key}
-              type="button"
-              role="tab"
-              aria-selected={selected}
-              tabIndex={selected ? 0 : -1}
-              className={selected ? "selected" : ""}
-              onClick={() => setTab(item.key)}
-              onKeyDown={(event) => onTabKeyDown(event, index)}
-            >
-              {item.label}
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="prototypeEmojiPanelBody" role="tabpanel">
-        {tab === "recent" ? (
-          <EmojiGrid
-            emptyLabel="最近使用的表情会出现在这里"
-            items={recent.map((item) => ({
-              key: item.id,
-              label: item.label,
-              content:
-                item.type === "unicode" ? (
-                  <span className="prototypeEmojiPanelGlyph">{item.value}</span>
-                ) : (
-                  <Image src={item.src} alt="" width={56} height={56} />
-                ),
-              onPress: () => onSelect(item),
-            }))}
-          />
-        ) : null}
-
-        {tab === "emoji" ? (
-          <EmojiGrid
-            items={SYSTEM_EMOJIS.map((emoji) => ({
-              key: emoji,
-              label: emoji,
-              content: (
-                <span className="prototypeEmojiPanelGlyph">{emoji}</span>
-              ),
-              onPress: () =>
-                onSelect({
-                  type: "unicode",
-                  id: `unicode-${emoji}`,
-                  label: emoji,
-                  value: emoji,
-                }),
-            }))}
-          />
-        ) : null}
-
-        {tab === "custom" ? (
-          <EmojiGrid
-            items={[
-              {
-                key: "upload",
-                label: "添加自定义表情",
-                content: (
-                  <span className="prototypeEmojiPanelAdd">
-                    <SystemIcon name="addCircle" size={24} />
-                  </span>
-                ),
-                onPress: onUploadRequest,
-              },
-              ...customEmojis.map((emoji) => ({
-                key: emoji.id,
-                label: emoji.label,
-                content: (
-                  <>
-                    <Image src={emoji.src} alt="" width={56} height={56} />
-                    {emoji.status === "pending" ? (
-                      <span className="prototypeEmojiPanelPending">审核中</span>
-                    ) : null}
-                  </>
-                ),
-                disabled: emoji.status === "pending",
-                onPress: () =>
-                  onSelect({
-                    type: "custom",
-                    id: emoji.id,
-                    label: emoji.label,
-                    src: emoji.src,
-                  }),
-              })),
-            ]}
-          />
-        ) : null}
-      </div>
-    </section>
+      ariaLabel="表情面板"
+      value={tab}
+      onChange={(key) => setTab(key as EmojiPanelTab)}
+      content={content}
+      onCellPress={(cell) => handleCellPress(cell, onSelect, onUploadRequest)}
+      onDelete={onDelete}
+      onVipAction={() => undefined}
+    />
   );
 }
 
-function EmojiGrid({
-  items,
-  emptyLabel,
-}: {
-  items: {
-    key: string;
-    label: string;
-    content: ReactNode;
-    disabled?: boolean;
-    onPress: () => void;
-  }[];
-  emptyLabel?: string;
-}) {
-  if (items.length === 0 && emptyLabel) {
-    return <p className="prototypeEmojiPanelEmpty">{emptyLabel}</p>;
-  }
+function buildPrototypeEmojiPanelContent(
+  tab: EmojiPanelTab,
+  recent: EmojiSelection[],
+  customEmojis: CustomEmojiItem[],
+): ChatEmojiGifPanelContent {
+  const [packCoinItems, packVipItems] = splitCustomEmojiPacks(customEmojis);
 
-  return (
-    <div className="prototypeEmojiPanelGrid" role="group" aria-label="表情列表">
-      {items.map((item) => (
-        <button
-          key={item.key}
-          type="button"
-          className="prototypeEmojiPanelCell"
-          aria-label={item.label}
-          disabled={item.disabled}
-          onClick={item.onPress}
-        >
-          {item.content}
-        </button>
-      ))}
-    </div>
-  );
+  switch (tab) {
+    case "emoji":
+      return {
+        variant: "emoji-sheet",
+        recentTitle: "最近使用",
+        allTitle: "所有表情",
+        recentStripSrc: CHAT_EMOJI_GIF_PANEL_ASSETS.recentStrip,
+        sheetSrc: CHAT_EMOJI_GIF_PANEL_ASSETS.emojiSheet,
+        showDelete: true,
+      };
+    case "gif":
+      return { variant: "empty", message: "GIF 库待接入" };
+    case "pack-grin":
+      if (recent.length === 0) {
+        return {
+          variant: "empty",
+          message: "最近使用的表情会出现在这里",
+        };
+      }
+      return {
+        variant: "unicode-grid",
+        sections: [
+          {
+            title: "最近使用",
+            cells: recent.map((item) => selectionToCell(item)),
+          },
+        ],
+      };
+    case "pack-heart":
+      return {
+        variant: "media-grid",
+        cells: [
+          {
+            kind: "add",
+            id: "upload",
+            label: "添加自定义表情",
+          },
+          ...customEmojis.map((emoji) => ({
+            kind: "image" as const,
+            id: emoji.id,
+            label: emoji.label,
+            src: emoji.src,
+            disabled: emoji.status === "pending",
+          })),
+        ],
+      };
+    case "pack-coin":
+      if (packCoinItems.length === 0) {
+        return { variant: "empty", message: "该贴纸包暂无内容" };
+      }
+      return {
+        variant: "media-grid",
+        cells: packCoinItems.map((emoji) => ({
+          kind: "image" as const,
+          id: emoji.id,
+          label: emoji.label,
+          src: emoji.src,
+        })),
+      };
+    case "pack-vip":
+      return {
+        variant: "vip-locked",
+        title: "VIP exclusive emojis",
+        actionLabel: "Open VIP",
+        backdropCells: packVipItems.map((emoji) => ({
+          kind: "image" as const,
+          id: emoji.id,
+          label: emoji.label,
+          src: emoji.src,
+        })),
+      };
+    default:
+      return { variant: "empty", message: "暂无内容" };
+  }
+}
+
+function handleCellPress(
+  cell: ChatEmojiGifPanelCell,
+  onSelect: (selection: EmojiSelection) => void,
+  onUploadRequest: () => void,
+) {
+  if (cell.kind === "add") {
+    onUploadRequest();
+    return;
+  }
+  if (cell.kind === "unicode") {
+    onSelect({
+      type: "unicode",
+      id: cell.id,
+      label: cell.label,
+      value: cell.value,
+    });
+    return;
+  }
+  onSelect({
+    type: "custom",
+    id: cell.id,
+    label: cell.label,
+    src: cell.src,
+  });
+}
+
+function selectionToCell(item: EmojiSelection): ChatEmojiGifPanelCell {
+  if (item.type === "unicode") {
+    return {
+      kind: "unicode",
+      id: item.id,
+      label: item.label,
+      value: item.value,
+    };
+  }
+  return {
+    kind: "image",
+    id: item.id,
+    label: item.label,
+    src: item.src,
+  };
+}
+
+function splitCustomEmojiPacks(customEmojis: CustomEmojiItem[]) {
+  const midpoint = Math.ceil(customEmojis.length / 2);
+  return [customEmojis.slice(0, midpoint), customEmojis.slice(midpoint)] as const;
 }
 
 export function pushRecentEmoji(

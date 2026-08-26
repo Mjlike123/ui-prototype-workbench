@@ -15,3 +15,4 @@ When adding or replacing an icon cut:
 6. Keep `specs/foundations/icons.yaml` consistent when supported icon formats or usage rules change.
 7. Give every new semantic monochrome icon a 24 × 24 canonical frame and use `currentColor` instead of a hard-coded fill or stroke.
 8. Default icon components to `color.text.primary`; apply another color only through the semantic Token required by the business state or surface.
+9. After registering SVG sources, add them to `scripts/generate-inline-icon-assets.mjs` and consume through `SystemIcon`, `BottomNavigationIcon`, or another Kit wrapper — never `<img>` / `next/image` / CSS mask in prototypes. See `prototype-asset-pipeline.mdc`.

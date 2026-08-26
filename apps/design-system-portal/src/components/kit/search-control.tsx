@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, type FormEvent } from "react";
+import { InlineSvgIcon } from "./inline-svg-icon";
+import { SEARCH_CONTROL_ICON_SVGS } from "./generated/search-control-icon-svgs";
 
 export function SearchControl({
   value,
@@ -68,20 +69,17 @@ export function SearchControl({
                   inputRef.current?.focus();
                 }}
               >
-                <Image
-                  src="/icons/search-control/clear-circle.svg"
-                  alt=""
-                  width={20}
-                  height={20}
-                  aria-hidden="true"
+                <InlineSvgIcon
+                  className="searchControlClearCircle"
+                  markup={SEARCH_CONTROL_ICON_SVGS.clearCircle}
+                  size={20}
+                  data-search-control-icon="clear-circle"
                 />
-                <Image
+                <InlineSvgIcon
                   className="searchControlClearGlyph"
-                  src="/icons/search-control/clear-glyph.svg"
-                  alt=""
-                  width={8}
-                  height={8}
-                  aria-hidden="true"
+                  markup={SEARCH_CONTROL_ICON_SVGS.clearGlyph}
+                  size={8}
+                  data-search-control-icon="clear-glyph"
                 />
               </button>
             ) : null}
@@ -111,13 +109,11 @@ export function SearchControl({
 
 export function SearchControlIcon() {
   return (
-    <span className="searchControlIcon" aria-hidden="true">
-      <Image
-        src="/icons/search-control/search.svg"
-        alt=""
-        width={21}
-        height={21}
-      />
-    </span>
+    <InlineSvgIcon
+      className="searchControlIcon"
+      markup={SEARCH_CONTROL_ICON_SVGS.search}
+      size={21}
+      data-search-control-icon="search"
+    />
   );
 }

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState, type CSSProperties } from "react";
 import { AvatarVisual } from "@/components/kit/avatar-visual";
+import { AvatarGroupVisual } from "@/components/kit/avatar-group-visual";
 import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { ListTag } from "@/components/kit/list-tag";
@@ -16,6 +17,7 @@ import {
   BOTTOM_NAV_DESTINATIONS,
   type BottomNavKey,
 } from "@/lib/profile-prototype-model";
+import { readPublishedFeedPosts } from "@/lib/feed-compose-session";
 
 type DestinationScreen = Extract<BottomNavKey, "room" | "feed" | "message">;
 
@@ -25,6 +27,7 @@ type PrototypeDestinationPageProps = {
   onOpenSearch?: () => void;
   onOpenPrivateChat?: (friend: PrivateChatFriend) => void;
   onOpenCompose?: () => void;
+  onOpenFeedDetail?: () => void;
   width?: number;
   height?: number;
   theme?: "light" | "dark";
@@ -39,6 +42,7 @@ export function PrototypeDestinationPage({
   onOpenSearch,
   onOpenPrivateChat,
   onOpenCompose,
+  onOpenFeedDetail,
   width = 375,
   height = 812,
   theme = "light",
@@ -65,7 +69,10 @@ export function PrototypeDestinationPage({
       <PrototypeStatusBar theme={theme} />
       <div className="pageCanvasContentShell">
         {screen === "feed" ? (
-          <FeedScreen onAction={setToast} />
+          <FeedScreen
+            onAction={setToast}
+            onOpenDetail={onOpenFeedDetail}
+          />
         ) : screen === "room" ? (
           <RoomScreen onAction={setToast} />
         ) : (
@@ -264,13 +271,20 @@ function RoomScreen({ onAction }: { onAction: (message: string) => void }) {
   );
 }
 
-function FeedScreen({ onAction }: { onAction: (message: string) => void }) {
+function FeedScreen({
+  onAction,
+  onOpenDetail,
+}: {
+  onAction: (message: string) => void;
+  onOpenDetail?: () => void;
+}) {
   const [tab, setTab] = useState<"Mine" | "Recommend" | "Beijing">("Recommend");
   const [followed, setFollowed] = useState<Record<string, boolean>>({
     Andrew: true,
   });
   const [liked, setLiked] = useState<Record<string, boolean>>({});
-  const posts = [
+  const [publishedPosts] = useState(() => readPublishedFeedPosts());
+  const basePosts = [
     {
       user: "Latifa Alghanim",
       avatar: "/prototypes/feed/latifa-avatar.png",
@@ -302,6 +316,23 @@ function FeedScreen({ onAction }: { onAction: (message: string) => void }) {
       comments: "",
     },
   ];
+  const publishedFeedCards = publishedPosts.map((post) => ({
+    id: post.id,
+    user: "Andrew",
+    avatar: "/prototypes/feed/andrew-avatar.png",
+    flag: "/prototypes/feed/saudi-flag.png",
+    flagWidth: 20,
+    gender: "male" as const,
+    age: 28,
+    vip: 10 as const,
+    caption: post.caption,
+    hashtags: [] as string[],
+    media: post.media,
+    likes: "",
+    comments: "",
+    isNew: true as const,
+  }));
+  const posts = [...publishedFeedCards, ...basePosts];
 
   return (
     <>
@@ -329,7 +360,12 @@ function FeedScreen({ onAction }: { onAction: (message: string) => void }) {
       <main className="prototypeDestinationScroll prototypeFeedScroll">
         <section className="prototypeFeedList" aria-label={`${tab} Feed`}>
           {posts.map((post) => (
-            <article className="prototypeFeedCard" key={post.user}>
+            <article
+              className={`prototypeFeedCard${
+                "isNew" in post && post.isNew ? " prototypeFeedCard--new" : ""
+              }`}
+              key={"id" in post ? post.id : post.user}
+            >
             <header className="prototypeFeedAuthor">
               <AvatarVisual size={48} src={post.avatar} alt="" />
               <div className="prototypeFeedIdentity">
@@ -394,35 +430,35 @@ function FeedScreen({ onAction }: { onAction: (message: string) => void }) {
               </div>
             </header>
             <div className="prototypeFeedBody">
-              <p className="prototypeFeedCaption">
-                {post.hashtags[0] ? <mark>{post.hashtags[0]} </mark> : null}
-                {post.caption}{" "}
-                {post.hashtags.slice(1).map((hashtag) => (
-                  <mark key={hashtag}>{hashtag} </mark>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => onAction(`展开 ${post.user} 的动态`)}
-                >
-                  ...see more
-                </button>
-              </p>
-              {post.media ? (
-                <button
-                  type="button"
-                  className="prototypeFeedMedia"
-                  aria-label={`查看 ${post.user} 的动态图片`}
-                  onClick={() => onAction(`查看 ${post.user} 的动态图片`)}
-                >
-                  <Image
-                    src={post.media}
-                    alt={`${post.user} 的动态照片`}
-                    width={180}
-                    height={180}
-                  />
-                </button>
-              ) : null}
-              <time className="prototypeFeedTime">23 minutes ago</time>
+              <button
+                type="button"
+                className="prototypeFeedOpenDetail"
+                aria-label={`查看 ${post.user} 的动态详情`}
+                onClick={() =>
+                  onOpenDetail?.() ??
+                  onAction(`打开 ${post.user} 的动态详情`)
+                }
+              >
+                <p className="prototypeFeedCaption">
+                  {post.hashtags[0] ? <mark>{post.hashtags[0]} </mark> : null}
+                  {post.caption}{" "}
+                  {post.hashtags.slice(1).map((hashtag) => (
+                    <mark key={hashtag}>{hashtag} </mark>
+                  ))}
+                  <span className="prototypeFeedSeeMore">...see more</span>
+                </p>
+                {post.media ? (
+                  <span className="prototypeFeedMedia">
+                    <Image
+                      src={post.media}
+                      alt={`${post.user} 的动态照片`}
+                      width={180}
+                      height={180}
+                    />
+                  </span>
+                ) : null}
+                <time className="prototypeFeedTime">23 minutes ago</time>
+              </button>
               <div className="prototypeFeedActions">
                 <div>
                   <button
@@ -443,7 +479,9 @@ function FeedScreen({ onAction }: { onAction: (message: string) => void }) {
                   <button
                     type="button"
                     aria-label={`评论 ${post.user} 的动态`}
-                    onClick={() => onAction(`评论 ${post.user} 的动态`)}
+                    onClick={() =>
+                      onOpenDetail?.() ?? onAction(`评论 ${post.user} 的动态`)
+                    }
                   >
                     <SystemIcon name="comment" />
                     {post.comments ? <span>{post.comments}</span> : null}
@@ -610,20 +648,18 @@ function MessageScreen({
               }
             >
               <span className="prototypeOnlineFriendAvatar">
-                <Image src={friend.avatar} alt="" width={48} height={48} />
-                <Image
-                  className="prototypeOnlineFriendDot"
-                  src="/prototypes/message/online-dot.svg"
+                <AvatarVisual
+                  size={48}
+                  src={friend.avatar}
                   alt=""
-                  width={12}
-                  height={12}
+                  badge="online"
                 />
               </span>
               <small>{friend.name}</small>
             </button>
           ))}
           <button type="button" onClick={() => onAction("查看另外 7 位在线好友")}>
-            <MessageGroupAvatar />
+            <AvatarGroupVisual variant="home-more" />
             <small>7 more</small>
           </button>
         </div>
@@ -649,17 +685,16 @@ function MessageScreen({
             }}
           >
             {message.group ? (
-              <MessageGroupAvatar />
+              <AvatarGroupVisual />
             ) : (
               <span className="prototypeMessageAvatar">
-                <Image
+                <AvatarVisual
+                  size={48}
                   src={
                     message.avatar ??
                     "/prototypes/message/conversation-1.png"
                   }
                   alt=""
-                  width={48}
-                  height={48}
                 />
               </span>
             )}
@@ -681,28 +716,6 @@ function MessageScreen({
         ))}
       </section>
     </>
-  );
-}
-
-function MessageGroupAvatar() {
-  const members = [
-    "/prototypes/toptop-home/avatar-cassie.png",
-    "/prototypes/toptop-home/avatar-andrew.png",
-    "/prototypes/toptop-home/avatar-estelle.png",
-    "/prototypes/toptop-home/avatar-felix.png",
-  ];
-  return (
-    <span className="prototypeMessageGroupAvatar" aria-hidden="true">
-      {members.map((member) => (
-        <Image
-          key={member}
-          src={member}
-          alt=""
-          width={28}
-          height={28}
-        />
-      ))}
-    </span>
   );
 }
 

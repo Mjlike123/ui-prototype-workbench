@@ -1,10 +1,20 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { displayImagePixels } from "@/lib/display-image-density";
 import { AvatarVisual, type AvatarSize } from "./avatar-visual";
 
 const businessSizes: AvatarSize[] = [72, 60, 48, 40, 36, 24, 20];
 
 describe("AvatarVisual", () => {
+  it("wraps the bitmap in the avatar image ring for bordBg2 stroke styling", () => {
+    const { container } = render(<AvatarVisual size={48} />);
+    const imageRing = container.querySelector(".avatarVisualImage");
+
+    expect(imageRing).toBeTruthy();
+    expect(imageRing?.querySelector("img")).toBeTruthy();
+    expect(imageRing).not.toHaveClass("avatarVisualImage--empty");
+  });
+
   it("renders every business size at its declared dimensions", () => {
     const { container } = render(
       <>
@@ -21,7 +31,10 @@ describe("AvatarVisual", () => {
       const frame = frames[index] as HTMLElement;
       expect(frame.style.width).toBe(`${size}px`);
       expect(frame.style.height).toBe(`${size}px`);
-      expect(frame.querySelector("img")).toHaveAttribute("width", `${size}`);
+      expect(frame.querySelector("img")).toHaveAttribute(
+        "width",
+        `${displayImagePixels(size)}`,
+      );
     });
   });
 
@@ -76,6 +89,19 @@ describe("AvatarVisual", () => {
     expect(container.querySelector("img")?.getAttribute("src")).toContain(
       "default-empty-dark.png",
     );
-    expect(container.querySelector("img")).toHaveAttribute("width", "48");
+    expect(container.querySelector("img")).toHaveAttribute(
+      "width",
+      `${displayImagePixels(48)}`,
+    );
+  });
+
+  it("renders the online badge from Kit assets", () => {
+    const { container } = render(
+      <AvatarVisual size={48} badge="online" alt="" />,
+    );
+
+    expect(
+      container.querySelector('.avatarVisualBadge--online img[src*="online-dot.svg"]'),
+    ).not.toBeNull();
   });
 });

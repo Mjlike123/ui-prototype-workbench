@@ -1,36 +1,85 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AvatarVisual } from "@/components/kit/avatar-visual";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { RegularNavigation } from "@/components/kit/regular-navigation";
 import { SystemIcon } from "@/components/kit/system-icon";
+import { PrototypeFeedMediaPicker } from "@/components/prototypes/prototype-feed-media-picker";
+import {
+  appendPublishedFeedPost,
+  clearFeedComposeDraft,
+  createPublishedFeedPost,
+  loadFeedComposeAudience,
+  loadFeedComposeDraft,
+  saveFeedComposeAudience,
+  saveFeedComposeDraft,
+  type FeedComposeAudience,
+} from "@/lib/feed-compose-session";
 
 type FeedComposePagePrototypeProps = {
   width?: number;
   height?: number;
   theme?: "light" | "dark";
   onBack: () => void;
+  onPublished?: () => void;
 };
 
+const MAX_MEDIA = 4;
 const MAX_CHARS = 280;
 const USER_AVATAR = "/prototypes/feed/andrew-avatar.png";
-const SAMPLE_PHOTOS = [
-  "/prototypes/feed/latifa-photo.png",
-  "/prototypes/profile-v3/feed-avatar.png",
-] as const;
+const PUBLISH_DELAY_MS = 900;
 
+const AUDIENCE_OPTIONS: Array<{
+  value: FeedComposeAudience;
+  label: string;
+  description: string;
+}> = [
+  {
+    value: "everyone",
+    label: "Everyone can reply",
+    description: "Anyone on TopTop can see and reply",
+  },
+  {
+    value: "friends",
+    label: "Friends only",
+    description: "Only people you follow can reply",
+  },
+];
+
+/** Core catalog compose screen — do not use in Studio; see StudioFeedComposePage. */
 export function FeedComposePagePrototype({
   width = 375,
   height = 812,
   theme = "light",
   onBack,
+  onPublished,
 }: FeedComposePagePrototypeProps) {
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [caption, setCaption] = useState("");
   const [media, setMedia] = useState<string[]>([]);
-  const [audience, setAudience] = useState<"everyone" | "friends">("everyone");
+  const [audience, setAudience] = useState<FeedComposeAudience>("everyone");
   const [toast, setToast] = useState<string | null>(null);
+  const [publishError, setPublishError] = useState<string | null>(null);
+  const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
+  const [audienceSheetOpen, setAudienceSheetOpen] = useState(false);
+  const [leaveSheetOpen, setLeaveSheetOpen] = useState(false);
+  const [posting, setPosting] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
+
+  useEffect(() => {
+    const draft = loadFeedComposeDraft();
+    if (draft) {
+      setCaption(draft.caption);
+      setMedia(draft.media);
+      setAudience(draft.audience);
+      setDraftRestored(true);
+    } else {
+      setAudience(loadFeedComposeAudience());
+    }
+    inputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     if (!toast) return;
@@ -38,31 +87,87 @@ export function FeedComposePagePrototype({
     return () => window.clearTimeout(timer);
   }, [toast]);
 
-  const remaining = MAX_CHARS - caption.length;
-  const canPost = caption.trim().length > 0 || media.length > 0;
-  const nextPhoto = useMemo(
-    () => SAMPLE_PHOTOS.find((photo) => !media.includes(photo)),
-    [media],
-  );
+  useEffect(() => {
+    saveFeedComposeDraft({ caption, media, audience });
+  }, [audience, caption, media]);
 
-  const addPhoto = () => {
-    if (!nextPhoto || media.length >= 4) {
-      setToast(media.length >= 4 ? "最多添加 4 张图片" : "暂无更多示例图片");
-      return;
-    }
-    setMedia((current) => [...current, nextPhoto]);
+  useEffect(() => {
+    if (!draftRestored) return;
+    setToast("已恢复草稿");
+    setDraftRestored(false);
+  }, [draftRestored]);
+
+  const remaining = MAX_CHARS - caption.length;
+  const remainingMedia = MAX_MEDIA - media.length;
+  const hasContent = caption.trim().length > 0 || media.length > 0;
+  const canPost = hasContent && !posting;
+
+  const addPhotos = (photos: string[]) => {
+    setMedia((current) => {
+      const merged = [...current];
+      for (const photo of photos) {
+        if (merged.length >= MAX_MEDIA || merged.includes(photo)) {
+          continue;
+        }
+        merged.push(photo);
+      }
+      return merged;
+    });
   };
 
   const removePhoto = (photo: string) => {
     setMedia((current) => current.filter((item) => item !== photo));
   };
 
-  const publish = () => {
-    if (!canPost) return;
-    setToast("动态已发布");
-    setCaption("");
-    setMedia([]);
+  const selectAudience = (next: FeedComposeAudience) => {
+    setAudience(next);
+    saveFeedComposeAudience(next);
+    setAudienceSheetOpen(false);
   };
+
+  const leaveCompose = (mode: "save" | "discard") => {
+    if (mode === "discard") {
+      clearFeedComposeDraft();
+      setCaption("");
+      setMedia([]);
+    }
+    setLeaveSheetOpen(false);
+    onBack();
+  };
+
+  const requestBack = () => {
+    if (posting) return;
+    if (hasContent) {
+      setLeaveSheetOpen(true);
+      return;
+    }
+    clearFeedComposeDraft();
+    onBack();
+  };
+
+  const publish = () => {
+    if (!hasContent || posting) return;
+
+    setPosting(true);
+    setPublishError(null);
+
+    window.setTimeout(() => {
+      const post = createPublishedFeedPost({ caption, media });
+      appendPublishedFeedPost(post);
+      clearFeedComposeDraft();
+      setCaption("");
+      setMedia([]);
+      setMediaPickerOpen(false);
+      setPosting(false);
+      setToast("动态已发布");
+      window.setTimeout(() => {
+        onPublished?.() ?? onBack();
+      }, 520);
+    }, PUBLISH_DELAY_MS);
+  };
+
+  const audienceLabel =
+    audience === "everyone" ? "Everyone can reply" : "Friends only";
 
   return (
     <div
@@ -82,18 +187,21 @@ export function FeedComposePagePrototype({
       <div className="pageCanvasContentShell">
         <RegularNavigation
           title="New post"
-          onBack={onBack}
+          onBack={requestBack}
           trailingKind="button"
           trailing={
             <button
               type="button"
-              className="regularNavigationActionButton"
+              className={`regularNavigationActionButton${
+                posting ? " regularNavigationActionButton--loading" : ""
+              }`}
               disabled={!canPost}
               aria-disabled={!canPost}
-              aria-label="发布动态"
+              aria-busy={posting}
+              aria-label={posting ? "发布中" : "发布动态"}
               onClick={publish}
             >
-              Post
+              {posting ? <SystemIcon name="loading" size={16} /> : "Post"}
             </button>
           }
         />
@@ -102,9 +210,12 @@ export function FeedComposePagePrototype({
           <section className="feedComposeEditor" aria-label="动态内容">
             <AvatarVisual size={40} src={USER_AVATAR} alt="" />
             <textarea
+              ref={inputRef}
               className="feedComposeInput"
               value={caption}
-              onChange={(event) => setCaption(event.target.value.slice(0, MAX_CHARS))}
+              onChange={(event) =>
+                setCaption(event.target.value.slice(0, MAX_CHARS))
+              }
               placeholder="What's happening?"
               aria-label="动态文案"
               rows={4}
@@ -114,7 +225,7 @@ export function FeedComposePagePrototype({
           {media.length > 0 ? (
             <section
               className="feedComposeMediaGrid"
-              aria-label={`已选图片 ${media.length} 张`}
+              aria-label={`已选图片 ${media.length} 张，还可添加 ${remainingMedia} 张`}
             >
               {media.map((photo) => (
                 <div className="feedComposeMediaItem" key={photo}>
@@ -129,17 +240,36 @@ export function FeedComposePagePrototype({
                   </button>
                 </div>
               ))}
+              {remainingMedia > 0 ? (
+                <button
+                  type="button"
+                  className="feedComposeMediaAdd"
+                  aria-label={`继续添加照片，还可添加 ${remainingMedia} 张`}
+                  onClick={() => setMediaPickerOpen(true)}
+                >
+                  <SystemIcon name="photo" size={20} />
+                  <span>{remainingMedia}</span>
+                </button>
+              ) : null}
             </section>
           ) : null}
 
           <section className="feedComposeToolbar" aria-label="发布工具">
-            <button type="button" onClick={addPhoto} aria-label="添加照片">
+            <button
+              type="button"
+              onClick={() => setMediaPickerOpen(true)}
+              aria-label="添加照片"
+            >
               <SystemIcon name="photo" size={20} />
               <span>Photo</span>
             </button>
             <button
               type="button"
-              onClick={() => setCaption((current) => `${current}${current ? " " : ""}#OOTD`)}
+              onClick={() =>
+                setCaption(
+                  (current) => `${current}${current ? " " : ""}#OOTD`,
+                )
+              }
               aria-label="插入话题标签"
             >
               <span className="feedComposeHashtagGlyph">#</span>
@@ -152,16 +282,10 @@ export function FeedComposePagePrototype({
               type="button"
               className="feedComposeAudience"
               aria-label={`可见范围：${audience === "everyone" ? "所有人" : "好友"}`}
-              onClick={() =>
-                setAudience((current) =>
-                  current === "everyone" ? "friends" : "everyone",
-                )
-              }
+              onClick={() => setAudienceSheetOpen(true)}
             >
               <SystemIcon name="contacts" size={16} />
-              <span>
-                {audience === "everyone" ? "Everyone can reply" : "Friends only"}
-              </span>
+              <span>{audienceLabel}</span>
               <SystemIcon name="chevronRight" size={16} />
             </button>
             <span
@@ -173,8 +297,112 @@ export function FeedComposePagePrototype({
               {remaining}
             </span>
           </section>
+
+          {publishError ? (
+            <div className="feedComposePublishError" role="alert">
+              <p>{publishError}</p>
+              <button type="button" onClick={publish}>
+                重试
+              </button>
+            </div>
+          ) : null}
         </main>
       </div>
+
+      <PrototypeFeedMediaPicker
+        open={mediaPickerOpen}
+        selected={media}
+        maxCount={MAX_MEDIA}
+        onClose={() => setMediaPickerOpen(false)}
+        onAddPhotos={addPhotos}
+      />
+
+      {audienceSheetOpen ? (
+        <div className="feedComposeOverlay" role="presentation">
+          <button
+            type="button"
+            className="feedComposeOverlayBackdrop"
+            aria-label="关闭可见范围设置"
+            onClick={() => setAudienceSheetOpen(false)}
+          />
+          <section
+            className="feedComposeMediaSheet feedComposeAudienceSheet"
+            aria-label="选择可见范围"
+          >
+            <div className="feedComposeMediaSheetHandle" aria-hidden="true" />
+            <header className="feedComposeMediaSheetHeader">
+              <h2>Who can reply</h2>
+              <p>Choose who can see and reply to this post</p>
+            </header>
+            <div className="feedComposeAudienceOptions">
+              {AUDIENCE_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={`feedComposeAudienceOption${
+                    audience === option.value
+                      ? " feedComposeAudienceOption--selected"
+                      : ""
+                  }`}
+                  aria-label={option.label}
+                  aria-pressed={audience === option.value}
+                  onClick={() => selectAudience(option.value)}
+                >
+                  <span className="feedComposeAudienceOptionCopy">
+                    <strong>{option.label}</strong>
+                    <small>{option.description}</small>
+                  </span>
+                  {audience === option.value ? (
+                    <span className="feedComposeAudienceOptionMark" aria-hidden="true">
+                      ✓
+                    </span>
+                  ) : null}
+                </button>
+              ))}
+            </div>
+          </section>
+        </div>
+      ) : null}
+
+      {leaveSheetOpen ? (
+        <div className="feedComposeOverlay" role="presentation">
+          <button
+            type="button"
+            className="feedComposeOverlayBackdrop"
+            aria-label="继续编辑"
+            onClick={() => setLeaveSheetOpen(false)}
+          />
+          <section
+            className="feedComposeMediaSheet feedComposeLeaveSheet"
+            aria-label="离开确认"
+          >
+            <div className="feedComposeMediaSheetHandle" aria-hidden="true" />
+            <header className="feedComposeMediaSheetHeader">
+              <h2>Save this post?</h2>
+              <p>Your draft will stay on this device until you publish or discard it.</p>
+            </header>
+            <div className="feedComposeLeaveActions">
+              <button type="button" onClick={() => leaveCompose("save")}>
+                Save draft
+              </button>
+              <button
+                type="button"
+                className="feedComposeLeaveActions--danger"
+                onClick={() => leaveCompose("discard")}
+              >
+                Discard
+              </button>
+              <button
+                type="button"
+                className="feedComposeMediaCancel"
+                onClick={() => setLeaveSheetOpen(false)}
+              >
+                Keep editing
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
 
       {toast ? (
         <div className="profilePrototypeToast" role="status" aria-live="polite">

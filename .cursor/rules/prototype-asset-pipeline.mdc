@@ -1,0 +1,65 @@
+---
+description: Prototype pages must use Kit icon components and @3x raster assets (Figma-capture ready)
+globs: "apps/design-system-portal/src/components/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/app/prototype-runtime/**/*.{ts,tsx},apps/design-system-portal/src/components/page-canvas-stage.tsx,scripts/generate-inline-icon-assets.mjs,scripts/generate-prototype-avatar-3x.mjs"
+alwaysApply: false
+---
+
+# Prototype Asset Pipeline
+
+New or updated **核心模块** prototype screens must follow this pipeline so pages render sharply in the browser and capture cleanly into Figma.
+
+## Icons → Kit components (inline SVG)
+
+Do **not** render semantic icons with any of these in prototypes:
+
+- CSS `mask-image` / `-webkit-mask-image`
+- `<img src="*.svg">` or `next/image` for SVG icons
+- Prototype-local emoji or hand-drawn shapes standing in for Kit icons
+
+Instead:
+
+1. Register the canonical SVG under `apps/design-system-portal/public/icons/` (see `icon-asset-registry.mdc`).
+2. Add the asset to `scripts/generate-inline-icon-assets.mjs` in the correct bucket:
+   - Monochrome UI actions → `SYSTEM_ICON_ASSETS` (`icons/svg/`)
+   - Bottom tab bar → `BOTTOM_NAVIGATION_ICON_ASSETS`
+   - Search field chrome → `SEARCH_CONTROL_ICON_ASSETS`
+   - List tag gender glyphs → `LIST_TAG_GENDER_ICON_ASSETS`
+3. Run `npm run icons:generate-inline` (also runs before `portal:test`).
+4. Render through the existing Kit wrapper:
+   - `SystemIcon` — monochrome, `currentColor`
+   - `BottomNavigationIcon` — outline / filled tab icons
+   - `InlineSvgIcon` — only when no wrapper exists yet; prefer adding a typed wrapper
+   - `SearchControl` / `ListTag` — already wired; extend their generated modules, do not bypass them
+
+Figma html-to-design reads real `<svg>` nodes in the DOM. Mask and rasterized SVG `<img>` tags export blank or as Image fills.
+
+## Photos & cut assets → @3x bitmaps
+
+Avatars, game covers, message thumbnails, and other **raster** prototype art are not icons.
+
+1. Export at **3× the logical display size** (iOS @3x). Example: 48 logical px → 144×144 px PNG.
+2. Store under `apps/design-system-portal/public/prototypes/…` (or the canonical Kit path for shared assets).
+3. Register `{ path, displaySize }` in `scripts/generate-prototype-avatar-3x.mjs` and run the script to verify/upscale.
+4. Render with density-aware helpers — never hard-code bitmap dimensions that match display size only:
+   - Circular avatars in prototypes → `PrototypeAvatarImage` + `displaySize`
+   - Kit `AvatarVisual` already applies `displayImagePixels()` internally
+   - Other rasters → `displayImagePixels(displaySize)` for `next/image` `width` / `height`, and CSS/layout stays at logical px
+
+Membership badge PNGs and colorful product icons stay as registered bitmaps under `icons/list-tags/` or `icons/product/`; do not inline them as SVG.
+
+## Figma capture checklist
+
+Before capturing a prototype into Figma:
+
+1. Use the isolated runtime route, e.g. `/prototype-runtime/app/<screen>?theme=light&width=375&height=812`.
+2. Capture the device root selector (e.g. `.prototypeSearchDevice`, `.topTopHomeDevice`), not the portal chrome.
+3. Confirm icons are `<svg>` in DevTools under `SystemIcon` / `BottomNavigationIcon` / `SearchControl` / `ListTag`.
+4. Confirm avatars use `@3x` sources so Figma receives crisp image fills.
+
+## Handoff
+
+When delivering a new core template, note in the PR:
+
+- Which icons were added to `generate-inline-icon-assets.mjs`
+- Which raster assets were registered at which `displaySize`
+- Whether a Figma capture was refreshed

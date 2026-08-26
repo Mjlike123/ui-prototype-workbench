@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PageCanvasStage } from "@/components/page-canvas-stage";
 import { ProfilePagePrototype } from "@/components/prototypes/profile-page-prototype";
+import { StudioFeedComposePage } from "@/components/studio/studio-feed-compose-page";
+import { StudioImCustomEmojiPage } from "@/components/studio/studio-im-custom-emoji-page";
 import { DesignMvpActions } from "@/components/design-mvp-actions";
 import { YuebanCanvasActions } from "@/components/yueban-canvas-actions";
 import {
@@ -330,6 +332,18 @@ export function PageCanvasShowcase() {
         <main className="canvasShowcaseStage" aria-label="功能原型预览">
           {plan.intent === "profile" ? (
             <ProfilePagePrototype width={viewportWidth} height={viewportHeight} />
+          ) : plan.intent === "feed-compose" ? (
+            <StudioFeedComposePage
+              width={viewportWidth}
+              height={viewportHeight}
+              onBack={() => setStatus("Studio 预览：返回由 Feed 入口承接")}
+            />
+          ) : plan.intent === "im-custom-emoji" ? (
+            <StudioImCustomEmojiPage
+              width={viewportWidth}
+              height={viewportHeight}
+              onBack={() => setStatus("Studio 预览：返回由 Message 入口承接")}
+            />
           ) : (
             <PageCanvasStage
               plan={plan}
@@ -372,9 +386,13 @@ export function PageCanvasShowcase() {
                 <small>
                   {plan.intent === "profile"
                     ? "功能原型 · /prototypes/profile"
-                    : agentVision
-                      ? "已包含 Agent 视觉映射"
-                      : "当前为 Kit 组件预览"}
+                    : plan.intent === "feed-compose"
+                      ? "Studio 探索 · StudioFeedComposePage + PrototypeFeedMediaPicker"
+                      : plan.intent === "im-custom-emoji"
+                        ? "Studio 探索 · StudioImCustomEmojiPage + 图片表情上传"
+                      : agentVision
+                        ? "已包含 Agent 视觉映射"
+                        : "当前为 Kit 组件预览"}
                 </small>
               </div>
             </div>

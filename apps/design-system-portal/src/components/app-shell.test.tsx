@@ -83,4 +83,24 @@ describe("AppShell interaction navigation", () => {
       screen.getByRole("button", { name: "收起验收中心" }),
     ).toHaveAttribute("aria-expanded", "true");
   });
+
+  it("shows prototype preview drawer with core and studio destinations", () => {
+    route.pathname = "/canvas/core";
+    render(
+      <AppShell interactionTabs={interactionTabs}>
+        <main>Core templates</main>
+      </AppShell>,
+    );
+
+    const navigation = screen.getByRole("navigation", { name: "主导航" });
+    const core = within(navigation).getByRole("link", { name: "核心模块" });
+    const studio = within(navigation).getByRole("link", { name: "原型创作" });
+
+    expect(core).toHaveAttribute("href", "/canvas/core");
+    expect(core).toHaveAttribute("aria-current", "page");
+    expect(studio).toHaveAttribute("href", "/canvas/studio");
+    expect(
+      screen.getByRole("button", { name: "收起原型预览" }),
+    ).toHaveAttribute("aria-expanded", "true");
+  });
 });

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { foundationNavTabs } from "@/lib/foundation-nav";
+import { prototypePreviewNavTabs } from "@/lib/prototype-preview-nav";
 import { Icon } from "./icons";
 
 const navigation = [
@@ -43,6 +44,8 @@ const auditTabs = [
   { href: "/audit/visual", label: "视觉走查工作台" },
 ];
 
+const prototypePreviewTabs = [...prototypePreviewNavTabs];
+
 type DrawerTab = {
   href: string;
   label: string;
@@ -64,6 +67,7 @@ export function AppShell({
     pathname.startsWith("/interactions"),
   );
   const [auditOpen, setAuditOpen] = useState(pathname.startsWith("/audit"));
+  const [canvasOpen, setCanvasOpen] = useState(pathname.startsWith("/canvas"));
   const isPrototypeRuntime = pathname.startsWith("/prototype-runtime/");
   const isComponentDetail =
     pathname.startsWith("/components/") && pathname !== "/components";
@@ -198,6 +202,62 @@ export function AppShell({
                   >
                     <div>
                       {interactionTabs.map((tab) => {
+                        const tabActive = pathname === tab.href;
+                        return (
+                          <Link
+                            className={`navDrawerTab${
+                              tabActive ? " navDrawerTabActive" : ""
+                            }`}
+                            href={tab.href}
+                            aria-current={tabActive ? "page" : undefined}
+                            key={tab.href}
+                          >
+                            {tab.label}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            if (item.href === "/canvas") {
+              return (
+                <div className="navDrawer" key={item.href}>
+                  <div
+                    className={`navDrawerTrigger${
+                      active ? " navDrawerTriggerActive" : ""
+                    }`}
+                  >
+                    <Link
+                      href="/canvas/core"
+                      className="navItem navDrawerLink"
+                      onClick={() => setCanvasOpen(true)}
+                    >
+                      <Icon name={item.icon} />
+                      <span>{item.label}</span>
+                    </Link>
+                    <button
+                      className="navDrawerToggle"
+                      type="button"
+                      aria-expanded={canvasOpen}
+                      aria-controls="canvas-drawer-tabs"
+                      aria-label={`${canvasOpen ? "收起" : "展开"}原型预览`}
+                      onClick={() => setCanvasOpen((open) => !open)}
+                    >
+                      <span aria-hidden="true">›</span>
+                    </button>
+                  </div>
+                  <div
+                    className={`navDrawerPanel${
+                      canvasOpen ? " navDrawerPanelOpen" : ""
+                    }`}
+                    id="canvas-drawer-tabs"
+                    aria-hidden={!canvasOpen}
+                    inert={!canvasOpen}
+                  >
+                    <div>
+                      {prototypePreviewTabs.map((tab) => {
                         const tabActive = pathname === tab.href;
                         return (
                           <Link

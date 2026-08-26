@@ -1,0 +1,111 @@
+schemaVersion: 1
+id: secondary-tab-text
+version: 1.0.0
+title: 二级 Tab（纯文字）
+owner: TopTop Design System
+category: Navigation
+status: stable
+since: 1.0.0
+tags:
+  - tab
+  - navigation
+  - text
+platforms:
+  - ios
+  - android
+  - h5
+description: 左对齐的纯文字二级 Tab；选中 16pt，未选中 15pt，无下划线或胶囊底。
+previewKey: secondary-tab-text
+reference:
+  figmaUrl: https://www.figma.com/design/cyq2oRQvURaHWzJLtlMWQS/%E8%AE%BE%E8%AE%A1%E4%B8%BB%E5%B8%A7%E7%95%8C%E9%9D%A2?node-id=856-69960
+  nodeId: "856:69960"
+  observations:
+    - 左内边距 16pt，上下内边距 10pt，Tab 间距 16pt
+    - 选中态 SF Pro Semibold 16pt / color.text.primary
+    - 未选中态 SF Pro Semibold 15pt / color.text.tertiary，默认 capitalize
+    - 无底部指示线或胶囊背景
+anatomy:
+  - id: container
+    label: 容器
+    description: 横向排列 Tab，左对齐。
+  - id: tabItem
+    label: 标签按钮
+    description: 根据文案自适应宽度。
+  - id: label
+    label: 标签文字
+    description: 通过字号与颜色区分选中态。
+variants:
+  - name: state
+    values:
+      - selected
+      - unselected
+    defaultValue: selected
+props:
+  - name: items
+    type: TextSecondaryTabItem[]
+    required: true
+    description: Tab 列表，顺序即视觉顺序。
+  - name: value
+    type: string
+    required: true
+    description: 当前选中 Tab key。
+  - name: onChange
+    type: (key:string)=>void
+    required: true
+    description: Tab 切换回调。
+  - name: capitalizeInactive
+    type: boolean
+    defaultValue: true
+    description: 未选中项是否使用 capitalize 文本变换。
+tokenRefs:
+  - color.text.primary
+  - color.text.tertiary
+  - spacing.4
+  - motion.duration.standard
+interactionIds:
+  - tab-selection
+accessibility:
+  - 使用 tablist / tab / aria-selected 表达结构与状态。
+  - 键盘左右方向键、Home、End 切换焦点 Tab。
+detection:
+  figmaFileKeys:
+    - cyq2oRQvURaHWzJLtlMWQS
+  figmaComponentIds:
+    - "856:69960"
+  nameAliases:
+    - 纯文字二级tab
+    - text secondary tab
+    - feed detail tab
+  selectedStateAliases:
+    - selected
+    - active
+  unselectedStateAliases:
+    - unselected
+    - inactive
+roles:
+  - container
+  - tabItem
+  - label
+  - selectedItem
+  - unselectedItem
+rules:
+  - id: container.gap
+    title: Tab 间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: selected.textColor
+    title: 选中态文字颜色
+    category: selected
+    metric: textColor
+    state: selected
+    tolerance: 12
+    aggregate: rule
+  - id: unselected.textColor
+    title: 未选中态文字颜色
+    category: unselected
+    metric: textColor
+    state: unselected
+    tolerance: 12
+    aggregate: rule

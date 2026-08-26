@@ -16,6 +16,16 @@
 
 需要区分进入与离开时，通过时长和位移距离表达，而不是替换缓动函数。
 
+## 弹簧动效
+
+`motion.spring.standard` 用于手势驱动、面板回弹和需要中途改目标的交互。它不用固定 duration，而是由 `stiffness` 与 `damping` 决定何时停下。
+
+- 典型 API：`transition={{ type: "spring", stiffness: 300, damping: 22 }}`
+- 视觉特征：元素会 **略 overshoot 目标位置**，再回弹落定
+- `damping` 越高，overshoot 越小；`stiffness` 越高，动作越干脆
+
+适合：Bottom Sheet 拖拽、Tab 指示器跟手、面板打开时的 iOS 风格回弹。不适合：必须严格按时长结束的加载进度。
+
 ## 不要做的事
 
 - 给列表项加逐个入场动画。首屏内容应直接可读，堆叠动画会显著推迟可用时间。

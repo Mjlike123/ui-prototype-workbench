@@ -533,7 +533,9 @@ describe("ComponentPreview", () => {
     expect(screen.getByRole("heading", { name: "不带头像框" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "带头像框" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "带徽标头像" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "头像组" })).toBeInTheDocument();
     expect(container.querySelectorAll(".avatarUsageItem")).toHaveLength(7);
+    expect(container.querySelectorAll(".avatarGroupCase")).toHaveLength(6);
     expect(container.querySelectorAll(".avatarVisual--framed")).toHaveLength(7);
     expect(container.querySelectorAll(".avatarVisualBadge")).toHaveLength(6);
     expect(
@@ -545,16 +547,12 @@ describe("ComponentPreview", () => {
         '.avatarVisualBadge--gender img[src*="gender-female.svg"]',
       ),
     ).not.toBeNull();
-    expect(screen.getAllByLabelText("48 像素头像").length).toBeGreaterThan(0);
     expect(
       container.querySelector('img[src*="default-empty-light.png"]'),
     ).not.toBeNull();
     expect(
       container.querySelector('img[src*="default-empty-dark.png"]'),
     ).not.toBeNull();
-    expect(
-      screen.getByLabelText("48 像素头像，带头像框"),
-    ).toBeInTheDocument();
   });
 
   it("renders image empty state light and dark previews", () => {

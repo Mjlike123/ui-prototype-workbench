@@ -19,23 +19,37 @@ describe("PrototypeEmojiPanel", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("tab", { name: "Emoji" }));
-    fireEvent.click(screen.getByRole("button", { name: "🎉" }));
-    expect(onSelect).toHaveBeenCalledWith({
-      type: "unicode",
-      id: "unicode-🎉",
-      label: "🎉",
-      value: "🎉",
-    });
+    expect(screen.getByText("最近使用")).toBeInTheDocument();
+    expect(screen.getByText("所有表情")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Emoji" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
 
-    fireEvent.click(screen.getByRole("tab", { name: "Custom" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Heart IP pack" }));
     fireEvent.click(screen.getByRole("button", { name: "Celebration" }));
-    expect(onSelect).toHaveBeenLastCalledWith({
+    expect(onSelect).toHaveBeenCalledWith({
       type: "custom",
       id: "celebration",
       label: "Celebration",
       src: "/prototypes/chat-reply/sticker.png",
     });
+  });
+
+  it("deletes draft characters from the emoji sheet backspace control", () => {
+    const onDelete = vi.fn();
+    render(
+      <PrototypeEmojiPanel
+        recent={[]}
+        customEmojis={DEFAULT_CUSTOM_EMOJIS}
+        onSelect={vi.fn()}
+        onUploadRequest={vi.fn()}
+        onDelete={onDelete}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "删除输入字符" }));
+    expect(onDelete).toHaveBeenCalledOnce();
   });
 
   it("shows recent items and upload entry", () => {
@@ -55,11 +69,12 @@ describe("PrototypeEmojiPanel", () => {
         customEmojis={DEFAULT_CUSTOM_EMOJIS}
         onSelect={vi.fn()}
         onUploadRequest={onUploadRequest}
+        initialTab="pack-grin"
       />,
     );
 
     expect(screen.getByRole("button", { name: "Celebration" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("tab", { name: "Custom" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Heart IP pack" }));
     fireEvent.click(screen.getByRole("button", { name: "添加自定义表情" }));
     expect(onUploadRequest).toHaveBeenCalledOnce();
   });

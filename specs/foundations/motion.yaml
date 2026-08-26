@@ -20,3 +20,7 @@ tokens:
     name: 标准缓动
     value: "cubic-bezier(0.2, 0, 0, 1)"
     description: 大多数进入、离开和状态变化。
+  - id: motion.spring.standard
+    name: 标准弹簧
+    value: "stiffness 300 · damping 22"
+    description: 手势驱动与面板回弹；略 overshoot 后落定，不用固定 duration。

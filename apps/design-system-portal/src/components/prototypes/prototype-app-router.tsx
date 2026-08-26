@@ -11,6 +11,7 @@ import {
 import { MePagePrototype } from "@/components/prototypes/me-page-prototype";
 import { MeSecondaryPrototype } from "@/components/prototypes/me-secondary-prototypes";
 import { FeedComposePagePrototype } from "@/components/prototypes/feed-compose-page-prototype";
+import { FeedDetailPagePrototype } from "@/components/prototypes/feed-detail-page-prototype";
 import { WalletPagePrototype } from "@/components/prototypes/wallet-page-prototype";
 import { PrototypeAppNavigationHost } from "@/components/prototypes/prototype-app-navigation-host";
 import {
@@ -313,6 +314,20 @@ export function PrototypeAppRouter({
             height={height}
             theme={theme}
             onBack={() => navigate(returnScreen)}
+            onPublished={() => navigate("feed")}
+          />
+        );
+      }
+
+      if (target === "feed-detail") {
+        const returnScreen =
+          stack.length >= 2 ? stack[stack.length - 2]! : "feed";
+        return (
+          <FeedDetailPagePrototype
+            width={width}
+            height={height}
+            theme={theme}
+            onBack={() => navigate(returnScreen)}
           />
         );
       }
@@ -347,6 +362,7 @@ export function PrototypeAppRouter({
             navigate("private-chat", friend);
           }}
           onOpenCompose={() => navigate("feed-compose")}
+          onOpenFeedDetail={() => navigate("feed-detail")}
         />
       );
     },

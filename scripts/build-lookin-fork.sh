@@ -21,6 +21,12 @@ fi
 
 cd "$LOOKIN_DIR"
 pod install
+
+STUB_DEST="$LOOKIN_DIR/Pods/LookinShared/Src/Main/Shared"
+mkdir -p "$STUB_DEST"
+cp "$LOOKIN_DIR/LookinMacStubs/LKS_MultiplatformAdapter.h" "$STUB_DEST/"
+cp "$LOOKIN_DIR/LookinMacStubs/LKS_MultiplatformAdapter.m" "$STUB_DEST/"
+
 xcodebuild \
   -workspace "Lookin.xcworkspace" \
   -scheme "LookinClient" \

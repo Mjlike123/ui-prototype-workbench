@@ -9,6 +9,7 @@ describe("MePagePrototype", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "打开个人资料" }));
     expect(onOpenProfile).toHaveBeenCalledOnce();
+    expect(screen.getByLabelText("女性")).toBeInTheDocument();
   });
 
   it.each([
