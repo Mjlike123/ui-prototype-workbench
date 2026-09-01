@@ -5,6 +5,8 @@ import { PageCanvasStage } from "@/components/page-canvas-stage";
 import { ProfilePagePrototype } from "@/components/prototypes/profile-page-prototype";
 import { StudioFeedComposePage } from "@/components/studio/studio-feed-compose-page";
 import { StudioImCustomEmojiPage } from "@/components/studio/studio-im-custom-emoji-page";
+import { StudioLiveRoomPage } from "@/components/studio/studio-live-room-page";
+import { StudioSpinBottlePage } from "@/components/studio/studio-spin-bottle-page";
 import { DesignMvpActions } from "@/components/design-mvp-actions";
 import { YuebanCanvasActions } from "@/components/yueban-canvas-actions";
 import {
@@ -337,12 +339,25 @@ export function PageCanvasShowcase() {
               width={viewportWidth}
               height={viewportHeight}
               onBack={() => setStatus("Studio 预览：返回由 Feed 入口承接")}
+              onPublished={() => setStatus("Studio 预览：动态已发布，返回 Feed")}
             />
           ) : plan.intent === "im-custom-emoji" ? (
             <StudioImCustomEmojiPage
               width={viewportWidth}
               height={viewportHeight}
               onBack={() => setStatus("Studio 预览：返回由 Message 入口承接")}
+            />
+          ) : plan.intent === "live-room" ? (
+            <StudioLiveRoomPage
+              width={viewportWidth}
+              height={viewportHeight}
+              onBack={() => setStatus("Studio 预览：退出直播间")}
+            />
+          ) : plan.intent === "spin-bottle" ? (
+            <StudioSpinBottlePage
+              width={viewportWidth}
+              height={viewportHeight}
+              onBack={() => setStatus("Studio 预览：退出转瓶语音房")}
             />
           ) : (
             <PageCanvasStage
@@ -390,6 +405,10 @@ export function PageCanvasShowcase() {
                       ? "Studio 探索 · StudioFeedComposePage + PrototypeFeedMediaPicker"
                       : plan.intent === "im-custom-emoji"
                         ? "Studio 探索 · StudioImCustomEmojiPage + 图片表情上传"
+                        : plan.intent === "live-room"
+                          ? "Studio 探索 · StudioLiveRoomPage + 送礼面板"
+                          : plan.intent === "spin-bottle"
+                            ? "Studio 探索 · StudioSpinBottlePage + 16 麦转瓶"
                       : agentVision
                         ? "已包含 Agent 视觉映射"
                         : "当前为 Kit 组件预览"}

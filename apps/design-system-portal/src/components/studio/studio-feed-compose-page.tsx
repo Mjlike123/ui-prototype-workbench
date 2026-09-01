@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AvatarVisual } from "@/components/kit/avatar-visual";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
+import { RegularListItem } from "@/components/kit/regular-list-item";
 import { RegularNavigation } from "@/components/kit/regular-navigation";
 import { SystemIcon } from "@/components/kit/system-icon";
 import { PrototypeFeedMediaPicker } from "@/components/prototypes/prototype-feed-media-picker";
@@ -21,10 +22,12 @@ type StudioFeedComposePageProps = {
   height?: number;
   theme?: "light" | "dark";
   onBack: () => void;
+  onPublished?: () => void;
 };
 
 const MAX_MEDIA = 4;
 const MAX_CHARS = 280;
+const PUBLISH_DELAY_MS = 900;
 const USER_AVATAR = "/prototypes/feed/andrew-avatar.png";
 
 const AUDIENCE_OPTIONS: Array<{
@@ -50,12 +53,14 @@ export function StudioFeedComposePage({
   height = 812,
   theme = "light",
   onBack,
+  onPublished,
 }: StudioFeedComposePageProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [caption, setCaption] = useState("");
   const [media, setMedia] = useState<string[]>([]);
   const [audience, setAudience] = useState<StudioFeedComposeAudience>("everyone");
   const [toast, setToast] = useState<string | null>(null);
+  const [publishError, setPublishError] = useState<string | null>(null);
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
   const [audienceSheetOpen, setAudienceSheetOpen] = useState(false);
   const [leaveSheetOpen, setLeaveSheetOpen] = useState(false);
@@ -141,7 +146,10 @@ export function StudioFeedComposePage({
 
   const publish = () => {
     if (!hasContent || posting) return;
+
     setPosting(true);
+    setPublishError(null);
+
     window.setTimeout(() => {
       clearStudioFeedComposeDraft();
       setCaption("");
@@ -149,7 +157,10 @@ export function StudioFeedComposePage({
       setMediaPickerOpen(false);
       setPosting(false);
       setToast("Studio 预览：动态已发布");
-    }, 900);
+      window.setTimeout(() => {
+        onPublished?.() ?? onBack();
+      }, 520);
+    }, PUBLISH_DELAY_MS);
   };
 
   const audienceLabel =
@@ -192,98 +203,81 @@ export function StudioFeedComposePage({
           }
         />
 
-        <main className="studioFeedComposeScroll">
-          <div className="studioFeedComposeBody">
-            <section className="studioFeedComposeEditor" aria-label="动态内容">
-              <AvatarVisual size={40} src={USER_AVATAR} alt="" />
-              <div className="studioFeedComposeComposer">
-                <textarea
-                  ref={inputRef}
-                  className="studioFeedComposeInput"
-                  value={caption}
-                  onChange={(event) =>
-                    setCaption(event.target.value.slice(0, MAX_CHARS))
-                  }
-                  placeholder="What's happening?"
-                  aria-label="动态文案"
-                  rows={6}
-                />
-                <span
-                  className={`studioFeedComposeCounter${
-                    remaining <= 20 ? " studioFeedComposeCounter--warn" : ""
-                  }`}
-                  aria-live="polite"
-                >
-                  {remaining}
-                </span>
-              </div>
-            </section>
+        <main className="feedComposeScroll" aria-label="发布动态内容">
+          <section className="feedComposeEditor" aria-label="动态内容">
+            <AvatarVisual size={40} src={USER_AVATAR} alt="" />
+            <textarea
+              ref={inputRef}
+              className="feedComposeInput"
+              value={caption}
+              onChange={(event) =>
+                setCaption(event.target.value.slice(0, MAX_CHARS))
+              }
+              placeholder="What's happening?"
+              aria-label="动态文案"
+              rows={4}
+            />
+          </section>
 
-            {media.length > 0 ? (
-              <section
-                className="studioFeedComposeMediaGrid"
-                aria-label={`已选图片 ${media.length} 张，还可添加 ${remainingMedia} 张`}
-              >
-                {media.map((photo) => (
-                  <div className="studioFeedComposeMediaItem" key={photo}>
-                    <Image src={photo} alt="" width={108} height={108} />
-                    <button
-                      type="button"
-                      className="studioFeedComposeMediaRemove"
-                      aria-label="移除图片"
-                      onClick={() => removePhoto(photo)}
-                    >
-                      <SystemIcon name="close" size={16} />
-                    </button>
-                  </div>
-                ))}
-                {remainingMedia > 0 ? (
+          {media.length > 0 ? (
+            <section
+              className="feedComposeMediaGrid"
+              aria-label={`已选图片 ${media.length} 张，还可添加 ${remainingMedia} 张`}
+            >
+              {media.map((photo) => (
+                <div className="feedComposeMediaItem" key={photo}>
+                  <Image src={photo} alt="" width={108} height={108} />
                   <button
                     type="button"
-                    className="studioFeedComposeMediaAdd"
-                    aria-label={`继续添加照片，还可添加 ${remainingMedia} 张`}
-                    onClick={() => setMediaPickerOpen(true)}
+                    className="feedComposeMediaRemove"
+                    aria-label="移除图片"
+                    onClick={() => removePhoto(photo)}
                   >
-                    <SystemIcon name="photo" size={20} />
-                    <span>{remainingMedia}</span>
+                    <SystemIcon name="close" size={16} />
                   </button>
-                ) : null}
-              </section>
-            ) : null}
-
-            <section className="studioFeedComposeToolbar" aria-label="发布工具">
-              <button
-                type="button"
-                className="studioFeedComposeToolButton"
-                onClick={() => setMediaPickerOpen(true)}
-                aria-label="添加照片"
-              >
-                <SystemIcon name="photo" size={20} />
-              </button>
-              <button
-                type="button"
-                className="studioFeedComposeToolButton"
-                onClick={() =>
-                  setCaption(
-                    (current) => `${current}${current ? " " : ""}#OOTD`,
-                  )
-                }
-                aria-label="插入话题标签"
-              >
-                <span className="studioFeedComposeHashtagGlyph">#</span>
-              </button>
+                </div>
+              ))}
+              {remainingMedia > 0 ? (
+                <button
+                  type="button"
+                  className="feedComposeMediaAdd"
+                  aria-label={`继续添加照片，还可添加 ${remainingMedia} 张`}
+                  onClick={() => setMediaPickerOpen(true)}
+                >
+                  <SystemIcon name="photo" size={20} />
+                  <span>{remainingMedia}</span>
+                </button>
+              ) : null}
             </section>
-          </div>
+          ) : null}
 
-          <footer className="studioFeedComposeFooter" aria-label="发布设置">
-            {media.length > 0 ? (
-              <p className="studioFeedComposeMediaQuota" aria-live="polite">
-                {media.length}/{MAX_MEDIA} photos
-              </p>
-            ) : null}
+          <section className="feedComposeToolbar" aria-label="发布工具">
             <button
               type="button"
-              className="studioFeedComposeAudience"
+              onClick={() => setMediaPickerOpen(true)}
+              aria-label="添加照片"
+            >
+              <SystemIcon name="photo" size={20} />
+              <span>Photo</span>
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setCaption(
+                  (current) => `${current}${current ? " " : ""}#OOTD`,
+                )
+              }
+              aria-label="插入话题标签"
+            >
+              <span className="feedComposeHashtagGlyph">#</span>
+              <span>Hashtag</span>
+            </button>
+          </section>
+
+          <section className="feedComposeMeta" aria-label="发布设置">
+            <button
+              type="button"
+              className="feedComposeAudience"
               aria-label={`可见范围：${audience === "everyone" ? "所有人" : "好友"}`}
               onClick={() => setAudienceSheetOpen(true)}
             >
@@ -291,7 +285,24 @@ export function StudioFeedComposePage({
               <span>{audienceLabel}</span>
               <SystemIcon name="chevronRight" size={16} />
             </button>
-          </footer>
+            <span
+              className={`feedComposeCounter${
+                remaining <= 20 ? " feedComposeCounter--warn" : ""
+              }`}
+              aria-live="polite"
+            >
+              {remaining}
+            </span>
+          </section>
+
+          {publishError ? (
+            <div className="feedComposePublishError" role="alert">
+              <p>{publishError}</p>
+              <button type="button" onClick={publish}>
+                重试
+              </button>
+            </div>
+          ) : null}
         </main>
       </div>
 
@@ -320,30 +331,31 @@ export function StudioFeedComposePage({
               <h2>Who can reply</h2>
               <p>Choose who can see and reply to this post</p>
             </header>
-            <div className="feedComposeAudienceOptions">
+            <div className="feedComposeAudienceOptions" role="list">
               {AUDIENCE_OPTIONS.map((option) => (
-                <button
+                <RegularListItem
                   key={option.value}
-                  type="button"
-                  className={`feedComposeAudienceOption${
+                  listType="action"
+                  title={option.label}
+                  subtitle={option.description}
+                  ariaLabel={option.label}
+                  className={
                     audience === option.value
-                      ? " feedComposeAudienceOption--selected"
-                      : ""
-                  }`}
-                  aria-label={option.label}
-                  aria-pressed={audience === option.value}
-                  onClick={() => selectAudience(option.value)}
-                >
-                  <span className="feedComposeAudienceOptionCopy">
-                    <strong>{option.label}</strong>
-                    <small>{option.description}</small>
-                  </span>
-                  {audience === option.value ? (
-                    <span className="feedComposeAudienceOptionMark" aria-hidden="true">
-                      ✓
-                    </span>
-                  ) : null}
-                </button>
+                      ? "feedComposeAudienceOption feedComposeAudienceOption--selected"
+                      : "feedComposeAudienceOption"
+                  }
+                  trailing={
+                    audience === option.value ? (
+                      <span
+                        className="feedComposeAudienceOptionMark"
+                        aria-hidden="true"
+                      >
+                        ✓
+                      </span>
+                    ) : undefined
+                  }
+                  onPress={() => selectAudience(option.value)}
+                />
               ))}
             </div>
           </section>
@@ -368,19 +380,23 @@ export function StudioFeedComposePage({
               <p>Your draft will stay on this device until you publish or discard it.</p>
             </header>
             <div className="feedComposeLeaveActions">
-              <button type="button" onClick={() => leaveCompose("save")}>
+              <button
+                type="button"
+                className="kitButton kitButton--height48 kitButton--primary"
+                onClick={() => leaveCompose("save")}
+              >
                 Save draft
               </button>
               <button
                 type="button"
-                className="feedComposeLeaveActions--danger"
+                className="kitButton kitButton--height48 kitButton--primary-outline feedComposeLeaveActions--danger"
                 onClick={() => leaveCompose("discard")}
               >
                 Discard
               </button>
               <button
                 type="button"
-                className="feedComposeMediaCancel"
+                className="feedComposeMediaCancel kitButton kitButton--height48 kitButton--neutral"
                 onClick={() => setLeaveSheetOpen(false)}
               >
                 Keep editing

@@ -13268,6 +13268,33 @@ div.chatBubbleRelationship {
   font: 700 16px/1 "SF Pro", var(--font-sans);
 }
 
+.feedComposeAudienceOptions .feedComposeAudienceOption.regularListItem {
+  padding: 0;
+  background: var(--color-surface-subtle, rgba(24, 25, 35, 0.04));
+}
+
+.feedComposeAudienceOptions .feedComposeAudienceOption .regularListMain {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+}
+
+.feedComposeAudienceOptions .feedComposeAudienceOption .regularListSubtitle {
+  color: var(--color-text-tertiary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.feedComposeLeaveActions .kitButton {
+  width: 100%;
+}
+
+.feedComposeLeaveActions .feedComposeLeaveActions--danger.kitButton {
+  color: var(--color-state-like, #ff2e60);
+  border-color: var(--color-state-like, #ff2e60);
+}
+
 .feedComposeLeaveSheet {
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
 }
@@ -13432,7 +13459,7 @@ div.chatBubbleRelationship {
   color: var(--color-state-like, #ff2e60);
 }
 
-/* Studio-only compose layout — safe to iterate without affecting Core */
+/* Studio-only compose shell — inner layout reuses shared .feedCompose* Kit blocks */
 .studioFeedComposeDevice {
   position: relative;
   color: var(--color-text-primary);
@@ -13450,213 +13477,1326 @@ div.chatBubbleRelationship {
   min-height: 0;
 }
 
-.studioFeedComposeScroll {
-  display: flex;
-  min-height: 0;
-  overflow: hidden;
-  flex: 1;
-  flex-direction: column;
-}
-
-.studioFeedComposeBody {
-  display: flex;
-  min-height: 0;
-  overflow-y: auto;
-  flex: 1;
-  flex-direction: column;
-  overscroll-behavior: contain;
-  scrollbar-width: none;
-}
-
-.studioFeedComposeBody::-webkit-scrollbar {
-  display: none;
-}
-
-.studioFeedComposeEditor {
-  display: grid;
-  min-height: 0;
-  flex: 1;
-  padding: 12px 16px 0;
-  gap: 12px;
-  grid-template-columns: 40px minmax(0, 1fr);
-  align-items: start;
-}
-
-.studioFeedComposeComposer {
-  display: flex;
-  min-width: 0;
-  min-height: 0;
-  flex: 1;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.studioFeedComposeInput {
-  width: 100%;
-  min-height: 168px;
-  padding: 0;
-  color: var(--color-text-primary);
-  background: transparent;
-  border: 0;
-  resize: none;
-  font: 400 16px/22px "SF Pro", var(--font-sans);
-}
-
-.studioFeedComposeInput::placeholder {
-  color: var(--color-text-tertiary);
-}
-
-.studioFeedComposeInput:focus {
-  outline: none;
-}
-
-.studioFeedComposeMediaGrid {
-  display: grid;
-  width: calc(100% - 52px);
-  margin-left: 52px;
-  padding: 8px 16px 0 0;
-  gap: 8px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.studioFeedComposeMediaItem {
+/* Studio live room — video shell + gift panel */
+.studioLiveRoomDevice {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 1;
-  border-radius: 12px;
+  color: #fff;
+  background: #0b0c10;
 }
 
-.studioFeedComposeMediaItem img {
+.studioLiveRoomDevice > .iosStatusBar {
+  position: relative;
+  z-index: 4;
+  flex: 0 0 calc(44px + env(safe-area-inset-top, 0px));
+  height: calc(44px + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  background: transparent;
+}
+
+.studioLiveRoomBody {
+  position: relative;
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.studioLiveRoomStage {
+  position: absolute;
+  inset: 0;
+}
+
+.studioLiveRoomCover {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.studioFeedComposeMediaRemove {
+.studioLiveRoomScrim {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  display: grid;
-  width: 24px;
-  height: 24px;
-  place-items: center;
-  color: var(--color-text-white-primary);
-  background: rgba(24, 25, 35, 0.56);
-  border: 0;
-  border-radius: var(--radius-full, 999px);
-  cursor: pointer;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(0 0 0 / 42%) 0%,
+    rgb(0 0 0 / 12%) 34%,
+    rgb(0 0 0 / 52%) 100%
+  );
 }
 
-.studioFeedComposeMediaRemove .systemIcon {
-  --system-icon-color: var(--color-text-white-primary);
-}
-
-.studioFeedComposeMediaAdd {
-  display: grid;
-  aspect-ratio: 1;
-  place-items: center;
-  gap: 4px;
-  color: var(--color-brand-primary);
-  background: var(--color-surface-subtle, rgba(24, 25, 35, 0.04));
-  border: 1px dashed var(--color-border-subtle);
-  border-radius: 12px;
-  cursor: pointer;
-  font: 590 13px/18px "SF Pro", var(--font-sans);
-}
-
-.studioFeedComposeMediaAdd .systemIcon {
-  --system-icon-color: var(--color-brand-primary);
-}
-
-.studioFeedComposeToolbar {
+.studioLiveRoomContent {
+  position: relative;
+  z-index: 2;
   display: flex;
-  padding: 12px 16px 16px 52px;
-  gap: 4px;
-}
-
-.studioFeedComposeToolButton {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  place-items: center;
-  padding: 0;
-  color: var(--color-brand-primary);
-  background: transparent;
-  border: 0;
-  border-radius: var(--radius-full, 999px);
-  cursor: pointer;
-}
-
-.studioFeedComposeToolButton:focus-visible {
-  outline: 2px solid var(--color-brand-primary);
-  outline-offset: 2px;
-}
-
-.studioFeedComposeToolButton .systemIcon {
-  --system-icon-color: var(--color-brand-primary);
-}
-
-.studioFeedComposeHashtagGlyph {
-  display: grid;
-  width: 20px;
-  height: 20px;
-  place-items: center;
-  font: 700 16px/1 "SF Pro", var(--font-sans);
-}
-
-.studioFeedComposeFooter {
-  display: flex;
+  min-height: 0;
+  flex: 1;
   flex-direction: column;
-  flex-shrink: 0;
+}
+
+.studioLiveRoomTopBar {
+  display: grid;
+  padding: 4px 12px 8px;
   gap: 8px;
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--color-border-subtle);
-  background: var(--color-surface-panel);
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
 }
 
-.studioFeedComposeMediaQuota {
-  margin: 0;
-  color: var(--color-text-tertiary);
-  font: 400 12px/16px "SF Pro", var(--font-sans);
-  font-variant-numeric: tabular-nums;
+.studioLiveRoomTopBar > button:first-child {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+  color: #fff;
+  background: rgb(0 0 0 / 28%);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  --system-icon-color: #fff;
 }
 
-.studioFeedComposeAudience {
-  display: inline-flex;
-  width: 100%;
+.studioLiveRoomHost {
+  display: flex;
   min-width: 0;
   align-items: center;
-  gap: 6px;
-  padding: 0;
-  color: var(--color-text-secondary);
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  font: 400 13px/18px "SF Pro", var(--font-sans);
-  text-align: left;
+  gap: 8px;
+  padding: 4px 8px 4px 4px;
+  background: rgb(0 0 0 / 36%);
+  border-radius: 999px;
 }
 
-.studioFeedComposeAudience span {
-  overflow: hidden;
+.studioLiveRoomHostCopy {
+  display: flex;
+  min-width: 0;
   flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.studioLiveRoomHostCopy strong {
+  overflow: hidden;
+  font: 590 13px/16px "SF Pro", var(--font-sans);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.studioFeedComposeAudience .systemIcon {
-  --system-icon-color: var(--color-text-tertiary);
-  flex: 0 0 auto;
+.studioLiveRoomHostCopy span {
+  color: rgb(255 255 255 / 72%);
+  font: 400 11px/14px "SF Pro", var(--font-sans);
 }
 
-.studioFeedComposeCounter {
-  align-self: flex-end;
-  color: var(--color-text-tertiary);
-  font: 400 12px/16px "SF Pro", var(--font-sans);
+.studioLiveRoomFollow {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  color: var(--color-brand-primary);
+  background: rgb(255 255 255 / 92%);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font: 590 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioLiveRoomFollow--active {
+  color: rgb(255 255 255 / 84%);
+  background: rgb(255 255 255 / 16%);
+}
+
+.studioLiveRoomViewerPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  color: #fff;
+  background: rgb(0 0 0 / 28%);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font: 590 12px/16px "SF Pro", var(--font-sans);
+  --system-icon-color: #fff;
+}
+
+.studioLiveRoomRail {
+  position: absolute;
+  right: 12px;
+  bottom: 132px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.studioLiveRoomRail > button {
+  display: grid;
+  width: 52px;
+  padding: 0;
+  place-items: center;
+  gap: 4px;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 590 11px/14px "SF Pro", var(--font-sans);
+  --system-icon-color: #fff;
+}
+
+.studioLiveRoomRailGift {
+  color: var(--color-gift-giving);
+  --system-icon-color: var(--color-gift-giving);
+}
+
+.studioLiveRoomChat {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 96px 8px 12px;
+}
+
+.studioLiveRoomChatScroll {
+  display: flex;
+  max-height: 220px;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.studioLiveRoomChatScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.studioLiveRoomChatSystem,
+.studioLiveRoomChatText,
+.studioLiveRoomChatGift {
+  margin: 0;
+  max-width: 100%;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.studioLiveRoomChatSystem {
+  align-self: flex-start;
+  color: rgb(255 255 255 / 72%);
+  background: rgb(0 0 0 / 24%);
+}
+
+.studioLiveRoomChatText {
+  align-self: flex-start;
+  color: #fff;
+  background: rgb(0 0 0 / 36%);
+}
+
+.studioLiveRoomChatText strong,
+.studioLiveRoomChatGift strong {
+  margin-right: 6px;
+  font: 590 13px/18px "SF Pro", var(--font-sans);
+}
+
+.studioLiveRoomChatGift {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  color: #fff;
+  background: linear-gradient(
+    90deg,
+    rgb(255 124 163 / 88%) 0%,
+    rgb(255 124 163 / 36%) 100%
+  );
+}
+
+.studioLiveRoomChatGift img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.studioLiveRoomComposer {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+.studioLiveRoomCommentField {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  background: rgb(0 0 0 / 36%);
+  border-radius: 999px;
+}
+
+.studioLiveRoomCommentField input {
+  width: 100%;
+  padding: 0;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  font: 400 14px/18px "SF Pro", var(--font-sans);
+}
+
+.studioLiveRoomCommentField input::placeholder {
+  color: rgb(255 255 255 / 56%);
+}
+
+.studioLiveRoomGiftTrigger {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-gift-giving);
+  background: var(--color-gift-giving-soft);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  --system-icon-color: var(--color-gift-giving);
+}
+
+.studioLiveRoomDevice--giftOpen .studioLiveRoomGiftTrigger,
+.studioLiveRoomDevice--giftOpen .studioLiveRoomRailGift {
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 88%);
+}
+
+.studioLiveRoomGiftOverlay .feedComposeOverlayBackdrop {
+  background: rgb(0 0 0 / 48%);
+}
+
+.studioLiveRoomGiftSheet {
+  display: flex;
+  max-height: min(62vh, 520px);
+  flex-direction: column;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  background: var(--color-surface-panel);
+  color: var(--color-text-primary);
+}
+
+.studioLiveRoomGiftHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px 8px;
+}
+
+.studioLiveRoomGiftBalance {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.studioLiveRoomGiftBalance strong {
+  color: var(--color-text-primary);
+  font: 590 18px/22px "SF Pro", var(--font-sans);
   font-variant-numeric: tabular-nums;
 }
 
-.studioFeedComposeCounter--warn {
-  color: var(--color-state-like, #ff2e60);
+.studioLiveRoomCoinMark {
+  color: var(--color-coin-light);
+  font: 700 14px/1 "SF Pro", var(--font-sans);
+}
+
+.studioLiveRoomGiftBalance button {
+  margin-left: auto;
+  padding: 0;
+  color: var(--color-brand-link);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 590 13px/18px "SF Pro", var(--font-sans);
+}
+
+.studioLiveRoomGiftTabs {
+  width: 100%;
+}
+
+.studioLiveRoomGiftGrid {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  padding: 8px 16px 12px;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.studioLiveRoomGiftEmpty {
+  grid-column: 1 / -1;
+  margin: 24px 0;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+}
+
+.studioLiveRoomGiftCell {
+  display: grid;
+  padding: 8px 4px;
+  place-items: center;
+  gap: 4px;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.studioLiveRoomGiftCell img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.studioLiveRoomGiftCell strong {
+  overflow: hidden;
+  max-width: 100%;
+  font: 590 12px/16px "SF Pro", var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studioLiveRoomGiftCell span {
+  color: var(--color-text-tertiary);
+  font: 400 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioLiveRoomGiftCell--selected {
+  background: var(--color-gift-giving-soft);
+  border-color: var(--color-gift-giving);
+}
+
+.studioLiveRoomGiftFooter {
+  display: grid;
+  padding: 0 16px 8px;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+}
+
+.studioLiveRoomGiftQuantity {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--color-button-secondary);
+  border-radius: 999px;
+}
+
+.studioLiveRoomGiftQuantity button {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font: 590 18px/1 "SF Pro", var(--font-sans);
+}
+
+.studioLiveRoomGiftQuantity button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.studioLiveRoomGiftQuantity span {
+  min-width: 20px;
+  color: var(--color-text-primary);
+  font: 590 15px/20px "SF Pro", var(--font-sans);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.studioLiveRoomGiftSend {
+  background: var(--color-gift-giving) !important;
+}
+
+.studioLiveRoomGiftSend--loading {
+  pointer-events: none;
+}
+
+.studioLiveRoomGiftSend .systemIcon {
+  --system-icon-color: #fff;
+}
+
+.studioLiveRoomDevice .profilePrototypeToast {
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+}
+
+.studioLiveRoomDevice--giftOpen .profilePrototypeToast {
+  bottom: calc(72px + min(62vh, 520px) + env(safe-area-inset-bottom, 0px));
+}
+
+/* Studio spin-bottle — intimate lounge: wine charcoal + blush amber */
+.studioSpinBottleDevice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 34%, rgb(210 110 140 / 22%) 0%, transparent 48%),
+    radial-gradient(circle at 50% 52%, rgb(180 110 70 / 14%) 0%, transparent 44%),
+    radial-gradient(circle at 16% 10%, rgb(130 80 120 / 14%) 0%, transparent 38%),
+    linear-gradient(180deg, #1f141a 0%, #161016 48%, #0e0a0e 100%);
+  color: #fff;
+  --system-icon-color: #fff;
+}
+
+.studioSpinBottleDevice .systemIcon {
+  --system-icon-color: #fff;
+  color: #fff;
+}
+
+.studioSpinBottleDevice--heated {
+  background:
+    radial-gradient(circle at 50% 36%, rgb(230 120 150 / 30%) 0%, transparent 50%),
+    radial-gradient(circle at 50% 54%, rgb(200 120 70 / 18%) 0%, transparent 46%),
+    radial-gradient(circle at 14% 12%, rgb(150 90 130 / 16%) 0%, transparent 40%),
+    linear-gradient(180deg, #27161e 0%, #1a1218 48%, #120c12 100%);
+}
+
+.studioSpinBottleDevice--spinning .studioSpinBottleRadarRing--2 {
+  animation: studioSpinBottleRadarSpin 3s linear infinite;
+}
+
+.studioSpinBottleDevice > .iosStatusBar {
+  position: relative;
+  z-index: 3;
+  flex: 0 0 auto;
+}
+
+.studioSpinBottleBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.studioSpinBottleTopBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 0;
+}
+
+.studioSpinBottleTopBar > button:first-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 28%);
+  color: #fff;
+  --system-icon-color: #fff;
+  cursor: pointer;
+}
+
+.studioSpinBottleRoomMeta {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.studioSpinBottleRoomMeta strong {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studioSpinBottleRoomMeta span {
+  font-size: 11px;
+  color: rgb(255 255 255 / 45%);
+}
+
+.studioSpinBottleIconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 28%);
+  color: #fff;
+  --system-icon-color: #fff;
+  cursor: pointer;
+}
+
+.studioSpinBottleBossPill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffd36a, #ff9a3c);
+  color: #3b2200;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.studioSpinBottleTagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 12px 4px;
+}
+
+.studioSpinBottleTag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 12%);
+  font-size: 10px;
+  color: rgb(255 255 255 / 72%);
+}
+
+.studioSpinBottleTag--gold {
+  background: rgb(255 190 70 / 22%);
+  color: #ffd88a;
+}
+
+.studioSpinBottleTag--pink {
+  background: rgb(210 120 150 / 24%);
+  color: #f0c4d4;
+}
+
+.studioSpinBottleRoomGifts {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: auto;
+  padding: 3px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  color: #fff;
+  --system-icon-color: #fff;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.studioSpinBottleStage {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0 8px 2px;
+  overflow: hidden;
+}
+
+.studioSpinBottleStageHead {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 4px 4px;
+}
+
+.studioSpinBottleStageHeadRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.studioSpinBottleSeatPicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.studioSpinBottleSeatPickerLabel {
+  margin-right: 2px;
+  font-size: 11px;
+  color: rgb(255 255 255 / 55%);
+}
+
+.studioSpinBottleSeatOption {
+  min-width: 28px;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 6%);
+  color: rgb(255 255 255 / 72%);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.studioSpinBottleSeatOption--active {
+  border-color: rgb(232 150 170 / 50%);
+  background: linear-gradient(
+    135deg,
+    rgb(232 150 170 / 22%),
+    rgb(220 160 100 / 16%)
+  );
+  color: #fff;
+  box-shadow: 0 0 12px rgb(210 110 140 / 22%);
+}
+
+.studioSpinBottleSeatOption:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.studioSpinBottleCountdown {
+  margin: 0;
+  font-size: 13px;
+  color: rgb(255 255 255 / 72%);
+}
+
+.studioSpinBottleCountdown strong {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.studioSpinBottleExtendBtn {
+  margin-top: 0;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #e8b07a, #d98a9a);
+  color: #2a1418;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.studioSpinBottleRing {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.studioSpinBottleBooth {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: var(--spin-booth-size, 320px);
+  height: var(--spin-booth-size, 320px);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 16px 36px rgb(0 0 0 / 55%));
+}
+
+.studioSpinBottleRadar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: calc(var(--spin-ring-radius, 118px) * 2 + 64px);
+  height: calc(var(--spin-ring-radius, 118px) * 2 + 64px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.28;
+}
+
+.studioSpinBottleRadarRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px dotted rgb(120 180 255 / 28%);
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+
+.studioSpinBottleRadarRing--1 {
+  width: calc(var(--spin-ring-radius, 118px) * 1.02);
+  height: calc(var(--spin-ring-radius, 118px) * 1.02);
+}
+
+.studioSpinBottleRadarRing--2 {
+  width: calc(var(--spin-ring-radius, 118px) * 1.48);
+  height: calc(var(--spin-ring-radius, 118px) * 1.48);
+  border-color: rgb(255 100 180 / 24%);
+}
+
+.studioSpinBottleRadarRing--3 {
+  width: calc(var(--spin-ring-radius, 118px) * 1.96);
+  height: calc(var(--spin-ring-radius, 118px) * 1.96);
+}
+
+.studioSpinBottleRadarRing--4 {
+  width: calc(var(--spin-ring-radius, 118px) * 2.42);
+  height: calc(var(--spin-ring-radius, 118px) * 2.42);
+  border-color: rgb(120 180 255 / 18%);
+}
+
+.studioSpinBottleConstellation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: calc(var(--spin-ring-radius, 118px) * 2 + 72px);
+  height: calc(var(--spin-ring-radius, 118px) * 2 + 72px);
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.studioSpinBottlePairArc {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: calc(var(--spin-ring-radius, 118px) * 2 + 72px);
+  height: calc(var(--spin-ring-radius, 118px) * 2 + 72px);
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgb(255 90 150 / 55%));
+}
+
+.studioSpinBottleMicCell {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(88px * var(--spin-seat-scale, 1));
+  padding: 0;
+  background: transparent;
+  transform-origin: center center;
+  filter: drop-shadow(0 6px 12px rgb(0 0 0 / 45%));
+}
+
+.studioSpinBottleAura {
+  position: relative;
+  padding: 5px;
+  border-radius: 999px;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.studioSpinBottleAura--cyan {
+  box-shadow:
+    0 0 0 3px rgb(92 225 255 / 55%),
+    0 0 22px rgb(92 225 255 / 28%);
+}
+
+.studioSpinBottleAura--magenta {
+  box-shadow:
+    0 0 0 3px rgb(255 90 180 / 58%),
+    0 0 26px rgb(255 90 180 / 32%);
+}
+
+.studioSpinBottleAura--active {
+  transform: scale(1.1);
+}
+
+.studioSpinBottleMicCell--target .studioSpinBottleAura--magenta,
+.studioSpinBottleMicCell--target .studioSpinBottleAura--cyan {
+  box-shadow:
+    0 0 0 4px rgb(255 120 200 / 85%),
+    0 0 36px rgb(255 90 180 / 55%),
+    0 0 48px rgb(92 225 255 / 22%);
+}
+
+.studioSpinBottleMicCell--spinner .studioSpinBottleAura--cyan,
+.studioSpinBottleMicCell--spinner .studioSpinBottleAura--magenta {
+  box-shadow:
+    0 0 0 4px rgb(92 225 255 / 75%),
+    0 0 32px rgb(92 225 255 / 42%);
+}
+
+.studioSpinBottleMicCell--locked {
+  opacity: 0.72;
+}
+
+.studioSpinBottleMicBadge {
+  position: absolute;
+  z-index: 2;
+  top: 4px;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 50%);
+  color: #fff;
+  --system-icon-color: #fff;
+}
+
+.studioSpinBottleMicAvatarWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+}
+
+.studioSpinBottleSeatIndex {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 999px;
+  background: rgb(8 18 34 / 88%);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  transform: translateX(-50%);
+}
+
+.studioSpinBottleMicLocked,
+.studioSpinBottleMicEmpty {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 20%);
+  color: #fff;
+  --system-icon-color: #fff;
+  cursor: pointer;
+}
+
+.studioSpinBottleMicPrice {
+  font-size: 9px;
+  line-height: 1;
+  color: rgb(255 255 255 / 45%);
+}
+
+.studioSpinBottleMicMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.studioSpinBottleMicName {
+  overflow: hidden;
+  max-width: 84px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studioSpinBottleMicHeat {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  font-size: 10px;
+  color: rgb(255 255 255 / 72%);
+}
+
+.studioSpinBottleMicHeat .systemIcon {
+  --system-icon-color: #fff;
+  color: #fff;
+}
+
+.studioSpinBottleMicName--muted {
+  color: rgb(255 255 255 / 45%);
+  font-size: 10px;
+}
+
+.studioSpinBottleCore {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 56px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.studioSpinBottleWaveform {
+  position: absolute;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 32px;
+}
+
+.studioSpinBottleWaveBar {
+  width: 3px;
+  height: var(--bar-height, 8px);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f0b8c8, #e07890);
+  opacity: 0.55;
+  transform-origin: center;
+}
+
+.studioSpinBottleWaveform--active .studioSpinBottleWaveBar {
+  animation: studioSpinBottleWave 0.9s ease-in-out infinite alternate;
+  animation-delay: var(--bar-delay, 0s);
+  opacity: 0.95;
+}
+
+.studioSpinBottleBottle {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-top: 28px;
+  border-radius: 999px;
+  background: rgb(28 16 22 / 72%);
+  box-shadow: 0 0 18px rgb(210 110 140 / 32%);
+}
+
+.studioSpinBottleBottleInner {
+  font-size: 30px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgb(220 120 150 / 42%));
+  transition: transform 2.2s cubic-bezier(0.22, 0.85, 0.25, 1);
+}
+
+.studioSpinBottleCenterHeart {
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  font-size: 14px;
+  color: #f0a0b8;
+  animation: studioSpinBottleHeartBeat 0.9s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgb(220 110 140 / 60%));
+}
+
+.studioSpinBottleBottle--spinning .studioSpinBottleBottleInner {
+  transition-duration: 2.2s;
+}
+
+.studioSpinBottleStateBar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  margin: 4px 12px 0;
+  padding: 5px 10px;
+  border: 1px solid rgb(232 150 170 / 16%);
+  border-radius: 10px;
+  background: rgb(36 18 28 / 56%);
+  font-size: 12px;
+  color: rgb(255 228 236 / 90%);
+}
+
+.studioSpinBottleSpinBtn,
+.studioSpinBottleStateBar button {
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e87898, #e8a070);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgb(210 100 130 / 32%);
+}
+
+.studioSpinBottleVoteInline {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.studioSpinBottleVoteTrack {
+  width: 72px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.studioSpinBottleVoteTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #e87898, #e8b07a);
+}
+
+.studioSpinBottleVoteInline button {
+  padding: 2px 8px;
+  background: rgb(232 150 170 / 18%);
+  box-shadow: none;
+}
+
+.studioSpinBottleChatText strong {
+  margin-right: 6px;
+  color: #f0c0d0;
+}
+
+.studioSpinBottleOnlineStrip {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 0 0 auto;
+  margin: 4px 12px 2px;
+  padding: 0 8px;
+  min-height: 26px;
+  border-radius: 999px;
+  background: rgb(36 18 28 / 48%);
+}
+
+.studioSpinBottleExpandBtn {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  --system-icon-color: #fff;
+  cursor: pointer;
+  transform: rotate(90deg);
+}
+
+.studioSpinBottleOnlineAvatars {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+}
+
+.studioSpinBottleOnlineCount {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 12px;
+  color: rgb(255 255 255 / 72%);
+  --system-icon-color: #fff;
+}
+
+.studioSpinBottleOnlineCount .systemIcon {
+  color: #fff;
+}
+
+.studioSpinBottleChat {
+  flex: 0 0 auto;
+  min-height: 0;
+  margin: 0 12px;
+}
+
+.studioSpinBottleChatScroll {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 64px;
+  overflow-y: auto;
+  mask-image: linear-gradient(180deg, transparent, #000 10%);
+}
+
+.studioSpinBottleChatScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.studioSpinBottleChatSystem,
+.studioSpinBottleChatText {
+  margin: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgb(36 18 28 / 50%);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.studioSpinBottleChatSystem {
+  color: rgb(240 210 220 / 62%);
+}
+
+.studioSpinBottleBottomBar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+}
+
+.studioSpinBottleBottomBar > button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  color: #fff;
+  --system-icon-color: #fff;
+  cursor: pointer;
+}
+
+.studioSpinBottleTypeField {
+  flex: 1;
+  min-width: 0;
+}
+
+.studioSpinBottleTypeField input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  color: #fff;
+  font-size: 14px;
+}
+
+.studioSpinBottleTypeField input::placeholder {
+  color: rgb(255 255 255 / 35%);
+}
+
+.studioSpinBottleSheet {
+  max-height: min(52vh, 420px);
+}
+
+.studioSpinBottleSheetHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 16px 0;
+  text-align: center;
+}
+
+.studioSpinBottleSheetHeader > p:first-child {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.studioSpinBottleSheetPair {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 22px;
+  color: #ff5a82;
+}
+
+.studioSpinBottleSheetNames {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.studioSpinBottleSheetActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px;
+}
+
+.studioSpinBottleSkipLink {
+  display: block;
+  width: 100%;
+  padding: 0 16px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.studioSpinBottleDevice .profilePrototypeToast {
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+}
+
+.studioSpinBottleDevice--sheetOpen .profilePrototypeToast {
+  bottom: calc(72px + min(52vh, 420px) + env(safe-area-inset-bottom, 0px));
+}
+
+@keyframes studioSpinBottleHeartBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+@keyframes studioSpinBottleRadarSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes studioSpinBottleWave {
+  0% {
+    transform: scaleY(0.45);
+  }
+
+  100% {
+    transform: scaleY(1.15);
+  }
+}
+
+@keyframes studioSpinBottlePulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px #ff5a9a,
+      0 0 24px rgb(255 70 130 / 45%);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 2px rgb(255 90 150 / 55%),
+      0 0 12px rgb(255 70 130 / 22%);
+  }
 }
 
 /* Studio IM custom emoji — shell reuses privateChatDevice; overrides below */

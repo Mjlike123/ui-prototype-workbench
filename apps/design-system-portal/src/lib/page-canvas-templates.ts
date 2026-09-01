@@ -134,6 +134,81 @@ export function resolvePageCanvasTemplate(raw: string): PageCanvasPlan | null {
   }
 
   if (
+    includesAny(text, [
+      "转瓶",
+      "转瓶子",
+      "spin the bottle",
+      "spin bottle",
+      "spin-bottle",
+      "bottle game",
+      "kiss kiss",
+      "真心话",
+      "破冰",
+      "麦位游戏",
+    ]) ||
+    (includesAny(text, ["语音房", "voice room", "room"]) &&
+      includesAny(text, ["转瓶", "bottle", "kiss", "真心话", "破冰"]))
+  ) {
+    return {
+      title: "转瓶语音房",
+      intent: "spin-bottle",
+      matched: [
+        "意图模板 · 转瓶破冰（Studio）",
+        "IosStatusBar · 语音房状态栏",
+        "PrototypeMicSeatCell · 8–12 麦霓虹圆环（可选席位数）",
+        "PrototypeMicSeatPair · 圆环 CP 弧线（Kiss 配对）",
+        "PrototypeSpinBottle · 转瓶动画与落点",
+        "kitButton · Kiss / Pass 确认",
+        "AvatarVisual · 52pt 麦位头像（48pt Kit + 容器）",
+        "SystemIcon · 底栏 / 闭麦 / 礼物",
+      ],
+      warnings: [
+        "围桌默认 10 麦，可在舞台区切换 8–12 麦；荷尔蒙氛围为 Studio 探索态。",
+        "真心话题库、换题与公屏投票权重为占位交互。",
+        "男性落座费、排队与淘汰退费规则待产品确认后接入。",
+        "本模板仅在原型创作（Studio）预览，未进入核心模块目录。",
+      ],
+      blocks: [],
+    };
+  }
+
+  if (
+    includesAny(text, [
+      "直播",
+      "直播间",
+      "live room",
+      "live stream",
+      "liveroom",
+      "voice room",
+      "送礼",
+      "礼物面板",
+      "gift panel",
+    ]) ||
+    (includesAny(text, ["live", "stream"]) &&
+      includesAny(text, ["gift", "礼物", "送礼"]))
+  ) {
+    return {
+      title: "直播间",
+      intent: "live-room",
+      matched: [
+        "意图模板 · 直播间 + 送礼面板（Studio）",
+        "IosStatusBar · 浅色状态栏",
+        "AvatarVisual · 主播头像",
+        "SystemIcon · 关闭 / 礼物 / 点赞 / 评论",
+        "PillSecondaryTab · 礼物分类",
+        "kitButton · 送礼主按钮（color.gift.giving）",
+        "PrototypeLiveRoomChat · 评论与送礼消息（prototype）",
+      ],
+      warnings: [
+        "视频流为静态封面模拟，非真实播放器。",
+        "礼物动效、连击 SVGA、充值与背包同步为占位交互。",
+        "本模板仅在原型创作（Studio）预览，未进入核心模块目录。",
+      ],
+      blocks: [],
+    };
+  }
+
+  if (
     includesAny(text, ["设置页", "settings", "账号与安全", "偏好设置"]) &&
     !includesAny(text, ["profile", "个人资料", "个人中心"]) &&
     !/标题[「『"']/.test(raw) &&
