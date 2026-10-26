@@ -1,0 +1,102 @@
+schemaVersion: 1
+id: toptop
+name: TopTop
+product:
+  platforms: [ios, android, web]
+  principles:
+    - 清晰简单
+    - 一致规律
+    - 包容开放
+  terminology:
+    moment: 动态
+    message: 消息
+    voice-room: 语音房
+    kit-gap: kitGap
+designSystem:
+  discoveryOrder: [page, module, component, pattern, token, primitive]
+  sources:
+    principles:
+      kind: repository
+      location: specs/principles/
+      authority: contract
+    tokens:
+      kind: repository
+      location: specs/foundations/
+      authority: contract
+    components:
+      kind: repository
+      location: specs/components/
+      authority: contract
+    interactions:
+      kind: repository
+      location: specs/interactions/
+      authority: contract
+    guidance:
+      kind: repository
+      location: content/
+      authority: guidance
+    implementation:
+      kind: repository
+      location: apps/design-system-portal/src/components/kit/
+      authority: contract
+    catalog:
+      kind: api
+      location: /api/catalog
+      authority: contract
+  tokenPolicy:
+    defaultBrandPrimary: color.brand.primary
+    regionalOverridesRequireExplicitContext: true
+    regionalTokenPrefixes:
+      - color.ku.
+      - color.brand.tw-
+knowledge:
+  - kind: core-pages
+    location: apps/design-system-portal/src/components/prototypes/
+  - kind: shared-modules
+    location: apps/design-system-portal/src/components/studio/
+  - kind: approved-features
+    location: specs/features/
+  - kind: research
+    location: .monkren/research/
+  - kind: ix-history
+    location: .monkren/ix-design/
+outputs:
+  draftRoot: .monkren/ix-design
+  approvedRoot: specs/features
+  requiredArtifacts:
+    - design-doc.md
+    - interaction.yaml
+    - studioPrototype
+prototype:
+  mode: studio
+  location: apps/design-system-portal/src/components/studio/
+  allowProductionCode: false
+  promotionPolicy: Studio exploration → review → Core implementation → catalog registration → PR
+workflow:
+  confirmationGates:
+    - brief
+    - material-research-decision
+    - delivery
+  downstreamSkills:
+    prototypeGap: toptop-prototype-studio
+    strictImplementation: toptop-design-system
+    review: toptop-design-review
+    screenshotMapping: page-canvas-vision
+qualityPolicy:
+  targetViewports:
+    - { width: 375, height: 812, label: iPhone standard }
+    - { width: 466, height: 678, label: iPhone Duo outer }
+    - { width: 890, height: 626, label: iPhone Duo inner landscape }
+  selectedDirectionReviewPasses: 2
+  minimumTouchTarget: 44
+  requireAuthenticContent: true
+  requireCompletedPrimaryFlow: true
+validation:
+  - name: design-system-contract
+    command: npm run specs:validate
+  - name: skill-consistency
+    command: npm run skill:check
+  - name: portal-tests
+    command: npm run portal:test
+  - name: portal-build
+    command: npm run portal:build

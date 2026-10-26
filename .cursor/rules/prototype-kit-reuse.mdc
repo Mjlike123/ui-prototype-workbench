@@ -1,6 +1,6 @@
 ---
 description: Require AI-designed prototypes to reuse existing TopTop Kit components
-globs: "apps/design-system-portal/src/components/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/components/studio/**/*.{ts,tsx},apps/design-system-portal/src/components/page-canvas-stage.tsx,apps/design-system-portal/src/components/page-canvas-showcase.tsx,apps/design-system-portal/src/app/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/app/prototype-runtime/**/*.{ts,tsx},apps/design-system-portal/src/app/canvas/**/*.{ts,tsx}"
+globs: "apps/design-system-portal/src/components/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/components/studio/**/*.{ts,tsx},apps/design-system-portal/src/components/page-canvas-stage.tsx,apps/design-system-portal/src/app/prototypes/**/*.{ts,tsx},apps/design-system-portal/src/app/prototype-runtime/**/*.{ts,tsx},apps/design-system-portal/src/app/canvas/**/*.{ts,tsx}"
 alwaysApply: false
 ---
 
@@ -8,15 +8,36 @@ alwaysApply: false
 
 When designing or implementing an AI-generated prototype:
 
-1. Inspect `specs/components/*.yaml`, matching MDX guidance, and existing `components/kit` implementations before writing UI.
-2. Reuse existing Kit components whenever the design contains their responsibility:
+1. Before writing UI, automatically select the smallest applicable design workflow:
+   - Kit covers the page → `toptop-design-system`
+   - Kit has page-level gaps → `toptop-prototype-studio`
+   - Screenshot-to-component mapping → `page-canvas-vision`
+   - Extra craft/a11y review → use `ui-skills-root` to select at most one relevant specialist Skill
+   External Skills may refine uncovered areas but must never override TopTop Foundations or stable Kit contracts.
+2. Run a visual-foundation preflight. Read only the relevant entries from:
+   - `specs/foundations/colors.yaml`
+   - `specs/foundations/spacing.yaml`
+   - `specs/foundations/typography.yaml`
+   - `specs/foundations/icons.yaml`
+   - `specs/foundations/radius.yaml` and `motion.yaml` when applicable
+   - matching component YAML, MDX, interaction YAML, and `components/kit` implementation
+   Write down the intended component, Token, spacing, and size mapping before styling.
+   For every reused component, follow its `interactionIds` into `specs/interactions/<id>.yaml` and `content/interactions/<id>.mdx`. The Portal `/interactions` section is the human-readable index; YAML remains the contract source.
+3. Reuse existing Kit components whenever the design contains their responsibility:
    - Tags and badges → `list-tag`
    - Action or message rows → `regular-list`
    - Page title bars and tabs → the matching navigation component
+   - Search → `SearchControl`; do not add a wrapper that changes its 56pt container, 40pt field, 16pt gutter, or Token background
    - Icons → `SystemIcon`, `BottomNavigationIcon`, `SearchControl`, or extend `generate-inline-icon-assets.mjs`; never CSS mask or rasterized SVG `<img>` (see `prototype-asset-pipeline.mdc`)
    - Avatars & prototype photos → `PrototypeAvatarImage` / `AvatarVisual` with @3x bitmaps registered in `generate-prototype-avatar-3x.mjs`
-3. Do not recreate Kit markup, tokens, states, or icons with prototype-local CSS, emoji, screenshots, or look-alike elements.
-4. Prototype layout may compose and position Kit components, but must not copy their internals.
-5. If no Kit component can express a required area, record it as a `kitGap` and isolate only that area as a clearly named `Prototype*` module.
-6. Include the component mapping and unresolved `kitGaps` in the prototype handoff.
-7. Verify reused components retain their documented accessibility, interaction states, and responsive behavior.
+4. Do not recreate or restyle Kit internals. Prototype CSS may position the component but must not add duplicate padding, height, gap, color, typography, radius, or icon rules to descendants such as `.regularListMain` or `.searchControlField`.
+5. Use semantic Tokens for every reusable visual value. Examples: page/list background → `color.surface.canvas` (`bgPrimary`); panel → `color.surface.panel`; text/icon color → the matching `color.text.*`. Brand primary defaults to `color.brand.primary` (`#16D8C8`) for every new page and unspecified region/package; `color.ku.*` and `color.brand.tw-*` require explicit product context. Raw values are allowed only inside an isolated `Prototype*` gap with a documented reason.
+6. If no Kit component can express a required area, design it as a clearly named `Prototype*` module using Foundations Tokens, record the `kitGap`, and do not invent a componentId or mark it stable.
+7. Reuse interaction patterns as strictly as visual components. Preserve documented states, trigger → result transitions, feedback, duration/easing, dismiss behavior, focus restoration, keyboard behavior, error recovery, localization, and edge cases. Do not add a prototype-local gesture or overlay when an existing Pattern already covers it. Missing behavior becomes an explicit interaction `kitGap`.
+8. Before handoff, verify actual rendered DOM values and behavior at the target viewport—not only source code:
+   - component bounds, page gutter, padding, gap, fixed insets, and safe area
+   - computed colors resolve to the intended semantic Tokens
+   - icons resolve through the canonical registry and Kit wrapper
+   - every applicable Pattern state and transition, including pressed/focus, loading/error/empty, dismiss, focus return, and reduced motion
+   Any local CSS override that makes a Kit component fail its YAML dimensions must be removed.
+9. Include component/Token/interactionId mapping, DOM and behavior evidence, unresolved `kitGaps`, and tests run in the handoff.

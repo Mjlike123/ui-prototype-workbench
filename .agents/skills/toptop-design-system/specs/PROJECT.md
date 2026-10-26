@@ -1,6 +1,6 @@
-# TopTop Agent Design Kit
+# TopTop UI 原型工作台
 
-> 使命：Kit 定义边界，本地 Agent 搭建原型，Skills 负责验收，运行时审计完成落地闭环。
+> 仓库名：`ui-prototype-workbench` · 使命：Kit 定义边界，本地 Agent 搭建原型，Skills 负责验收，运行时审计完成落地闭环。
 
 本仓库不是一个低配 Figma，也不在 Portal 服务器内托管大模型。Portal 可以部署到外网，向设计师、研发和本地 Agent 提供同一套设计资源；推理和代码修改由用户自己的 Cursor 等 Agent IDE 完成。
 
@@ -75,7 +75,10 @@ Prototype 模块 = Profile hero、统计、媒体区等待验证业务结构
 - 稳定 Kit 组件继续严格遵守契约。
 - 基础原语继承 Foundations，但不计入组件覆盖率。
 - 创意模块允许探索布局、层级和交互，必须标记为 `prototype`。
-- 原型验证后，重复且稳定的模块才进入 Kit 的 draft → review → stable 生命周期。
+- 新设计前先区分页面、组件、交互、Token、内容与平台能力缺口；已有组件可合理组合时不算缺口。
+- Prototype 先用功能合同约束用户任务、触发与结果、状态、行为边界、系统约束和探索边界。
+- 只有无法由现有 Kit 合理覆盖、边界与状态稳定、通过原型验证且具备复用证据的候选，才进入 Kit 的 `draft → review → stable` 生命周期。
+- 页面专属业务模块保留为 Prototype；交互和 Token 缺口分别进入对应规范，不得一律包装成组件。
 - 需要多个方向时使用 `design-brainstorm` 或 `generate-variations`，而不是只换配色。
 
 ### 3. Skills 验收

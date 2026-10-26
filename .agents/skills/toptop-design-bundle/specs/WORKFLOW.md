@@ -15,7 +15,7 @@
 | **实机审计** | `npm run ui` + Lookin | 需本地设备 |
 | **Design MVP Manifest** | `src/lib/design-mvp-bundle.ts` 等库 | 逻辑保留、单测在跑，**当前无页面入口** |
 
-> `/canvas` 曾经是「自然语言 → PageCanvasPlan → 组件预览」的生成画布。该形态已被原型预览目录取代；`page-canvas-showcase.tsx` 与 Manifest 相关库仍在仓库中，但没有任何路由挂载它们。需要 Manifest 时直接调用库或由 Agent 生成，不要在 Portal 中寻找对应按钮。
+> `/canvas` 曾经是「自然语言 → PageCanvasPlan → 组件预览」的生成画布。该形态及 `page-canvas-showcase.tsx` 已被 Core 目录与 Studio 项目画廊取代；Manifest 相关库仍可由 Agent 直接调用，但当前没有 Portal 页面入口。
 
 ## 综合验收（不要单一路径）
 
@@ -69,8 +69,12 @@ npm run portal:dev
 
 - 主要任务与页面区域蓝图
 - 需要覆盖的状态清单
-- 组件映射与 Kit gaps
+- 组件映射与分类后的 Kit gaps
 - 每个可见层的来源标记：`kit` / `primitive` / `prototype`
+
+若需要新设计，先将问题标为 `pageGap`、`componentGap`、`interactionGap`、`tokenGap`、`contentGap` 或 `capabilityGap`，并为 `prototype` 区域写清用户任务、触发与结果、输入与信息优先级、状态、行为边界、系统约束和探索边界。已有组件能通过合理组合完成任务时不算 gap。
+
+AI 可以自由探索信息组织、操作模型和反馈方式，但颜色、字体、圆角、图标、基础动效与稳定 Kit 内部结构继续受 Foundations 和组件契约约束。
 
 ### 3. 在 Portal 预览
 
@@ -79,7 +83,7 @@ npm run portal:dev
 左侧按一级页面与二级页面列出已登记的原型路由；右侧为可交互预览，支持：
 
 - Light / Dark 主题（全局设置，切换后保留当前路由）
-- 三种设备尺寸：375×812、393×852、430×932（按页面独立保存）
+- 五种设备尺寸：375×812、393×852、430×932、Duo 外屏 466×678、Duo 内屏 890×626（按页面独立保存）
 - 70%–110% 缩放（按页面独立保存）
 - 刷新与重置
 - 「单独打开」跳转到 `/prototype-runtime/app/<screen>?theme=&width=&height=`
@@ -97,7 +101,7 @@ npm run portal:dev
 - `interaction-states-pass`
 - `accessibility-audit`
 
-审查为只读，输出带 spec 或 `file:line` 证据的 P0/P1/P2 与是否可交付。
+审查为只读，输出带 spec 或 `file:line` 证据的 P0/P1/P2 与是否可交付。若 Manifest 中存在 Kit candidate，还必须给出 `keep-prototype`、`nominate` 或 `reject`；页面看起来合理不能单独作为提名依据。
 
 ### 5. 可选：局部视觉核对
 
@@ -111,6 +115,19 @@ npm run verify:screenshot -- path/to/reference.png out/actual.png
 ```
 
 关注 JSON 中 `changed_pixel_ratio` 与 `same_size`。组件化路径不要求像素零差异。
+
+### 6. 可选：候选能力反哺 Kit
+
+只有同时满足以下条件才进入 Kit：
+
+- 现有 Kit 组合无法在不扭曲语义的前提下完成任务；
+- 用户任务、组件或模式边界、Variants、状态与异常路径稳定；
+- 已在目标视口、主流程和可访问性场景验证；
+- 有两个稳定复用场景，或属于经产品 / Kit owner 确认的平台级基础能力；
+- `toptop-design-review` 结论为 `nominate`，且当前任务授权修改 Kit；
+- 无未决产品、内容、能力或工程 blocker。
+
+`componentGap`、`interactionGap`、`tokenGap` 分别进入组件、交互或 Foundations，不得一律包装成组件。落地从 `draft` 开始，补齐 YAML、MDX、Token、Interaction、实现、测试和参考预览；验证通过且无 blocker 后才按 `draft → review → stable` 晋升。页面专属业务模块默认继续保留为 Prototype。
 
 ---
 
@@ -135,8 +152,12 @@ specs:validate
     → 读取 Kit 契约与指南
     → Cursor 输出蓝图与状态清单
     → Cursor 实现原型并登记预览
-    → /canvas 逐状态与逐设备检查
-    → toptop-design-review 只读报告
+    → /canvas 逐状态与 375 / 466 / 890 检查
+    → 截图优先的独立视觉审查
+    → 修正后再次截图
+    → toptop-design-review 交付门禁
+    → （候选）keep-prototype / nominate / reject
+    → （已授权且 nominate）draft → Kit 实现与验证 → review → stable
     → （可选）/audit/visual 局部叠图
     → （可选）Lookin + Figma audit
 ```

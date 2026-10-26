@@ -1,0 +1,115 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: IXDesignerBusinessProfile
+type: object
+additionalProperties: false
+required: [schemaVersion, id, name, designSystem, outputs, prototype]
+properties:
+  schemaVersion: { type: integer, const: 1 }
+  id: { type: string, pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+  name: { type: string }
+  product:
+    type: object
+    additionalProperties: true
+    properties:
+      platforms:
+        type: array
+        items: { type: string }
+      principles:
+        type: array
+        items: { type: string }
+      terminology:
+        type: object
+        additionalProperties: { type: string }
+  designSystem:
+    type: object
+    required: [discoveryOrder, sources]
+    properties:
+      discoveryOrder:
+        type: array
+        items:
+          enum: [page, module, component, pattern, token, primitive]
+      sources:
+        type: object
+        additionalProperties:
+          type: object
+          required: [kind, location]
+          properties:
+            kind:
+              enum: [repository, api, mcp, package, documentation]
+            location: { type: string }
+            authority:
+              enum: [contract, guidance, reference]
+      tokenPolicy:
+        type: object
+        additionalProperties: false
+        required: [defaultBrandPrimary, regionalOverridesRequireExplicitContext]
+        properties:
+          defaultBrandPrimary: { type: string }
+          regionalOverridesRequireExplicitContext: { type: boolean }
+          regionalTokenPrefixes:
+            type: array
+            items: { type: string }
+  knowledge:
+    type: array
+    items:
+      type: object
+      required: [kind, location]
+      properties:
+        kind: { type: string }
+        location: { type: string }
+  outputs:
+    type: object
+    required: [draftRoot, approvedRoot]
+    properties:
+      draftRoot: { type: string }
+      approvedRoot: { type: string }
+      requiredArtifacts:
+        type: array
+        items: { type: string }
+  prototype:
+    type: object
+    required: [mode, allowProductionCode]
+    properties:
+      mode:
+        enum: [none, static, project-native, studio, external]
+      location: { type: string }
+      allowProductionCode: { type: boolean }
+      promotionPolicy: { type: string }
+  workflow:
+    type: object
+    properties:
+      confirmationGates:
+        type: array
+        items: { type: string }
+      downstreamSkills:
+        type: object
+        additionalProperties: { type: string }
+  qualityPolicy:
+    type: object
+    additionalProperties: false
+    properties:
+      targetViewports:
+        type: array
+        items:
+          type: object
+          required: [width, height]
+          properties:
+            width: { type: integer, minimum: 1 }
+            height: { type: integer, minimum: 1 }
+            label: { type: string }
+      selectedDirectionReviewPasses:
+        type: integer
+        minimum: 1
+      minimumTouchTarget:
+        type: integer
+        minimum: 1
+      requireAuthenticContent: { type: boolean }
+      requireCompletedPrimaryFlow: { type: boolean }
+  validation:
+    type: array
+    items:
+      type: object
+      required: [name, command]
+      properties:
+        name: { type: string }
+        command: { type: string }

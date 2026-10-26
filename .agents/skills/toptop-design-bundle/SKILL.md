@@ -1,7 +1,7 @@
 ---
 name: toptop-design-bundle
 description: |
-  TopTop Agent Design Kit 统一入口。用户询问设计系统、Kit 能力、组件资源、Skill 组合、安装接入或完整原型工作流时使用；具体实现路由到 toptop-design-system，审查路由到 toptop-design-review。
+  TopTop Agent Design Kit 统一入口。用户询问设计系统、Kit 能力、组件资源、Skill 组合、安装接入或完整原型工作流时使用；PRD/交互设计路由到 toptop-ix-designer，实现路由到 toptop-design-system，审查路由到 toptop-design-review。
 ---
 
 # TopTop Agent Design Kit
@@ -11,21 +11,24 @@ description: |
 ## 目标
 
 ```text
-Kit 定义边界 → 本地 Agent 搭建原型 → Skills 多维验收 → H5 / iOS 运行时闭环
+产品输入 → 交互设计（IX）→ 本地 Agent 搭建原型 → Skills 多维验收 → H5 / iOS 运行时闭环
 ```
 
 - Portal 可以部署到外网，提供文档、预览、Catalog API 和工作流。
 - 推理与代码修改运行在用户本机 Cursor 等 Agent IDE。
 - `specs/**/*.yaml` 是单一事实来源，Skill 不得发明组件或 Token。
 - `/canvas` 是轻量预览与 Manifest 交接面，不是主要页面编辑器。
+- IX 设计采用 `ix-designer-core + toptop-profile + 当前 Agent adapter` 组合；`toptop-ix-designer` 是向后兼容入口。
 
 ## 路由
 
 | 用户意图 | 使用能力 |
 |---|---|
 | 浏览 Kit、怎么接入、有哪些 Skill | 本 Skill |
+| 飞书/PDF/截图/Figma → 黑白交互稿 + UX 文档 | `toptop-ix-designer` |
 | Kit 不完整时做功能原型、布局探索和创意方向 | `toptop-prototype-studio` |
 | 已有较完整 Kit，需要严格实现生产页面 | `toptop-design-system` |
+| Prototype 能力是否值得进入 Kit | `toptop-design-review` 候选门禁 → `toptop-design-system` 建立 draft |
 | 0→1 视觉方向、Landing、品牌探索、设计审计（无 Kit 约束） | `ojo-design-skills → app-ui-ux-best-practices` |
 | 审查视觉、设计规范和交互逻辑 | `toptop-design-review` |
 | 深度五维审查 | `monkren-design → 5-dim-review` |

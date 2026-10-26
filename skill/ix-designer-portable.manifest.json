@@ -1,0 +1,23 @@
+{
+  "name": "ix-designer-portable",
+  "version": "1.0.0",
+  "entrySkill": "ix-designer-core",
+  "description": "Portable PRD-to-UX/UI workflow composed with a business design-system profile and an Agent-platform adapter.",
+  "license": "Proprietary",
+  "requiredComposition": {
+    "core": "ix-designer-core",
+    "businessProfile": "<business>-profile",
+    "agentAdapter": "<agent>-adapter"
+  },
+  "contents": {
+    "core": ".agents/skills/ix-designer-core/",
+    "includedAdapters": [
+      ".agents/skills/cursor-adapter/"
+    ],
+    "profileTemplate": ".agents/skills/ix-designer-core/templates/business-profile.example.yaml"
+  },
+  "compatibility": {
+    "cursor": "included",
+    "otherAgentPlatforms": "requires adapter implementing agent-adapter.schema.yaml"
+  }
+}

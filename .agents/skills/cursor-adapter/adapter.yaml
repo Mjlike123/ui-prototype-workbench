@@ -1,0 +1,60 @@
+schemaVersion: 1
+id: cursor
+platform: Cursor
+capabilities:
+  conversation.read:
+    status: available
+    provider: session context
+  repository.read:
+    status: available
+    provider: ReadFile
+  repository.search:
+    status: available
+    provider: rg and Glob
+  repository.write:
+    status: available
+    provider: ApplyPatch
+    instructions: Requires a user request that authorizes implementation or document changes.
+  command.run:
+    status: available
+    provider: Shell
+  question.ask:
+    status: available
+    provider: AskQuestion
+  url.fetch:
+    status: available
+    provider: WebFetch
+  web.search:
+    status: available
+    provider: WebSearch
+  image.inspect:
+    status: available
+    provider: ReadFile image support
+  pdf.read:
+    status: available
+    provider: ReadFile PDF support
+  document.read:
+    status: fallback
+    provider: dynamic MCP or repository file
+    fallback: Ask for text, PDF, or image export.
+  design.read:
+    status: fallback
+    provider: authorized Figma MCP
+    fallback: Ask for exported frames and variable documentation.
+  designSystem.query:
+    status: available
+    provider: repository search, package source, API, or discovered MCP
+  prototype.render:
+    status: available
+    provider: project framework and Shell
+  runtime.inspect:
+    status: available
+    provider: project browser tests or Playwright
+  parallel.explore:
+    status: available
+    provider: Subagent
+constraints:
+  - Discover dynamic tool schemas before invocation.
+  - Do not assume external provider authentication.
+  - Do not mutate files or external systems for read-only requests.
+  - Use repository-relative paths in generated artifacts.

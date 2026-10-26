@@ -1,0 +1,221 @@
+# $schema: https://json-schema.org/draft/2020-12/schema
+# RequirementBrief — 多模态需求归一契约
+# 输出路径：specs/features/{feature-id}/brief.yaml
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: RequirementBrief
+type: object
+required:
+  - schemaVersion
+  - feature
+  - sources
+  - pages
+  - flows
+properties:
+  schemaVersion:
+    type: integer
+    const: 1
+  feature:
+    type: object
+    required: [id, name]
+    properties:
+      id:
+        type: string
+        description: kebab-case 功能标识，如 feed-compose
+      name:
+        type: string
+        description: 中文或英文功能名
+      platform:
+        type: string
+        enum: [ios, android, web, cross-platform]
+        default: ios
+      viewport:
+        type: object
+        properties:
+          width: { type: integer, default: 375 }
+          height: { type: integer, default: 812 }
+      goals:
+        type: array
+        items: { type: string }
+      personas:
+        type: array
+        items: { type: string }
+  sources:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      required: [type, ref]
+      properties:
+        type:
+          enum: [feishu-doc, pdf, image, figma, text, url]
+        ref:
+          type: string
+          description: URL、文件路径或对话摘要 ID
+        extractedAt:
+          type: string
+          format: date
+        confidence:
+          enum: [high, medium, low]
+  scope:
+    type: object
+    description: 本期增量与存量能力过滤结果；过滤项必须可追溯
+    properties:
+      newBehavior:
+        type: array
+        items: { type: string }
+      existingModified:
+        type: array
+        items: { type: string }
+      existingUnchanged:
+        type: array
+        items:
+          type: object
+          required: [item, evidence]
+          properties:
+            item: { type: string }
+            evidence:
+              type: string
+              description: 对应 Kit、Core 原型、现有代码或来源章节
+      uncertain:
+        type: array
+        items: { type: string }
+  visualDirections:
+    type: array
+    description: 与交互功能拆开的视觉/UI约束，不得用于推导新功能
+    items:
+      type: object
+      required: [statement, sourceRef]
+      properties:
+        statement: { type: string }
+        sourceRef: { type: string }
+        confidence:
+          enum: [high, medium, low]
+  qualityBar:
+    type: object
+    description: 新页面、改版与重大视觉变化的可观察质量目标
+    properties:
+      category: { type: string }
+      primaryTask: { type: string }
+      firstScreenHero: { type: string }
+      designSpecificity: { type: string }
+      signatureMoment: { type: string }
+      benchmarkPatterns:
+        type: array
+        items:
+          type: object
+          required: [sourceRef, observedPattern, decision]
+          properties:
+            sourceRef: { type: string }
+            observedPattern: { type: string }
+            decision:
+              enum: [adopt, avoid, needs-validation]
+      contentRequirements:
+        type: array
+        items: { type: string }
+      acceptance:
+        type: array
+        items: { type: string }
+  designImpacts:
+    type: array
+    description: 产品、运营、技术或视觉信息对用户体验的转译结果
+    items:
+      type: object
+      required: [sourceType, statement, impact, target]
+      properties:
+        sourceType:
+          enum: [product, operation, technical, visual]
+        sourceRef: { type: string }
+        statement: { type: string }
+        impact: { type: string }
+        target:
+          enum: [interaction, visual, both]
+        confidence:
+          enum: [high, medium, low]
+  ignoredItems:
+    type: array
+    description: 确认不影响用户体验、因而不进入设计的内容
+    items:
+      type: object
+      required: [item, reason, sourceRef]
+      properties:
+        item: { type: string }
+        reason:
+          enum:
+            - existing-unchanged
+            - no-user-facing-impact
+            - duplicate
+            - out-of-release-scope
+        sourceRef: { type: string }
+  pages:
+    type: array
+    items:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        knownStates:
+          type: array
+          items: { type: string }
+        sourceRefs:
+          type: array
+          items: { type: string }
+  flows:
+    type: array
+    items:
+      type: object
+      required: [name, steps]
+      properties:
+        name: { type: string }
+        type:
+          enum: [primary, secondary, error, cancel]
+          default: primary
+        steps:
+          type: array
+          items: { type: string }
+  rules:
+    type: array
+    items:
+      type: object
+      required: [text, source]
+      properties:
+        text: { type: string }
+        source: { type: string }
+        confidence:
+          enum: [high, medium, low]
+  visualReferences:
+    type: array
+    items:
+      type: object
+      properties:
+        path: { type: string }
+        interpretation: { type: string }
+        linkedPageId: { type: string }
+  competitiveInsights:
+    type: object
+    properties:
+      competitors:
+        type: array
+        items: { type: string }
+      adopt:
+        type: array
+        items: { type: string }
+      avoid:
+        type: array
+        items: { type: string }
+      researchReport:
+        type: string
+        description: 路径，如 .monkren/research/feed-publish-ux-2026-08-19/report.md
+  conflicts:
+    type: array
+    items:
+      type: object
+      properties:
+        topic: { type: string }
+        sources: { type: array, items: { type: string } }
+        resolution: { type: string }
+  openQuestions:
+    type: array
+    items: { type: string }

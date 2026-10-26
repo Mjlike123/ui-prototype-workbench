@@ -23,6 +23,7 @@
     "specs:validate": "npm run contract:build && tsx scripts/validate-design-system.ts",
     "skill:sync-specs": "node scripts/sync-skill-specs.mjs",
     "skill:check": "node scripts/check-skill-specs-drift.mjs",
+    "ix-designer:validate": "node scripts/validate-ix-designer-package.mjs",
     "icons:generate-inline": "node scripts/generate-inline-icon-assets.mjs",
     "avatars:generate-3x": "node scripts/generate-prototype-avatar-3x.mjs",
     "check:kit": "npm run specs:validate && npm run skill:check && npm run portal:test",

@@ -1,0 +1,42 @@
+schemaVersion: 1
+id: replace-with-business-id
+name: Replace with business name
+product:
+  platforms: [web]
+  principles: []
+  terminology: {}
+designSystem:
+  discoveryOrder: [page, module, component, pattern, token, primitive]
+  sources:
+    tokens:
+      kind: repository
+      location: packages/design-tokens/
+      authority: contract
+    components:
+      kind: repository
+      location: packages/ui/
+      authority: contract
+    interactions:
+      kind: documentation
+      location: docs/interaction-patterns/
+      authority: guidance
+knowledge:
+  - kind: existing-pages
+    location: src/pages/
+outputs:
+  draftRoot: .design/ix
+  approvedRoot: specs/features
+  requiredArtifacts: [design-doc.md, interaction.yaml, functionalPrototype]
+prototype:
+  mode: project-native
+  location: src/features/
+  allowProductionCode: false
+  promotionPolicy: Prototype must pass business review before production integration.
+workflow:
+  confirmationGates: [brief, delivery]
+  downstreamSkills: {}
+validation:
+  - name: tests
+    command: npm test
+  - name: build
+    command: npm run build

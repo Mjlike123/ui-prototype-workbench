@@ -1,8 +1,12 @@
 {
   "name": "toptop-agent-design-kit",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "entrySkill": "toptop-design-bundle",
   "subSkills": [
+    "ix-designer-core",
+    "toptop-profile",
+    "cursor-adapter",
+    "toptop-ix-designer",
     "toptop-prototype-studio",
     "toptop-design-system",
     "toptop-design-review"
@@ -13,9 +17,20 @@
     "cursor",
     "agent-ide"
   ],
+  "composition": {
+    "toptop-ix-designer": {
+      "core": "ix-designer-core",
+      "businessProfile": "toptop-profile",
+      "agentAdapter": "cursor-adapter"
+    }
+  },
   "contents": {
     "skills": [
       ".agents/skills/toptop-design-bundle/",
+      ".agents/skills/ix-designer-core/",
+      ".agents/skills/toptop-profile/",
+      ".agents/skills/cursor-adapter/",
+      ".agents/skills/toptop-ix-designer/",
       ".agents/skills/toptop-prototype-studio/",
       ".agents/skills/toptop-design-system/",
       ".agents/skills/toptop-design-review/"
@@ -26,12 +41,16 @@
     },
     "specs": [
       ".agents/skills/toptop-design-bundle/specs/",
+      ".agents/skills/toptop-ix-designer/specs/",
       ".agents/skills/toptop-prototype-studio/specs/",
       ".agents/skills/toptop-design-system/specs/",
       ".agents/skills/toptop-design-review/specs/"
     ]
   },
   "sourceOfTruth": {
+    "ixMethod": ".agents/skills/ix-designer-core/",
+    "businessProfile": ".agents/skills/toptop-profile/profile.yaml",
+    "agentAdapter": ".agents/skills/cursor-adapter/adapter.yaml",
     "foundations": "specs/foundations/",
     "components": "specs/components/",
     "interactions": "specs/interactions/",

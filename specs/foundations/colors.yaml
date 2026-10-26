@@ -211,12 +211,12 @@ tokens:
     description: "一级文案（纯白）首页暗色标题tab"
     figmaVariableId: "VariableID:9022:174163"
   - id: color.brand.primary
-    name: "主色/brandPrimary"
+    name: "TopTop 默认主色/brandPrimary"
     value: "#16D8C8"
     modes:
       light: "#16D8C8"
       dark: "#14C2B4"
-    description: "teami包以外其他包主题色"
+    description: "TopTop 默认品牌主色；新页面、Prototype 和未指定区域/包的场景必须默认使用。只有需求或既有页面契约明确指定区域主题时，才可切换到对应区域 Token。"
     figmaVariableId: "VariableID:9022:174172"
     platforms:
       ios: TTColor.brandPrimary
@@ -228,7 +228,7 @@ tokens:
     modes:
       light: "#1677FF"
       dark: "#146BE5"
-    description: "teami包主题色"
+    description: "Teami/TW 包专用品牌主色；仅在需求或既有页面契约明确指定 Teami/TW 时使用，不得作为新页面默认主色。"
     figmaVariableId: "VariableID:9022:174156"
   - id: color.brand.primary-a10
     name: "主色浅色/brandPrimary_a10"
@@ -296,20 +296,21 @@ tokens:
     figmaVariableId: "VariableID:9022:174154"
   - id: color.search-control.container-background
     name: "搜索控件容器/searchControlContainer"
-    value: "#FFFFFF"
+    value: "transparent"
     modes:
-      light: "#FFFFFF"
-      dark: "#181923"
-    description: "搜索控件 56pt 容器背景"
+      light: "transparent"
+      dark: "transparent"
+    description: "搜索控件 56pt 容器背景；透传页面底色"
     platforms:
       h5: var(--search-control-container-background)
   - id: color.search-control.field-background
     name: "搜索框背景/searchControlField"
-    value: "#F7F8FA"
+    value: "rgba(24, 25, 35, 0.04)"
     modes:
-      light: "#F7F8FA"
+      light: "rgba(24, 25, 35, 0.04)"
       dark: "rgba(255, 255, 255, 0.1)"
-    description: "搜索框 40pt 胶囊背景"
+    description: "搜索框 40pt 胶囊背景，对齐 btnSecondary"
+    figmaVariableId: "VariableID:9022:174154"
     platforms:
       h5: var(--search-control-field-background)
   - id: color.search-control.placeholder
@@ -318,7 +319,7 @@ tokens:
     modes:
       light: "#BABABD"
       dark: "#8B8C91"
-    description: "搜索占位文案与图标色"
+    description: "搜索占位文案、输入文字与图标色，对齐 textTertiary"
     platforms:
       h5: var(--search-control-placeholder)
   - id: color.border.subtle
@@ -420,7 +421,7 @@ tokens:
     modes:
       light: "#FFF5F0"
       dark: "#3D261E"
-    description: "Figma 变量：KU主色/brandPrimary_Lighter"
+    description: "KU 区域主题浅色层级；仅在需求或既有页面契约明确指定 KU 时使用，不得作为新页面默认品牌色。"
     figmaVariableId: "VariableID:12410:239927"
   - id: color.ku.brand-primary-light
     name: "KU主色/brandPrimary_Light"
@@ -428,7 +429,7 @@ tokens:
     modes:
       light: "#FFEAE1"
       dark: "#6B3D2E"
-    description: "Figma 变量：KU主色/brandPrimary_Light"
+    description: "KU 区域主题浅色层级；仅在需求或既有页面契约明确指定 KU 时使用，不得作为新页面默认品牌色。"
     figmaVariableId: "VariableID:12416:242318"
   - id: color.ku.brand-primary-hover
     name: "KU主色/brandPrimary_Hover"
@@ -436,7 +437,7 @@ tokens:
     modes:
       light: "#FF966A"
       dark: "#FFA582"
-    description: "Figma 变量：KU主色/brandPrimary_Hover"
+    description: "KU 区域主题 Hover 状态；仅在需求或既有页面契约明确指定 KU 时使用，不得作为新页面默认品牌色。"
     figmaVariableId: "VariableID:12416:242319"
   - id: color.ku.brand-primary
     name: "KU主色/brandPrimary"
@@ -444,7 +445,7 @@ tokens:
     modes:
       light: "#FF7A45"
       dark: "#FF8E61"
-    description: "Figma 变量：KU主色/brandPrimary"
+    description: "KU 区域专用品牌主色；仅在需求或既有页面契约明确指定 KU 时使用。未指定区域时必须使用 color.brand.primary（#16D8C8）。"
     figmaVariableId: "VariableID:12410:239925"
   - id: color.ku.brand-primary-pressed
     name: "KU主色/brandPrimary_Pressed"
@@ -452,7 +453,7 @@ tokens:
     modes:
       light: "#E05D28"
       dark: "#FFB394"
-    description: "Figma 变量：KU主色/brandPrimary_Pressed"
+    description: "KU 区域主题 Pressed 状态；仅在需求或既有页面契约明确指定 KU 时使用，不得作为新页面默认品牌色。"
     figmaVariableId: "VariableID:12416:242320"
   - id: color.ku.background
     name: "KU主色/KU_bg"

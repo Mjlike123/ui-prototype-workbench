@@ -1,0 +1,106 @@
+# $schema: https://json-schema.org/draft/2020-12/schema
+# InteractionSpec — 交互设计契约
+# 输出路径：specs/features/{feature-id}/interaction.yaml
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: InteractionSpec
+type: object
+required:
+  - schemaVersion
+  - featureId
+  - pages
+properties:
+  schemaVersion:
+    type: integer
+    const: 1
+  featureId:
+    type: string
+  platform:
+    type: string
+    enum: [ios, android, web, cross-platform]
+  pages:
+    type: array
+    items:
+      type: object
+      required: [id, name, purpose, states]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        purpose: { type: string }
+        entry:
+          type: array
+          items: { type: string }
+        exit:
+          type: array
+          items: { type: string }
+        states:
+          type: array
+          items:
+            type: object
+            required: [id, description]
+            properties:
+              id: { type: string }
+              description: { type: string }
+              conditions: { type: string }
+        elements:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string }
+              role: { type: string }
+              label: { type: string }
+              behavior: { type: string }
+        transitions:
+          type: array
+          items:
+            type: object
+            required: [trigger, result]
+            properties:
+              trigger: { type: string }
+              result: { type: string }
+              targetPageId: { type: string }
+              targetOverlayId: { type: string }
+              notes: { type: string }
+  overlays:
+    type: array
+    items:
+      type: object
+      required: [id, name, hostPageId, dismiss]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        hostPageId: { type: string }
+        type:
+          enum: [sheet, dialog, fullscreen, toast]
+        dismiss:
+          type: array
+          items: { type: string }
+        states:
+          type: array
+          items: { type: object }
+  globalRules:
+    type: array
+    items: { type: string }
+  kitMapping:
+    type: array
+    items:
+      type: object
+      properties:
+        pageId: { type: string }
+        region: { type: string }
+        componentId: { type: string }
+        source:
+          enum: [kit, primitive, prototype]
+        kitGap: { type: string }
+  optimizations:
+    type: array
+    items:
+      type: object
+      properties:
+        type:
+          enum: [design-completion, ux-improvement, needs-product-confirm]
+        topic: { type: string }
+        original: { type: string }
+        proposal: { type: string }
+        evidence: { type: string }

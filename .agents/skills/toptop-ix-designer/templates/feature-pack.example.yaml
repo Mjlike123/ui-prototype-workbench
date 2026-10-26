@@ -1,0 +1,60 @@
+# 功能域示例：发布动态（feed-compose）
+# 可复制为 specs/features/feed-compose/brief.yaml 的起点
+
+schemaVersion: 1
+feature:
+  id: feed-compose
+  name: 发布动态
+  platform: ios
+  viewport: { width: 375, height: 812 }
+  goals:
+    - 用户可发布图文动态
+    - 可选话题与可见范围
+  personas:
+    - 普通社交用户
+sources:
+  - type: feishu-doc
+    ref: "<用户提供的 PRD URL>"
+    confidence: high
+pages:
+  - id: compose
+    name: 发布页
+    knownStates: [empty, filled, publishing]
+  - id: photo-picker
+    name: 相册选择
+    knownStates: [default, selected]
+  - id: audience-sheet
+    name: 可见范围半窗
+    knownStates: [public, friends]
+  - id: leave-confirm
+    name: 离开确认
+    knownStates: [default]
+flows:
+  - name: 主流程
+    type: primary
+    steps:
+      - 进入发布页
+      - 可选添加图片（相册单选，最多累计 9 张）
+      - 填写文案与话题
+      - 点击 Post 发布
+  - name: 取消
+    type: cancel
+    steps:
+      - 有内容时返回 → 离开确认 → 保存草稿或丢弃
+rules:
+  - text: 单次相册会话最多选 1 张；发布页累计最多 9 张
+    source: product-confirmed
+    confidence: high
+  - text: 文案或媒体任一即可启用 Post
+    source: interaction-spec
+    confidence: high
+competitiveInsights:
+  competitors: [Threads, Instagram, X, TikTok]
+  adopt:
+    - 文本优先 Compose
+    - 点击 + 直接进相册（无多余来源 sheet）
+    - 离开确认与草稿
+  avoid:
+    - 第一步强制选图（TikTok 式）
+  researchReport: .monkren/research/feed-publish-ux-2026-08-19/report.md
+openQuestions: []
