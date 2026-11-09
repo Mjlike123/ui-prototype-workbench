@@ -15,6 +15,7 @@ export const SYSTEM_ICON_ASSETS = {
   newMessage: "/icons/svg/icon=消息页新增.svg",
   voiceStatus: "/icons/svg/icon=语音状态.svg",
   contacts: "/icons/svg/icon=通讯录.svg",
+  person: "/icons/svg/icon=个人.svg",
   back: "/icons/svg/icon=左箭头1.svg",
   chevronRight: "/icons/svg/icon=右箭头1.svg",
   guidelines: "/icons/svg/icon=规则.svg",

@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
+import { SystemIcon, type SystemIconName } from "./system-icon";
 
 export type RegularListItemProps = {
   listType: "action" | "message";
+  surface?: "panel" | "canvas";
   title: string;
   subtitle?: string;
   leading?: ReactNode;
@@ -14,6 +16,7 @@ export type RegularListItemProps = {
 
 export function RegularListItem({
   listType,
+  surface = "panel",
   title,
   subtitle,
   leading,
@@ -30,6 +33,9 @@ export function RegularListItem({
         listType === "message"
           ? "regularListItem--message"
           : "regularListItem--action",
+        surface === "canvas"
+          ? "regularListItem--canvas"
+          : "regularListItem--panel",
         className,
       ]
         .filter(Boolean)
@@ -59,5 +65,24 @@ export function RegularListItem({
       </button>
       {trailing}
     </div>
+  );
+}
+
+export function RegularListLeadingIcon({
+  icon,
+  className,
+}: {
+  icon: SystemIconName;
+  className?: string;
+}) {
+  return (
+    <span
+      className={["regularListLeadingIcon", className]
+        .filter(Boolean)
+        .join(" ")}
+      aria-hidden="true"
+    >
+      <SystemIcon name={icon} size={24} />
+    </span>
   );
 }

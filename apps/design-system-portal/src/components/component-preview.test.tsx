@@ -637,6 +637,20 @@ describe("ComponentPreview", () => {
     expect(container.querySelector(".regularListAvatarFrame")).not.toBeNull();
   });
 
+  it("matches the compact Invite TopTop friends row composition", () => {
+    const { container } = render(
+      <ComponentPreview component={regularList} compact />,
+    );
+
+    expect(screen.getByText("Invite TopTop friends")).toBeInTheDocument();
+    expect(screen.getByText("Browse your friends")).toBeInTheDocument();
+    expect(container.querySelector(".regularListItem--canvas")).not.toBeNull();
+    expect(container.querySelector(".regularListLeadingIcon")).not.toBeNull();
+    expect(
+      container.querySelector('[data-system-icon="person"]'),
+    ).toHaveStyle({ width: "24px", height: "24px" });
+  });
+
   it("switches between 28px and 24px pill heights", () => {
     render(<ComponentPreview component={pillTab} />);
 

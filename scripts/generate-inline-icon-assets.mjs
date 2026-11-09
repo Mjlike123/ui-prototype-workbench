@@ -20,6 +20,7 @@ const SYSTEM_ICON_ASSETS = {
   newMessage: "icon=消息页新增.svg",
   voiceStatus: "icon=语音状态.svg",
   contacts: "icon=通讯录.svg",
+  person: "icon=个人.svg",
   back: "icon=左箭头1.svg",
   chevronRight: "icon=右箭头1.svg",
   guidelines: "icon=规则.svg",

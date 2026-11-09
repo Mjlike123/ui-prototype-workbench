@@ -16,6 +16,10 @@ import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { SystemIcon } from "@/components/kit/system-icon";
 import {
+  RegularListItem as KitRegularListItem,
+  RegularListLeadingIcon,
+} from "@/components/kit/regular-list-item";
+import {
   SearchControl,
   SearchControlIcon,
 } from "@/components/kit/search-control";
@@ -197,13 +201,21 @@ export function ComponentPreview({
             <ImageEmptyState theme="light" />
           </div>
         ) : isRegularList ? (
-          <div className="regularListCompact" aria-hidden="true">
-            <RegularListItem
-              type="action"
-              leading="icon"
-              trailing="chevron"
-              messageDetails="basic"
-              avatarFrame={false}
+          <div className="regularListCompact">
+            <KitRegularListItem
+              listType="action"
+              surface="canvas"
+              title="Invite TopTop friends"
+              subtitle="Browse your friends"
+              leading={<RegularListLeadingIcon icon="person" />}
+              trailing={
+                <SystemIcon
+                  name="chevronRight"
+                  size={20}
+                  className="regularListTrailingIcon"
+                />
+              }
+              onPress={() => undefined}
             />
           </div>
         ) : isSearchControl ? (
@@ -1397,14 +1409,7 @@ function RegularListItem({
         ) : (
           <>
             {leading === "icon" && (
-              <span className="regularListSystemIcon" aria-hidden="true">
-                <Image
-                  src="/icons/list/system-notification.png"
-                  alt=""
-                  width={48}
-                  height={48}
-                />
-              </span>
+              <RegularListLeadingIcon icon="person" />
             )}
             {leading === "avatar" && (
               <Image
