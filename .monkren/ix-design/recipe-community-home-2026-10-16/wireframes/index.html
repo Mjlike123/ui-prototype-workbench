@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>配方社区首页改版 · 黑底设计稿（三方案）</title>
+  <style>
+    :root {
+      --black: #000000;
+      --panel: #0a0a0c;
+      --elevated: rgba(255, 255, 255, 0.06);
+      --text: #f5f6f8;
+      --text-muted: rgba(255, 255, 255, 0.55);
+      --brand: #16d8c8;
+      --border: rgba(255, 255, 255, 0.12);
+      --radius-8: 8px;
+      --radius-12: 12px;
+      --radius-16: 16px;
+      --radius-full: 999px;
+      --font: "SF Pro Text", -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      --phone-w: 375px;
+      --phone-h: 812px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--black);
+      color: var(--text);
+      padding: 48px 32px 80px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .deck-header {
+      max-width: 1280px;
+      margin: 0 auto 32px;
+    }
+
+    .deck-header h1 {
+      font: 700 28px/34px var(--font);
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .deck-header p {
+      max-width: 720px;
+      font: 400 14px/22px var(--font);
+      color: var(--text-muted);
+    }
+
+    .legend {
+      max-width: 1280px;
+      margin: 0 auto 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font: 500 12px/16px var(--font);
+      color: var(--text-muted);
+    }
+
+    .legend span {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      background: var(--panel);
+    }
+
+    .grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      gap: 28px;
+      grid-template-columns: repeat(auto-fit, minmax(375px, 1fr));
+      justify-content: center;
+    }
+
+    .frame {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .frame-label {
+      font: 600 13px/18px var(--font);
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .phone {
+      width: var(--phone-w);
+      height: var(--phone-h);
+      overflow: hidden;
+      background: var(--black);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status {
+      height: 44px;
+      padding: 14px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      font: 600 15px/18px var(--font);
+    }
+
+    .status-dots {
+      width: 56px;
+      height: 10px;
+      margin-top: 4px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .screen {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--black);
+    }
+
+    .nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      font: 600 17px/22px var(--font);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 16px;
+      font: 600 16px/20px var(--font);
+    }
+
+    .nav-tabs .on { color: var(--brand); }
+
+    .pill {
+      display: inline-flex;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      background: var(--elevated);
+      font: 600 12px/16px var(--font);
+    }
+
+    .pill--brand {
+      background: var(--brand);
+      color: #000;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 12px;
+      overflow: hidden;
+    }
+
+    .chip {
+      flex: 0 0 auto;
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+      background: var(--elevated);
+      font: 500 13px/16px var(--font);
+      color: var(--text-muted);
+    }
+
+    .chip--on {
+      background: var(--brand);
+      color: #000;
+    }
+
+    .hero {
+      margin: 4px 16px 12px;
+      height: 180px;
+      border-radius: var(--radius-16);
+      background: linear-gradient(135deg, #2a2a32, #121218);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.75));
+    }
+
+    .hero-meta {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font: 600 16px/20px var(--font);
+    }
+
+    .hero-cta {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      background: var(--brand);
+      color: #000;
+      font: 600 12px/16px var(--font);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 16px 8px;
+      font: 600 15px/20px var(--font);
+    }
+
+    .section-head span { color: var(--brand); font: 500 14px/18px var(--font); }
+
+    .rail {
+      display: flex;
+      gap: 12px;
+      padding: 0 16px 14px;
+    }
+
+    .rail-card {
+      flex: 0 0 108px;
+    }
+
+    .rail-card .thumb {
+      width: 108px;
+      height: 108px;
+      border-radius: var(--radius-12);
+      background: linear-gradient(145deg, #3a3a44, #1a1a20);
+      margin-bottom: 6px;
+    }
+
+    .rail-card small {
+      display: block;
+      color: var(--text-muted);
+      font: 400 11px/14px var(--font);
+    }
+
+    .masonry {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 0 16px;
+    }
+
+    .m-card {
+      position: relative;
+      border-radius: var(--radius-12);
+      min-height: 160px;
+      background: linear-gradient(160deg, #35353f, #141418);
+    }
+
+    .m-card .overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 8px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,.8));
+      font: 600 12px/16px var(--font);
+    }
+
+    .list {
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-radius: var(--radius-12);
+      background: var(--elevated);
+    }
+
+    .thumb-sq {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-8);
+      background: linear-gradient(145deg, #404048, #1e1e24);
+    }
+
+    .row strong { font: 600 14px/18px var(--font); display: block; }
+    .row p { font: 400 11px/15px var(--font); color: var(--text-muted); margin-top: 4px; }
+
+    .btn-primary {
+      padding: 8px 12px;
+      border-radius: var(--radius-full);
+      background: var(--brand);
+      color: #000;
+      font: 600 12px/16px var(--font);
+      border: 0;
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 0 16px 12px;
+    }
+
+    .slot {
+      padding: 10px 6px;
+      text-align: center;
+      border-radius: var(--radius-12);
+      background: var(--elevated);
+      font: 600 11px/14px var(--font);
+    }
+
+    .slot span { display: block; color: var(--text-muted); margin-bottom: 4px; }
+
+    .param-card {
+      margin: 0 16px;
+      padding: 12px;
+      border-radius: var(--radius-12);
+      background: var(--elevated);
+    }
+
+    .param-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+
+    .param-grid div {
+      padding: 8px;
+      border-radius: var(--radius-8);
+      background: rgba(0,0,0,.35);
+    }
+
+    .param-grid dt { font: 500 10px/12px var(--font); color: var(--text-muted); }
+    .param-grid dd { font: 600 14px/18px var(--font); margin-top: 4px; }
+
+    .actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+    .btn-outline {
+      padding: 8px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font: 600 12px/16px var(--font);
+    }
+
+    .compare {
+      max-width: 1280px;
+      margin: 56px auto 0;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .compare h2 {
+      font: 700 20px/26px var(--font);
+      margin-bottom: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font: 400 12px/18px var(--font);
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    thead th { background: rgba(255,255,255,.06); font-weight: 600; }
+    tbody th { width: 72px; background: rgba(255,255,255,.04); font-weight: 600; }
+
+    @media print {
+      body { padding: 24px; background: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .phone { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="deck-header">
+    <h1>配方社区首页改版 · 黑底设计稿</h1>
+    <p>
+      三方案对照 FujiStyle / Fuji Recipes / Recipe Room。画布与机框均为纯黑 #000，品牌强调色 #16d8c8。
+      交互原型：<code>/canvas/studio/recipe-community-redesign</code>（默认深色 + 黑底舞台）。
+    </p>
+  </header>
+
+  <div class="legend">
+    <span>A · 社交灵感流</span>
+    <span>B · 工具工作台</span>
+    <span>C · 作品/配方双轨</span>
+    <span>导出：浏览器打印为 PDF，或打开 wireframes 同目录 PNG</span>
+  </div>
+
+  <div class="grid">
+    <div class="frame">
+      <p class="frame-label">方案 A · FujiStyle 灵感流</p>
+      <div class="phone" aria-label="方案 A">
+        <div class="status"><span>9:41</span><span class="status-dots"></span></div>
+        <div class="screen">
+          <div class="nav-row">
+            <div class="nav-tabs"><span class="on">配方社区</span><span>配方组</span></div>
+            <span class="pill">搜索</span>
+          </div>
+          <div class="hero">
+            <span class="hero-cta">存配方</span>
+            <div class="hero-meta"><span class="pill">Classic Neg</span><span>盛夏巴黎</span></div>
+          </div>
+          <div class="chip-row">
+            <span class="chip chip--on">热门</span>
+            <span class="chip">人像</span>
+            <span class="chip">风景</span>
+            <span class="chip">夜景</span>
+          </div>
+          <div class="section-head">热门配方组 <span>更多</span></div>
+          <div class="rail">
+            <div class="rail-card"><div class="thumb"></div><strong>山川风景</strong><small>12 配方</small></div>
+            <div class="rail-card"><div class="thumb"></div><strong>街头纪实</strong><small>8 配方</small></div>
+            <div class="rail-card"><div class="thumb"></div><strong>当前相机</strong><small>7 配方 · 已同步</small></div>
+          </div>
+          <div class="masonry">
+            <div class="m-card"><div class="overlay">Classic Neg<br>盛夏巴黎</div></div>
+            <div class="m-card" style="min-height:130px"><div class="overlay">CC 人像</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="frame">
+      <p class="frame-label">方案 B · Fuji Recipes 工作台</p>
+      <div class="phone" aria-label="方案 B">
+        <div class="status"><span>9:41</span><span class="status-dots"></span></div>
+        <div class="screen">
+          <div class="nav-row">
+            <span class="pill pill--brand">● X100VI · 已连接</span>
+            <span class="pill" style="border:1px solid var(--brand);color:var(--brand)">已同步 12</span>
+          </div>
+          <div style="padding:0 16px 8px"><span class="pill" style="width:100%;justify-content:center">搜索胶片模拟、作者</span></div>
+          <div class="chip-row">
+            <span class="chip chip--on">全部</span>
+            <span class="chip">X-Trans V</span>
+            <span class="chip">Classic Neg</span>
+            <span class="chip">人像</span>
+          </div>
+          <div class="section-head">我的相机槽位 <span>编辑</span></div>
+          <div class="slots">
+            <div class="slot"><span>C1</span>Classic Neg</div>
+            <div class="slot"><span>C2</span>空</div>
+            <div class="slot"><span>C3</span>CC 人像</div>
+          </div>
+          <div class="list">
+            <div class="row">
+              <div class="thumb-sq"></div>
+              <div><strong>Classic Neg</strong><p>DR400 · 颗粒弱 · X100VI</p></div>
+              <button type="button" class="btn-primary">写入</button>
+            </div>
+            <div class="row">
+              <div class="thumb-sq"></div>
+              <div><strong>Classic Chrome</strong><p>DR200 · 阴天 · X-T5</p></div>
+              <button type="button" class="btn-primary">写入</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="frame">
+      <p class="frame-label">方案 C · Recipe Room 双轨</p>
+      <div class="phone" aria-label="方案 C">
+        <div class="status"><span>9:41</span><span class="status-dots"></span></div>
+        <div class="screen">
+          <div class="nav-row"><strong>发现</strong><span class="pill">搜索</span></div>
+          <div class="chip-row">
+            <span class="chip">作品 Post</span>
+            <span class="chip chip--on">配方 Recipe</span>
+          </div>
+          <div class="chip-row">
+            <span class="chip chip--on">胶片模拟</span>
+            <span class="chip">X100VI</span>
+            <span class="chip">复古</span>
+          </div>
+          <div class="list" style="margin-top:8px">
+            <div class="param-card">
+              <div class="section-head" style="padding:0 0 8px">盛夏巴黎 · 街头 <span class="pill">Classic Neg</span></div>
+              <dl class="param-grid">
+                <div><dt>动态范围</dt><dd>DR400</dd></div>
+                <div><dt>颗粒</dt><dd>弱</dd></div>
+                <div><dt>色彩</dt><dd>+2</dd></div>
+                <div><dt>机型</dt><dd>X100VI</dd></div>
+              </dl>
+              <div class="actions">
+                <button type="button" class="btn-outline">对比</button>
+                <button type="button" class="btn-primary">应用配方</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="compare" aria-labelledby="compare-title">
+    <h2 id="compare-title">首页模块对照表</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>模块</th>
+          <th>A FujiStyle</th>
+          <th>B Fuji Recipes</th>
+          <th>C Recipe Room</th>
+          <th>改版清单</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>顶栏</th>
+          <td>社区 Tab + 搜索</td>
+          <td>连接态 + 同步</td>
+          <td>发现 + Post/Recipe</td>
+          <td>P0 单一导航</td>
+        </tr>
+        <tr>
+          <th>筛选</th>
+          <td>场景 chip + Hero</td>
+          <td>传感器/模拟/场景</td>
+          <td>分段筛选</td>
+          <td>P0 去重</td>
+        </tr>
+        <tr>
+          <th>卡片</th>
+          <td>大图 + 作者 + 模拟角标</td>
+          <td>参数一行 + 机型</td>
+          <td>参数表 / 作品格</td>
+          <td>P0 可读参数</td>
+        </tr>
+        <tr>
+          <th>主 CTA</th>
+          <td>存配方</td>
+          <td>写入相机</td>
+          <td>应用配方</td>
+          <td>P0 写机闭环</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>

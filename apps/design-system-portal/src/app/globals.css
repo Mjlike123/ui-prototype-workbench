@@ -3741,6 +3741,957 @@ kbd {
   border-color: var(--color-border-image);
 }
 
+.kitTextButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: "SF Pro", var(--font-sans);
+  font-weight: 400;
+  line-height: normal;
+}
+
+.kitTextButton--size16 {
+  font-size: 16px;
+}
+
+.kitTextButton--size14 {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.kitTextButton--size12 {
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.kitTextButton--brand.kitTextButton--body:not(:disabled) {
+  color: var(--color-brand-primary);
+}
+
+.kitTextButton--brand.kitTextButton--secondary:not(:disabled) {
+  color: var(--color-brand-primary);
+}
+
+.kitTextButton--neutral.kitTextButton--body:not(:disabled) {
+  color: var(--color-text-primary);
+}
+
+.kitTextButton--neutral.kitTextButton--secondary:not(:disabled) {
+  color: var(--color-text-secondary);
+}
+
+.kitTextButton--disabled,
+.kitTextButton:disabled {
+  cursor: not-allowed;
+}
+
+.kitTextButton--brand.kitTextButton--disabled,
+.kitTextButton--brand:disabled {
+  color: var(--color-brand-primary-a50);
+}
+
+.kitTextButton--neutral.kitTextButton--disabled,
+.kitTextButton--neutral:disabled {
+  color: var(--color-text-secondary);
+}
+
+.kitTextButton:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.kitTextButtonIcon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+.kitTextButton--size12 .kitTextButtonIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.kitTextButton--size16 .kitTextButtonIcon,
+.kitTextButton--size14 .kitTextButtonIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.kitTextButton .systemIcon {
+  color: currentColor;
+}
+
+.kitTextButtonChevron {
+  display: block;
+  flex: 0 0 auto;
+  background: currentColor;
+  mask: url("/icons/svg/icon=右箭头2.svg") center / contain no-repeat;
+}
+
+.kitTextButton--size12 .kitTextButtonChevron {
+  width: 14px;
+  height: 14px;
+}
+
+.kitTextButton--size16 .kitTextButtonChevron,
+.kitTextButton--size14 .kitTextButtonChevron {
+  width: 20px;
+  height: 20px;
+}
+
+.textButtonKitStage {
+  display: grid;
+  gap: 28px;
+}
+
+.textButtonKitMatrix {
+  display: grid;
+  gap: 12px;
+}
+
+.textButtonKitMatrixGroup {
+  display: grid;
+  gap: 8px;
+}
+
+.textButtonKitMatrixGroup > strong {
+  font: 590 13px/18px "SF Pro", var(--font-sans);
+  color: var(--color-text-secondary);
+}
+
+.textButtonKitMatrixRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.textButtonKitMatrixCase {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+
+.textButtonKitMatrixCase p {
+  margin: 0;
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+  color: var(--color-text-tertiary);
+}
+
+.textButtonKitCompact {
+  display: inline-flex;
+}
+
+.kitSelectorButton {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  margin: 0;
+  appearance: none;
+  place-items: center;
+  color: var(--color-text-white-primary);
+  background: var(--color-surface-panel);
+  border: 1.5px solid var(--color-border-image);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background-color 100ms ease,
+    border-color 100ms ease,
+    opacity 100ms ease;
+}
+
+.kitSelectorButton::after {
+  width: 6px;
+  height: 10px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  content: "";
+  opacity: 0;
+  transform: translateY(-1px) rotate(45deg) scale(0.8);
+}
+
+.kitSelectorButton:checked {
+  background: var(--color-brand-primary);
+  border-color: var(--color-brand-primary);
+}
+
+.kitSelectorButton:checked::after {
+  opacity: 1;
+}
+
+.kitSelectorButton--compact {
+  width: 24px;
+  height: 24px;
+  border-width: 3px;
+}
+
+.kitSelectorButton:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.kitSelectorButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.kitActionPanelOverlay {
+  position: absolute;
+  z-index: 20;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.kitActionPanelOverlay--exit {
+  pointer-events: none;
+}
+
+.kitActionPanelBackdrop {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  background: rgb(0 0 0 / 50%);
+  border: 0;
+  cursor: pointer;
+  animation: kitActionPanelBackdropIn 250ms var(--motion-easing-standard) both;
+}
+
+.kitActionPanelBackdrop--static {
+  cursor: default;
+}
+
+.kitActionPanelBackdrop--exit {
+  animation: kitActionPanelBackdropOut var(--motion-duration-standard)
+    var(--motion-easing-standard) both;
+}
+
+.kitActionPanelDock {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 430px);
+  max-height: calc(100% - 16px);
+  animation: kitActionPanelDockIn 250ms var(--motion-easing-standard) both;
+  will-change: transform;
+}
+
+.kitActionPanelDock--exit {
+  animation: kitActionPanelDockOut var(--motion-duration-standard)
+    var(--motion-easing-standard) both;
+}
+
+.kitActionPanel {
+  display: flex;
+  width: 100%;
+  max-height: inherit;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+  border-radius: var(--radius-16) var(--radius-16) 0 0;
+}
+
+.kitActionPanelDescription {
+  display: flex;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 16px 0;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.kitActionPanelToolbar {
+  display: grid;
+  min-height: 44px;
+  flex: 0 0 44px;
+  align-items: center;
+  grid-template-columns: minmax(44px, 80px) 1fr minmax(44px, 80px);
+}
+
+.kitActionPanelToolbarBack,
+.kitActionPanelToolbarConfirm {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.kitActionPanelToolbarBack {
+  display: grid;
+  place-items: center;
+  justify-self: start;
+  color: var(--color-text-primary);
+}
+
+.kitActionPanelToolbarBack .systemIcon {
+  --system-icon-color: currentColor;
+}
+
+.kitActionPanelToolbarTitle {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--color-text-primary);
+  font: 590 16px/20px "SF Pro", var(--font-sans);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kitActionPanelToolbarConfirm {
+  padding: 0 16px;
+  justify-self: end;
+  color: var(--color-brand-primary);
+  font: 590 16px/20px "SF Pro", var(--font-sans);
+}
+
+.kitActionPanelToolbarSpacer {
+  width: 44px;
+  height: 44px;
+}
+
+.kitActionPanelList {
+  min-height: 0;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.kitActionPanelList::-webkit-scrollbar {
+  display: none;
+}
+
+.kitActionPanelItem,
+.kitActionPanelCancel {
+  display: flex;
+  width: 100%;
+  min-height: 64px;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+  border: 0;
+  cursor: pointer;
+  font: 400 16px/20px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.kitActionPanelItem {
+  border-bottom: 0.5px solid var(--color-border-subtle);
+}
+
+.kitActionPanelItem--emphasis {
+  color: var(--color-brand-primary);
+  font-weight: 590;
+}
+
+.kitActionPanelItem--destructive {
+  color: var(--color-state-like);
+}
+
+.kitActionPanelItem:disabled {
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.kitActionPanelEmpty {
+  display: grid;
+  min-height: 64px;
+  margin: 0;
+  padding: 0 16px;
+  place-items: center;
+  color: var(--color-text-tertiary);
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+}
+
+.kitActionPanelFooter {
+  flex: 0 0 auto;
+}
+
+.kitActionPanelSectionGap {
+  height: 4px;
+  background: var(--color-button-primary);
+}
+
+.kitActionPanelCancel {
+  color: var(--color-text-secondary);
+}
+
+.kitActionPanelSwitchRow {
+  display: flex;
+  min-height: 64px;
+  padding: 11px 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 0.5px solid var(--color-border-subtle);
+}
+
+.kitActionPanelSwitchCopy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kitActionPanelSwitchCopy strong {
+  color: var(--color-text-primary);
+  font: 400 16px/20px "SF Pro", var(--font-sans);
+}
+
+.kitActionPanelSwitchCopy span {
+  color: var(--color-text-secondary);
+  font: 400 14px/18px "SF Pro", var(--font-sans);
+}
+
+.kitActionPanelHomeIndicator {
+  display: grid;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: end center;
+  padding-bottom: 8px;
+}
+
+.kitActionPanelHomeIndicator span {
+  display: block;
+  width: min(134px, 36%);
+  height: 5px;
+  background: var(--color-text-primary);
+  border-radius: var(--radius-full);
+}
+
+.actionPanelKitStage {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-height: 420px;
+  overflow: hidden;
+  place-items: center;
+  background: var(--color-surface-canvas);
+}
+
+.actionPanelKitTrigger {
+  position: relative;
+  z-index: 1;
+}
+
+.actionPanelKitCompact {
+  width: min(100%, 375px);
+}
+
+.previewDeviceActionPanel {
+  width: min(100%, 375px);
+}
+
+@keyframes kitActionPanelDockIn {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes kitActionPanelDockOut {
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes kitActionPanelBackdropIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes kitActionPanelBackdropOut {
+  to {
+    opacity: 0;
+  }
+}
+
+.kitInRoomNotification {
+  display: flex;
+  width: min(343px, 100%);
+  min-height: 80px;
+  padding: 16px;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--radius-12);
+}
+
+.kitInRoomNotification--light {
+  color: var(--color-text-primary);
+  background: color-mix(
+    in srgb,
+    var(--color-surface-panel) 90%,
+    transparent
+  );
+  border: 0.5px solid var(--color-border-subtle);
+  box-shadow: 0 8px 12.5px rgb(0 0 0 / 10%);
+}
+
+.kitInRoomNotification--dark {
+  color: var(--color-text-white-primary);
+  background: color-mix(
+    in srgb,
+    var(--color-text-primary) 80%,
+    transparent
+  );
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+  backdrop-filter: blur(10px);
+}
+
+.kitInRoomNotificationAvatar {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+}
+
+.kitInRoomNotificationAvatar .avatarVisual,
+.kitInRoomNotificationAvatar .avatarVisualImage {
+  width: 48px;
+  height: 48px;
+}
+
+.kitInRoomNotificationContent {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kitInRoomNotificationTitle,
+.kitInRoomNotificationDescription,
+.kitInRoomNotificationMessage {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kitInRoomNotificationTitle {
+  color: var(--color-text-primary);
+  font: 400 16px/22px "SF Pro", var(--font-sans);
+  white-space: nowrap;
+}
+
+.kitInRoomNotification--dark .kitInRoomNotificationTitle {
+  color: var(--color-text-white-primary);
+}
+
+.kitInRoomNotificationDescription,
+.kitInRoomNotificationMessage {
+  display: -webkit-box;
+  color: var(--color-text-secondary);
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.kitInRoomNotification--compact .kitInRoomNotificationMessage {
+  -webkit-line-clamp: 1;
+}
+
+.kitInRoomNotificationButton {
+  min-width: 64px;
+  flex: 0 0 auto;
+}
+
+.kitInRoomNotificationLink {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  color: var(--color-brand-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+}
+
+.kitInRoomNotificationLinkIcon {
+  --system-icon-color: currentColor;
+}
+
+.inRoomNotificationKitStage {
+  width: 100%;
+  padding: 24px 0;
+  background: var(--color-surface-canvas);
+}
+
+.inRoomNotificationKitPhoneShell {
+  display: grid;
+  gap: 16px;
+}
+
+.inRoomNotificationKitMatrixCell {
+  display: grid;
+  min-height: 128px;
+  padding: 16px;
+  place-items: center;
+  border-radius: var(--radius-16);
+}
+
+.inRoomNotificationKitMatrixCell--light {
+  background: var(--color-surface-canvas);
+}
+
+.inRoomNotificationKitMatrixCell--dark {
+  background: var(--color-text-primary);
+}
+
+.inRoomNotificationKitCompact {
+  display: grid;
+  width: min(100%, 343px);
+  place-items: center;
+}
+
+.previewDeviceInRoomNotification {
+  width: min(100%, 375px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kitActionPanelDock {
+    animation-name: kitActionPanelBackdropIn;
+    animation-duration: var(--motion-duration-standard);
+    will-change: opacity;
+  }
+
+  .kitActionPanelDock--exit {
+    animation-name: kitActionPanelBackdropOut;
+  }
+}
+
+.kitCenterDialogOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  padding: 16px;
+  place-items: center;
+}
+
+.kitCenterDialogBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 45%);
+  border: 0;
+  animation: kitCenterDialogBackdropIn var(--motion-duration-standard) ease both;
+}
+
+.kitCenterDialogBackdrop--exit {
+  animation: kitCenterDialogBackdropOut var(--motion-duration-emphasized) ease both;
+}
+
+.kitCenterDialog {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: min(300px, calc(100% - 32px));
+  max-height: calc(100% - 64px);
+  overflow: hidden;
+  flex-direction: column;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+  border-radius: 16px;
+  box-shadow: 0 16px 44px rgb(0 0 0 / 18%);
+  animation: kitCenterDialogIn var(--motion-duration-standard) var(--motion-easing-standard) both;
+}
+
+.kitCenterDialog--exit {
+  animation: kitCenterDialogOut var(--motion-duration-emphasized) var(--motion-easing-standard) both;
+}
+
+.kitCenterDialogTextRegion {
+  display: flex;
+  min-height: 0;
+  overflow-y: auto;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 24px 0;
+  text-align: center;
+}
+
+.kitCenterDialogTitle {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: 590 18px/24px "SF Pro", var(--font-sans);
+}
+
+.kitCenterDialogDescription {
+  margin: 8px 0 0;
+  color: var(--color-text-secondary);
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+}
+
+.kitCenterDialogIllustration {
+  display: grid;
+  width: 100px;
+  height: 100px;
+  margin-top: 16px;
+  overflow: hidden;
+  place-items: center;
+}
+
+.kitCenterDialogActionRegion {
+  padding: 16px 20px 20px;
+}
+
+.kitCenterDialogReminder {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--color-text-secondary);
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+}
+
+.kitCenterDialogActions {
+  display: flex;
+  gap: 16px;
+}
+
+.kitCenterDialogActions .kitButton {
+  min-width: 0;
+  flex: 1;
+}
+
+.kitCenterDialogActions--vertical {
+  flex-direction: column;
+}
+
+.kitCenterDialogActions--single .kitButton {
+  width: 100%;
+}
+
+.kitCenterDialogAction--destructive {
+  color: var(--color-state-like);
+}
+
+.kitToast {
+  display: inline-flex;
+  max-width: 200px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--color-text-white-primary);
+  background: var(--color-toast-background);
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
+}
+
+.kitToast--text {
+  min-height: 40px;
+  padding: 10px 16px;
+}
+
+.kitToast--status {
+  min-height: 100px;
+  flex-direction: column;
+  padding: 16px;
+  gap: 10px;
+}
+
+.kitToast--status.kitToast--long {
+  width: 200px;
+  min-height: 112px;
+}
+
+.kitToast--interactive {
+  cursor: pointer;
+}
+
+.kitToastMessage {
+  margin: 0;
+  color: inherit;
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.kitToast--short .kitToastMessage {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kitToast--long .kitToastMessage {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.kitToastStatusIcon,
+.kitToastChevron {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: inherit;
+}
+
+.kitToastStatusIcon--loading {
+  animation: feedComposeSpin 0.8s linear infinite;
+}
+
+.kitPublishStatusNotification {
+  position: relative;
+  width: min(343px, calc(100% - 32px));
+  height: 56px;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  background: var(--color-surface-panel);
+  border: 0.5px solid var(--color-border-subtle);
+  border-radius: 12px;
+  box-shadow: 0 8px 12.5px rgb(0 0 0 / 10%);
+}
+
+.kitPublishStatusNotificationBody {
+  display: flex;
+  height: 54px;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+}
+
+.kitPublishStatusNotificationThumb {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  flex: 0 0 32px;
+  place-items: center;
+  color: var(--color-text-tertiary);
+  background: var(--color-surface-canvas);
+  border: 0.5px solid var(--color-border-image);
+  border-radius: 4px;
+}
+
+.kitPublishStatusNotificationThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kitPublishStatusNotificationThumbCaption {
+  display: block;
+  width: 24px;
+  overflow: hidden;
+  font: 400 8px/10px "SF Pro", var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kitPublishStatusNotificationMessage {
+  min-width: 0;
+  overflow: hidden;
+  flex: 1;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font: 400 15px/20px "SF Pro", var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kitPublishStatusNotification--failed .kitPublishStatusNotificationMessage {
+  color: var(--color-state-like);
+}
+
+.kitPublishStatusNotificationActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kitPublishStatusNotificationAction {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.kitPublishStatusNotificationAction:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: -2px;
+}
+
+.kitPublishStatusNotificationProgress {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  overflow: hidden;
+  background: var(--color-brand-primary-a10);
+}
+
+.kitPublishStatusNotificationProgressFill {
+  display: block;
+  height: 100%;
+  background: var(--color-brand-primary);
+  transition: width var(--motion-duration-standard) linear;
+}
+
+.kitPublishStatusNotification--failed .kitPublishStatusNotificationProgressFill {
+  background: var(--color-state-like);
+}
+
+@keyframes kitCenterDialogIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes kitCenterDialogOut {
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes kitCenterDialogBackdropIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes kitCenterDialogBackdropOut {
+  to {
+    opacity: 0;
+  }
+}
+
 .buttonKitStage > p {
   margin: 0;
   color: var(--ink-500);
@@ -3982,7 +4933,7 @@ kbd {
   overflow: hidden;
   padding: 0 16px;
   color: var(--color-text-primary);
-  background: var(--color-surface-panel);
+  background: var(--color-surface-canvas);
 }
 
 .regularNavigation--leading-back,
@@ -8938,7 +9889,6 @@ kbd {
   background: var(--color-surface-canvas);
 }
 
-.prototypeRuntimePage--dark .regularNavigation,
 .prototypeRuntimePage--dark .bottomNavigationLight {
   color: var(--color-text-primary);
   background: var(--color-surface-panel);
@@ -9290,25 +10240,37 @@ kbd {
 
 .topTopSectionHeader {
   display: flex;
-  height: 40px;
+  min-height: 44px;
   align-items: center;
   justify-content: space-between;
 }
 
 .topTopPrivateRoomButton {
   display: flex;
-  height: 28px;
-  padding: 4px 8px 4px 10px !important;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 !important;
   align-items: center;
-  gap: 4px;
+  justify-content: flex-end;
   color: var(--color-text-primary);
-  font: 400 12px/16px "SF Pro", var(--font-sans);
-  background: var(--color-button-secondary);
-  border-radius: 30px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 }
 
-.topTopPrivateRoomButton span {
-  font-size: 18px;
+.topTopPrivateRoomPill {
+  display: inline-flex;
+  min-height: 28px;
+  padding: 4px 8px 4px 10px;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-button-secondary);
+  border-radius: var(--radius-full);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.topTopPrivateRoomPill .systemIcon {
+  --system-icon-color: currentColor;
 }
 
 .topTopGameGrid {
@@ -9337,6 +10299,197 @@ kbd {
   height: 100% !important;
   max-width: none;
   object-fit: contain;
+}
+
+.prototypePrivateRoomOverlay {
+  position: absolute;
+  z-index: 50;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.prototypePrivateRoomOverlay--exit {
+  pointer-events: none;
+}
+
+.prototypePrivateRoomBackdrop {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  background: rgb(0 0 0 / 50%);
+  border: 0;
+  cursor: pointer;
+  animation: prototypePrivateRoomBackdropIn var(--motion-duration-standard)
+    var(--motion-easing-standard) both;
+}
+
+.prototypePrivateRoomOverlay--exit .prototypePrivateRoomBackdrop {
+  animation-name: prototypePrivateRoomBackdropOut;
+}
+
+.prototypePrivateRoomSheet {
+  position: relative;
+  z-index: 1;
+  --color-text-primary: var(--ink);
+  --color-text-secondary: var(--ink-secondary);
+  --color-button-secondary: rgb(24 25 35 / 4%);
+  display: flex;
+  width: min(100%, 430px);
+  max-height: min(72%, 560px);
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--color-text-primary);
+  color-scheme: light;
+  background: var(--color-surface-panel);
+  border-radius: var(--radius-16) var(--radius-16) 0 0;
+  box-shadow: 0 -12px 36px rgb(24 25 35 / 16%);
+  animation: prototypePrivateRoomSheetIn var(--motion-duration-standard)
+    var(--motion-easing-standard) both;
+  will-change: transform;
+}
+
+.prototypePrivateRoomOverlay--exit .prototypePrivateRoomSheet {
+  animation-name: prototypePrivateRoomSheetOut;
+}
+
+.prototypePrivateRoomNavigation {
+  flex: 0 0 auto;
+  background: var(--color-surface-panel);
+}
+
+.prototypePrivateRoomGameGrid {
+  display: grid;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 16px 16px;
+  justify-content: center;
+  grid-template-columns: repeat(3, minmax(0, 109px));
+  gap: 8px;
+  scrollbar-width: none;
+}
+
+.prototypePrivateRoomGameGrid::-webkit-scrollbar {
+  display: none;
+}
+
+.prototypePrivateRoomGame {
+  position: relative;
+  display: block;
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.prototypePrivateRoomGameArtwork {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 109 / 150;
+  background: var(--color-surface-canvas);
+  border: 2px solid transparent;
+  border-radius: 16px;
+}
+
+.prototypePrivateRoomGameArtwork img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.prototypePrivateRoomGame--selected .prototypePrivateRoomGameArtwork {
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--color-brand-primary) 18%, transparent);
+}
+
+.prototypePrivateRoomGameCheck {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: var(--color-text-white-primary);
+  background: var(--color-brand-primary);
+  border: 2px solid var(--color-surface-panel);
+  border-radius: 50%;
+  font: 700 13px/1 "SF Pro", var(--font-sans);
+}
+
+.prototypePrivateRoomGame:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.prototypePrivateRoomFooter {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 12px 16px;
+  background: var(--color-surface-panel);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.prototypePrivateRoomFooter .kitButton {
+  width: 100%;
+}
+
+.prototypePrivateRoomHomeArea {
+  display: grid;
+  height: 21px;
+  flex: 0 0 21px;
+  place-items: end center;
+  background: var(--color-surface-panel);
+}
+
+.topTopHomeToast {
+  position: absolute;
+  z-index: 60;
+  left: 50%;
+  bottom: 96px;
+  transform: translateX(-50%);
+}
+
+@keyframes prototypePrivateRoomSheetIn {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes prototypePrivateRoomSheetOut {
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes prototypePrivateRoomBackdropIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes prototypePrivateRoomBackdropOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prototypePrivateRoomSheet {
+    animation-name: prototypePrivateRoomBackdropIn;
+    will-change: opacity;
+  }
+
+  .prototypePrivateRoomOverlay--exit .prototypePrivateRoomSheet {
+    animation-name: prototypePrivateRoomBackdropOut;
+  }
 }
 
 .topTopFindSection {
@@ -12733,6 +13886,9 @@ div.chatBubbleRelationship {
 .meSecondaryDevice > .iosStatusBar,
 .meSecondaryDevice .regularNavigation {
   flex: 0 0 auto;
+}
+
+.meSecondaryDevice > .iosStatusBar {
   background: var(--color-surface-panel);
 }
 
@@ -12992,6 +14148,9 @@ div.chatBubbleRelationship {
 .walletPrototypeDevice > .iosStatusBar,
 .walletPrototypeDevice .regularNavigation {
   flex: 0 0 auto;
+}
+
+.walletPrototypeDevice > .iosStatusBar {
   background: var(--color-surface-panel);
 }
 
@@ -13156,6 +14315,50 @@ div.chatBubbleRelationship {
   align-items: start;
 }
 
+.feedComposeEditor--singleColumn {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.feedComposeCaptionField {
+  position: relative;
+  min-height: 120px;
+}
+
+.feedComposeCaptionMirror {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  color: var(--color-text-primary);
+  font: 400 16px/22px "SF Pro", var(--font-sans);
+  overflow-wrap: anywhere;
+  pointer-events: none;
+  white-space: pre-wrap;
+}
+
+.feedComposeCaptionPlaceholder {
+  color: var(--color-text-tertiary);
+}
+
+.feedComposeHashtag {
+  color: var(--color-brand-primary);
+}
+
+.feedComposeEditor--singleColumn .feedComposeInput {
+  position: relative;
+  z-index: 1;
+  color: transparent;
+  caret-color: var(--color-text-primary);
+}
+
+.feedComposeEditor--singleColumn .feedComposeInput::placeholder {
+  color: transparent;
+}
+
+.feedComposeEditor--singleColumn .feedComposeMediaGrid {
+  padding: 0;
+}
+
 .feedComposeInput {
   width: 100%;
   min-height: 120px;
@@ -13258,7 +14461,7 @@ div.chatBubbleRelationship {
   gap: 8px;
 }
 
-.feedComposeAudienceOption {
+button.feedComposeAudienceOption {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13272,6 +14475,16 @@ div.chatBubbleRelationship {
 }
 
 .feedComposeAudienceOption--selected {
+  border-color: var(--color-brand-primary);
+}
+
+.regularListItem.feedComposeAudienceOption {
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 12px;
+}
+
+.regularListItem.feedComposeAudienceOption--selected {
   border-color: var(--color-brand-primary);
 }
 
@@ -13295,59 +14508,6 @@ div.chatBubbleRelationship {
 .feedComposeAudienceOptionMark {
   color: var(--color-brand-primary);
   font: 700 16px/1 "SF Pro", var(--font-sans);
-}
-
-.feedComposeAudienceOptions .feedComposeAudienceOption.regularListItem {
-  padding: 0;
-  background: var(--color-surface-subtle, rgba(24, 25, 35, 0.04));
-}
-
-.feedComposeAudienceOptions .feedComposeAudienceOption .regularListMain {
-  flex: 1;
-  padding: 12px;
-  background: transparent;
-  border: 0;
-  text-align: left;
-}
-
-.feedComposeAudienceOptions .feedComposeAudienceOption .regularListSubtitle {
-  color: var(--color-text-tertiary);
-  font: 400 12px/16px "SF Pro", var(--font-sans);
-}
-
-.feedComposeLeaveActions .kitButton {
-  width: 100%;
-}
-
-.feedComposeLeaveActions .feedComposeLeaveActions--danger.kitButton {
-  color: var(--color-state-like, #ff2e60);
-  border-color: var(--color-state-like, #ff2e60);
-}
-
-.feedComposeLeaveSheet {
-  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-}
-
-.feedComposeLeaveActions {
-  display: flex;
-  flex-direction: column;
-  padding: 0 16px 8px;
-  gap: 8px;
-}
-
-.feedComposeLeaveActions button {
-  width: 100%;
-  padding: 12px 16px;
-  color: var(--color-text-primary);
-  background: var(--color-surface-subtle, rgba(24, 25, 35, 0.04));
-  border: 0;
-  border-radius: 12px;
-  cursor: pointer;
-  font: 590 15px/20px "SF Pro", var(--font-sans);
-}
-
-.feedComposeLeaveActions--danger {
-  color: var(--color-state-like, #ff2e60) !important;
 }
 
 .feedComposePublishError {
@@ -13486,6 +14646,379 @@ div.chatBubbleRelationship {
 
 .feedComposeCounter--warn {
   color: var(--color-state-like, #ff2e60);
+}
+
+.feedComposeTopicRow {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  padding: 4px 16px;
+  gap: 8px;
+  overflow-x: auto;
+  flex: 0 0 auto;
+  border-top: 1px solid var(--color-border-subtle);
+  scrollbar-width: none;
+}
+
+.feedComposeTopicRow::-webkit-scrollbar {
+  display: none;
+}
+
+.feedComposeTopicSuggestions {
+  display: flex;
+  gap: 8px;
+}
+
+.feedComposeTopicChip {
+  display: inline-flex;
+  min-width: max-content;
+  min-height: 44px;
+  align-items: center;
+  padding: 0 12px;
+  gap: 4px;
+  color: var(--color-text-secondary);
+  background: var(--color-button-secondary);
+  border: 0;
+  border-radius: 22px;
+  cursor: pointer;
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.feedComposeTopicChip--add {
+  color: var(--color-brand-primary);
+  background: var(--color-brand-primary-a10);
+}
+
+.feedComposeTopicChip .systemIcon {
+  --system-icon-color: currentColor;
+}
+
+.feedComposeDock {
+  display: flex;
+  min-height: 60px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  gap: 8px;
+  flex: 0 0 auto;
+  background: var(--color-surface-panel);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.feedComposeDockTools,
+.feedComposeDockPills {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.feedComposeDockIconBtn {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  border-radius: 22px;
+  cursor: pointer;
+}
+
+.feedComposeDockIconBtn .systemIcon {
+  --system-icon-color: currentColor;
+}
+
+.feedComposeLocalPill,
+.feedComposeVisibilityPill {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  color: var(--color-text-secondary);
+  background: var(--color-button-secondary);
+  border: 0;
+  border-radius: 22px;
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.feedComposeVisibilityPill {
+  max-width: 132px;
+  cursor: pointer;
+}
+
+.feedComposeVisibilityPill span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feedComposeLocalPill .kitSelectorButton {
+  flex: 0 0 24px;
+}
+
+.feedComposeVisibilityPill .systemIcon {
+  --system-icon-color: currentColor;
+  flex: 0 0 auto;
+}
+
+.feedComposeHomeArea {
+  display: grid;
+  height: 21px;
+  flex: 0 0 21px;
+  place-items: end center;
+  background: var(--color-surface-panel);
+}
+
+.feedComposePhotoPickerOverlay {
+  position: absolute;
+  z-index: 20;
+  inset: 0;
+  overflow: hidden;
+}
+
+.feedComposePhotoPickerOverlay--exit {
+  pointer-events: none;
+}
+
+.feedComposePhotoPickerBackdrop {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border: 0;
+  animation: feedComposePhotoPickerBackdropIn var(--motion-duration-emphasized)
+    var(--motion-easing-standard) both;
+}
+
+.feedComposePhotoPickerOverlay--exit .feedComposePhotoPickerBackdrop {
+  animation-name: feedComposePhotoPickerBackdropOut;
+}
+
+.feedComposePhotoPickerPage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+  animation: feedComposePhotoPickerPageIn var(--motion-duration-emphasized)
+    var(--motion-easing-standard) both;
+  will-change: transform;
+}
+
+.feedComposePhotoPickerOverlay--exit .feedComposePhotoPickerPage {
+  animation-name: feedComposePhotoPickerPageOut;
+}
+
+.feedComposePhotoPickerPage > .iosStatusBar,
+.feedComposePhotoPickerNavigation {
+  flex: 0 0 auto;
+  background: var(--color-surface-panel);
+}
+
+.feedComposePhotoPickerNavigation {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.feedComposePhotoPickerAlbum {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.feedComposePhotoPickerAlbum .systemIcon {
+  --system-icon-color: currentColor;
+}
+
+.feedComposePhotoPickerGrid {
+  display: grid;
+  min-height: 0;
+  flex: 1 1 auto;
+  align-content: start;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px;
+  scrollbar-width: none;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.feedComposePhotoPickerGrid::-webkit-scrollbar {
+  display: none;
+}
+
+.feedComposePhotoPickerCell {
+  position: relative;
+  display: block;
+  min-width: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  background: var(--color-surface-canvas);
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.feedComposePhotoPickerCell img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feedComposePhotoPickerCell:focus-visible {
+  z-index: 2;
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: -2px;
+}
+
+.feedComposePhotoPickerCell:disabled {
+  cursor: not-allowed;
+}
+
+.feedComposePhotoPickerCell--attached img {
+  opacity: 0.45;
+}
+
+.feedComposePhotoPickerScrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(24, 25, 35, 0.16);
+  border: 3px solid var(--color-brand-primary);
+  pointer-events: none;
+}
+
+.feedComposePhotoPickerBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  background: rgba(24, 25, 35, 0.18);
+  border: 2px solid var(--color-text-white-primary);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(24, 25, 35, 0.22);
+}
+
+.feedComposePhotoPickerBadge--selected {
+  background: var(--color-brand-primary);
+  border-color: var(--color-brand-primary);
+}
+
+.feedComposePhotoPickerBadge--selected::after {
+  width: 8px;
+  height: 4px;
+  content: "";
+  border-bottom: 2px solid var(--color-text-white-primary);
+  border-left: 2px solid var(--color-text-white-primary);
+  transform: translateY(-1px) rotate(-45deg);
+}
+
+.feedComposePhotoPickerAttached {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 3px 6px;
+  color: var(--color-text-white-primary);
+  background: rgba(24, 25, 35, 0.68);
+  border-radius: var(--radius-full);
+  font: 590 10px/14px "SF Pro", var(--font-sans);
+}
+
+.feedComposePhotoPickerFooter {
+  display: flex;
+  min-height: 56px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: var(--color-surface-panel);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.feedComposePhotoPickerPreview {
+  min-width: 72px;
+  min-height: 44px;
+  padding: 0;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: 590 14px/20px "SF Pro", var(--font-sans);
+  text-align: left;
+}
+
+.feedComposePhotoPickerPreview:disabled {
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.feedComposePhotoPickerFooter .kitButton {
+  min-width: 88px;
+}
+
+@keyframes feedComposePhotoPickerPageIn {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes feedComposePhotoPickerPageOut {
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes feedComposePhotoPickerBackdropIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes feedComposePhotoPickerBackdropOut {
+  to {
+    opacity: 0;
+  }
+}
+
+.feedComposeToast {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  bottom: 88px;
+  transform: translateX(-50%);
+}
+
+.feedComposePublishStatusAnchor {
+  position: absolute;
+  z-index: 12;
+  top: 52px;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.feedComposePublishStatusAnchor .kitPublishStatusNotification {
+  pointer-events: auto;
 }
 
 /* Studio-only compose shell — inner layout reuses shared .feedCompose* Kit blocks */
@@ -15383,12 +16916,22 @@ div.chatBubbleRelationship {
   justify-content: flex-end;
 }
 
+.feedComposeOverlay--exit {
+  pointer-events: none;
+}
+
 .feedComposeOverlayBackdrop {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.35);
   border: 0;
   cursor: pointer;
+  animation: feedComposeSheetBackdropIn var(--motion-duration-standard)
+    var(--motion-easing-standard) both;
+}
+
+.feedComposeOverlay--exit .feedComposeOverlayBackdrop {
+  animation-name: feedComposeSheetBackdropOut;
 }
 
 .feedComposeMediaSheet {
@@ -15399,6 +16942,63 @@ div.chatBubbleRelationship {
   flex-direction: column;
   background: var(--color-surface-panel);
   border-radius: 16px 16px 0 0;
+  animation: feedComposeSheetIn var(--motion-duration-standard)
+    var(--motion-easing-standard) both;
+  will-change: transform;
+}
+
+.feedComposeOverlay--exit .feedComposeMediaSheet {
+  animation-name: feedComposeSheetOut;
+}
+
+@keyframes feedComposeSheetIn {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes feedComposeSheetOut {
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes feedComposeSheetBackdropIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes feedComposeSheetBackdropOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes feedComposeReducedFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes feedComposeReducedFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feedComposePhotoPickerPage,
+  .feedComposeMediaSheet {
+    animation-name: feedComposeReducedFadeIn;
+    animation-duration: var(--motion-duration-standard);
+    will-change: opacity;
+  }
+
+  .feedComposePhotoPickerOverlay--exit .feedComposePhotoPickerPage,
+  .feedComposeOverlay--exit .feedComposeMediaSheet {
+    animation-name: feedComposeReducedFadeOut;
+  }
 }
 
 .feedComposeMediaSheetHandle {
@@ -16003,6 +17603,45 @@ div.chatBubbleRelationship {
   object-fit: contain;
 }
 
+.profileV3PrivateActions {
+  border-top: 0.5px solid var(--color-border-subtle);
+  border-bottom: 0.5px solid var(--color-border-subtle);
+}
+
+.profileV3LikedMomentsEntry {
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+}
+
+.profileV3LikedMomentsIcon {
+  --system-icon-color: var(--color-brand-primary);
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  place-items: center;
+  color: var(--color-brand-primary);
+  background: var(--color-brand-primary-a10);
+  border-radius: var(--radius-full);
+}
+
+.profileV3LikedMomentsMeta {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-text-tertiary);
+}
+
+.profileV3LikedMomentsMeta small {
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+  white-space: nowrap;
+}
+
+.profileV3LikedMomentsMeta .systemIcon {
+  --system-icon-color: var(--color-text-primary-a30);
+}
+
 .profileV3StickyTabs {
   position: sticky;
   z-index: 15;
@@ -16332,6 +17971,348 @@ div.chatBubbleRelationship {
 
   .prototypeZoomControl {
     flex: 1;
+  }
+}
+
+/* Prototype Studio — project gallery & workspace */
+.studioProjectNotice {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  color: var(--ink-secondary);
+  font-size: 13px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.studioProjectGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.studioProjectCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.studioProjectCardLink {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
+.studioProjectCardLink:hover .studioProjectCardHeading strong {
+  color: var(--brand);
+}
+
+.studioProjectCover {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--surface-subtle);
+}
+
+.studioProjectCover img {
+  object-fit: cover;
+}
+
+.studioProjectCardBody {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px 16px;
+}
+
+.studioProjectCardHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.studioProjectCardHeading strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.studioProjectCardHeading small {
+  flex-shrink: 0;
+  color: var(--ink-tertiary);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.studioProjectDescription {
+  color: var(--ink-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.studioProjectMeta {
+  color: var(--ink-tertiary);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.studioProjectDeleteButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  height: 30px;
+  padding: 0 10px;
+  color: var(--ink-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.studioProjectDeleteButton:hover {
+  color: var(--color-state-danger, #d92d20);
+  border-color: rgba(217, 45, 32, 0.35);
+}
+
+.studioProjectEmpty {
+  display: grid;
+  gap: 8px;
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--surface-subtle);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.studioProjectEmpty strong {
+  font-size: 16px;
+}
+
+.studioProjectEmpty p {
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: 14px;
+}
+
+.studioProjectWorkspace {
+  display: grid;
+  min-height: 900px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.studioProjectPreview {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.studioProjectWorkspaceToolbar {
+  display: flex;
+  min-height: 64px;
+  padding: 12px 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.studioProjectSectionEyebrow {
+  margin: 0 0 4px;
+  color: var(--ink-tertiary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.studioProjectWorkspaceToolbar strong {
+  font-size: 14px;
+}
+
+.studioProjectWorkspaceControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.studioProjectWorkspaceControls label {
+  display: grid;
+  gap: 4px;
+}
+
+.studioProjectWorkspaceControls label > span {
+  color: var(--ink-tertiary);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.studioProjectWorkspaceControls select {
+  min-width: 148px;
+  height: 34px;
+  padding: 0 9px;
+  color: var(--ink);
+  font-size: 13px;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  outline: 0;
+}
+
+.studioProjectStage {
+  display: grid;
+  min-height: 0;
+  padding: 24px 16px 32px;
+  place-items: start center;
+  overflow: auto;
+  background: linear-gradient(180deg, #eef1f5 0%, var(--canvas) 100%);
+}
+
+.studioProjectInfo {
+  display: flex;
+  min-width: 0;
+  padding: 18px;
+  flex-direction: column;
+  gap: 20px;
+  overflow: auto;
+  background: #fafafa;
+}
+
+.studioProjectInfoIntro h2 {
+  margin: 4px 0 10px;
+  font-size: 18px;
+}
+
+.studioProjectInfoIntro > p {
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.studioProjectBackLink {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--ink-tertiary);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.studioProjectBackLink:hover {
+  color: var(--brand);
+}
+
+.studioProjectVersion {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 8px;
+  color: var(--ink-secondary);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.studioProjectInfoSection h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.studioProjectInfoSection p {
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.studioProjectTagList,
+.studioProjectModuleList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.studioProjectTagList li {
+  padding: 4px 8px;
+  color: var(--ink-secondary);
+  font-size: 11px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.studioProjectModuleList li code {
+  display: inline-block;
+  padding: 4px 8px;
+  color: var(--ink-secondary);
+  font-size: 11px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.studioProjectDetailHeader {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 1080px) {
+  .studioProjectWorkspace {
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  }
+}
+
+@media (max-width: 820px) {
+  .studioProjectWorkspace {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .studioProjectPreview {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .studioProjectWorkspaceToolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .studioProjectWorkspaceControls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .studioProjectWorkspaceControls select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .studioProjectStage {
+    padding: 16px 8px 24px;
   }
 }
 
@@ -16877,4 +18858,3599 @@ div.chatBubbleRelationship {
   .visualInspectionHistoryList {
     grid-template-columns: 1fr;
   }
+}
+
+/* Studio · 配方社区首页改版三方案 */
+.studioProjectStage--recipeCommunityBlack {
+  background: #000000;
+}
+
+.prototypeRuntimePage--recipeCommunity {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  background: #000000;
+}
+
+.prototypeRuntimePage--filmsimLight {
+  background: #e8eaee;
+}
+
+.studioRecipeCommunityShell {
+  gap: 12px;
+}
+
+.studioRecipeCommunityShell--dark,
+.studioRecipeCommunityShell--capture {
+  background: #000000;
+}
+
+.studioRecipeCommunityShell--capture {
+  gap: 0;
+  padding: 0;
+}
+
+.studioRecipeCommunitySceneTabs {
+  padding: 8px 12px 0;
+  background: #000000;
+}
+
+.studioRecipeCommunityDevice {
+  background: #000000;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.studioRecipeCommunityDevice--dark {
+  color: #f5f6f8;
+}
+
+.studioRecipeCommunityDevice--dark .pageCanvasContentShell {
+  background: #000000;
+}
+
+.studioRecipeCommunityContent {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* Studio · 配方社区质量基线：影像驱动的相机工作台 */
+.studioRecipeCommunityDevice--quality {
+  --recipe-quality-accent: var(--color-brand-primary, #16d8c8);
+  --recipe-quality-canvas: var(--color-surface-canvas, #181923);
+  --recipe-quality-panel: var(--color-surface-panel, #181923);
+  --recipe-quality-raised: rgba(255, 255, 255, 0.06);
+  --recipe-quality-border: var(--color-border-image, rgba(255, 255, 255, 0.1));
+  --recipe-quality-secondary: var(--color-text-auxiliary, #a3a5b1);
+  position: relative;
+  color: var(--color-text-primary, rgba(255, 255, 255, 0.9));
+  background: var(--recipe-quality-canvas);
+}
+
+.studioRecipeCommunityDevice--quality .pageCanvasContentShell--sideChrome {
+  min-height: 0;
+  flex: 1;
+}
+
+.studioRecipeQualityExperience {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  background: var(--recipe-quality-canvas);
+}
+
+.studioRecipeQualityExperience--sideChrome {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+}
+
+.studioRecipeQualityExperience--inner {
+  grid-template-columns: 72px minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.studioRecipeQualityMain {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  border-right: 1px solid var(--recipe-quality-border);
+}
+
+.studioRecipeQualityNav {
+  flex: 0 0 auto;
+}
+
+.studioRecipeQualitySideRail {
+  display: flex;
+  min-height: 0;
+  padding:
+    var(--duo-reserved-top, 0)
+    8px
+    var(--duo-reserved-bottom, 0);
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 8px;
+  background: var(--recipe-quality-panel);
+  border-right: 1px solid var(--recipe-quality-border);
+}
+
+.studioRecipeQualitySideRail button {
+  display: flex;
+  min-width: 44px;
+  min-height: 56px;
+  padding: 6px 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-12, 12px);
+  color: var(--color-text-tertiary, #8b8c91);
+  font: 500 10px/12px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeQualitySideRail button.selected {
+  color: var(--color-text-primary, rgba(255, 255, 255, 0.9));
+  background: var(--recipe-quality-raised);
+}
+
+.studioRecipeQualityScroll {
+  min-height: 0;
+  flex: 1;
+  padding-bottom: 32px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  background: var(--recipe-quality-canvas);
+}
+
+.studioRecipeQualityScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.studioRecipeQualityCamera {
+  display: grid;
+  width: calc(100% - 32px);
+  min-height: 48px;
+  margin: 8px 16px 16px;
+  padding: 8px 12px;
+  align-items: center;
+  gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  text-align: left;
+  background: var(--recipe-quality-raised);
+  border: 1px solid var(--recipe-quality-border);
+  border-radius: var(--radius-12, 12px);
+  color: inherit;
+  cursor: pointer;
+}
+
+.studioRecipeQualityCameraStatus {
+  width: 8px;
+  height: 8px;
+  background: #3dd68c;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(61, 214, 140, 0.12);
+}
+
+.studioRecipeQualityCamera > span:nth-child(2) {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.studioRecipeQualityCamera strong {
+  font: 600 13px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityCamera small {
+  overflow: hidden;
+  color: var(--color-text-tertiary, #8b8c91);
+  font: 400 11px/14px "SF Pro", var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studioRecipeQualityHero {
+  margin: 0 16px 24px;
+  overflow: hidden;
+  background: var(--recipe-quality-panel);
+  border: 1px solid var(--recipe-quality-border);
+  border-radius: var(--radius-16, 16px);
+}
+
+.studioRecipeQualityHeroMedia {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 195px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--recipe-quality-raised);
+  border: 0;
+  cursor: pointer;
+}
+
+.studioRecipeQualityHeroMedia::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.04) 35%,
+    rgba(0, 0, 0, 0.62) 100%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.studioRecipeQualityHeroMedia img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.studioRecipeQualityEdition {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  z-index: 1;
+  color: #fff;
+  font: 700 10px/14px "SF Pro", var(--font-sans);
+  letter-spacing: 0.12em;
+}
+
+.studioRecipeQualityHeroCopy {
+  display: block;
+  padding: 16px;
+}
+
+.studioRecipeQualityEyebrow {
+  margin: 0 0 6px;
+  color: var(--recipe-quality-accent) !important;
+  font: 650 10px/14px "SF Pro", var(--font-sans) !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.studioRecipeQualityHeroCopy h1 {
+  margin: 0;
+  font: 650 24px/29px "SF Pro Display", "SF Pro", var(--font-sans);
+  letter-spacing: -0.03em;
+}
+
+.studioRecipeQualityHeroCopy p:not(.studioRecipeQualityEyebrow) {
+  max-width: 24em;
+  margin: 6px 0 0;
+  color: var(--recipe-quality-secondary);
+  font: 400 13px/19px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityAuthor {
+  display: flex !important;
+  margin-top: 8px;
+  align-items: center;
+  gap: 8px;
+  color: var(--recipe-quality-secondary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityAuthor > span {
+  min-width: 0;
+}
+
+.studioRecipeQualityHeroActions {
+  display: flex;
+  margin-top: 14px;
+  align-items: flex-end;
+  justify-content: stretch;
+  gap: 8px;
+}
+
+.studioRecipeQualitySaveButton {
+  display: inline-flex;
+  width: auto;
+  height: 44px;
+  min-width: 78px;
+  padding: 0 12px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--recipe-quality-raised);
+  border: 1px solid var(--recipe-quality-border);
+  border-radius: var(--radius-full, 999px);
+  color: var(--color-text-primary, rgba(255, 255, 255, 0.9));
+  font: 600 12px/16px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeQualitySaveButton[aria-pressed="true"] {
+  color: #041413;
+  background: var(--recipe-quality-accent);
+  border-color: var(--recipe-quality-accent);
+}
+
+.studioRecipeQualityWriteButton {
+  min-width: 104px;
+  flex: 1;
+}
+
+.studioRecipeQualityFilters {
+  padding: 0 16px 20px;
+  overflow-x: auto;
+}
+
+.studioRecipeQualityFilters button {
+  height: 44px;
+}
+
+.studioRecipeQualityFeed {
+  padding: 0 16px;
+}
+
+.studioRecipeQualityFeed > header {
+  display: flex;
+  margin-bottom: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.studioRecipeQualityFeed > header p {
+  margin: 0 0 2px;
+  color: var(--recipe-quality-secondary);
+  font: 500 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityFeed > header h2 {
+  margin: 0;
+  font: 650 18px/23px "SF Pro", var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+.studioRecipeQualityFeed > header > span {
+  color: var(--color-text-tertiary, #8b8c91);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityGrid {
+  display: grid;
+  gap: 18px 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studioRecipeQualityCard {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius-12, 12px);
+  outline: 1px solid transparent;
+  transition: outline-color 160ms ease;
+}
+
+.studioRecipeQualityCard--selected {
+  background: color-mix(
+    in srgb,
+    var(--recipe-quality-accent) 7%,
+    transparent
+  );
+  outline: 2px solid
+    color-mix(in srgb, var(--recipe-quality-accent) 72%, transparent);
+}
+
+.studioRecipeQualityCardMedia {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 180px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--recipe-quality-raised);
+  border: 0;
+  border-radius: var(--radius-12, 12px);
+  cursor: pointer;
+}
+
+.studioRecipeQualityCardMedia::after {
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.6));
+  content: "";
+  pointer-events: none;
+}
+
+.studioRecipeQualityCardMedia img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.studioRecipeQualityPalette {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.studioRecipeQualityPalette i {
+  display: block;
+}
+
+.studioRecipeQualityPalette--detail {
+  position: absolute;
+  inset: 0;
+}
+
+.studioRecipeQualityCard:nth-child(2) .studioRecipeQualityCardMedia img {
+  transform: scale(1.08);
+}
+
+.studioRecipeQualityCardMedia > span {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 1;
+  color: #fff;
+  font: 650 10px/13px "SF Pro", var(--font-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.studioRecipeQualityCardCopy {
+  display: grid;
+  min-height: 92px;
+  padding: 10px 2px 8px;
+  align-items: start;
+  gap: 4px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.studioRecipeQualityCardCopy h3 {
+  margin: 0;
+  font: 650 15px/19px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityCardCopy p {
+  margin: 3px 0 0;
+  overflow: hidden;
+  color: var(--recipe-quality-secondary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studioRecipeQualityCardCopy div > span {
+  display: block;
+  margin-top: 4px;
+  color: var(--recipe-quality-secondary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityCardSave {
+  display: inline-flex;
+  width: auto;
+  height: 44px;
+  min-width: 64px;
+  padding: 0 6px;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  color: var(--recipe-quality-secondary);
+  font: 600 11px/14px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeQualityCardSave[aria-pressed="true"] {
+  color: var(--recipe-quality-accent);
+}
+
+.studioRecipeQualityCardWrite {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--recipe-quality-raised);
+  border: 1px solid var(--recipe-quality-border);
+  border-radius: var(--radius-8, 8px);
+  color: var(--color-text-primary, rgba(255, 255, 255, 0.9));
+  font: 600 12px/16px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeQualityEmpty {
+  display: flex;
+  min-height: 260px;
+  padding: 32px 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--recipe-quality-raised);
+  border: 1px solid var(--recipe-quality-border);
+  border-radius: var(--radius-16, 16px);
+}
+
+.studioRecipeQualityEmpty h3 {
+  margin: 14px 0 4px;
+  font: 650 16px/20px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityEmpty p {
+  max-width: 250px;
+  margin: 0 0 18px;
+  color: var(--color-text-secondary, #8b8c91);
+  font: 400 13px/19px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityDetail {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--recipe-quality-panel);
+  scrollbar-width: none;
+}
+
+.studioRecipeQualityDetail::-webkit-scrollbar {
+  display: none;
+}
+
+.studioRecipeQualityDetailMedia {
+  position: relative;
+  height: 42%;
+  min-height: 220px;
+  overflow: hidden;
+}
+
+.studioRecipeQualityDetailMedia::after {
+  position: absolute;
+  inset: 55% 0 0;
+  background: linear-gradient(180deg, transparent, var(--recipe-quality-panel));
+  content: "";
+}
+
+.studioRecipeQualityDetailMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.studioRecipeQualityDetailMedia > span {
+  position: absolute;
+  bottom: 16px;
+  left: 20px;
+  z-index: 1;
+  color: #fff;
+  font: 650 10px/14px "SF Pro", var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.studioRecipeQualityDetailCopy {
+  padding: 20px;
+}
+
+.studioRecipeQualityDetailCopy > p:first-child {
+  margin: 0 0 4px;
+  color: var(--recipe-quality-accent);
+  font: 650 10px/14px "SF Pro", var(--font-sans);
+  letter-spacing: 0.1em;
+}
+
+.studioRecipeQualityDetailCopy h2 {
+  margin: 0;
+  font: 650 28px/34px "SF Pro Display", "SF Pro", var(--font-sans);
+  letter-spacing: -0.03em;
+}
+
+.studioRecipeQualityDetailCopy > span {
+  display: flex;
+  margin-top: 6px;
+  color: var(--recipe-quality-secondary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityDetailCopy > p:nth-of-type(2) {
+  margin: 16px 0;
+  color: var(--recipe-quality-secondary);
+  font: 400 14px/21px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityCompatibility {
+  margin: -8px 0 16px !important;
+  color: var(--color-text-primary, rgba(255, 255, 255, 0.9)) !important;
+  font: 500 12px/16px "SF Pro", var(--font-sans) !important;
+}
+
+.studioRecipeQualityDetailCopy dl {
+  display: grid;
+  margin: 0;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studioRecipeQualityDetailCopy dl div {
+  padding: 12px;
+  background: var(--recipe-quality-raised);
+  border: 1px solid var(--recipe-quality-border);
+  border-radius: var(--radius-8, 8px);
+}
+
+.studioRecipeQualityDetailCopy dt {
+  color: var(--color-text-tertiary, #8b8c91);
+  font: 400 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityDetailCopy dd {
+  margin: 4px 0 0;
+  font: 650 13px/17px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityDetailActions {
+  display: grid;
+  margin-top: 20px;
+  gap: 10px;
+  grid-template-columns: 44px minmax(0, 1fr);
+}
+
+.studioRecipeQualitySheetBackdrop,
+.studioRecipeQualityStatusBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.66);
+  backdrop-filter: blur(8px);
+}
+
+.studioRecipeQualitySheet {
+  width: min(100%, 430px);
+  max-height: 82%;
+  overflow-y: auto;
+  background: var(--color-surface-panel, #181923);
+  border: 1px solid var(--recipe-quality-border);
+  border-radius: var(--radius-16, 16px) var(--radius-16, 16px) 0 0;
+  box-shadow: 0 -16px 40px rgba(0, 0, 0, 0.28);
+}
+
+.studioRecipeQualitySheet > header {
+  display: grid;
+  min-height: 64px;
+  padding: 10px 8px;
+  align-items: center;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  border-bottom: 1px solid var(--recipe-quality-border);
+}
+
+.studioRecipeQualitySheet > header button,
+.studioRecipeQualitySheet > header > span {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.studioRecipeQualitySheet > header div {
+  text-align: center;
+}
+
+.studioRecipeQualitySheet > header p {
+  margin: 0;
+  color: var(--recipe-quality-accent);
+  font: 650 9px/12px "SF Pro", var(--font-sans);
+  letter-spacing: 0.1em;
+}
+
+.studioRecipeQualitySheet > header h2 {
+  margin: 2px 0 0;
+  font: 650 16px/20px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualitySheetIntro {
+  margin: 0;
+  padding: 16px 16px 12px;
+  color: var(--color-text-secondary, #8b8c91);
+  font: 400 13px/19px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualitySlotList {
+  padding: 0 16px 24px;
+}
+
+.studioRecipeQualitySlotAvailable,
+.studioRecipeQualitySlotLocked {
+  align-self: center;
+  margin-right: 16px;
+  font: 600 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualitySlotAvailable {
+  color: var(--recipe-quality-accent);
+}
+
+.studioRecipeQualitySlotLocked {
+  color: var(--color-text-tertiary, #8b8c91);
+}
+
+.studioRecipeQualityOverwrite {
+  display: flex;
+  padding: 28px 20px 24px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.studioRecipeQualityOverwriteIcon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 16px;
+  place-items: center;
+  background: var(--recipe-quality-raised);
+  border-radius: var(--radius-full, 999px);
+  color: var(--recipe-quality-accent);
+}
+
+.studioRecipeQualityOverwrite h3 {
+  margin: 0;
+  font: 650 18px/23px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityOverwrite p {
+  max-width: 300px;
+  margin: 8px 0 20px;
+  color: var(--color-text-secondary, #8b8c91);
+  font: 400 13px/19px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityOverwrite .kitButton {
+  width: 100%;
+}
+
+.studioRecipeQualityOverwrite .kitButton + .kitButton {
+  margin-top: 10px;
+}
+
+.studioRecipeQualityStatusBackdrop {
+  z-index: 30;
+  align-items: center;
+  padding: 24px;
+}
+
+.studioRecipeQualityStatus {
+  display: flex;
+  width: min(100%, 340px);
+  padding: 28px 24px 24px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--color-surface-panel, #181923);
+  border: 1px solid var(--recipe-quality-border);
+  border-radius: var(--radius-16, 16px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.38);
+}
+
+.studioRecipeQualityStatusIcon {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  background: var(--recipe-quality-raised);
+  border-radius: var(--radius-full, 999px);
+  color: var(--recipe-quality-accent);
+}
+
+.studioRecipeQualityStatusIcon:not(.studioRecipeQualityStatusIcon--success) {
+  animation: studioRecipeQualitySpin 900ms linear infinite;
+}
+
+.studioRecipeQualityStatus > p {
+  margin: 16px 0 4px;
+  color: var(--recipe-quality-accent);
+  font: 650 9px/12px "SF Pro", var(--font-sans);
+  letter-spacing: 0.12em;
+}
+
+.studioRecipeQualityStatus h2 {
+  margin: 0;
+  font: 650 18px/23px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityStatus > span:not(.studioRecipeQualityStatusIcon) {
+  margin-top: 8px;
+  color: var(--color-text-secondary, #8b8c91);
+  font: 400 13px/19px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeQualityProgress {
+  width: 100%;
+  height: 4px;
+  margin: 20px 0;
+  overflow: hidden;
+  background: var(--recipe-quality-raised);
+  border-radius: var(--radius-full, 999px);
+}
+
+.studioRecipeQualityProgress span {
+  display: block;
+  width: 78%;
+  height: 100%;
+  background: var(--recipe-quality-accent);
+  border-radius: inherit;
+  animation: studioRecipeQualityProgress 1200ms ease-out both;
+}
+
+.studioRecipeQualityStatus .kitButton {
+  width: 100%;
+  margin-top: 20px;
+}
+
+@keyframes studioRecipeQualitySpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes studioRecipeQualityProgress {
+  from {
+    width: 8%;
+  }
+  to {
+    width: 78%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studioRecipeQualityCard,
+  .studioRecipeQualityStatusIcon,
+  .studioRecipeQualityProgress span {
+    transition: none;
+    animation: none;
+  }
+}
+
+.studioRecipeCommunityScroll {
+  flex: 1;
+  padding-bottom: 24px;
+  background: #000000;
+}
+
+.studioRecipeCommunityNav {
+  flex: 0 0 auto;
+}
+
+.studioRecipeCommunitySearchSlot {
+  flex: 0 0 auto;
+  padding: 0 0 4px;
+}
+
+.studioRecipeCommunityHero {
+  position: relative;
+  margin: 8px 16px 12px;
+  overflow: hidden;
+  border-radius: var(--radius-16, 16px);
+}
+
+.studioRecipeCommunityHeroMedia {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.studioRecipeCommunityHeroMeta {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
+.studioRecipeCommunityHeroMeta strong {
+  flex: 1 1 auto;
+  font: 600 18px/22px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityHeroStat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: 500 13px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityHeroCta {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.studioRecipeCommunityFilmPill {
+  display: inline-flex;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: var(--radius-full, 999px);
+  color: #fff;
+  font: 600 11px/14px "SF Pro", var(--font-sans);
+  letter-spacing: 0.02em;
+}
+
+.studioRecipeCommunityChipRow {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 12px;
+  overflow-x: auto;
+}
+
+.studioRecipeCommunityChip {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  color: rgba(255, 255, 255, 0.72);
+  font: 500 13px/16px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeCommunityChip--active {
+  background: var(--color-brand-primary, #16d8c8);
+  color: #0f1014;
+}
+
+.studioRecipeCommunitySectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 16px 8px;
+}
+
+.studioRecipeCommunitySectionHead h3 {
+  margin: 0;
+  font: 600 16px/20px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunitySectionHead button {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--color-brand-primary, #16d8c8);
+  font: 500 14px/18px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeCommunityGroupRail {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 16px;
+  overflow-x: auto;
+}
+
+.studioRecipeCommunityGroupCard {
+  display: flex;
+  flex: 0 0 120px;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.studioRecipeCommunityGroupCard img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: var(--radius-12, 12px);
+}
+
+.studioRecipeCommunityGroupCard strong {
+  font: 600 13px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityGroupCard span {
+  color: rgba(255, 255, 255, 0.55);
+  font: 400 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityMasonry {
+  display: grid;
+  padding: 0 16px;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studioRecipeCommunityMasonryCard {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-12, 12px);
+}
+
+.studioRecipeCommunityMasonryCard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.studioRecipeCommunityMasonryOverlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 10px 8px 8px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+  color: #fff;
+}
+
+.studioRecipeCommunityMasonryOverlay p {
+  margin: 4px 0 6px;
+  font: 600 13px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityMasonryMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: 400 11px/14px "SF Pro", var(--font-sans);
+  opacity: 0.9;
+}
+
+.studioRecipeCommunityMasonryMeta span:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.studioRecipeCommunityMasonrySave {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.45);
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  color: #fff;
+  cursor: pointer;
+}
+
+.studioRecipeCommunityWorkbenchBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px 4px;
+  gap: 8px;
+}
+
+.studioRecipeCommunityCameraPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  color: inherit;
+  font: 600 13px/16px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeCommunityCameraDot {
+  width: 8px;
+  height: 8px;
+  background: #3dd68c;
+  border-radius: 50%;
+}
+
+.studioRecipeCommunitySyncBtn {
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid rgba(22, 216, 200, 0.45);
+  border-radius: var(--radius-full, 999px);
+  color: var(--color-brand-primary, #16d8c8);
+  font: 600 12px/16px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeCommunityFilterTabs,
+.studioRecipeCommunitySortTabs,
+.studioRecipeCommunityDualTabs {
+  flex: 0 0 auto;
+}
+
+.studioRecipeCommunitySlotRow {
+  display: grid;
+  padding: 0 16px 12px;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.studioRecipeCommunitySlot {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-12, 12px);
+  text-align: center;
+}
+
+.studioRecipeCommunitySlot span {
+  color: rgba(255, 255, 255, 0.5);
+  font: 500 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunitySlot strong {
+  font: 600 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityRecipeList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0 16px;
+  gap: 10px;
+  list-style: none;
+}
+
+.studioRecipeCommunityRecipeRow {
+  display: grid;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-12, 12px);
+}
+
+.studioRecipeCommunityRecipeThumb {
+  border-radius: var(--radius-8, 8px);
+  object-fit: cover;
+}
+
+.studioRecipeCommunityRecipeTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.studioRecipeCommunityRecipeTitleRow strong {
+  font: 600 15px/18px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityVerified {
+  padding: 2px 6px;
+  background: rgba(22, 216, 200, 0.16);
+  border-radius: var(--radius-4, 4px);
+  color: var(--color-brand-primary, #16d8c8);
+  font: 600 10px/12px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityRecipeShorthand {
+  margin: 4px 0;
+  color: rgba(255, 255, 255, 0.72);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityRecipeMeta {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.45);
+  font: 400 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityRowCta {
+  min-width: 56px;
+}
+
+.studioRecipeCommunityNavIconBtn {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.studioRecipeCommunityPostGrid {
+  display: grid;
+  padding: 8px 16px;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studioRecipeCommunityPostCell {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-12, 12px);
+}
+
+.studioRecipeCommunityPostCell img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.studioRecipeCommunityAnalyseBtn {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 0;
+  border-radius: var(--radius-8, 8px);
+  color: #fff;
+  font: 600 12px/14px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeCommunityRecipeRoomCard {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-12, 12px);
+}
+
+.studioRecipeCommunityRecipeRoomCard header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.studioRecipeCommunityParamGrid {
+  display: grid;
+  margin: 0 0 12px;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studioRecipeCommunityParamGrid div {
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-8, 8px);
+}
+
+.studioRecipeCommunityParamGrid dt {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.45);
+  font: 500 10px/12px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityParamGrid dd {
+  margin: 4px 0 0;
+  font: 600 14px/18px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityRecipeRoomActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.studioRecipeCommunityCompare {
+  padding: 12px 16px 24px;
+}
+
+.studioRecipeCommunityCompareHeader h2 {
+  margin: 0 0 6px;
+  font: 600 18px/22px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityCompareHeader p {
+  margin: 0 0 12px;
+  color: rgba(24, 25, 35, 0.65);
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityCompare--onBlack {
+  background: #000000;
+}
+
+.studioRecipeCommunityCompare--onBlack .studioRecipeCommunityCompareHeader h2 {
+  color: #f5f6f8;
+}
+
+.studioRecipeCommunityCompare--onBlack .studioRecipeCommunityCompareHeader p {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.studioRecipeCommunityCompare--onBlack .studioRecipeCommunityCompareTable th,
+.studioRecipeCommunityCompare--onBlack .studioRecipeCommunityCompareTable td {
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.studioRecipeCommunityCompare--onBlack .studioRecipeCommunityCompareTable thead th {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.studioRecipeCommunityCompare--onBlack .studioRecipeCommunityCompareTable tbody th {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.studioRecipeCommunityCompareScroll {
+  overflow-x: auto;
+}
+
+.studioRecipeCommunityCompareTable {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font: 400 12px/18px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeCommunityCompareTable th,
+.studioRecipeCommunityCompareTable td {
+  padding: 10px 8px;
+  border: 1px solid rgba(24, 25, 35, 0.12);
+  text-align: left;
+  vertical-align: top;
+}
+
+.studioRecipeCommunityCompareTable thead th {
+  background: rgba(24, 25, 35, 0.04);
+  font-weight: 600;
+}
+
+.studioRecipeCommunityCompareTable tbody th {
+  width: 72px;
+  background: rgba(24, 25, 35, 0.03);
+  font-weight: 600;
+}
+
+/* Filmsim Recipes 竞品参考（浅色配方 Tab） */
+.studioRecipeCommunityDevice--filmsim {
+  color: #181923;
+  background: #f7f8fa;
+  border-color: rgba(24, 25, 35, 0.08);
+}
+
+.studioRecipeCommunityDevice--filmsim .pageCanvasContentShell {
+  background: #f7f8fa;
+}
+
+.studioRecipeFilmsimHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 16px 0;
+}
+
+.studioRecipeFilmsimBrand {
+  font: 700 18px/22px "SF Pro", var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+.studioRecipeFilmsimHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.studioRecipeFilmsimIconBtn,
+.studioRecipeFilmsimAvatarBtn {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.studioRecipeFilmsimSearch {
+  padding: 4px 0 8px;
+}
+
+.studioRecipeFilmsimProBanner {
+  display: grid;
+  align-items: center;
+  margin: 0 16px 12px;
+  padding: 12px;
+  gap: 12px;
+  grid-template-columns: auto 1fr auto;
+  text-align: left;
+  background: #0a0a0c;
+  border: 0;
+  border-radius: 16px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.studioRecipeFilmsimProThumbs {
+  display: flex;
+  gap: 4px;
+}
+
+.studioRecipeFilmsimProThumbs img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.studioRecipeFilmsimProTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 15px/18px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeFilmsimProBadge {
+  padding: 2px 6px;
+  background: #ff3b30;
+  border-radius: 4px;
+  font: 700 10px/12px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeFilmsimProSub {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.65);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeFilmsimFilterRow {
+  padding-bottom: 8px;
+}
+
+.studioRecipeFilmsimFilterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: #fff;
+  border: 1px solid rgba(24, 25, 35, 0.08);
+  border-radius: 999px;
+  color: #181923;
+  font: 500 13px/16px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeFilmsimFilterChip--active {
+  background: #181923;
+  border-color: #181923;
+  color: #fff;
+}
+
+.studioRecipeFilmsimListMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 8px;
+  gap: 8px;
+}
+
+.studioRecipeFilmsimCount {
+  flex: 0 0 auto;
+  margin: 0;
+  font: 500 13px/16px "SF Pro", var(--font-sans);
+  color: #5c5d6b;
+}
+
+.studioRecipeFilmsimSortTabs {
+  min-width: 0;
+}
+
+.studioRecipeFilmsimScroll {
+  flex: 1;
+  padding-bottom: 88px;
+  background: #f7f8fa;
+}
+
+.studioRecipeFilmsimGrid {
+  display: grid;
+  padding: 0 16px;
+  gap: 16px 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studioRecipeImportBadge {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  padding: 6px 10px;
+  background: var(--color-brand-primary, #16d8c8);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  color: #041413;
+  font: 600 11px/14px "SF Pro", var(--font-sans);
+  pointer-events: none;
+}
+
+.studioRecipeImportBadge strong {
+  font: 700 13px/16px "SF Pro", var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+.studioRecipeImportBadge--compact {
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.studioRecipeImportBadge--compact strong {
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.studioRecipeImportBadge--onThumb {
+  right: 4px;
+  bottom: 4px;
+  padding: 3px 6px;
+  border-radius: 6px;
+}
+
+.studioRecipeImportBadge--inline {
+  position: static;
+  flex: 0 0 auto;
+  pointer-events: auto;
+}
+
+.studioRecipeCommunityRecipeThumbWrap {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+
+.studioRecipeImportMetaHighlight {
+  color: var(--color-brand-primary, #16d8c8);
+  font-weight: 600;
+}
+
+.studioRecipeCommunityRecipeRoomHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.studioRecipeFilmsimCardMedia {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.studioRecipeFilmsimCardMedia img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.studioRecipeFilmsimCardLikes {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 999px;
+  color: #fff;
+  font: 600 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeFilmsimCardBody {
+  padding-top: 8px;
+}
+
+.studioRecipeFilmsimCardBody strong {
+  display: block;
+  font: 600 14px/18px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeFilmsimCardSim {
+  display: block;
+  margin-top: 2px;
+  color: #5c5d6b;
+  font: 500 11px/14px "SF Pro", var(--font-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.studioRecipeFilmsimCardAuthor {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0 0;
+  color: #8e8f9a;
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioRecipeFilmsimVerified {
+  width: 6px;
+  height: 6px;
+  background: #ff3b30;
+  border-radius: 50%;
+}
+
+.studioRecipeFilmsimTabBar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  align-items: end;
+  padding: 8px 12px 20px;
+  gap: 4px;
+  grid-template-columns: 1fr 1fr auto 1fr 1fr;
+  background: rgba(247, 248, 250, 0.96);
+  border-top: 0.5px solid rgba(24, 25, 35, 0.08);
+}
+
+.studioRecipeCommunityDevice--filmsim .pageCanvasContentShell {
+  position: relative;
+}
+
+.studioRecipeFilmsimTabBar button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 0;
+  background: transparent;
+  border: 0;
+  color: #8e8f9a;
+  font: 500 10px/12px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioRecipeFilmsimTabBarItem--active {
+  color: #181923 !important;
+  font-weight: 600;
+}
+
+.studioRecipeFilmsimCameraFab {
+  display: grid !important;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 4px;
+  place-items: center;
+  background: #ff3b30 !important;
+  border-radius: 50%;
+  color: #fff !important;
+  box-shadow: 0 8px 24px rgba(255, 59, 48, 0.35);
+}
+
+/* Studio · App login flow */
+.studioLoginFlowShell {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.studioLoginFlowControls {
+  width: min(100%, var(--page-canvas-width, 375px));
+  overflow-x: auto;
+}
+
+.studioLoginFlowControls [role="tablist"] {
+  display: flex;
+  min-width: max-content;
+  padding: 4px;
+  gap: 4px;
+  background: var(--color-button-secondary);
+  border-radius: var(--radius-full, 999px);
+}
+
+.studioLoginFlowControl {
+  min-height: 44px;
+  padding: 0 12px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  font: 600 12px/16px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioLoginFlowControl--active {
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+  box-shadow: 0 2px 10px rgba(24, 25, 35, 0.08);
+}
+
+.studioLoginDevice {
+  --studio-login-surface: var(--color-surface-panel, #fff);
+  --studio-login-field: var(--color-button-secondary, rgba(24, 25, 35, 0.04));
+  --studio-login-ink: var(--color-text-primary, #181923);
+  --studio-login-muted: color-mix(
+    in srgb,
+    var(--color-text-secondary, #8b8c91) 65%,
+    var(--color-text-primary, #181923) 35%
+  );
+  --studio-login-brand: var(--color-brand-primary, #16d8c8);
+  --studio-login-accent-text: color-mix(
+    in srgb,
+    var(--color-brand-primary-dark, #12ada0) 68%,
+    var(--color-text-primary, #181923) 32%
+  );
+  position: relative;
+  isolation: isolate;
+  color: var(--studio-login-ink);
+  background: var(--studio-login-surface);
+}
+
+.studioLoginDevice[data-theme="dark"] {
+  --studio-login-surface: #181923;
+  --studio-login-field: rgba(255, 255, 255, 0.1);
+}
+
+.studioLoginDevice > .iosStatusBar {
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+.studioLoginLanding {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  grid-template-rows: minmax(220px, 1fr) auto;
+  overflow: hidden;
+}
+
+.studioLoginHero {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 78% 14%, rgba(22, 216, 200, 0.18), transparent 38%),
+    var(--studio-login-surface);
+}
+
+.studioLoginHero > img,
+.studioLoginAuthArt > img {
+  object-fit: cover;
+  object-position: center 46%;
+}
+
+.studioLoginHero::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 38%;
+  content: "";
+  background: linear-gradient(to bottom, transparent, var(--studio-login-surface));
+  pointer-events: none;
+}
+
+.studioLoginHeroCopy {
+  position: absolute;
+  z-index: 1;
+  right: 20px;
+  bottom: 12px;
+  left: 20px;
+}
+
+.studioLoginEyebrow {
+  margin: 0 0 6px;
+  color: var(--studio-login-accent-text);
+  font: 700 11px/14px "SF Pro", var(--font-sans);
+  letter-spacing: 0.14em;
+}
+
+.studioLoginHeroCopy h1 {
+  max-width: 310px;
+  margin: 0;
+  color: var(--studio-login-ink);
+  font: 700 28px/34px "SF Pro Display", "SF Pro", var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+.studioLoginActions {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  padding: 12px 20px 32px;
+  gap: 10px;
+  background: var(--studio-login-surface);
+}
+
+.studioLoginWelcome h2 {
+  margin: 0;
+  color: var(--studio-login-ink);
+  font: 700 20px/26px "SF Pro Display", "SF Pro", var(--font-sans);
+}
+
+.studioLoginWelcome p {
+  margin: 3px 0 0;
+  color: var(--studio-login-muted);
+  font: 400 13px/18px "SF Pro", var(--font-sans);
+}
+
+.studioLoginProvider {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  font: 600 15px/20px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioLoginProvider:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.studioLoginProvider--apple {
+  color: #fff;
+  background: #111218;
+}
+
+.studioLoginProvider--google {
+  color: var(--studio-login-ink);
+  background: var(--studio-login-field);
+  box-shadow: inset 0 0 0 1px var(--color-border-subtle, rgba(24, 25, 35, 0.04));
+}
+
+.studioLoginProviderMark {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font: 700 15px/18px "SF Pro", var(--font-sans);
+}
+
+.studioLoginProviderMark--apple {
+  color: #fff;
+  background: transparent;
+  font-size: 22px;
+}
+
+.studioLoginProviderMark--google {
+  color: #fff;
+  background:
+    conic-gradient(
+      from -45deg,
+      #4285f4 0 25%,
+      #34a853 0 50%,
+      #fbbc05 0 75%,
+      #ea4335 0
+    );
+  box-shadow: inset 0 0 0 5px var(--studio-login-surface);
+}
+
+.studioLoginInlineError {
+  display: flex;
+  min-height: 44px;
+  padding: 8px 10px 8px 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #c53b44;
+  background: rgba(197, 59, 68, 0.08);
+  border-radius: var(--radius-12, 12px);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioLoginInlineError button {
+  min-width: 44px;
+  min-height: 44px;
+  color: #a92631;
+  background: transparent;
+  border: 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.studioLoginDivider {
+  display: flex;
+  height: 20px;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-text-tertiary);
+  font: 400 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioLoginDivider::before,
+.studioLoginDivider::after {
+  height: 1px;
+  flex: 1;
+  content: "";
+  background: var(--color-border-subtle, rgba(24, 25, 35, 0.04));
+}
+
+.studioLoginAlternatives {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.studioLoginAlternatives button {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--studio-login-ink);
+  background: transparent;
+  border: 1px solid var(--color-border-image, #e1e2e6);
+  border-radius: var(--radius-full, 999px);
+  font: 600 13px/18px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioLoginAlternativeMark {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  color: var(--studio-login-accent-text);
+  background: var(--color-brand-primary-a10, rgba(22, 216, 200, 0.1));
+  border-radius: 50%;
+  font: 700 11px/14px "SF Pro", var(--font-sans);
+}
+
+.studioLoginLegal {
+  margin: 0;
+  color: var(--studio-login-muted);
+  font: 400 11px/15px "SF Pro", var(--font-sans);
+  text-align: center;
+}
+
+.studioLoginLegal button {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 2px;
+  align-items: center;
+  color: var(--studio-login-ink);
+  background: transparent;
+  border: 0;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.studioLoginLastUsed {
+  margin: 0 4px -4px;
+  color: var(--studio-login-accent-text);
+  font: 600 11px/15px "SF Pro", var(--font-sans);
+}
+
+.studioLoginAuthPage {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.studioLoginAuthArt {
+  position: relative;
+  display: none;
+  min-height: 0;
+  overflow: hidden;
+  background: #effffb;
+}
+
+.studioLoginAuthPanel {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  padding: 44px 20px 24px;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.studioLoginBack {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  margin: 2px 0 10px -10px;
+  flex: 0 0 44px;
+  align-items: center;
+  justify-content: center;
+  color: var(--studio-login-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.studioLoginAuthHeader {
+  margin-bottom: 30px;
+}
+
+.studioLoginAuthHeader h1 {
+  margin: 0;
+  color: var(--studio-login-ink);
+  font: 700 28px/34px "SF Pro Display", "SF Pro", var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+.studioLoginAuthHeader > p:last-child {
+  margin: 8px 0 0;
+  color: var(--studio-login-muted);
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+}
+
+.studioLoginForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.studioLoginFieldLabel {
+  margin: 0 0 8px;
+  color: var(--studio-login-ink);
+  font: 600 13px/18px "SF Pro", var(--font-sans);
+}
+
+.studioLoginFieldLabel:not(:first-child) {
+  margin-top: 20px;
+}
+
+.studioLoginField {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  background: var(--studio-login-field);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full, 999px);
+}
+
+.studioLoginField:focus-within {
+  border-color: var(--studio-login-brand);
+  box-shadow: 0 0 0 3px var(--color-brand-primary-a10);
+}
+
+.studioLoginField--error {
+  border-color: #c53b44;
+}
+
+.studioLoginField input {
+  min-width: 0;
+  height: 50px;
+  flex: 1;
+  padding: 0 12px;
+  color: var(--studio-login-ink);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font: 500 16px/22px "SF Pro", var(--font-sans);
+}
+
+.studioLoginField input::placeholder {
+  color: var(--studio-login-muted);
+}
+
+.studioLoginCountryCode {
+  display: inline-flex;
+  min-width: 70px;
+  height: 50px;
+  padding: 0 4px 0 14px;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--studio-login-ink);
+  background: transparent;
+  border: 0;
+  font: 600 14px/20px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioLoginFieldAction,
+.studioLoginPasswordToggle {
+  display: inline-flex;
+  min-width: 44px;
+  height: 50px;
+  padding: 0 12px;
+  align-items: center;
+  justify-content: center;
+  color: var(--studio-login-muted);
+  background: transparent;
+  border: 0;
+  font: 600 12px/16px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioLoginFieldMessage {
+  min-height: 18px;
+  margin: 8px 2px 0;
+  color: var(--studio-login-muted);
+  font: 400 12px/18px "SF Pro", var(--font-sans);
+}
+
+.studioLoginField--error + .studioLoginFieldMessage,
+.studioLoginOtp--error + .studioLoginOtpMeta .studioLoginFieldMessage {
+  color: #c53b44;
+}
+
+.studioLoginPrimaryButton {
+  width: 100%;
+  margin-top: 28px;
+  gap: 8px;
+}
+
+.studioLoginPrimaryButton,
+.studioLoginSuccessButton {
+  color: var(--studio-login-ink);
+}
+
+.studioLoginPrimaryButton:disabled {
+  color: var(--color-text-secondary);
+  background: var(--color-button-primary, #f3f5f9);
+  opacity: 1;
+}
+
+.studioLoginSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: studio-login-spin 700ms linear infinite;
+}
+
+@keyframes studio-login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.studioLoginOtp {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  cursor: text;
+}
+
+.studioLoginOtpSlot {
+  display: flex;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  color: var(--studio-login-ink);
+  background: var(--studio-login-field);
+  border: 1px solid transparent;
+  border-radius: var(--radius-12, 12px);
+  font: 600 22px/28px "SF Pro", var(--font-sans);
+}
+
+.studioLoginOtpSlot--active {
+  border-color: var(--studio-login-brand);
+  box-shadow: 0 0 0 3px var(--color-brand-primary-a10);
+}
+
+.studioLoginOtp--error .studioLoginOtpSlot {
+  border-color: #c53b44;
+}
+
+.studioLoginOtp--error .studioLoginOtpSlot--active {
+  box-shadow: none;
+}
+
+.studioLoginOtpInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  cursor: text;
+}
+
+.studioLoginOtpMeta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.studioLoginOtp--error + .studioLoginOtpMeta {
+  flex-direction: column;
+  gap: 0;
+}
+
+.studioLoginOtp--error + .studioLoginOtpMeta .studioLoginTextButton {
+  color: var(--studio-login-accent-text);
+}
+
+.studioLoginTextButton,
+.studioLoginChangeNumber {
+  min-height: 44px;
+  padding: 0 4px;
+  color: var(--studio-login-accent-text);
+  background: transparent;
+  border: 0;
+  font: 600 13px/18px "SF Pro", var(--font-sans);
+  cursor: pointer;
+}
+
+.studioLoginTextButton:disabled {
+  color: var(--color-text-tertiary);
+  cursor: default;
+}
+
+.studioLoginChangeNumber {
+  align-self: flex-start;
+  margin-top: 12px;
+}
+
+.studioLoginSuccess {
+  display: flex;
+  min-height: 0;
+  padding: 20px 24px 28px;
+  flex: 1;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: center;
+}
+
+.studioLoginSuccessVisual {
+  position: relative;
+  width: 180px;
+  height: 210px;
+  margin-top: 72px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: #effffb;
+  border-radius: 48% 48% 44% 44%;
+}
+
+.studioLoginSuccessVisual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+}
+
+.studioLoginSuccessBadge {
+  position: absolute;
+  right: 10px;
+  bottom: 12px;
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: var(--studio-login-brand);
+  border: 4px solid var(--studio-login-surface);
+  border-radius: 50%;
+  font: 700 20px/24px "SF Pro", var(--font-sans);
+}
+
+.studioLoginSuccess h1 {
+  margin: 0;
+  color: var(--studio-login-ink);
+  font: 700 30px/36px "SF Pro Display", "SF Pro", var(--font-sans);
+}
+
+.studioLoginSuccess > p:not(.studioLoginEyebrow):not(.studioLoginEntered) {
+  margin: 8px 0 0;
+  color: var(--studio-login-muted);
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+}
+
+.studioLoginSuccessButton {
+  width: 100%;
+  max-width: 343px;
+  margin-top: 28px;
+}
+
+.studioLoginEntered {
+  margin: 12px 0 0;
+  color: var(--studio-login-accent-text);
+  font: 600 12px/18px "SF Pro", var(--font-sans);
+}
+
+.studioLoginSuccess > .studioLoginTextButton {
+  margin-top: 8px;
+}
+
+.studioLoginDevice--compact .studioLoginHeroCopy h1 {
+  font-size: 24px;
+  line-height: 29px;
+}
+
+.studioLoginDevice--compact .studioLoginActions {
+  padding-top: 8px;
+  padding-bottom: 30px;
+  gap: 8px;
+}
+
+.studioLoginDevice--compact .studioLoginProvider {
+  height: 48px;
+}
+
+.studioLoginDevice--compact .studioLoginAuthHeader {
+  margin-bottom: 20px;
+}
+
+.studioLoginDevice--compact .studioLoginAuthHeader h1 {
+  font-size: 25px;
+  line-height: 30px;
+}
+
+.studioLoginDevice--wide .studioLoginLanding {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.studioLoginDevice--wide .studioLoginHeroCopy {
+  right: 32px;
+  bottom: 30px;
+  left: 32px;
+}
+
+.studioLoginDevice--wide .studioLoginHeroCopy h1 {
+  max-width: 360px;
+  font-size: 36px;
+  line-height: 42px;
+}
+
+.studioLoginDevice--wide .studioLoginActions {
+  padding: 24px 36px;
+  align-content: center;
+  border-left: 1px solid var(--color-border-subtle);
+}
+
+.studioLoginDevice--wide .studioLoginAuthPage {
+  grid-template-columns: 1fr 1fr;
+}
+
+.studioLoginDevice--wide .studioLoginAuthArt {
+  display: block;
+}
+
+.studioLoginDevice--wide .studioLoginAuthPanel {
+  padding: 0 40px 30px;
+  justify-content: center;
+}
+
+.studioLoginDevice--wide .studioLoginBack {
+  position: absolute;
+  top: 48px;
+  margin: 0;
+}
+
+.studioLoginDevice--wide .studioLoginSuccessVisual {
+  width: 150px;
+  height: 176px;
+  margin-top: 22px;
+}
+
+.studioLoginHomeArea {
+  position: absolute;
+  z-index: 12;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  height: 21px;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 7px;
+  pointer-events: none;
+}
+
+.studioLoginHomeArea .bottomNavigationHomeIndicator {
+  background: var(--studio-login-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studioLoginSpinner {
+    animation: none;
+  }
+}
+
+/* Studio · Seeded social splash */
+.studioSocialSplashShell {
+  display: grid;
+  justify-items: center;
+  color-scheme: dark;
+}
+
+.studioSocialSplashControls {
+  display: flex;
+  width: min(100%, var(--page-canvas-width, 375px));
+  justify-content: center;
+  padding-bottom: 12px;
+}
+
+.studioSocialSplashDevice {
+  --studio-splash-background: #001613;
+  --studio-splash-foreground: rgba(255, 255, 255, 0.9);
+  --studio-splash-secondary: rgba(255, 255, 255, 0.5);
+  --studio-splash-thread: color-mix(
+    in srgb,
+    var(--color-brand-primary) 48%,
+    transparent
+  );
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--studio-splash-foreground);
+  background: var(--studio-splash-background);
+}
+
+.studioSocialSplashDevice--brand-core {
+  --studio-splash-background: var(--color-brand-primary);
+  --studio-splash-foreground: #001613;
+  --studio-splash-secondary: rgb(0 22 19 / 64%);
+  color-scheme: light;
+}
+
+.studioSocialSplashDevice--type-gate {
+  --studio-splash-background: var(--color-surface-canvas);
+  --studio-splash-foreground: var(--color-text-primary);
+  --studio-splash-secondary: var(--color-text-secondary);
+  --studio-splash-thread: color-mix(
+    in srgb,
+    var(--color-brand-primary-dark) 36%,
+    transparent
+  );
+  color-scheme: light;
+}
+
+.studioSocialSplashDevice > .iosStatusBar {
+  position: absolute;
+  z-index: 10;
+  inset: 0 0 auto;
+}
+
+.studioSocialSplashMain {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  min-height: 0;
+  padding: 58px 24px 48px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
+}
+
+.studioSocialSplashBrandCore {
+  gap: 28px;
+}
+
+.studioSocialSplashBrandMark {
+  position: relative;
+  display: grid;
+  width: 120px;
+  height: 120px;
+  place-items: center;
+  animation: studioSocialSplashBrandMarkIn
+    var(--motion-duration-emphasized) var(--motion-easing-standard) both;
+}
+
+.studioSocialSplashBrandMarkInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 120px;
+  height: 120px;
+  place-items: center;
+  background: #001613;
+  border-radius: var(--radius-16);
+  box-shadow: 0 16px 36px rgb(0 22 19 / 18%);
+}
+
+.studioSocialSplashBrandMarkInner .bottomNavigationGlyph {
+  transform: scale(2);
+}
+
+.studioSocialSplashLoom {
+  position: relative;
+  width: min(84%, 360px);
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+}
+
+.studioSocialSplashDevice--compact .studioSocialSplashMain {
+  padding-block: 48px 38px;
+  gap: 26px;
+}
+
+.studioSocialSplashDevice--wide .studioSocialSplashMain {
+  padding-block: 40px 32px;
+  gap: 24px;
+}
+
+.studioSocialSplashDevice--wide .studioSocialSplashLoom {
+  width: min(52%, 440px);
+}
+
+.studioSocialSplashThread {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 47%;
+  height: 24%;
+  background: transparent;
+  border: 1.25px solid var(--studio-splash-thread);
+  border-radius: var(--radius-full);
+  transform-origin: left center;
+  animation: studioSocialSplashThreadIn var(--motion-duration-emphasized)
+    var(--motion-easing-standard) both;
+}
+
+.studioSocialSplashThread::after {
+  position: absolute;
+  top: 50%;
+  right: 9%;
+  width: 7px;
+  height: 7px;
+  content: "";
+  background: var(--color-brand-primary);
+  border: 2px solid var(--studio-splash-background);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.studioSocialSplashThread--northWest {
+  transform: translateY(-50%) rotate(218deg);
+  animation-delay: 44ms;
+}
+
+.studioSocialSplashThread--northEast {
+  transform: translateY(-50%) rotate(322deg);
+  animation-delay: 88ms;
+}
+
+.studioSocialSplashThread--west {
+  transform: translateY(-50%) rotate(180deg);
+  animation-delay: 132ms;
+}
+
+.studioSocialSplashThread--east {
+  transform: translateY(-50%) rotate(0deg);
+  animation-delay: 176ms;
+}
+
+.studioSocialSplashThread--southWest {
+  transform: translateY(-50%) rotate(142deg);
+  animation-delay: 220ms;
+}
+
+.studioSocialSplashThread--southEast {
+  transform: translateY(-50%) rotate(38deg);
+  animation-delay: 264ms;
+}
+
+.studioSocialSplashJunction {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 104px;
+  height: 104px;
+  place-items: center;
+  background: var(--studio-splash-background);
+  border: 1px solid
+    color-mix(in srgb, var(--color-brand-primary) 70%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 18px 48px
+    color-mix(in srgb, var(--color-brand-primary) 24%, transparent);
+  transform: translate(-50%, -50%);
+  animation: studioSocialSplashJunctionIn var(--motion-duration-emphasized)
+    var(--motion-easing-standard) 620ms both;
+}
+
+.studioSocialSplashJunction::before,
+.studioSocialSplashJunction::after {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  content: "";
+  background: var(--color-brand-primary-a50);
+  border: 3px solid var(--studio-splash-background);
+  border-radius: 50%;
+}
+
+.studioSocialSplashJunction::before {
+  top: 2px;
+  left: 4px;
+}
+
+.studioSocialSplashJunction::after {
+  right: 4px;
+  bottom: 2px;
+}
+
+.studioSocialSplashMark {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+}
+
+.studioSocialSplashMark .bottomNavigationGlyph {
+  transform: scale(1.3);
+}
+
+.studioSocialSplashStatusIcon {
+  position: absolute;
+  z-index: 4;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--studio-splash-background);
+  border-radius: 50%;
+  box-shadow: 0 10px 28px rgb(0 0 0 / 18%);
+  animation: studioSocialSplashStatusIconIn
+    var(--motion-duration-emphasized) var(--motion-easing-standard) both;
+}
+
+.studioSocialSplashStatusIcon--room {
+  top: 8%;
+  left: 50%;
+  translate: -50% 0;
+  animation-delay: 420ms;
+}
+
+.studioSocialSplashStatusIcon--game {
+  bottom: 12%;
+  left: 8%;
+  animation-delay: 520ms;
+}
+
+.studioSocialSplashStatusIcon--voice {
+  right: 8%;
+  bottom: 12%;
+  animation-delay: 620ms;
+}
+
+.studioSocialSplashIdentity {
+  z-index: 2;
+  text-align: center;
+  animation: studioSocialSplashIdentityIn var(--motion-duration-emphasized)
+    var(--motion-easing-standard) 820ms both;
+}
+
+.studioSocialSplashIdentity h1 {
+  margin: 0;
+  color: var(--studio-splash-foreground);
+  font: 590 34px/40px "SF Pro", var(--font-sans);
+  letter-spacing: -1.2px;
+}
+
+.studioSocialSplashIdentity p {
+  margin: 5px 0 0;
+  color: color-mix(
+    in srgb,
+    var(--studio-splash-foreground) 72%,
+    transparent
+  );
+  font: 400 14px/20px "SF Pro", var(--font-sans);
+  letter-spacing: 0.4px;
+}
+
+.studioSocialSplashTypeGate {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  padding: 72px 32px 58px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.studioSocialSplashTypeLockup {
+  position: relative;
+  width: min(100%, 540px);
+  margin-inline: auto;
+}
+
+.studioSocialSplashTypeLockup h1 {
+  display: flex;
+  margin: 0;
+  color: var(--color-text-primary);
+  font: 590 clamp(72px, 21vw, 136px) / 0.9 "SF Pro", var(--font-sans);
+  letter-spacing: -0.08em;
+}
+
+.studioSocialSplashTypeLockup h1 span {
+  display: block;
+  animation: studioSocialSplashTypeIn var(--motion-duration-emphasized)
+    var(--motion-easing-standard) both;
+}
+
+.studioSocialSplashTypeLockup h1 span:last-child {
+  color: var(--color-brand-primary-dark);
+  animation-delay: 120ms;
+}
+
+.studioSocialSplashTypeGate > p {
+  width: min(100%, 540px);
+  margin: 32px auto 0;
+  color: var(--color-text-secondary);
+  font: 400 14px/22px "SF Pro", var(--font-sans);
+  animation: studioSocialSplashIdentityIn var(--motion-duration-emphasized)
+    var(--motion-easing-standard) 440ms both;
+}
+
+.studioSocialSplashDevice--wide .studioSocialSplashTypeGate {
+  padding-inline: 72px;
+}
+
+.studioSocialSplashDevice--compact .studioSocialSplashTypeLockup h1 {
+  font-size: clamp(68px, 19vw, 112px);
+}
+
+.studioSocialSplashStatus {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.studioSocialSplashHomeArea {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  height: 21px;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 7px;
+  pointer-events: none;
+}
+
+.studioSocialSplashHomeArea .bottomNavigationHomeIndicator {
+  background: var(--studio-splash-foreground);
+}
+
+@keyframes studioSocialSplashBrandMarkIn {
+  from {
+    opacity: 0;
+    transform: scale(0.84) rotate(-4deg);
+  }
+}
+
+@keyframes studioSocialSplashThreadIn {
+  from {
+    opacity: 0;
+    scale: 0 1;
+  }
+}
+
+@keyframes studioSocialSplashJunctionIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.72) rotate(-8deg);
+  }
+}
+
+@keyframes studioSocialSplashIdentityIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes studioSocialSplashStatusIconIn {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+}
+
+@keyframes studioSocialSplashTypeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studioSocialSplashBrandMark,
+  .studioSocialSplashThread,
+  .studioSocialSplashJunction,
+  .studioSocialSplashStatusIcon,
+  .studioSocialSplashIdentity,
+  .studioSocialSplashTypeLockup h1 span,
+  .studioSocialSplashTypeGate > p {
+    animation: none;
+  }
+}
+
+/* Studio shell (shared scene tabs) + moment-liked-mention prototype */
+.studioVoiceRoomStatusShell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: min(100%, var(--page-canvas-width, 375px));
+  margin: 0 auto;
+}
+
+.studioVoiceRoomStatusScenes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.studioVoiceRoomStatusSceneTab {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-subtle, rgba(24, 25, 35, 0.12));
+  background: var(--color-surface-panel, #fff);
+  font: 500 13px/16px var(--font-family-text, sans-serif);
+  color: var(--color-text-secondary, #5c5d6b);
+}
+
+.studioVoiceRoomStatusSceneTab--active {
+  border-color: var(--color-brand-primary, #16d8c8);
+  color: var(--color-text-primary, #181923);
+}
+
+.studioMomentDeviceStack {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.studioMomentLikedMentionStatus {
+  font: 400 13px/18px var(--font-family-text, sans-serif);
+  color: var(--color-text-secondary, #5c5d6b);
+  text-align: center;
+}
+
+.studioMomentLikedCard {
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: var(--color-surface-panel, #fff);
+  border: 1px solid var(--color-border-subtle, rgba(24, 25, 35, 0.08));
+  text-align: left;
+}
+
+.studioMomentLikedCardHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.studioMomentLikedCardBody {
+  font: 400 14px/20px var(--font-family-text, sans-serif);
+  color: var(--color-text-secondary, #5c5d6b);
+}
+
+.studioMomentLikedCardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.studioMomentLikedPill {
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 16px;
+  border: 1px solid var(--color-border-subtle, rgba(24, 25, 35, 0.12));
+  background: transparent;
+  font: 500 13px/32px var(--font-family-text, sans-serif);
+}
+
+.studioMomentLikedPill--brand {
+  border-color: var(--color-brand-primary, #16d8c8);
+  color: var(--color-brand-primary, #16d8c8);
+}
+
+.studioMomentLikedRegionToggle {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.studioMomentLikedRegionToggleBtn {
+  min-height: 28px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-subtle, rgba(24, 25, 35, 0.12));
+  background: transparent;
+  font: 500 11px/28px var(--font-family-text, sans-serif);
+}
+
+.studioMomentLikedRegionToggleBtn--active {
+  background: rgba(22, 216, 200, 0.12);
+  border-color: var(--color-brand-primary, #16d8c8);
+}
+
+.studioMomentLikedCardButton {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: inherit;
+}
+
+.studioMomentLikedDevice,
+.studioMomentComposeDevice {
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--color-surface-canvas, #f7f8fa);
+  border: 1px solid var(--color-border-subtle, rgba(24, 25, 35, 0.08));
+}
+
+.studioMomentComposeBody {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.studioMomentComposeInput {
+  width: 100%;
+  min-height: 120px;
+  border: 0;
+  resize: vertical;
+  font: 400 16px/22px var(--font-family-text, sans-serif);
+  background: transparent;
+}
+
+.studioMomentComposerToolbar {
+  display: flex;
+  gap: 16px;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom, 0));
+  border-top: 1px solid var(--color-border-subtle, rgba(24, 25, 35, 0.08));
+  background: var(--color-surface-panel, #fff);
+}
+
+.studioMomentComposerToolbar button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  font: 600 18px/44px var(--font-family-text, sans-serif);
+}
+
+.studioMomentMentionPreview {
+  font: 400 12px/16px var(--font-family-text, sans-serif);
+  color: var(--color-text-tertiary, #8e8f9a);
+}
+
+.studioMomentMentionToken {
+  color: var(--color-brand-primary, #16d8c8);
+  font-weight: 600;
+}
+
+.studioMomentMentionSearch {
+  padding-bottom: 8px;
+}
+
+.studioMomentMentionSheetActions {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px 20px;
+}
+
+.studioMomentMentionSheetActions .kitButton {
+  flex: 1;
+}
+
+.studioMomentLikedDetailHost {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.studioMomentCommentOverlayBar {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--color-surface-panel, #fff);
+  box-shadow: 0 8px 24px rgba(24, 25, 35, 0.12);
+}
+
+.studioMomentCommentInput {
+  flex: 1;
+  min-height: 44px;
+  max-height: 96px;
+  border: 0;
+  resize: none;
+  font: 400 15px/20px var(--font-family-text, sans-serif);
+}
+
+.studioMomentCommentAt {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  font: 600 18px/44px var(--font-family-text, sans-serif);
+}
+
+.regularNavigationTrailing .studioMomentClearAll {
+  border: 0;
+  background: transparent;
+  font: 500 14px/20px var(--font-family-text, sans-serif);
+  color: var(--color-brand-primary, #16d8c8);
+  min-height: 44px;
+}
+
+.studioMomentNotifyDelete {
+  border: 0;
+  background: transparent;
+  color: #ff4d4f;
+  font: 500 13px/20px var(--font-family-text, sans-serif);
+  min-height: 44px;
+}
+
+.studioMomentNotifyEmpty {
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--color-text-tertiary, #8e8f9a);
+}
+
+.studioMomentComposeDevice {
+  display: flex;
+  flex-direction: column;
+}
+
+.studioMomentCoreFeedWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.studioMomentCoreFeedWrap--liked .prototypeFeedScroll {
+  padding-bottom: 24px;
+}
+
+.studioLikedMomentsDevice {
+  position: relative;
+  background: var(--color-surface-canvas);
+}
+
+.studioLikedMomentsDevice[data-theme="dark"] {
+  --color-brand-primary: #14c2b4;
+  --color-brand-primary-a10: rgba(22, 216, 200, 0.3);
+  --color-text-primary: rgba(255, 255, 255, 0.9);
+  --color-text-secondary: #8b8c91;
+  --color-text-tertiary: #8b8c91;
+  --color-text-auxiliary: #a3a5b1;
+  --color-surface-panel: #181923;
+  --color-surface-canvas: #181923;
+  --color-button-secondary: rgba(255, 255, 255, 0.1);
+  --color-border-subtle: rgba(255, 255, 255, 0.04);
+  --color-border-image: rgba(255, 255, 255, 0.1);
+  --color-image-empty-background: rgba(255, 255, 255, 0.1);
+}
+
+.studioLikedMomentsLayout {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.studioLikedMomentsMaster,
+.studioLikedMomentsDetail {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.studioLikedMomentsContext {
+  display: flex;
+  min-height: 56px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  color: var(--color-text-primary);
+  background: var(--color-surface-canvas);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.studioLikedMomentsContextIcon {
+  --system-icon-color: var(--color-brand-primary);
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  color: var(--color-brand-primary);
+  background: var(--color-brand-primary-a10);
+  border-radius: var(--radius-full);
+}
+
+.studioLikedMomentsContext > span:last-child {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.studioLikedMomentsContext strong {
+  color: var(--color-text-primary);
+  font: 600 14px/20px "SF Pro", var(--font-sans);
+}
+
+.studioLikedMomentsContext small {
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font: 400 12px/18px Inter, "PingFang SC", sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studioLikedMomentsScroll,
+.studioLikedMomentsDetailScroll {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.studioLikedMomentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+.studioLikedMomentCard {
+  overflow: hidden;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-12);
+  transition:
+    opacity var(--motion-duration-standard) var(--motion-easing-standard),
+    transform var(--motion-duration-standard) var(--motion-easing-standard),
+    border-color var(--motion-duration-instant) var(--motion-easing-standard);
+}
+
+.studioLikedMomentCard--selected {
+  border-color: var(--color-border-subtle);
+  border-left-color: var(--color-brand-primary);
+  border-left-width: 3px;
+}
+
+.studioLikedMomentCard--removing {
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+.studioLikedMomentAuthor {
+  display: grid;
+  min-height: 64px;
+  align-items: center;
+  padding: 12px 16px;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.studioLikedMomentIdentity {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.studioLikedMomentIdentity strong {
+  overflow: hidden;
+  color: var(--color-text-primary);
+  font: 590 16px/20px "SF Pro", var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studioLikedMomentTags {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.studioLikedMomentLikedAt {
+  max-width: 88px;
+  color: var(--color-text-secondary);
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+  text-align: right;
+}
+
+.studioLikedMomentContent {
+  display: block;
+  width: 100%;
+  padding: 0 16px;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.studioLikedMomentContent:focus-visible,
+.studioLikedMomentActions button:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.studioLikedMomentCaption {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: 400 14px/22px Inter, "PingFang SC", sans-serif;
+}
+
+.studioLikedMomentCaption mark {
+  color: var(--color-text-secondary);
+  background: transparent;
+}
+
+.studioLikedMomentCard--list .studioLikedMomentContent {
+  padding-bottom: 12px;
+}
+
+.studioLikedMomentCard--list.studioLikedMomentCard--has-media
+  .studioLikedMomentContent {
+  display: grid;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 88px;
+  gap: 12px;
+}
+
+.studioLikedMomentCard--list .studioLikedMomentCaption {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.studioLikedMomentMedia {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--color-image-empty-background);
+  border: 1px solid var(--color-border-image);
+  border-radius: var(--radius-8);
+}
+
+.studioLikedMomentMedia img {
+  object-fit: cover;
+}
+
+.studioLikedMomentCard--list .studioLikedMomentMedia {
+  width: 88px;
+  margin-top: 0;
+  aspect-ratio: 1;
+}
+
+.studioLikedMomentActions {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+}
+
+.studioLikedMomentActions button {
+  display: inline-flex;
+  min-width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 8px;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font: 400 12px/16px "SF Pro", var(--font-sans);
+}
+
+.studioLikedMomentActions button:active {
+  background: var(--color-button-secondary);
+}
+
+.studioLikedMomentActions button:disabled {
+  cursor: default;
+}
+
+.studioLikedMomentActions .studioLikedMomentLike {
+  --system-icon-color: var(--color-state-like);
+  color: var(--color-state-like);
+}
+
+.studioLikedMomentActions .studioLikedMomentOpenAction {
+  --system-icon-color: var(--color-text-secondary);
+  gap: 2px;
+  margin-left: auto;
+  color: var(--color-text-secondary);
+}
+
+.studioLikedMomentHistoryLabel {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  color: var(--color-text-secondary);
+  font: 400 12px/18px Inter, "PingFang SC", sans-serif;
+}
+
+.studioLikedMomentHistoryLabel .systemIcon {
+  flex: 0 0 auto;
+}
+
+.studioLikedMomentCard--list .studioLikedMomentHistoryLabel {
+  display: none;
+}
+
+.studioLikedMomentsEmpty {
+  min-height: 100%;
+  padding: 32px 16px;
+}
+
+.studioLikedMomentsToast {
+  position: absolute;
+  z-index: 20;
+  right: 16px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  left: 16px;
+  display: flex;
+  justify-content: center;
+  animation: studioLikedMomentsToastIn var(--motion-duration-standard)
+    var(--motion-easing-standard) both;
+}
+
+.studioLikedMomentsToast .kitToast {
+  max-width: min(100%, 260px);
+}
+
+.studioLikedMomentsDetail {
+  display: none;
+  background: var(--color-surface-panel);
+  border-left: 1px solid var(--color-border-subtle);
+}
+
+.studioLikedMomentsDetailScroll {
+  padding: 16px 24px 24px;
+  background: var(--color-surface-canvas);
+}
+
+.studioLikedMomentCard--detail {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.studioLikedMomentCard--detail .studioLikedMomentAuthor {
+  min-height: 72px;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+}
+
+.studioLikedMomentCard--detail .studioLikedMomentMedia {
+  aspect-ratio: 16 / 10;
+}
+
+@keyframes studioLikedMomentsToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.studioLikedMomentsDevice--split .studioLikedMomentsLayout {
+  grid-template-columns: minmax(320px, 38%) minmax(0, 1fr);
+}
+
+.studioLikedMomentsDevice--split .studioLikedMomentsDetail {
+  display: flex;
+}
+
+.studioLikedMomentsDevice--split .studioLikedMomentsList {
+  padding: 12px;
+}
+
+.studioLikedMomentsDevice--split
+  .studioLikedMomentCard--list
+  .studioLikedMomentHistoryLabel {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studioLikedMomentCard,
+  .studioLikedMomentsToast {
+    transition: opacity var(--motion-duration-instant) linear;
+    animation-duration: var(--motion-duration-instant);
+  }
+
+  .studioLikedMomentCard--removing,
+  .studioLikedMomentsToast {
+    transform: none;
+  }
+}
+
+.studioMomentRegion--closed .prototypeFeedChat {
+  display: none;
+}
+
+.studioMomentDetail--closed-region .feedDetailComposerAction--chat {
+  display: none;
+}
+
+.studioMomentCaptureDevice {
+  position: relative;
+}
+
+.studioMomentLikedMentionShell .feedComposeOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.studioMomentMentionSheet {
+  max-height: 72%;
+}
+
+.studioMomentMentionSheet .feedComposeAudienceOptions {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.studioMomentMentionNoResults {
+  padding: 24px 16px;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.feedComposeDockMentionBtn,
+.feedDetailReplyMention {
+  color: var(--color-text-primary);
+  font: 590 22px/24px "SF Pro", var(--font-sans);
+}
+
+.studioMomentNotificationThumb {
+  display: block;
+  width: 44px;
+  height: 44px;
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border-image);
+  border-radius: 8px;
+}
+
+.studioMomentNotifyRow {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.studioMomentNotifyRow .regularListItem {
+  position: relative;
+  z-index: 1;
+  min-height: 84px;
+  color: var(--color-text-primary);
+  background: var(--color-surface-panel);
+  transition: transform 200ms ease-out;
+}
+
+.studioMomentNotifyRow--revealed .regularListItem {
+  transform: translateX(-76px);
+}
+
+.studioMomentNotifyTrailing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.studioMomentNotifyMore {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  color: var(--color-text-secondary);
+  background: transparent;
+}
+
+.studioMomentNotifyMore:focus-visible,
+.studioMomentNotifyDeleteAction:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: -2px;
+}
+
+.studioMomentNotifyDeleteAction {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  width: 76px;
+  place-items: center;
+  border: 0;
+  color: #fff;
+  background: #e93b3b;
+  font: 500 14px/20px var(--font-family-text, sans-serif);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studioMomentNotifyRow .regularListItem {
+    transition: none;
+  }
+}
+
+.studioMomentLikedMentionShell .kitCenterDialogOverlay {
+  z-index: 100;
+}
+
+.studioMomentClearDialog {
+  background: var(--color-surface-panel);
 }

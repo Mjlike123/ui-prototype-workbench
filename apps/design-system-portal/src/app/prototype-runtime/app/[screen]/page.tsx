@@ -5,6 +5,7 @@ import {
   PROTOTYPE_APP_SCREENS,
   type PrototypeAppScreen,
 } from "@/lib/prototype-app-routes";
+import { parseFeedComposeCaptureScene } from "@/lib/feed-compose-capture-scenes";
 
 export function generateStaticParams() {
   return PROTOTYPE_APP_SCREENS.map((screen) => ({ screen }));
@@ -22,6 +23,7 @@ export default async function PrototypeAppScreenPage({
     friendId?: string;
     friendName?: string;
     friendAvatar?: string;
+    scene?: string;
   }>;
 }) {
   const { screen } = await params;
@@ -42,6 +44,8 @@ export default async function PrototypeAppScreenPage({
         }
       : undefined;
 
+  const feedComposeScene = parseFeedComposeCaptureScene(query.scene);
+
   return (
     <main
       className={`prototypeRuntimePage${
@@ -53,6 +57,7 @@ export default async function PrototypeAppScreenPage({
         width={width}
         height={height}
         theme={theme}
+        feedComposeScene={feedComposeScene}
         privateChatFriend={privateChatFriend}
       />
     </main>

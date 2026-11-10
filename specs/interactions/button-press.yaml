@@ -5,6 +5,7 @@ status: review
 description: 按钮在默认、按下和禁用状态之间切换，并在一次有效释放后触发操作。
 componentIds:
   - button
+  - text-button
 states:
   - default
   - pressed

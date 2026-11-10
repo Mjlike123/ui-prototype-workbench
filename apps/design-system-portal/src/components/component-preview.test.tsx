@@ -88,6 +88,22 @@ const button: ComponentSpec = {
   rules: [],
 };
 
+const textButton: ComponentSpec = {
+  schemaVersion: 1,
+  id: "text-button",
+  version: "1.0.0",
+  title: "文字按钮",
+  status: "review",
+  platforms: ["ios", "android", "h5"],
+  previewKey: "text-button",
+  detection: {
+    figmaComponentIds: ["40:3663"],
+    nameAliases: ["文字按钮", "文字+icon"],
+  },
+  roles: ["container", "label"],
+  rules: [],
+};
+
 const searchControl: ComponentSpec = {
   schemaVersion: 1,
   id: "search-control",
@@ -149,6 +165,22 @@ const switchControl: ComponentSpec = {
     nameAliases: ["开关"],
   },
   roles: ["container", "trailing"],
+  rules: [],
+};
+
+const selectorButton: ComponentSpec = {
+  schemaVersion: 1,
+  id: "selector-button",
+  version: "1.0.0",
+  title: "选择器按钮",
+  status: "review",
+  platforms: ["ios", "android", "h5"],
+  previewKey: "selector-button",
+  detection: {
+    figmaComponentIds: ["9088:176887"],
+    nameAliases: ["选择器按钮", "selector button"],
+  },
+  roles: ["trailing"],
   rules: [],
 };
 
@@ -452,6 +484,42 @@ describe("ComponentPreview", () => {
     expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
   });
 
+  it("renders text button variants and interactive controls", () => {
+    render(<ComponentPreview component={textButton} />);
+
+    expect(
+      screen.getByRole("heading", { name: "Figma 变体矩阵" }),
+    ).toBeInTheDocument();
+    const liveButtons = screen.getAllByRole("button", { name: "文字+icon" });
+    expect(liveButtons.length).toBeGreaterThan(1);
+    const [liveButton] = liveButtons;
+    expect(liveButton).toHaveClass("kitTextButton--size16");
+
+    fireEvent.change(screen.getByLabelText("字号"), {
+      target: { value: "size12" },
+    });
+    fireEvent.change(screen.getByLabelText("颜色"), {
+      target: { value: "neutral" },
+    });
+    fireEvent.change(screen.getByLabelText("状态"), {
+      target: { value: "secondary" },
+    });
+    fireEvent.change(screen.getByLabelText("图标"), {
+      target: { value: "none" },
+    });
+    fireEvent.change(screen.getByLabelText("交互"), {
+      target: { value: "disabled" },
+    });
+
+    expect(liveButton).toHaveClass(
+      "kitTextButton--size12",
+      "kitTextButton--neutral",
+      "kitTextButton--secondary",
+      "kitTextButton--disabled",
+    );
+    expect(liveButton).toBeDisabled();
+  });
+
   it("supports search activation, input, clear and cancel", () => {
     render(<ComponentPreview component={searchControl} />);
 
@@ -682,6 +750,28 @@ describe("ComponentPreview", () => {
     });
     expect(
       screen.getByRole("switch", { name: "受控开关示例" }),
+    ).toBeChecked();
+  });
+
+  it("renders selector button states and syncs the interactive demo", () => {
+    render(<ComponentPreview component={selectorButton} />);
+
+    expect(screen.getByRole("checkbox", { name: "未选中" })).not.toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "选中" })).toBeChecked();
+    expect(
+      screen.getByRole("checkbox", { name: "受控选择器示例" }),
+    ).toBeChecked();
+
+    fireEvent.click(screen.getByRole("checkbox", { name: "受控选择器示例" }));
+    expect(
+      screen.getByRole("checkbox", { name: "受控选择器示例" }),
+    ).not.toBeChecked();
+
+    fireEvent.change(screen.getByLabelText("交互示例"), {
+      target: { value: "on" },
+    });
+    expect(
+      screen.getByRole("checkbox", { name: "受控选择器示例" }),
     ).toBeChecked();
   });
 });

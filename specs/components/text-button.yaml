@@ -1,0 +1,162 @@
+schemaVersion: 1
+id: text-button
+version: 1.0.0
+title: 文字按钮
+owner: TopTop Design System
+category: Actions
+status: review
+since: 1.0.0
+tags:
+  - button
+  - text-button
+  - link-action
+  - navigation
+platforms:
+  - ios
+  - android
+  - h5
+description: 无实体底色的文字操作按钮，支持 16、14、12 三档字号，主题色与中性色语气，以及无图标、左侧图标与右侧图标（含方向 Chevron）布局。
+previewKey: text-button
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=40-3663
+  nodeId: "40:3663"
+  observations:
+    - 文案与图标水平居中对齐，间距 4px；图标在左或在右，亦可无图标
+    - 16 号字配 20×20pt 图标；14 号字配 20×20pt 或 24×24pt 业务图标；12 号字配 14×14pt 图标
+    - 主题色正文使用 brand primary；中性色正文使用一级标题色；富文本（次级语气）使用二级正文色
+    - 禁用态：主题色使用 #8AECE3；中性色使用二级正文色
+    - 列表尾部品牌色「文字+方向」为 14 号字主题色 + 右侧 Chevron 的常见组合
+anatomy:
+  - id: container
+    label: 按钮容器
+    description: 透明背景的内联按钮，承载文案与可选图标，按内容自适应宽度。
+  - id: label
+    label: 文案
+    description: 单行动词或短语，不换行；过长时由外层布局裁切或调整文案。
+  - id: leadingIcon
+    label: 前置图标
+    description: 可选，位于文案左侧，继承当前文字颜色。
+  - id: trailingIcon
+    label: 尾部图标
+    description: 可选，位于文案右侧；可为 SystemIcon 或品牌/弱化 Chevron 预设。
+variants:
+  - name: size
+    values:
+      - size16
+      - size14
+      - size12
+    defaultValue: size16
+  - name: appearance
+    values:
+      - brand
+      - neutral
+    defaultValue: brand
+  - name: emphasis
+    values:
+      - body
+      - secondary
+    defaultValue: body
+  - name: iconPosition
+    values:
+      - none
+      - leading
+      - trailing
+    defaultValue: none
+  - name: interaction
+    values:
+      - default
+      - disabled
+    defaultValue: default
+props:
+  - name: label
+    type: string
+    required: true
+    description: 操作文案，保持简短明确。
+  - name: size
+    type: size16|size14|size12
+    defaultValue: size16
+    description: 控制字号与配套图标尺寸。
+  - name: appearance
+    type: brand|neutral
+    defaultValue: brand
+    description: brand 用于主操作或强调链；neutral 用于正文级或列表内操作。
+  - name: emphasis
+    type: body|secondary
+    defaultValue: body
+    description: secondary 对应 Figma「富文本」语气，使用较弱的二级正文色。
+  - name: iconPosition
+    type: none|leading|trailing
+    defaultValue: none
+    description: 图标相对文案的位置。
+  - name: leadingIcon
+    type: SystemIconName
+    description: iconPosition 为 leading 时使用的语义图标名称。
+  - name: trailingIcon
+    type: SystemIconName
+    description: iconPosition 为 trailing 时使用的语义图标名称。
+  - name: trailingPreset
+    type: chevron
+    description: 使用设计系统 Chevron 矢量而非业务 SystemIcon。
+  - name: disabled
+    type: boolean
+    defaultValue: false
+    description: 禁用时不触发 onPress，并切换为禁用色。
+  - name: onPress
+    type: () => void
+    description: 一次有效点击或键盘激活后触发。
+tokenRefs:
+  - color.brand.primary
+  - color.brand.primary-a50
+  - color.text.primary
+  - color.text.secondary
+  - typography.navigation.regular-action
+  - typography.list.body
+  - typography.list.metadata
+  - spacing.1
+interactionIds:
+  - button-press
+accessibility:
+  - 必须渲染原生 button，不使用可点击 div。
+  - disabled 必须设置 disabled 属性，不能只降低透明度。
+  - 图标装饰使用 aria-hidden；按钮 aria-label 默认取自 label。
+  - 焦点可见时使用品牌色描边，outline-offset 2px。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "40:3663"
+    - "40:3664"
+    - "40:3667"
+    - "40:3670"
+    - "40:3673"
+    - "818:7773"
+    - "818:7858"
+  nameAliases:
+    - 文字按钮
+    - 文字+icon
+    - text button
+    - text action
+    - link button
+roles:
+  - container
+  - label
+rules:
+  - id: container.gap
+    title: 文案与图标间距
+    category: spacing
+    metric: gap
+    tolerance: 1
+    aggregate: rule
+  - id: leadingIcon.size
+    title: 前置图标尺寸
+    category: structure
+    metric: iconSize
+    tolerance: 2
+    aggregate: rule
+  - id: default.textColor
+    title: 默认可点击文字色
+    category: selected
+    metric: textColor
+    state: selected
+    tolerance: 12
+    aggregate: rule

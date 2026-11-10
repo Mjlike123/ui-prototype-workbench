@@ -113,6 +113,17 @@ properties:
       contentRequirements:
         type: array
         items: { type: string }
+      creativeLatitude:
+        type: object
+        description: 传给下游 Studio 的受约束探索边界
+        required: [locked, variable]
+        properties:
+          locked:
+            type: array
+            items: { type: string }
+          variable:
+            type: array
+            items: { type: string }
       acceptance:
         type: array
         items: { type: string }

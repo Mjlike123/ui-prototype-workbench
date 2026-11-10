@@ -1,0 +1,102 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "capturedAt": "2026-10-29T11:07:45.766Z",
+  "files": [
+    {
+      "state": "feed-open",
+      "file": "moment-feed-open-375.png",
+      "width": 375,
+      "height": 812,
+      "scene": "feed-structure",
+      "region": "open",
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-feed-open-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=375&height=812&scene=feed-structure&region=open"
+    },
+    {
+      "state": "feed-closed",
+      "file": "moment-feed-closed-375.png",
+      "width": 375,
+      "height": 812,
+      "scene": "feed-structure",
+      "region": "closed",
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-feed-closed-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=375&height=812&scene=feed-structure&region=closed"
+    },
+    {
+      "state": "liked-list",
+      "file": "moment-liked-list-375.png",
+      "width": 375,
+      "height": 812,
+      "scene": "liked-list",
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-liked-list-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=375&height=812&scene=liked-list"
+    },
+    {
+      "state": "profile-liked-entry",
+      "file": "moment-profile-liked-375.png",
+      "width": 375,
+      "height": 812,
+      "scene": "profile-liked",
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-profile-liked-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=375&height=812&scene=profile-liked"
+    },
+    {
+      "state": "compose-mention",
+      "file": "moment-compose-mention-375.png",
+      "width": 375,
+      "height": 812,
+      "scene": "compose-mention",
+      "openMention": true,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-compose-mention-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=375&height=812&scene=compose-mention"
+    },
+    {
+      "state": "notifications-dialog",
+      "file": "moment-notify-clear-375.png",
+      "width": 375,
+      "height": 812,
+      "scene": "notifications",
+      "openClearDialog": true,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-notify-clear-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=375&height=812&scene=notifications"
+    },
+    {
+      "state": "feed-open",
+      "file": "moment-feed-open-466.png",
+      "width": 466,
+      "height": 678,
+      "scene": "feed-structure",
+      "region": "open",
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-feed-open-466.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=466&height=678&scene=feed-structure&region=open"
+    },
+    {
+      "state": "liked-list",
+      "file": "moment-liked-list-466.png",
+      "width": 466,
+      "height": 678,
+      "scene": "liked-list",
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-liked-list-466.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=466&height=678&scene=liked-list"
+    },
+    {
+      "state": "feed-open",
+      "file": "moment-feed-open-890.png",
+      "width": 890,
+      "height": 626,
+      "scene": "feed-structure",
+      "region": "open",
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-feed-open-890.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=890&height=626&scene=feed-structure&region=open"
+    },
+    {
+      "state": "liked-list",
+      "file": "moment-liked-list-890.png",
+      "width": 890,
+      "height": 626,
+      "scene": "liked-list",
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/moment-liked-list-890.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/moment-liked-mention?theme=light&width=890&height=626&scene=liked-list"
+    }
+  ]
+}

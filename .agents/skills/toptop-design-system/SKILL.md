@@ -24,10 +24,18 @@ description: |
 
 没有截图时根据产品目标搭建；有截图时直接查看图片，不用像素带启发式猜测。
 
+### 现有页面上的增量功能
+
+当需求是在现有 UI 中增加能力时，先列出「现有页面保持什么、仅新增什么、触发后出现哪些状态」。以原稿的网格、内容层级、组件样式和真实素材为基线，局部修改入口与受影响区域，不把整页重画成近似布局，也不通过克隆参考画板冒充独立设计。
+
+选组件时同时检查任务语义、内容模型、尺寸与交互状态。视觉上相似不等于适用：可搜索、可选择的好友半屏应使用半屏内容容器并组合搜索和列表；`action-panel` 的动作菜单语义不适用于这种任务。Kit 外壳能复用而业务内容不能复用时，保留 Kit 实例作为外壳，把内容作为明确的原型组合，并记录组件缺口。
+
+增量设计至少核对触发前、触发后、选中或输入中、完成后四类状态，以及入口与结果在其他相关页面的呈现。用户提供的标注与参考图用于解释设计意图；从中提炼可复用规则后，用未见过的状态验证规则，不能只复制图层。
+
 ## Phase 2：最小化读取 Kit
 
-1. 读取 `specs/principles/core-design-principles.yaml`，按清晰简单 → 一致规律 → 包容开放确定取舍。
-2. 读取 `specs/foundations/*.yaml` 中与当前页面有关的分类。
+1. 读取 `../toptop-profile/SKILL.md`、`../toptop-profile/profile.yaml` 和 `references/mdesign-baseline.md`，确认权威顺序、目标视口与共享硬基线。M-Design PDF 只提供通用 UI 基线，不能覆盖 TopTop YAML。
+2. 读取 `specs/principles/core-design-principles.yaml` 和 `specs/foundations/*.yaml` 中与当前页面有关的分类，按清晰简单 → 一致规律 → 包容开放确定取舍。
 3. 搜索可复用组件，只读取候选 `specs/components/<id>.yaml`。
 4. 读取对应 `content/components/<id>.mdx`，并根据组件 `interactionIds` 读取 `specs/interactions/<id>.yaml` 与 `content/interactions/<id>.mdx`。
 5. 搜索目标代码库中已有组件、Token 和页面模式。
@@ -35,6 +43,10 @@ description: |
 组件存在时必须复用；没有匹配契约时把它列为 `kitGap`，不要伪装成相似组件。原型任务可以通过 `toptop-prototype-studio` 补齐探索区域；生产任务仍把缺失能力视为 blocker。
 
 品牌主色默认使用 `color.brand.primary`（`#16D8C8`）。只有需求、既有页面契约或业务 Profile 明确指定 KU、Teami/TW 等区域/包时，才可使用 `color.ku.*`、`color.brand.tw-*` 等覆盖 Token；“更温暖”“更醒目”等视觉偏好不是切换区域品牌色的依据。
+
+实现前必须形成 `baselineEvidence`：记录本页采用的视口、16pt 内容边距或合法 full-bleed、间距 Token、图标来源、44pt 触控区、颜色 Token、Safe Area、关键状态和可恢复结果。无对应要求时写明不适用；不得省略检查或用截图观感代替合同证据。
+
+当交付物包含 Figma 写入时，每次完成目标节点修改后自动读取并执行 `references/figma-node-token-audit.md`：扫描可见硬编码颜色，并检查 Primary/Regular Navigation 是否绑定 `背景色/bgPrimary`。结果写入 `baselineEvidence.figmaAudit`；当前只报告、不自动修复、不作为交付门禁。
 
 ### Kit candidate 进入条件
 
@@ -107,6 +119,7 @@ description: |
 - componentId 与 spec 路径
 - 交互状态和未覆盖区域
 - 截图/Figma 引用（如有）
+- `baselineEvidence.figmaAudit`（存在 Figma 写入时）
 - `kitGaps`
 - Kit candidates 的评审结论、落点与生命周期状态
 

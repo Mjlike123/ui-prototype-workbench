@@ -6,6 +6,7 @@ import { AvatarVisual } from "@/components/kit/avatar-visual";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { ListTag } from "@/components/kit/list-tag";
 import { PagIcon } from "@/components/kit/pag-icon";
+import { RegularListItem } from "@/components/kit/regular-list-item";
 import { SystemIcon } from "@/components/kit/system-icon";
 import { UnderlineSecondaryTab } from "@/components/kit/underline-secondary-tab";
 import type { BottomNavKey } from "@/lib/profile-prototype-model";
@@ -15,9 +16,12 @@ type ProfilePagePrototypeProps = {
   height?: number;
   theme?: "light" | "dark";
   className?: string;
+  embedded?: boolean;
   onNavigate?: (destination: BottomNavKey) => void;
   onBack?: () => void;
   onOpenCompose?: () => void;
+  onOpenLikedMoments?: () => void;
+  likedMomentsCount?: number;
 };
 
 type ProfileTab = "about" | "movement";
@@ -52,9 +56,12 @@ export function ProfilePagePrototype({
   height = 812,
   theme = "light",
   className,
+  embedded = false,
   onNavigate,
   onBack,
   onOpenCompose,
+  onOpenLikedMoments,
+  likedMomentsCount,
 }: ProfilePagePrototypeProps) {
   /*
    * Screen: Profile — active room entry, without occupying the honor badge
@@ -85,32 +92,38 @@ export function ProfilePagePrototype({
   return (
     <div
       className={[
-        "pageCanvasDevice",
+        embedded ? null : "pageCanvasDevice",
         "profileV3Device",
+        embedded ? "profileV3Device--embedded" : null,
         navigationSolid ? "isNavigationSolid" : null,
         className,
       ]
         .filter(Boolean)
         .join(" ")}
       style={
-        {
-          "--page-canvas-width": `${width}px`,
-          "--page-canvas-height": `${height}px`,
-        } as CSSProperties
+        embedded
+          ? undefined
+          : ({
+              "--page-canvas-width": `${width}px`,
+              "--page-canvas-height": `${height}px`,
+            } as CSSProperties)
       }
       aria-label={`个人资料原型 · ${width}×${height}`}
     >
-      <IosStatusBar
-        appearance={
-          !navigationSolid || theme === "dark"
-            ? "light-content"
-            : "dark-content"
-        }
-      />
+      {embedded ? null : (
+        <IosStatusBar
+          appearance={
+            !navigationSolid || theme === "dark"
+              ? "light-content"
+              : "dark-content"
+          }
+        />
+      )}
       <div className="pageCanvasContentShell">
         <div className="profileV3Scroll" onScroll={handleScroll}>
           <ProfileV3Navigation
             solid={navigationSolid}
+            showBack={!embedded}
             onBack={onBack ?? (() => showAction("返回上一页"))}
             onCar={() => showAction("打开座驾")}
             onMore={() => showAction("打开个人资料更多操作")}
@@ -187,6 +200,50 @@ export function ProfilePagePrototype({
               </div>
             </header>
 
+            {onOpenLikedMoments ? (
+              <div
+                className="profileV3PrivateActions"
+                role="list"
+                aria-label="仅自己可见的个人功能"
+              >
+                <RegularListItem
+                  listType="action"
+                  title="我赞过的"
+                  subtitle="仅你可见"
+                  ariaLabel={[
+                    "我赞过的",
+                    likedMomentsCount === undefined
+                      ? null
+                      : `${likedMomentsCount} 条动态`,
+                    "仅你可见",
+                  ]
+                    .filter(Boolean)
+                    .join("，")}
+                  className="profileV3LikedMomentsEntry"
+                  leading={
+                    <span
+                      className="profileV3LikedMomentsIcon"
+                      aria-hidden="true"
+                    >
+                      <SystemIcon name="like" />
+                    </span>
+                  }
+                  trailing={
+                    <span
+                      className="profileV3LikedMomentsMeta"
+                      aria-hidden="true"
+                    >
+                      {likedMomentsCount === undefined ? null : (
+                        <small>{likedMomentsCount} 条动态</small>
+                      )}
+                      <SystemIcon name="chevronRight" size={16} />
+                    </span>
+                  }
+                  onPress={onOpenLikedMoments}
+                />
+              </div>
+            ) : null}
+
             <div className="profileV3StickyTabs">
               <UnderlineSecondaryTab
                 items={PROFILE_TABS}
@@ -229,11 +286,13 @@ export function ProfilePagePrototype({
 
 function ProfileV3Navigation({
   solid,
+  showBack = true,
   onBack,
   onCar,
   onMore,
 }: {
   solid: boolean;
+  showBack?: boolean;
   onBack: () => void;
   onCar: () => void;
   onMore: () => void;
@@ -243,9 +302,13 @@ function ProfileV3Navigation({
       className={`profileV3Navigation${solid ? " isSolid" : ""}`}
       aria-label="个人资料导航"
     >
-      <button type="button" aria-label="返回" onClick={onBack}>
-        <SystemIcon name="back" />
-      </button>
+      {showBack ? (
+        <button type="button" aria-label="返回" onClick={onBack}>
+          <SystemIcon name="back" />
+        </button>
+      ) : (
+        <span className="profileV3NavigationSpacer" aria-hidden="true" />
+      )}
       <span className="profileV3NavigationTitle">
         <strong>Amanda</strong>
         <small>ID:1239232</small>

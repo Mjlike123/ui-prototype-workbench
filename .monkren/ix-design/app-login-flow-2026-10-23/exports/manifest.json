@@ -1,0 +1,102 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "capturedAt": "2026-10-23T06:17:08.464Z",
+  "files": [
+    {
+      "state": "landing",
+      "file": "login-landing-375.png",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-landing-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=375&height=812"
+    },
+    {
+      "state": "phone",
+      "file": "login-phone-375.png",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-phone-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=375&height=812"
+    },
+    {
+      "state": "otp-error",
+      "file": "login-otp-error-375.png",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-otp-error-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=375&height=812"
+    },
+    {
+      "state": "success",
+      "file": "login-success-375.png",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-success-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=375&height=812"
+    },
+    {
+      "state": "landing",
+      "file": "login-landing-466.png",
+      "width": 466,
+      "height": 678,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-landing-466.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=466&height=678"
+    },
+    {
+      "state": "phone",
+      "file": "login-phone-466.png",
+      "width": 466,
+      "height": 678,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-phone-466.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=466&height=678"
+    },
+    {
+      "state": "otp-error",
+      "file": "login-otp-error-466.png",
+      "width": 466,
+      "height": 678,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-otp-error-466.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=466&height=678"
+    },
+    {
+      "state": "success",
+      "file": "login-success-466.png",
+      "width": 466,
+      "height": 678,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-success-466.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=466&height=678"
+    },
+    {
+      "state": "landing",
+      "file": "login-landing-890.png",
+      "width": 890,
+      "height": 626,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-landing-890.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=890&height=626"
+    },
+    {
+      "state": "phone",
+      "file": "login-phone-890.png",
+      "width": 890,
+      "height": 626,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-phone-890.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=890&height=626"
+    },
+    {
+      "state": "otp-error",
+      "file": "login-otp-error-890.png",
+      "width": 890,
+      "height": 626,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-otp-error-890.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=890&height=626"
+    },
+    {
+      "state": "success",
+      "file": "login-success-890.png",
+      "width": 890,
+      "height": 626,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/app-login-flow-2026-10-23/exports/login-success-890.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/app-login-flow?theme=light&width=890&height=626"
+    }
+  ]
+}

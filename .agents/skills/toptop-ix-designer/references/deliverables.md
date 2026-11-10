@@ -62,6 +62,17 @@
 - `needs-product-confirm` 项不混入已采纳方案正文
 - 验收清单可执行（可勾选用例）
 
+## 下游质量证据
+
+存在 `qualityBar` 时，交付物必须把 `creativeLatitude.locked` 与 `creativeLatitude.variable` 原样传给 Prototype Studio，并预留以下实现证据：
+
+- 选定方向与理由；
+- 375×812、466×678、890×626 运行截图；
+- 使用同一基线问题完成的截图盲评：分数、前三项差距、修正轮次；
+- `subtractionLog`：删除项、保留理由和前后截图。
+
+IX 阶段只定义证据要求，不预填分数或声称已经完成视觉验收。
+
 ## 评审闸门
 
 默认在以下节点暂停征求确认：

@@ -34,12 +34,14 @@ import type {
   MeSecondaryScreen,
   PrototypeAppScreen,
 } from "@/lib/prototype-app-routes";
+import type { FeedComposeCaptureScene } from "@/lib/feed-compose-capture-scenes";
 
 export function PrototypeAppRouter({
   screen,
   width = 375,
   height = 812,
   theme = "light",
+  feedComposeScene,
   onPreviewNavigate,
   searchReturnScreen = "toptop",
   privateChatFriend,
@@ -49,6 +51,7 @@ export function PrototypeAppRouter({
   width?: number;
   height?: number;
   theme?: "light" | "dark";
+  feedComposeScene?: FeedComposeCaptureScene;
   onPreviewNavigate?: (screen: PrototypeAppScreen) => void;
   searchReturnScreen?: PrototypeAppScreen;
   privateChatFriend?: PrivateChatFriend;
@@ -313,8 +316,9 @@ export function PrototypeAppRouter({
             width={width}
             height={height}
             theme={theme}
+            captureScene={feedComposeScene}
             onBack={() => navigate(returnScreen)}
-            onPublished={() => navigate("feed")}
+            onPublished={() => navigate(returnScreen)}
           />
         );
       }
@@ -368,6 +372,7 @@ export function PrototypeAppRouter({
     },
     [
       activePrivateChatFriend,
+      feedComposeScene,
       height,
       navigate,
       onPrivateChatFriendChange,

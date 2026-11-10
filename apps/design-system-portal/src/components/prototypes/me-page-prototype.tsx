@@ -14,6 +14,17 @@ import {
   BOTTOM_NAV_DESTINATIONS,
   type BottomNavKey,
 } from "@/lib/profile-prototype-model";
+import { RegularNavigation } from "@/components/kit/regular-navigation";
+import { ProfilePagePrototype } from "@/components/prototypes/profile-page-prototype";
+import {
+  bottomNavigationAxisClass,
+  iphoneDuoCanvasClass,
+  iphoneDuoChromeAxis,
+  iphoneDuoContentShellClass,
+  iphoneDuoDeviceChromeClass,
+  iphoneDuoReservedVars,
+  isIphoneDuoInnerCanvas,
+} from "@/lib/iphone-duo-layout";
 import type { MeSecondaryScreen } from "@/lib/prototype-app-routes";
 
 type MeMenuItem = {
@@ -132,6 +143,8 @@ export function MePagePrototype({
 }: MePagePrototypeProps) {
   const [bottomNav, setBottomNav] = useState<BottomNavKey>("me");
   const [toast, setToast] = useState<string | null>(null);
+  const innerCanvas = isIphoneDuoInnerCanvas(width);
+  const chromeAxis = iphoneDuoChromeAxis(width, height);
 
   useEffect(() => {
     if (!toast) return;
@@ -140,14 +153,78 @@ export function MePagePrototype({
   }, [toast]);
 
   const showAction = (message: string) => setToast(message);
+  const openAccountItem = (item: MeMenuItem) => {
+    if (item.id === "wallet" && onOpenSecondary) {
+      onOpenSecondary("wallet");
+      return;
+    }
+    showAction(`打开 ${item.label}`);
+  };
+  const openSupportItem = (item: MeMenuItem) => {
+    const screenByItem: Partial<Record<string, MeSecondaryScreen>> = {
+      guidelines: "community-guidelines",
+      help: "help",
+      settings: "settings",
+    };
+    const secondaryScreen = screenByItem[item.id];
+    if (secondaryScreen && onOpenSecondary) {
+      onOpenSecondary(secondaryScreen);
+      return;
+    }
+    showAction(`打开 ${item.label}`);
+  };
+
+  const changeBottomNav = (key: BottomNavKey) => {
+    if (onNavigate) {
+      onNavigate(key);
+      return;
+    }
+    setBottomNav(key);
+    showAction(
+      key === "me"
+        ? "已回到 Me"
+        : `切换到 ${
+            BOTTOM_NAV_DESTINATIONS.find(
+              (destination) => destination.key === key,
+            )?.label
+          }`,
+    );
+  };
+
+  const functionList = (
+    <>
+      <TribeCard onPress={() => showAction("开始创建或加入 Tribe")} />
+      <MeMenuGroup
+        label="Activity"
+        items={activityItems}
+        onItemPress={(item) => {
+          showAction(`打开 ${item.label}`);
+        }}
+      />
+      <MeMenuGroup
+        label="Account and benefits"
+        items={accountItems}
+        onItemPress={openAccountItem}
+      />
+      <div className="meMenuDivider" aria-hidden="true" />
+      <MeMenuGroup
+        label="Support"
+        items={supportItems}
+        onItemPress={openSupportItem}
+      />
+    </>
+  );
 
   return (
     <div
-      className="pageCanvasDevice mePrototypeDevice"
+      className={`pageCanvasDevice mePrototypeDevice${
+        innerCanvas ? " mePrototypeDevice--duoInner" : ""
+      }${iphoneDuoDeviceChromeClass(width, height)}`}
       style={
         {
           "--page-canvas-width": `${width}px`,
           "--page-canvas-height": `${height}px`,
+          ...iphoneDuoReservedVars(width, height),
         } as CSSProperties
       }
       aria-label={`Me 账户中心原型 · ${width}×${height}`}
@@ -156,56 +233,47 @@ export function MePagePrototype({
         appearance={theme === "dark" ? "light-content" : "dark-content"}
       />
 
-      <div className="pageCanvasContentShell">
-        <div className="pageCanvasScroll mePrototypeScroll">
+      <div className={iphoneDuoContentShellClass(width, height)}>
+        <div className={iphoneDuoCanvasClass(width)}>
           {bottomNav === "me" ? (
-            <>
-              <MeIdentityHeader
-                onOpenProfile={onOpenProfile}
-                onEdit={() => showAction("进入编辑资料")}
-                onCopyId={() => showAction("ID 已复制")}
-              />
-
-              <TribeCard onPress={() => showAction("开始创建或加入 Tribe")} />
-
-              <MeMenuGroup
-                label="Activity"
-                items={activityItems}
-                onItemPress={(item) => showAction(`打开 ${item.label}`)}
-              />
-              <div className="meMenuDivider" aria-hidden="true" />
-              <MeMenuGroup
-                label="Account and benefits"
-                items={accountItems}
-                onItemPress={(item) => {
-                  if (item.id === "wallet" && onOpenSecondary) {
-                    onOpenSecondary("wallet");
-                    return;
-                  }
-                  showAction(`打开 ${item.label}`);
-                }}
-              />
-              <div className="meMenuDivider" aria-hidden="true" />
-              <MeMenuGroup
-                label="Support"
-                items={supportItems}
-                onItemPress={(item) => {
-                  const screenByItem: Partial<
-                    Record<string, MeSecondaryScreen>
-                  > = {
-                    guidelines: "community-guidelines",
-                    help: "help",
-                    settings: "settings",
-                  };
-                  const secondaryScreen = screenByItem[item.id];
-                  if (secondaryScreen && onOpenSecondary) {
-                    onOpenSecondary(secondaryScreen);
-                    return;
-                  }
-                  showAction(`打开 ${item.label}`);
-                }}
-              />
-            </>
+            innerCanvas ? (
+              <>
+                <div
+                  className="prototypePrimaryDuoPane prototypePrimaryDuoPane--primary prototypePrimaryDuoMaster"
+                  aria-label="我的功能"
+                >
+                  <RegularNavigation
+                    title="Me"
+                    leading="none"
+                    ariaLabel="Me 导航"
+                  />
+                  <div className="pageCanvasScroll mePrototypeScroll">
+                    {functionList}
+                  </div>
+                </div>
+                <aside
+                  className="prototypePrimaryDuoPane prototypePrimaryDuoPane--context prototypePrimaryDuoPane--profile"
+                  aria-label="个人资料"
+                >
+                  <ProfilePagePrototype
+                    embedded
+                    width={width}
+                    height={height}
+                    theme={theme}
+                    onNavigate={onNavigate}
+                  />
+                </aside>
+              </>
+            ) : (
+              <div className="pageCanvasScroll mePrototypeScroll prototypePrimaryDuoPane">
+                <MeIdentityHeader
+                  onOpenProfile={onOpenProfile}
+                  onEdit={() => showAction("进入编辑资料")}
+                  onCopyId={() => showAction("ID 已复制")}
+                />
+                {functionList}
+              </div>
+            )
           ) : (
             <section className="mePrototypePlaceholder">
               <h2>
@@ -222,25 +290,10 @@ export function MePagePrototype({
             </section>
           )}
         </div>
-
         <MeBottomNavigation
           selected={bottomNav}
-          onChange={(key) => {
-            if (onNavigate) {
-              onNavigate(key);
-              return;
-            }
-            setBottomNav(key);
-            showAction(
-              key === "me"
-                ? "已回到 Me"
-                : `切换到 ${
-                    BOTTOM_NAV_DESTINATIONS.find(
-                      (destination) => destination.key === key,
-                    )?.label
-                  }`,
-            );
-          }}
+          axis={chromeAxis}
+          onChange={changeBottomNav}
         />
       </div>
 
@@ -392,13 +445,15 @@ function MeMenuGroup({
 function MeBottomNavigation({
   selected,
   onChange,
+  axis = "horizontal",
 }: {
   selected: BottomNavKey;
   onChange: (key: BottomNavKey) => void;
+  axis?: "horizontal" | "vertical";
 }) {
   return (
     <nav
-      className="bottomNavigation bottomNavigationLight pageCanvasBottomNav"
+      className={`bottomNavigation bottomNavigationLight pageCanvasBottomNav${bottomNavigationAxisClass(axis)}`}
       aria-label="App 一级目的地"
     >
       <div className="bottomNavigationItems">

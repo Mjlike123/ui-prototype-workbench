@@ -23,7 +23,13 @@ describe("design system contract", () => {
       "consistency",
       "openness",
     ]);
-    expect(catalog.interactions).toHaveLength(10);
+    expect(catalog.interactions).toHaveLength(13);
+    expect(catalog.interactions.map((item) => item.id)).toContain(
+      "action-panel-behavior",
+    );
+    expect(catalog.interactions.map((item) => item.id)).toContain(
+      "center-dialog-behavior",
+    );
     expect(catalog.interactions.map((item) => item.id)).toContain(
       "tab-selection",
     );

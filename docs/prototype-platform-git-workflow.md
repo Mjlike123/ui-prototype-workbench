@@ -22,7 +22,7 @@
 | 入口 | 路由 | 是否提交 GitHub |
 |------|------|-----------------|
 | **核心模块** | `/canvas/core` | ✅ 验收通过后，走分支 + PR | 契约：`specs/scenes/prototype-catalog-core.yaml` |
-| **原型创作** | `/canvas/studio` | ❌ 个人画布，历史在本浏览器，**不要 push** | 契约：`specs/scenes/page-canvas-studio.yaml` |
+| **原型创作** | `/canvas/studio` | 项目画廊与平台代码可评审提交；个人草稿与本地项目状态不要 push | 契约：`specs/scenes/page-canvas-studio.yaml` |
 
 ### 应该 push / PR 的内容（核心模块）
 
@@ -33,7 +33,7 @@
 
 ### 不要 push 的内容（原型创作）
 
-- 浏览器 **localStorage** 里的创作历史（如 `toptop-page-canvas-history-v1`）
+- Studio 专属 session 数据与本地 catalog 删除状态
 - 未确定的布局草稿、临时 prompt、试验性方案
 - 仅在创作画布里上传、未评审的个人参考图
 
@@ -55,12 +55,13 @@
 | 页面组件 | `components/prototypes/*-prototype.tsx` | `components/studio/*` |
 | 页面样式 | `.feedCompose*` 等 Core 命名空间 | `.studioFeedCompose*` 等 Studio 命名空间 |
 | 草稿 / 会话 | `feed-compose-session.ts` 等 | `studio-feed-compose-session.ts` 等 |
-| 注册入口 | `prototype-preview-showcase.tsx`、`prototype-app-router.tsx` | `page-canvas-showcase.tsx` |
+| 注册入口 | `prototype-preview-showcase.tsx`、`prototype-app-router.tsx` | `studio-project-catalog.ts`、`studio-project-gallery.tsx` |
 
 **约定：**
 
 - 你说「在原型创作里做 XXX」→ 只改 `components/studio/` 与 Studio 样式；**不**改 `components/prototypes/` 与 Core catalog。
 - 共用 Kit、图标、Token、媒体选择 sheet 可以复用；**页面 shell 布局与存储 key 必须分开**。
+- 项目卡片删除只移除 Studio catalog 条目及白名单登记的 Studio 专属数据；不得删除 Kit、Core、共享组件、图标、Token、共享 CSS 或设计资料。
 - 评审通过后，再 **promote** 到 `*-prototype.tsx` 并走 Core PR（见上路径）。
 
 Cursor 工作区规则见：`.cursor/rules/prototype-git-scope.mdc`（含 `UI separation` 小节）。

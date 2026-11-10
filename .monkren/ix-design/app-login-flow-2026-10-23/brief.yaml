@@ -1,0 +1,164 @@
+schemaVersion: 1
+feature:
+  id: app-login-flow
+  name: App 登录流程
+  platform: ios
+  viewport: { width: 375, height: 812 }
+  goals:
+    - 让新用户与回访用户快速选择可信的登录方式
+    - 完成手机号、验证码与第三方登录的可恢复闭环
+  personas:
+    - 首次安装 TopTop 的社交用户
+    - 使用 Apple 或 Google 回访的既有用户
+sources:
+  - type: image
+    ref: user-reference-login-landing
+    extractedAt: "2026-10-23"
+    confidence: high
+  - type: image
+    ref: user-reference-phone-entry
+    extractedAt: "2026-10-23"
+    confidence: high
+  - type: conversation
+    ref: user-confirmed-methods-and-scope
+    extractedAt: "2026-10-23"
+    confidence: high
+scope:
+  newBehavior:
+    - 登录首页支持 Apple、Google、手机号和 TopTop ID
+    - 记忆并突出上次使用的登录方式
+    - 手机号输入、验证码验证、重发、错误恢复与登录成功
+    - 第三方登录模拟授权、失败和重试
+  existingModified: []
+  existingUnchanged:
+    - item: TopTop 品牌色、状态栏、按钮和系统图标
+      evidence: specs/foundations 与 specs/components
+  uncertain:
+    - 真实服务端验证码长度、发送频率和错误码需产品与工程确认
+visualDirections:
+  - statement: 首屏使用单一 Toppy 主视觉，登录操作集中在下半屏。
+    sourceRef: user-reference-login-landing
+    confidence: high
+  - statement: 手机号输入页保持大留白、单字段与清晰主按钮。
+    sourceRef: user-reference-phone-entry
+    confidence: high
+qualityBar:
+  category: 社交 App 身份认证
+  primaryTask: 选择登录方式并成功进入 App
+  firstScreenHero: 原创 Toppy 穿过社交入口的 3D 主视觉
+  designSpecificity: Toppy、TopTop 青色、上次登录识别与社交世界语义只能属于 TopTop
+  signatureMoment: 选择上次使用方式后进入可恢复授权；验证码完成后以 Toppy 成功态进入 App
+  benchmarkPatterns:
+    - sourceRef: user-reference-login-landing
+      observedPattern: 大面积品牌主视觉、最近登录提示、第三方方式分层
+      decision: adopt
+    - sourceRef: user-reference-phone-entry
+      observedPattern: 国家区号与手机号同一字段、输入后启用主按钮
+      decision: adopt
+    - sourceRef: user-reference-login-landing
+      observedPattern: 首屏并列展示过多低频渠道图标
+      decision: avoid
+  contentRequirements:
+    - 原创且不重复的 Toppy 主视觉
+    - Apple、Google、手机号与 TopTop ID 的真实方法名称
+    - 明确的号码示例、验证码倒计时、错误与恢复文案
+  acceptance:
+    - 375×812 首屏无需滚动即可看到主视觉、主要登录方式和协议
+    - 466×678 与 890×626 保持任务聚焦并利用宽屏空间
+    - 所有可见控制触控区域不小于 44×44pt
+    - 手机号和验证码流程包含 disabled、loading、error、success
+    - 主任务以成功进入 App 结束，不以 Toast 代替
+designImpacts:
+  - sourceType: image
+    sourceRef: user-reference-login-landing
+    statement: 上次登录方式需要更高优先级
+    impact: 主登录按钮提供“上次使用”标记，并保留其他方式入口
+    target: both
+    confidence: high
+  - sourceType: image
+    sourceRef: user-reference-phone-entry
+    statement: 输入状态决定下一步按钮可用性
+    impact: 使用格式化手机号、清除按钮、校验与 disabled 状态
+    target: interaction
+    confidence: high
+ignoredItems:
+  - item: 参考图中的 Facebook 与 Snapchat
+    reason: 用户确认本次仅保留 Apple、Google、手机号和 TopTop ID
+    sourceRef: user-confirmed-methods-and-scope
+pages:
+  - id: login-landing
+    name: 登录首页
+    description: 品牌主视觉、上次登录方式和其他登录方式。
+    knownStates: [default, provider-loading, provider-error]
+    sourceRefs: [user-reference-login-landing]
+  - id: phone-entry
+    name: 手机号输入
+    description: 国家区号、手机号、即时格式校验和下一步。
+    knownStates: [empty, typing, valid, invalid, sending, network-error]
+    sourceRefs: [user-reference-phone-entry]
+  - id: otp-verification
+    name: 验证码验证
+    description: 六位验证码、自动提交、重发倒计时和错误恢复。
+    knownStates: [empty, typing, verifying, incorrect, expired, resend-ready]
+  - id: id-entry
+    name: TopTop ID 登录
+    description: TopTop ID 与密码输入、显示切换、校验和错误恢复。
+    knownStates: [empty, filled, submitting, invalid, network-error]
+  - id: login-success
+    name: 登录成功
+    description: 明确完成反馈并进入 App。
+    knownStates: [success]
+flows:
+  - name: 手机号登录
+    type: primary
+    steps:
+      - 登录首页选择手机号
+      - 选择区号并输入手机号
+      - 校验成功后发送验证码
+      - 输入六位验证码并自动验证
+      - 登录成功并进入 App
+  - name: Apple 或 Google 登录
+    type: secondary
+    steps:
+      - 选择第三方登录方式
+      - 显示授权进行中
+      - 授权成功后进入 App
+  - name: TopTop ID 登录
+    type: secondary
+    steps:
+      - 登录首页选择 TopTop ID
+      - 输入 ID 和密码
+      - 校验成功后进入 App
+  - name: 登录错误恢复
+    type: error
+    steps:
+      - 遇到无效手机号、错误验证码、验证码过期或网络失败
+      - 在原上下文显示原因
+      - 修改输入或重试后继续
+rules:
+  - text: 默认突出上次使用的 Apple 登录，但不能隐藏其他方式
+    source: user-reference-login-landing
+    confidence: high
+  - text: 手机号满足当前区号的最小格式后才能发送验证码
+    source: interaction-design
+    confidence: medium
+  - text: 验证码采用六位数字，输入完整后自动验证
+    source: interaction-design
+    confidence: medium
+  - text: 协议确认以继续操作即同意表达，服务条款与隐私政策可点击
+    source: user-reference-login-landing
+    confidence: high
+competitiveInsights:
+  competitors: []
+  adopt:
+    - 最近登录方式优先
+    - 单字段手机号输入
+    - 验证码自动提交与重发倒计时
+  avoid:
+    - 首屏平铺过多第三方渠道
+    - 仅用 Toast 表达登录失败
+  unavailableResearch:
+    - Mobbin 外部流程检索因付费权限不可用
+openQuestions:
+  - 真实验证码长度、重发倒计时与错误码需进入生产前确认
+  - TopTop ID 的真实认证页面与账号规则需进入生产前确认

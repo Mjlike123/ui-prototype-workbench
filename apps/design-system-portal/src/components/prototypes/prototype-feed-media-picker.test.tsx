@@ -1,12 +1,9 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import {
-  FEED_CAMERA_CAPTURE,
-  PrototypeFeedMediaPicker,
-} from "./prototype-feed-media-picker";
+import { PrototypeFeedMediaPicker } from "./prototype-feed-media-picker";
 
 describe("PrototypeFeedMediaPicker", () => {
-  it("adds photos from the album flow", () => {
+  it("opens the album page directly and adds selected photos", () => {
     const onAddPhotos = vi.fn();
     const onClose = vi.fn();
     render(
@@ -18,20 +15,63 @@ describe("PrototypeFeedMediaPicker", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "从相册选择" }));
-    fireEvent.click(
-      screen.getByRole("button", { name: "选择 Latifa pool" }),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "完成" }));
+    expect(screen.getByRole("button", { name: "相册：Recents" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "选择 app-login-hero-0" }));
+    fireEvent.click(screen.getByRole("button", { name: "Done (1)" }));
 
     expect(onAddPhotos).toHaveBeenCalledWith([
-      "/prototypes/feed/latifa-photo.png",
+      "/prototypes/studio/app-login-hero.jpg",
     ]);
     expect(onClose).toHaveBeenCalledOnce();
   });
 
-  it("captures a photo from the camera flow", () => {
+  it("closes from the backdrop", () => {
+    const onClose = vi.fn();
+    render(
+      <PrototypeFeedMediaPicker
+        open
+        selected={[]}
+        onAddPhotos={vi.fn()}
+        onClose={onClose}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "关闭相册选择层" }));
+    expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it("keeps the page mounted while the exit motion completes", () => {
     vi.useFakeTimers();
+    const { container, rerender } = render(
+      <PrototypeFeedMediaPicker
+        open
+        selected={[]}
+        onAddPhotos={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    rerender(
+      <PrototypeFeedMediaPicker
+        open={false}
+        selected={[]}
+        onAddPhotos={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(
+      container.querySelector(".feedComposePhotoPickerOverlay"),
+    ).toHaveAttribute("data-state", "exit");
+
+    act(() => vi.advanceTimersByTime(320));
+    expect(
+      container.querySelector(".feedComposePhotoPickerOverlay"),
+    ).not.toBeInTheDocument();
+    vi.useRealTimers();
+  });
+
+  it("only keeps one draft photo selected at a time", () => {
     const onAddPhotos = vi.fn();
     render(
       <PrototypeFeedMediaPicker
@@ -42,31 +82,36 @@ describe("PrototypeFeedMediaPicker", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "拍照" }));
-    fireEvent.click(screen.getByRole("button", { name: "允许" }));
-    fireEvent.click(screen.getByRole("button", { name: "拍摄照片" }));
-    vi.advanceTimersByTime(500);
+    fireEvent.click(screen.getByRole("button", { name: "选择 app-login-hero-0" }));
+    fireEvent.click(screen.getByRole("button", { name: "选择 spin-bottle-booth-1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Done (1)" }));
 
-    expect(onAddPhotos).toHaveBeenCalledWith([FEED_CAMERA_CAPTURE]);
-    vi.useRealTimers();
+    expect(onAddPhotos).toHaveBeenCalledWith([
+      "/prototypes/studio/spin-bottle-booth.jpg",
+    ]);
   });
 
-  it("blocks selection when the post is already full", () => {
-    render(
+  it("does not render when the post is already full", () => {
+    const { container } = render(
       <PrototypeFeedMediaPicker
         open
+        maxCount={9}
         selected={[
           "/prototypes/feed/latifa-photo.png",
           "/prototypes/profile-v3/feed-avatar.png",
           "/prototypes/message/conversation-1.png",
           "/prototypes/message/conversation-2.png",
+          "/prototypes/message/conversation-3.png",
+          "/prototypes/message/online-1.png",
+          "/prototypes/message/group-1.png",
+          "/prototypes/profile-v3/supporter-card.png",
+          "/prototypes/message/conversation-4.png",
         ]}
         onAddPhotos={vi.fn()}
         onClose={vi.fn()}
       />,
     );
 
-    expect(screen.getByText("已达上限，请先移除已选图片")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "从相册选择" })).toBeDisabled();
+    expect(container).toBeEmptyDOMElement();
   });
 });

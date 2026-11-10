@@ -137,13 +137,14 @@ const prototypes = [
     title: "Feed · 发布动态",
     route: "/prototype-runtime/app/feed-compose",
     sourceRoute: "/prototypes/app",
-    description: "文案编辑、图片附件、可见范围与 Post 发布反馈",
+    description: "话题高亮文案、112px 图片格、话题条、Local/Public 底栏与 Post 发布",
     intent: "二级页面",
-    kit: ["ios-status-bar", "regular-navigation", "avatar", "icon"],
+    kit: ["ios-status-bar", "icon", "button", "selector-button"],
     prototypeModules: [
       "PrototypeFeedComposeEditor",
-      "PrototypeFeedComposeMediaPicker",
-      "PrototypeFeedComposeAudienceRow",
+      "PrototypeFeedComposeTopicRow",
+      "PrototypeFeedComposeDock",
+      "PrototypeFeedMediaPicker",
     ],
   },
   {
@@ -193,7 +194,12 @@ const prototypes = [
 
 type PrototypeId = (typeof prototypes)[number]["id"];
 type PreviewTheme = "light" | "dark";
-type ViewportId = "iphone-standard" | "iphone-large" | "iphone-16-plus";
+type ViewportId =
+  | "iphone-standard"
+  | "iphone-large"
+  | "iphone-16-plus"
+  | "iphone-duo-outer"
+  | "iphone-duo-inner";
 
 const viewportPresets = [
   { id: "iphone-standard", label: "iPhone · 375 × 812", width: 375, height: 812 },
@@ -203,6 +209,18 @@ const viewportPresets = [
     label: "iPhone 16 Plus · 430 × 932",
     width: 430,
     height: 932,
+  },
+  {
+    id: "iphone-duo-outer",
+    label: "iPhone Duo 外屏 · 466 × 678",
+    width: 466,
+    height: 678,
+  },
+  {
+    id: "iphone-duo-inner",
+    label: "iPhone Duo 内屏 · 890 × 626",
+    width: 890,
+    height: 626,
   },
 ] as const;
 

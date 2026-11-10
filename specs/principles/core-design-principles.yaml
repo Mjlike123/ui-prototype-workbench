@@ -2,9 +2,9 @@ schemaVersion: 1
 id: core-design-principles
 title: 核心设计原则
 status: stable
-description: 将 M Design 的设计价值观与 TopTop Kit 的基础规范、组件契约和原型工作流融合为可执行的决策顺序。
+description: 以 M Design 的设计价值观指导 TopTop Kit：快速搭建 0→1 项目、拉齐交互细节认知，并改善设计与研发协作；通过基础规范、组件契约和原型工作流落实为可执行的决策顺序。
 source:
-  title: M-Design 设计体系
+  title: M设计系统
   url: https://micoworld.feishu.cn/wiki/RNbswePgRiSg1OkFP6TcGt5Wnjg
 decisionOrder:
   - clarity
@@ -36,6 +36,7 @@ principles:
     commitments:
       - 业务实现优先复用语义 Token、稳定组件和已定义交互模式。
       - 同一状态在不同页面保持一致的命名、层级、反馈和平台语义。
+      - 通过共用的组件与交互契约快速搭建基础功能，拉齐设计、产品与研发对细节的理解。
       - 规范变更通过 YAML、MDX、参考预览、测试和版本共同维护。
     checks:
       - 是否复用了已有 Token、组件与交互契约，而非创建近似副本？

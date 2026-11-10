@@ -1,0 +1,123 @@
+schemaVersion: 1
+id: toast
+version: 1.0.0
+title: Toast 提示
+owner: TopTop Design System
+category: Feedback
+status: stable
+since: 1.0.0
+tags:
+  - toast
+  - feedback
+  - notification
+  - hint
+platforms:
+  - ios
+  - android
+  - h5
+description: 短时非模态提示，用于操作结果、状态说明或轻量反馈；默认相对完整屏幕视口水平、垂直居中，不打断当前流程，数秒后自动消失。
+previewKey: toast
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=1356-9189
+  nodeId: "1356:9189"
+  observations:
+    - 背景 rgba(47,48,57,0.9)，圆角 12pt，文案 14pt Regular 白色居中
+    - 右箭头与成功、失败、警示、加载状态图标均使用 color.text.white-primary，与文案保持同色
+    - 纯文案短：水平排列，内边距 16pt，可与 16pt 右箭头组合
+    - 纯文案长：最大宽 200pt，内边距 16pt，行高 20pt，可换行至两行
+    - 带状态图标短：100×100pt，图标 32pt，图标与文案间距 10pt，文案单行 18pt 行高
+    - 带状态图标长：宽 200pt，上内边距 20pt、下 16pt、左右 16pt，图标 32pt，文案区宽 168pt、行高 18pt
+    - 状态含成功、失败、警示、加载；加载图标持续旋转
+    - 默认相对完整屏幕视口水平、垂直居中，不跟随滚动内容或默认贴底；仅键盘避让、沉浸式媒体或明确业务合同允许偏移
+anatomy:
+  - id: shell
+    label: 提示容器
+    description: 深色半透明圆角底框，承载图标与文案；宿主默认将其固定在完整屏幕视口中心。
+  - id: statusIcon
+    label: 状态图标
+    description: 可选 32pt 成功/失败/警示/加载图标，颜色与文案同为 color.text.white-primary。
+  - id: message
+    label: 提示文案
+    description: 14pt Regular 白色，可单行或最多两行。
+  - id: chevron
+    label: 右箭头
+    description: 纯文案短提示可选 16pt 白色右箭头，表示可继续操作。
+variants:
+  - name: status
+    values:
+      - none
+      - success
+      - error
+      - warning
+      - loading
+    defaultValue: none
+  - name: longText
+    values:
+      - short
+      - long
+    defaultValue: short
+props:
+  - name: message
+    type: string
+    required: true
+    description: 提示文案；长文案模式建议不超过两行。
+  - name: status
+    type: ToastStatus
+    defaultValue: none
+    description: 状态图标；none 为纯文案提示。
+  - name: longText
+    type: boolean
+    defaultValue: false
+    description: 是否使用长文案布局（最大宽 200pt，可换行）。
+  - name: showChevron
+    type: boolean
+    defaultValue: false
+    description: 纯文案短提示是否显示右箭头；需配合 onPress。
+  - name: onPress
+    type: () => void
+    description: 点击带箭头的纯文案短提示时触发。
+tokenRefs:
+  - color.toast.background
+  - color.text.white-primary
+accessibility:
+  - 使用 role="status" 与 aria-live="polite"，避免打断屏幕阅读器当前朗读。
+  - 自动消失前保留足够阅读时间（建议 2–3 秒）；关键失败信息不应只依赖 Toast。
+  - 带箭头的短提示必须是可聚焦 button，并提供可读名称。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "1356:9189"
+    - "1356:9190"
+    - "1356:9193"
+    - "1356:9196"
+    - "1356:9199"
+    - "1356:9202"
+    - "1356:9205"
+    - "1356:9208"
+    - "1356:9215"
+    - "1356:9222"
+    - "1356:9225"
+  nameAliases:
+    - toast
+    - Toast
+    - 提示
+    - 轻提示
+    - toast提示
+roles:
+  - label
+  - content
+  - trailing
+rules:
+  - id: shell.borderRadius
+    title: 容器圆角
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: statusIcon.size
+    title: 状态图标尺寸
+    category: structure
+    metric: iconSize
+    tolerance: 2
+    aggregate: rule

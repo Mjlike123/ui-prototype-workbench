@@ -1,0 +1,52 @@
+schemaVersion: 1
+featureId: app-login-flow
+verdict: deliverable
+reviewPasses:
+  - pass: 1
+    evidence: screenshot-only
+    findings:
+      - short-height content hierarchy and bottom safe area
+      - Apple provider presentation
+      - supporting-text contrast
+      - OTP error-state competition
+      - success-screen rhythm
+    resolution: fixed-and-recaptured
+  - pass: 2
+    evidence: screenshot-only
+    findings:
+      - small accent-text contrast
+      - Apple last-used label placement
+      - resend-action clarity
+      - incomplete state-by-viewport matrix
+    resolution: fixed-and-recaptured
+  - pass: final
+    evidence: screenshot-and-runtime
+    findings: []
+    verdict: deliverable
+severity:
+  p0: []
+  p1: []
+  p2: []
+scores:
+  visual: 9.1
+  consistency: 9.3
+  interactionClarity: 9.3
+  deliveryCompleteness: 9.5
+runtimeEvidence:
+  viewports:
+    - 375x812
+    - 466x678
+    - 890x626
+  states:
+    - landing
+    - phone
+    - otp-error
+    - success
+    - toptop-id
+  horizontalOverflow: false
+  verticalOverflow: false
+  undersizedVisibleControls: 0
+openQuestions:
+  - 生产验证码规则和错误码
+  - TopTop ID 真实认证规则
+  - Apple 与 Google SDK 账户冲突处理

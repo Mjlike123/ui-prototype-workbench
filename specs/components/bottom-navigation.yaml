@@ -30,6 +30,7 @@ reference:
     - 未选中图标与文案使用 #8B8C91，文案为 SF Pro Regular 12pt/16pt
     - 选中文案使用 SF Pro Semibold 12pt/16pt，图标与文案同步切换品牌色
     - 默认目的地为 TopTop、Room、Feed、Message、Me；首项可切换为 Refresh
+    - iPhone Duo 外屏与内屏横持由布局把同一组目的地转到侧边（HIG Vertical controls），375 基准仍是底部 86pt 五等分
     - Room 始终使用默认图标；未选中使用线性图标，选中后切换为品牌色实心图标
 anatomy:
   - id: container

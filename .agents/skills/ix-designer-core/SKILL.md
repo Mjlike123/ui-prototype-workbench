@@ -50,7 +50,7 @@ Classify every relevant statement:
 
 Translate technical and operational statements into UX constraints when they affect loading, errors, permissions, compatibility, content priority, moderation, localization, or perceived performance.
 
-For a new page, redesign, or material visual change, add `qualityBar` to the brief. It must name the product category, primary task, first-screen hero, product-specific design cue, content/asset requirements, benchmark patterns to adopt or avoid, and observable acceptance criteria. Keep visual art direction separate from interaction facts; vague adjectives are not acceptance criteria.
+For a new page, redesign, or material visual change, add `qualityBar` to the brief. It must name the product category, primary task, first-screen hero, product-specific design cue, content/asset requirements, benchmark patterns to adopt or avoid, and observable acceptance criteria. Add `creativeLatitude.locked` and `creativeLatitude.variable` so downstream exploration cannot rewrite user tasks, brand/Kit contracts, or accessibility constraints. Keep visual art direction separate from interaction facts; vague adjectives are not acceptance criteria.
 
 Present the page inventory, primary flow, assumptions, and open questions. Apply the profile's confirmation gate.
 
@@ -110,7 +110,7 @@ Use output locations and formats from the business profile. Default deliverables
 - optional brief, research, review report, or wireframes.
 
 The prototype must use the active profile's real components, Tokens, and interaction contracts where available. Validate rendered behavior, not source code alone.
-When a `qualityBar` exists, include the selected direction, content/asset gaps, target-viewport screenshots, and review evidence in the handoff. A main task that ends only in placeholder feedback is not a completed functional prototype.
+When a `qualityBar` exists, pass its `creativeLatitude` downstream unchanged and include the selected direction, content/asset gaps, target-viewport screenshots, fixed-baseline screenshot-critique evidence, iteration count, and subtraction log in the handoff. A main task that ends only in placeholder feedback is not a completed functional prototype.
 
 ## Capability fallback
 

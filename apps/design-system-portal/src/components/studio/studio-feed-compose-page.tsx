@@ -3,10 +3,13 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AvatarVisual } from "@/components/kit/avatar-visual";
+import { CenterDialog } from "@/components/kit/center-dialog";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
+import { PublishStatusNotification } from "@/components/kit/publish-status-notification";
 import { RegularListItem } from "@/components/kit/regular-list-item";
 import { RegularNavigation } from "@/components/kit/regular-navigation";
 import { SystemIcon } from "@/components/kit/system-icon";
+import { Toast } from "@/components/kit/toast";
 import { PrototypeFeedMediaPicker } from "@/components/prototypes/prototype-feed-media-picker";
 import {
   clearStudioFeedComposeDraft,
@@ -16,6 +19,7 @@ import {
   saveStudioFeedComposeDraft,
   type StudioFeedComposeAudience,
 } from "@/lib/studio-feed-compose-session";
+import { useTimedPresence } from "@/lib/use-timed-presence";
 
 type StudioFeedComposePageProps = {
   width?: number;
@@ -23,11 +27,25 @@ type StudioFeedComposePageProps = {
   theme?: "light" | "dark";
   onBack: () => void;
   onPublished?: () => void;
+  communityOptions?: StudioFeedComposeCommunityOption[];
+  initialCommunity?: string | null;
+};
+
+export type StudioFeedComposeCommunityOption = {
+  value: string;
+  label: string;
+  description?: string;
+  isNew?: boolean;
+  requiresMedia?: boolean;
 };
 
 const MAX_MEDIA = 4;
 const MAX_CHARS = 280;
+const BOTTOM_SHEET_EXIT_MS = 200;
 const PUBLISH_DELAY_MS = 900;
+const PUBLISH_SUCCESS_MS = 600;
+
+type PublishPhase = "idle" | "uploading" | "success" | "failed";
 const USER_AVATAR = "/prototypes/feed/andrew-avatar.png";
 
 const AUDIENCE_OPTIONS: Array<{
@@ -54,29 +72,49 @@ export function StudioFeedComposePage({
   theme = "light",
   onBack,
   onPublished,
+  communityOptions = [],
+  initialCommunity = null,
 }: StudioFeedComposePageProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [caption, setCaption] = useState("");
-  const [media, setMedia] = useState<string[]>([]);
-  const [audience, setAudience] = useState<StudioFeedComposeAudience>("everyone");
-  const [toast, setToast] = useState<string | null>(null);
-  const [publishError, setPublishError] = useState<string | null>(null);
+  const [initialDraft] = useState(() => loadStudioFeedComposeDraft());
+  const [caption, setCaption] = useState(() => initialDraft?.caption ?? "");
+  const [media, setMedia] = useState<string[]>(
+    () => initialDraft?.media ?? [],
+  );
+  const [audience, setAudience] = useState<StudioFeedComposeAudience>(
+    () => initialDraft?.audience ?? loadStudioFeedComposeAudience(),
+  );
+  const [toast, setToast] = useState<string | null>(() =>
+    initialDraft ? "已恢复草稿" : null,
+  );
+  const [publishPhase, setPublishPhase] = useState<PublishPhase>("idle");
+  const [publishProgress, setPublishProgress] = useState(0);
+  const [publishThumbnail, setPublishThumbnail] = useState<string | undefined>();
+  const [publishFailureMessage, setPublishFailureMessage] = useState<
+    string | null
+  >(null);
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
   const [audienceSheetOpen, setAudienceSheetOpen] = useState(false);
+  const [communitySheetOpen, setCommunitySheetOpen] = useState(false);
   const [leaveSheetOpen, setLeaveSheetOpen] = useState(false);
   const [posting, setPosting] = useState(false);
-  const [draftRestored, setDraftRestored] = useState(false);
+  const [community, setCommunity] = useState<string | null>(initialCommunity);
+  const [communityEntryUnread, setCommunityEntryUnread] = useState(() =>
+    communityOptions.some((option) => option.isNew),
+  );
+  const [communityRowsUnread, setCommunityRowsUnread] = useState(() =>
+    communityOptions.some((option) => option.isNew),
+  );
+  const communitySheetPresence = useTimedPresence(
+    communitySheetOpen,
+    BOTTOM_SHEET_EXIT_MS,
+  );
+  const audienceSheetPresence = useTimedPresence(
+    audienceSheetOpen,
+    BOTTOM_SHEET_EXIT_MS,
+  );
 
   useEffect(() => {
-    const draft = loadStudioFeedComposeDraft();
-    if (draft) {
-      setCaption(draft.caption);
-      setMedia(draft.media);
-      setAudience(draft.audience);
-      setDraftRestored(true);
-    } else {
-      setAudience(loadStudioFeedComposeAudience());
-    }
     inputRef.current?.focus();
   }, []);
 
@@ -89,12 +127,6 @@ export function StudioFeedComposePage({
   useEffect(() => {
     saveStudioFeedComposeDraft({ caption, media, audience });
   }, [audience, caption, media]);
-
-  useEffect(() => {
-    if (!draftRestored) return;
-    setToast("已恢复草稿");
-    setDraftRestored(false);
-  }, [draftRestored]);
 
   const remaining = MAX_CHARS - caption.length;
   const remainingMedia = MAX_MEDIA - media.length;
@@ -124,6 +156,21 @@ export function StudioFeedComposePage({
     setAudienceSheetOpen(false);
   };
 
+  const openCommunitySheet = () => {
+    setCommunityEntryUnread(false);
+    setCommunitySheetOpen(true);
+  };
+
+  const closeCommunitySheet = () => {
+    setCommunitySheetOpen(false);
+    setCommunityRowsUnread(false);
+  };
+
+  const selectCommunity = (next: string | null) => {
+    setCommunity(next);
+    closeCommunitySheet();
+  };
+
   const leaveCompose = (mode: "save" | "discard") => {
     if (mode === "discard") {
       clearStudioFeedComposeDraft();
@@ -148,23 +195,60 @@ export function StudioFeedComposePage({
     if (!hasContent || posting) return;
 
     setPosting(true);
-    setPublishError(null);
+    setPublishFailureMessage(null);
+    setPublishPhase("uploading");
+    setPublishProgress(12);
+    setPublishThumbnail(media[0]);
+
+    const progressTimer = window.setInterval(() => {
+      setPublishProgress((current) => Math.min(current + 14, 72));
+    }, 120);
 
     window.setTimeout(() => {
+      window.clearInterval(progressTimer);
+      const selectedCommunity = communityOptions.find(
+        (option) => option.value === community,
+      );
+      if (selectedCommunity?.requiresMedia && media.length === 0) {
+        setPosting(false);
+        setPublishProgress(100);
+        setPublishPhase("failed");
+        setPublishFailureMessage("该圈子发布需要添加图片，草稿已保留");
+        setPublishThumbnail(undefined);
+        return;
+      }
+
       clearStudioFeedComposeDraft();
       setCaption("");
       setMedia([]);
       setMediaPickerOpen(false);
       setPosting(false);
-      setToast("Studio 预览：动态已发布");
+      setPublishProgress(100);
+      setPublishPhase("success");
+
       window.setTimeout(() => {
-        onPublished?.() ?? onBack();
-      }, 520);
+        setPublishPhase("idle");
+        if (onPublished) {
+          onPublished();
+        } else {
+          onBack();
+        }
+      }, PUBLISH_SUCCESS_MS);
     }, PUBLISH_DELAY_MS);
+  };
+
+  const dismissPublishStatus = () => {
+    setPublishPhase("idle");
+    setPublishProgress(0);
+    setPublishThumbnail(undefined);
+    setPublishFailureMessage(null);
   };
 
   const audienceLabel =
     audience === "everyone" ? "Everyone can reply" : "Friends only";
+  const communityLabel =
+    communityOptions.find((option) => option.value === community)?.label ??
+    "Select Community";
 
   return (
     <div
@@ -251,6 +335,34 @@ export function StudioFeedComposePage({
             </section>
           ) : null}
 
+          {communityOptions.length > 0 ? (
+            <section
+              className="studioFeedComposeCommunityRow"
+              aria-label="圈子设置"
+              role="list"
+            >
+              <RegularListItem
+                listType="action"
+                title="Select Community"
+                subtitle={community ? communityLabel : "No community selected"}
+                ariaLabel={`选择圈子：${communityLabel}`}
+                leading={<SystemIcon name="contacts" size={20} />}
+                trailing={
+                  <span className="studioFeedComposeCommunityTrailing">
+                    {communityEntryUnread ? (
+                      <span
+                        className="studioMomentUnreadDot"
+                        aria-label="有新圈子"
+                      />
+                    ) : null}
+                    <SystemIcon name="chevronRight" size={16} />
+                  </span>
+                }
+                onPress={openCommunitySheet}
+              />
+            </section>
+          ) : null}
+
           <section className="feedComposeToolbar" aria-label="发布工具">
             <button
               type="button"
@@ -295,14 +407,6 @@ export function StudioFeedComposePage({
             </span>
           </section>
 
-          {publishError ? (
-            <div className="feedComposePublishError" role="alert">
-              <p>{publishError}</p>
-              <button type="button" onClick={publish}>
-                重试
-              </button>
-            </div>
-          ) : null}
         </main>
       </div>
 
@@ -314,8 +418,112 @@ export function StudioFeedComposePage({
         onAddPhotos={addPhotos}
       />
 
-      {audienceSheetOpen ? (
-        <div className="feedComposeOverlay" role="presentation">
+      {communitySheetPresence.mounted ? (
+        <div
+          className={[
+            "feedComposeOverlay",
+            communitySheetPresence.phase === "exit"
+              ? "feedComposeOverlay--exit"
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          data-state={communitySheetPresence.phase}
+          role="presentation"
+        >
+          <button
+            type="button"
+            className="feedComposeOverlayBackdrop"
+            aria-label="关闭圈子选择"
+            onClick={closeCommunitySheet}
+          />
+          <section
+            className="feedComposeMediaSheet feedComposeAudienceSheet"
+            aria-label="选择圈子"
+            role="dialog"
+            aria-modal="true"
+            data-kit-gap="single-choice-sheet"
+          >
+            <div className="feedComposeMediaSheetHandle" aria-hidden="true" />
+            <header className="feedComposeMediaSheetHeader">
+              <h2>Select Community</h2>
+              <p>Choose where to share this post</p>
+            </header>
+            <div className="feedComposeAudienceOptions" role="list">
+              <RegularListItem
+                listType="action"
+                title="No Posting to Any Community"
+                ariaLabel={`不发布到圈子${community === null ? "，已选择" : ""}`}
+                className={
+                  community === null
+                    ? "feedComposeAudienceOption feedComposeAudienceOption--selected"
+                    : "feedComposeAudienceOption"
+                }
+                trailing={
+                  community === null ? (
+                    <span
+                      className="feedComposeAudienceOptionMark"
+                      aria-hidden="true"
+                    >
+                      ✓
+                    </span>
+                  ) : undefined
+                }
+                onPress={() => selectCommunity(null)}
+              />
+              {communityOptions.map((option) => (
+                <RegularListItem
+                  key={option.value}
+                  listType="action"
+                  title={option.label}
+                  subtitle={option.description}
+                  ariaLabel={`${option.label}${
+                    community === option.value ? "，已选择" : ""
+                  }${option.isNew && communityRowsUnread ? "，新圈子" : ""}`}
+                  className={
+                    community === option.value
+                      ? "feedComposeAudienceOption feedComposeAudienceOption--selected"
+                      : "feedComposeAudienceOption"
+                  }
+                  trailing={
+                    <span className="studioFeedComposeCommunityTrailing">
+                      {option.isNew && communityRowsUnread ? (
+                        <span
+                          className="studioMomentUnreadDot"
+                          aria-hidden="true"
+                        />
+                      ) : null}
+                      {community === option.value ? (
+                        <span
+                          className="feedComposeAudienceOptionMark"
+                          aria-hidden="true"
+                        >
+                          ✓
+                        </span>
+                      ) : null}
+                    </span>
+                  }
+                  onPress={() => selectCommunity(option.value)}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
+      ) : null}
+
+      {audienceSheetPresence.mounted ? (
+        <div
+          className={[
+            "feedComposeOverlay",
+            audienceSheetPresence.phase === "exit"
+              ? "feedComposeOverlay--exit"
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          data-state={audienceSheetPresence.phase}
+          role="presentation"
+        >
           <button
             type="button"
             className="feedComposeOverlayBackdrop"
@@ -325,6 +533,9 @@ export function StudioFeedComposePage({
           <section
             className="feedComposeMediaSheet feedComposeAudienceSheet"
             aria-label="选择可见范围"
+            role="dialog"
+            aria-modal="true"
+            data-kit-gap="single-choice-sheet"
           >
             <div className="feedComposeMediaSheetHandle" aria-hidden="true" />
             <header className="feedComposeMediaSheetHeader">
@@ -362,53 +573,46 @@ export function StudioFeedComposePage({
         </div>
       ) : null}
 
-      {leaveSheetOpen ? (
-        <div className="feedComposeOverlay" role="presentation">
-          <button
-            type="button"
-            className="feedComposeOverlayBackdrop"
-            aria-label="继续编辑"
-            onClick={() => setLeaveSheetOpen(false)}
-          />
-          <section
-            className="feedComposeMediaSheet feedComposeLeaveSheet"
-            aria-label="离开确认"
-          >
-            <div className="feedComposeMediaSheetHandle" aria-hidden="true" />
-            <header className="feedComposeMediaSheetHeader">
-              <h2>Save this post?</h2>
-              <p>Your draft will stay on this device until you publish or discard it.</p>
-            </header>
-            <div className="feedComposeLeaveActions">
-              <button
-                type="button"
-                className="kitButton kitButton--height48 kitButton--primary"
-                onClick={() => leaveCompose("save")}
-              >
-                Save draft
-              </button>
-              <button
-                type="button"
-                className="kitButton kitButton--height48 kitButton--primary-outline feedComposeLeaveActions--danger"
-                onClick={() => leaveCompose("discard")}
-              >
-                Discard
-              </button>
-              <button
-                type="button"
-                className="feedComposeMediaCancel kitButton kitButton--height48 kitButton--neutral"
-                onClick={() => setLeaveSheetOpen(false)}
-              >
-                Keep editing
-              </button>
-            </div>
-          </section>
-        </div>
-      ) : null}
+      <CenterDialog
+        open={leaveSheetOpen}
+        title="Save this post?"
+        description="Your draft will stay on this device until you publish or discard it."
+        dismissible
+        onDismiss={() => setLeaveSheetOpen(false)}
+        actionLayout="horizontal"
+        actions={[
+          {
+            id: "discard",
+            label: "Discard",
+            tone: "destructive",
+            onPress: () => leaveCompose("discard"),
+          },
+          {
+            id: "save",
+            label: "Save draft",
+            tone: "primary",
+            onPress: () => leaveCompose("save"),
+          },
+        ]}
+      />
 
       {toast ? (
-        <div className="profilePrototypeToast" role="status" aria-live="polite">
-          {toast}
+        <Toast message={toast} className="feedComposeToast" />
+      ) : null}
+
+      {publishPhase !== "idle" ? (
+        <div className="feedComposePublishStatusAnchor">
+          <PublishStatusNotification
+            status={publishPhase}
+            message={publishFailureMessage ?? undefined}
+            thumbnailSrc={publishThumbnail}
+            thumbnailPlaceholder={caption.trim() || "Draft post"}
+            progress={publishProgress}
+            onRetry={publishPhase === "failed" ? publish : undefined}
+            onDismiss={
+              publishPhase === "failed" ? dismissPublishStatus : undefined
+            }
+          />
         </div>
       ) : null}
     </div>

@@ -1,0 +1,240 @@
+schemaVersion: 1
+featureId: moment-structure-liked-mention
+platform: ios
+
+pages:
+  - id: moment-feed
+    name: Moment 列表
+    purpose: 统一卡片结构，按大区关系策略展示操作
+    entry:
+      - 底部导航 Moment
+    exit:
+      - 进入 feed-detail
+      - 进入 profile-mine（经「我」Tab）
+    states:
+      - id: open-region
+        description: 开放关系大区；卡片展示 Chat、Add/已关注等完整操作
+      - id: closed-region
+        description: 非开放关系大区；隐藏或替换 Chat，保留点赞评论与关系操作
+    elements:
+      - id: feed-card
+        role: content-card
+        label: 动态卡片
+        behavior: 头像、正文、话题、媒体、互动计数与 footer 操作组
+      - id: region-actions
+        role: action-group
+        label: 大区差异化操作
+        behavior: 由服务端 regionProfile 驱动显隐，不维护两套卡片模板
+    transitions:
+      - trigger: 点击卡片正文或媒体
+        result: 进入动态详情
+        targetPageId: feed-detail
+
+  - id: profile-mine
+    name: 本人 Profile
+    purpose: 提供「我赞过的」回看入口
+    entry:
+      - 从底部导航「我」进入本人 Profile
+    states:
+      - id: default
+        description: 复用 Core ProfilePagePrototype，在身份资料与内容 Tab 之间增加一行仅本人可见的「我赞过的」
+    elements:
+      - id: liked-entry-row
+        role: navigation-row
+        label: 我赞过的
+        behavior: RegularListItem 展示「仅你可见」、当前数量与 chevron；点击进入 liked-moments
+    transitions:
+      - trigger: 点击 liked-entry-row
+        result: 进入赞过列表
+        targetPageId: liked-moments
+
+  - id: liked-moments
+    name: 我赞过的
+    purpose: 聚合用户点赞过的动态，支持再次进入详情
+    entry:
+      - profile-mine liked-entry-row
+    states:
+      - id: populated
+        description: 按点赞时间排序的摘要列表；宽屏同时显示当前选中动态详情
+      - id: empty
+        description: 空态文案 + 引导去 Moment 浏览
+      - id: error
+        description: 加载失败可重试
+    elements:
+      - id: liked-nav
+        role: regular-navigation
+        label: 返回 / 我赞过的
+      - id: liked-feed
+        role: content-feed
+        label: 赞过动态摘要列表
+        behavior: 展示作者、点赞时间、正文摘要、可选缩略图与明确的已赞操作
+    transitions:
+      - trigger: 点击卡片
+        result: 进入 feed-detail
+        targetPageId: feed-detail
+      - trigger: 点击已赞
+        result: 当前卡片退出列表并显示可撤销 Toast
+      - trigger: 点击撤销
+        result: 卡片恢复到原排序位置并重新成为宽屏当前项
+
+  - id: feed-compose
+    name: 发布器
+    purpose: 编辑内容并 @ 好友提醒
+    entry:
+      - Moment 发布 FAB
+    states:
+      - id: editing
+        description: 文案、媒体、圈子、可见范围与线上一致
+      - id: mention-open
+        description: Choose who to remind 半窗打开
+    elements:
+      - id: caption-editor
+        role: text-editor
+        label: 正文
+        behavior: 检测 @ 触发 mention-picker；已选好友以 token 插入
+      - id: mention-toolbar
+        role: toolbar-action
+        label: "@"
+        behavior: 打开 mention-picker
+      - id: mention-picker
+        role: bottom-sheet
+        label: Choose who to remind
+        behavior: SearchControl + 好友列表多选；确认后写回正文
+    transitions:
+      - trigger: 输入 @ 或点击 mention-toolbar
+        result: 打开 mention-picker
+        targetOverlayId: mention-picker
+      - trigger: 确认选择好友
+        result: 关闭半窗并在光标处插入 @昵称
+        targetOverlayId: mention-picker
+
+  - id: feed-detail
+    name: 动态详情
+    purpose: 阅读动态并在评论中 @ 好友
+    entry:
+      - moment-feed / liked-moments 卡片
+    states:
+      - id: comment-active
+        description: 评论 composer 激活
+      - id: mention-open
+        description: 评论场景打开同一 mention-picker
+    elements:
+      - id: mention-body
+        role: rich-text
+        label: 正文 @ 展示
+        behavior: "@昵称 可点击跳转用户主页（与线上一致）"
+      - id: reply-composer
+        role: text-editor
+        label: 评论输入
+      - id: reply-mention-toolbar
+        role: toolbar-action
+        label: "@"
+    transitions:
+      - trigger: 评论输入 @ 或 reply-mention-toolbar
+        result: 打开 mention-picker（与 feed-compose 共用 overlay 定义）
+        targetOverlayId: mention-picker
+
+  - id: moment-notifications
+    name: 动态通知
+    purpose: 展示互动与 @ 提醒，支持清理
+    entry:
+      - Moment 模块通知入口（与现有入口对齐）
+    states:
+      - id: list
+        description: Liked / Replied / Commented / mentioned you 等行
+      - id: clear-confirm
+        description: CenterDialog 二次确认
+      - id: empty
+        description: 无通知
+    elements:
+      - id: notification-list
+        role: regular-list
+        label: 通知行
+      - id: clear-all
+        role: text-button
+        label: Clear all
+      - id: swipe-delete
+        role: destructive-action
+        label: Delete
+    transitions:
+      - trigger: 点击 clear-all 并在 dialog 确认
+        result: 清空列表并展示 empty
+        targetOverlayId: clear-all-dialog
+
+overlays:
+  - id: mention-picker
+    name: Choose who to remind
+    type: bottom-sheet
+    dismiss:
+      - 点击遮罩
+      - 下滑
+      - 系统返回
+    elements:
+      - id: mention-search
+        componentId: search-control
+      - id: mention-friend-rows
+        componentId: regular-list
+    rules:
+      - 发布与评论共用同一 overlay 定义
+      - 已选好友在列表中展示 selected 态
+
+  - id: clear-all-dialog
+    name: Sure to clear all notifications?
+    type: center-dialog
+    dismiss:
+      - Cancel
+      - 点击遮罩
+    actions:
+      - id: cancel
+        result: 关闭 dialog，列表不变
+      - id: clear
+        result: 清空 moment-notifications
+
+rules:
+  - id: mention-picker-reuse
+    text: mention-picker 在 feed-compose 与 feed-detail 必须同构
+    pages:
+      - feed-compose
+      - feed-detail
+  - id: liked-list-content-parity
+    text: liked-moments 与 moment-feed 保持相同内容字段与 Foundation Token；回看列表可使用摘要结构提升比较效率
+    pages:
+      - liked-moments
+      - moment-feed
+
+kitMapping:
+  - elementId: liked-nav
+    componentId: regular-navigation
+    status: kit
+  - elementId: liked-feed
+    componentId: prototype-liked-moment-card
+    status: prototype
+    kitGap: 点赞历史需要摘要卡片、取消点赞撤销和宽屏列表—详情结构；保持页面专属，不提名 Kit
+  - elementId: mention-search
+    componentId: search-control
+    status: kit
+  - elementId: mention-friend-rows
+    componentId: regular-list
+    status: kit
+  - elementId: clear-all-dialog
+    componentId: center-dialog
+    status: kit
+  - elementId: feed-card
+    componentId: prototype-feed-card
+    status: prototype
+    kitGap: 动态卡片 footer 大区差异化操作组需配置 slot
+  - elementId: mention-body
+    componentId: prototype-mention-inline
+    status: prototype
+    kitGap: 正文/评论内 @ token 高亮与跳转
+  - elementId: mention-picker
+    componentId: prototype-mention-picker-sheet
+    status: prototype
+    kitGap: 多选好友 + 搜索 + 与 composer 光标协同
+
+candidates:
+  - id: mention-picker-sheet
+    description: 发布/评论共用的 @ 好友选择半窗
+    recommendation: keep-prototype
+    reuseEvidence: 当前仅 Moment 发布与评论两处；需第二场景稳定验证后再 nominate
+    blockers: 多选上限、非互关策略、与 IM @ 是否合并

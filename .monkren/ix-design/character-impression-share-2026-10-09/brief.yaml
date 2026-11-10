@@ -1,0 +1,80 @@
+schemaVersion: 1
+feature:
+  id: character-impression-share
+  name: 形象分享与形象码
+  platform: ios
+  viewport: { width: 375, height: 812 }
+  goals:
+    - 用户可上传人物图并生成 AI 形象
+    - 用户可通过形象码使用他人分享的形象
+    - 用户可管理「我的生成」并控制是否仅自己可见
+    - 用户可将形象分享到 IM / 外链落地页
+  personas:
+    - 创建形象的创作者
+    - 通过好友形象码进入的受邀用户
+sources:
+  - type: image
+    ref: user-prd-screenshots-2026-10-09
+    confidence: high
+  - type: feishu-doc
+    ref: https://micoworld.feishu.cn/wiki/V2cxw47EoiFuE1kwPO6cjPLjnyg
+    confidence: low
+    note: CLI 用户身份过期，正文以截图与后续文档同步为准
+pages:
+  - id: generate
+    name: Generate Characters
+    knownStates: [empty-image, filled, first-free-dialog, generating, view]
+  - id: character-code-modal
+    name: Use Characters Code
+    knownStates: [empty, filled, invalid]
+  - id: library
+    name: All character
+    knownStates: [my, hot, add, generating, failed, ready]
+  - id: detail
+    name: View Characters
+    knownStates: [default, private-only-on]
+  - id: share-landing
+    name: 第三方分享落地
+    knownStates: [invite, use, edit, go-play]
+  - id: error
+    name: 形象异常
+    knownStates: [broken, delete, retry]
+flows:
+  - name: 自主生成
+    type: primary
+    steps:
+      - 进入 Generate Characters
+      - 上传人物图 + 可选 Text Instruction / 模板
+      - 首次创建确认（免费提示）
+      - Generate → 查看结果 → Use / share
+  - name: 形象码导入
+    type: branch
+    steps:
+      - Generate 页点击 Characters Code
+      - 输入好友分享码 → ok → View Characters
+  - name: 分享受邀
+    type: branch
+    steps:
+      - 打开第三方落地页 / IM 卡片
+      - 查看形象与 code → Use → Go to play
+scope:
+  newBehavior:
+    - 形象码生成、复制、粘贴导入
+    - 我的生成网格状态（Add / Generating / Failed / Using）
+    - 「只能我自己用」可见性开关
+    - 首次创建免费 + 后续金币扣费提示
+    - 分享 Action Panel 与第三方落地页
+  existingModified: []
+  existingUnchanged:
+    - 标准二级导航返回
+    - IM 会话气泡样式（落地页外链仅示意）
+  visualDirection:
+    - PRD 示意含 3D 全身像与风格模板缩略图
+    - Generate 主按钮展示金币消耗
+  ignoredItems:
+    - 飞书 PRD 排期与接口字段未在截图中出现 → 待文档同步
+openQuestions:
+  - 形象码长度/字符集与失效规则是否在全区域一致？
+  - Hot Character 列表排序与审核策略？
+  - 生成失败是否自动退款或仅支持重试？
+  - 「Go to play」跳转的具体玩法入口？

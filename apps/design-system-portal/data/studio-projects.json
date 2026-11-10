@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "activeProjectIds": [
+    "feed-compose",
+    "im-custom-emoji",
+    "live-room",
+    "spin-bottle",
+    "voice-room-status",
+    "moment-publish-detail",
+    "search-flow",
+    "message-conversation-pin",
+    "offer-center-optimization",
+    "topic-discovery",
+    "report-reason-optimization",
+    "character-impression-share",
+    "app-login-flow",
+    "social-splash-seeded",
+    "moment-liked-mention"
+  ]
+}

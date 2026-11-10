@@ -1,6 +1,6 @@
 ---
 name: visual-taste-lab
-description: Use when the user wants better-looking UI, fewer AI-looking webpages, a reusable design-language workflow, screenshot/URL-based aesthetic distillation, or adaptable visual direction for company sites, product landing pages, investor pages, institutional pages, transactional utility sites, dashboards, portfolios, or marketing pages.
+description: Use when the user wants better-looking UI, fewer AI-looking webpages, a reusable design-language workflow, screenshot/URL-based aesthetic distillation, durable preference learning from repeated design feedback, or adaptable visual direction for company sites, product surfaces, dashboards, portfolios, and marketing pages.
 ---
 
 # Visual Taste Lab
@@ -15,6 +15,7 @@ Turn vague taste requests into a repeatable design-language workflow. Use this b
 - The work involves a website, product surface, dashboard, portfolio, investor page, institutional page, transactional flow, or marketing page.
 - The user provides screenshots, URLs, brand references, competitor references, or asks to derive taste from examples.
 - The project needs a reusable visual system before implementation.
+- The user asks to remember, summarize, or reuse recurring visual preferences and repeated design corrections.
 
 Do not use this skill for pure copy editing, backend work, accessibility-only audits, or small bug fixes unless visual language decisions are part of the request.
 
@@ -38,6 +39,11 @@ Before choosing an archetype, layout, palette, or component style, identify the 
 If references conflict with the existing brand, state the conflict and choose a direction deliberately. Do not replace a viable existing VI just because a reference looks fashionable.
 
 ## Workflow
+
+0. **Load relevant preference memory**
+   - If the environment exposes a personal Agent Store, look for `design-taste/preferences.yaml`.
+   - Apply only relevant `stable` and `emerging` entries. Treat `tentative` entries as hypotheses.
+   - Current user direction, brand evidence, accessibility, platform rules, and component contracts override remembered taste.
 
 1. **Collect references**
    - Prefer full-page screenshots, URLs, brand sites, existing codebase, or 3-5 inspiration links.
@@ -79,6 +85,17 @@ If references conflict with the existing brand, state the conflict and choose a 
    - Check that repeated UI elements share the same token/component rules.
    - Keep honest claims: do not invent cases, customers, metrics, or product status.
 
+## Preference Learning Loop
+
+When the user repeatedly adjusts a design, read [references/preference-learning.md](references/preference-learning.md).
+
+- Separate taste from design-system rules, accessibility requirements, product constraints, and one-off fixes.
+- Promote a preference to `stable` only after an explicit general statement or matching evidence across at least two independent contexts.
+- Store user-specific preferences in the personal Agent Store, not in the project repository or this reusable Skill.
+- Record generic evidence counts and context labels, not raw messages, screenshots, private project names, or confidential content.
+- After meaningful feedback, update the profile and report what became stable, emerging, tentative, narrowed, or retired.
+- Preferences are priors, not mandates. Explain when the current brand, task, or platform justifies a different choice.
+
 ## Design Standards
 
 - Typography should create hierarchy before decoration does.
@@ -110,6 +127,7 @@ If references conflict with the existing brand, state the conflict and choose a 
 For a real project, aim to deliver:
 
 - `docs/design-language.md` or a project-local equivalent.
+- Applied preference IDs and any remembered preferences intentionally overridden.
 - A short VI brief: logo anchor, primary color, secondary color, accent color, neutral system, typography direction, image direction, and site-type decision.
 - Updated shared styles/components.
 - 2-4 key pages redesigned or tightened.

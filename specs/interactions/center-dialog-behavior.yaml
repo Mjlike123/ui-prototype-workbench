@@ -1,0 +1,55 @@
+schemaVersion: 1
+id: center-dialog-behavior
+title: 中间弹窗呈现、关闭与动效
+status: stable
+description: 居中模态弹窗用于重要信息提示或需要用户决策的短任务；统一蒙层、进入/离开动效、按钮关闭规则与可访问性行为。
+componentIds:
+  - center-dialog
+states:
+  - closed
+  - presenting
+  - open
+  - closing
+  - open-scrollable
+transitions:
+  - from: closed
+    to: presenting
+    trigger: present-center-dialog
+    feedback: 黑色蒙层不透明度 0%→50%；弹窗不透明度 0%→100%，缩放 0.85→1.03→1；焦点移入标题或首个按钮。
+    duration: 320ms
+    easing: standard
+  - from: presenting
+    to: open
+    trigger: enter-animation-complete
+    feedback: 进入动效完成，背景页面不可误触。
+    duration: 0ms
+    easing: standard
+  - from: open
+    to: closing
+    trigger: action-press-or-explicit-dismiss
+    feedback: 蒙层与弹窗按进入动效反向播放；关闭后将焦点恢复到触发元素。
+    duration: 320ms
+    easing: standard
+  - from: closing
+    to: closed
+    trigger: exit-animation-complete
+    feedback: 弹窗卸载，恢复页面滚动与焦点。
+    duration: 0ms
+    easing: standard
+  - from: open
+    to: open-scrollable
+    trigger: content-exceeds-max-height
+    feedback: 标题与按钮区固定，中间文案/配图区域内部滚动，底部保留渐变遮罩提示。
+    duration: 0ms
+    easing: standard
+accessibility:
+  - 使用 role="dialog"、aria-modal="true" 与可感知标题（aria-labelledby 或 aria-label）。
+  - 打开后约束焦点在弹窗内；Tab 循环于可聚焦控件；关闭后恢复到触发元素。
+  - Web 支持 Escape；仅当 dismissible=true 时 Escape 与蒙层点击执行 onDismiss。
+  - 警报型弹窗（dismissible=false）只能通过按钮关闭，不能只依赖蒙层或 Escape。
+edgeCases:
+  - 弹窗宽度固定 300pt，375pt 与 430pt 屏宽下均保持相同尺寸并水平垂直居中。
+  - 最大高度不超过视口 70%；超出时中间内容区滚动，按钮区始终可见。
+  - 双按钮横向布局时左侧为中性次要操作、右侧为主题主操作；纵向布局时主操作在上。
+  - 与 bottom-sheet-behavior 的 dismiss-confirmation 配合时，蒙层/Escape 表示继续编辑，Discard/Save 表示放弃或保留草稿后离开。
+  - 减少动态效果开启时移除缩放，仅保留透明度或直接切换终态。

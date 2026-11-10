@@ -261,9 +261,9 @@ export function StudioImCustomEmojiPage({
                   timestamp={message.time}
                   avatar={
                     message.direction === "incoming" ? (
-                      <AvatarVisual size={30} src={FRIEND.avatar} alt="" />
+                      <AvatarVisual size={36} src={FRIEND.avatar} alt="" />
                     ) : (
-                      <AvatarVisual size={30} src={OUTGOING_AVATAR} alt="" />
+                      <AvatarVisual size={36} src={OUTGOING_AVATAR} alt="" />
                     )
                   }
                 >

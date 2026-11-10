@@ -1,0 +1,272 @@
+schemaVersion: 1
+feature:
+  id: moment-publish-detail-v319
+  name: Moment 发布入口与动态详情交互优化
+  platform: ios
+  viewport:
+    width: 375
+    height: 812
+  goals:
+    - 提升动态发布渗透
+    - 提升动态互动渗透
+  personas:
+    - 浏览 Friend、Find 圈子或 Room members 的用户
+    - 浏览 My Moment 并希望继续发布的用户
+    - 发布纯文案圈子内容的用户
+    - 在动态详情中点赞、评论或发起私聊的用户
+
+sources:
+  - type: feishu-doc
+    ref: https://micoworld.feishu.cn/wiki/UAEuwz3FHiYBidkMRBecsIHDnQe
+    extractedAt: 2026-09-07
+    confidence: high
+  - type: figma
+    ref: https://www.figma.com/design/7dOjirtlxF6MTSSWmmfcv1/3.19.0?node-id=199-5662
+    extractedAt: 2026-09-07
+    confidence: high
+
+scope:
+  newBehavior:
+    - Friend、Find 各圈子、Room members 均提供右下角悬浮发布入口
+    - My Moment 新增右下角悬浮发布入口，进入发布器时不预选圈子
+    - 后端可配置允许纯文案发布的圈子，客户端取消“圈子内容必须配图”的校验
+    - 发布失败控件可点击，并以失败内容恢复当前发布草稿
+    - 后端按大区上线新圈子时，圈子入口及选择面板显示一次性红点
+    - 动态详情作者信息固定在顶部 title 区
+    - 动态详情评论输入、点赞、评论与 Chat 固定在底部互动区
+  existingModified:
+    - Moment 发布入口由右上角移动至右下角悬浮位置
+    - Moment 页面原礼包悬浮入口取消
+    - 加好友按钮调整 UI；添加成功或查看自己的动态时隐藏
+    - 动态详情作者信息由内容区域调整至吸顶 title 区
+    - 动态详情互动操作由内容区域调整至吸底操作区
+  existingUnchanged:
+    - item: 点击发布入口进入现有发布器页面
+      evidence: PRD 方案明确“点击交互一致”；现有 FeedComposePagePrototype
+    - item: 动态详情 title 区头像、名称、性别年龄、VIP、魅力等级及更多操作
+      evidence: PRD 要求与线上一致；现有 FeedDetailPagePrototype
+    - item: 点击评论输入框或评论按钮唤起键盘
+      evidence: PRD 明确与线上交互一致；现有 feedDetail reply composer
+    - item: 点赞直接作用于当前动态
+      evidence: PRD 明确与线上交互一致；现有 liked state
+    - item: 点击 Chat 进入现有私聊页面
+      evidence: PRD 明确与线上交互一致；现有 private-chat prototype
+  uncertain:
+    - 发布失败控件恢复草稿时是否包含图片、圈子、可见范围及输入焦点
+    - 取消 Moment 礼包悬浮入口后是否存在替代入口
+    - 纯文案圈子的配置更新与客户端缓存刷新策略
+
+visualDirections:
+  - statement: 发布入口使用右下角圆形悬浮按钮，复用 Figma 中品牌色与发布图标
+    sourceRef: PRD 方案 / Figma 363:12130、1082:10643
+    confidence: high
+  - statement: 新圈子提示使用小红点，入口与选择面板均需表达未读状态
+    sourceRef: PRD 方案“后端可指定大区上线新圈子”
+    confidence: high
+  - statement: 动态详情 title 区吸顶、互动区吸底，内容在两者之间滚动
+    sourceRef: PRD 方案 / Figma 363:11264
+    confidence: high
+  - statement: 加好友按钮沿用现有语义，仅调整视觉并覆盖隐藏状态
+    sourceRef: PRD 主要改动
+    confidence: medium
+
+designImpacts:
+  - sourceType: product
+    sourceRef: PRD 背景与目标
+    statement: 发布与互动操作需要更易触达
+    impact: 发布入口移动到单手拇指热区；详情互动区固定在底部
+    target: both
+    confidence: high
+  - sourceType: technical
+    sourceRef: PRD 发布器优化
+    statement: 是否必须配图统一由后端按圈子判断
+    impact: 客户端允许提交纯文本；提交后需承接服务端校验、错误原因和可恢复草稿
+    target: interaction
+    confidence: high
+  - sourceType: operation
+    sourceRef: PRD 后端可指定大区上线新圈子
+    statement: 新圈子可按大区动态上线
+    impact: 圈子入口与对应选项需一次性红点，并明确消费时机
+    target: both
+    confidence: high
+  - sourceType: operation
+    sourceRef: PRD 上线大区
+    statement: v3.19.0 所有大区上线
+    impact: 需要覆盖开放关系大区与 ME、KSA 的差异状态
+    target: interaction
+    confidence: high
+  - sourceType: product
+    sourceRef: PRD 动态详情互动区
+    statement: ME、KSA 无 Chat；自己的动态也无 Chat
+    impact: Chat 隐藏后评论输入框自适应扩展，操作区不能留下空槽
+    target: both
+    confidence: high
+  - sourceType: visual
+    sourceRef: Figma 3.19.0
+    statement: 发布 FAB、吸顶作者栏、吸底互动栏已有视觉基线
+    impact: 交互原型直接复用 Kit Token、SystemIcon 与现有 Feed Core 样式
+    target: visual
+    confidence: high
+
+ignoredItems:
+  - item: 文档创建人和创建日期
+    reason: no-user-facing-impact
+    sourceRef: PRD 变更日志
+  - item: 数据需求与数据结论空章节
+    reason: no-user-facing-impact
+    sourceRef: PRD 数据需求 / 数据结论
+  - item: 旧版本兼容空章节
+    reason: out-of-release-scope
+    sourceRef: PRD 旧版本兼容
+
+pages:
+  - id: moment-feed
+    name: Moment 列表
+    description: Friend、Find 圈子和 Room members 中展示悬浮发布入口
+    knownStates:
+      - 默认浏览
+      - 滚动中
+      - 新圈子入口红点
+      - 发布失败提示
+    sourceRefs:
+      - PRD 方案 / Moment 调整内容
+      - Figma 363:12130
+  - id: my-moment
+    name: My Moment
+    description: 用户自己的动态列表，新增不预选圈子的悬浮发布入口
+    knownStates:
+      - 有动态
+      - 空状态
+    sourceRefs:
+      - PRD 方案 / My moment
+      - Figma 1082:10643
+  - id: feed-compose
+    name: 动态发布器
+    description: 支持文案、图片、圈子与可见范围；圈子配图规则由后端判断
+    knownStates:
+      - 空草稿
+      - 已输入文案
+      - 已选图片
+      - 已选圈子
+      - 新圈子红点
+      - 提交中
+      - 服务端校验失败
+      - 恢复失败草稿
+    sourceRefs:
+      - PRD 发布器优化
+      - Figma 1808:12355
+  - id: feed-detail
+    name: 动态详情
+    description: 作者信息吸顶、互动操作吸底，正文与评论区独立滚动
+    knownStates:
+      - 他人动态未添加
+      - 他人动态已添加
+      - 自己的动态
+      - 开放关系大区
+      - ME 或 KSA
+      - 图片加载中
+      - 无评论
+      - 已点赞
+      - 评论输入激活
+    sourceRefs:
+      - PRD 动态详情页优化
+      - Figma 363:11264
+
+flows:
+  - name: 从 Moment 发布
+    type: primary
+    steps:
+      - 浏览 Friend、Find 圈子或 Room members
+      - 点击右下角悬浮发布按钮
+      - 进入现有发布器
+      - 编辑内容并发布
+      - 返回对应 Moment 列表
+  - name: 从 My Moment 发布
+    type: primary
+    steps:
+      - 浏览 My Moment
+      - 点击右下角悬浮发布按钮
+      - 进入发布器且不预选圈子
+      - 编辑并发布
+  - name: 发布纯文案圈子内容
+    type: primary
+    steps:
+      - 输入纯文本并选择圈子
+      - 客户端不拦截缺少图片
+      - 提交服务端判断该圈子是否允许纯文案
+      - 允许则发布成功
+  - name: 服务端拒绝并恢复草稿
+    type: error
+    steps:
+      - 服务端判定当前圈子仍要求配图
+      - 展示发布失败控件与原因
+      - 点击失败控件
+      - 返回发布器并恢复失败草稿
+  - name: 动态详情互动
+    type: primary
+    steps:
+      - 进入动态详情
+      - 作者栏固定在顶部，互动栏固定在底部
+      - 点赞直接切换状态
+      - 点击评论输入框或评论按钮唤起键盘
+      - 开放关系大区且非本人时可点击 Chat 进入私聊
+  - name: 消费新圈子红点
+    type: secondary
+    steps:
+      - 后端按大区上线新圈子
+      - 发布器圈子入口显示红点
+      - 打开圈子选择面板后入口红点消失
+      - 新圈子选项保留红点至本次面板关闭
+      - 下次打开面板时选项红点消失
+
+rules:
+  - text: Friend、Find 各圈子、Room members 都必须提供悬浮发布入口
+    source: PRD Moment 调整内容
+    confidence: high
+  - text: My Moment 进入发布器时不预选任何圈子
+    source: PRD My moment
+    confidence: high
+  - text: 客户端取消圈子内容必须配图的校验，由后端统一判断
+    source: PRD 发布器优化
+    confidence: high
+  - text: 新圈子入口红点在打开选择面板后消失，选项红点在下次打开面板时消失
+    source: PRD 后端可指定大区上线新圈子
+    confidence: high
+  - text: 动态详情 title 区固定顶部，互动区固定底部
+    source: PRD 动态详情页优化
+    confidence: high
+  - text: 已添加或自己的动态隐藏添加按钮
+    source: PRD 动态详情 title 区
+    confidence: high
+  - text: ME、KSA 不展示 Chat；自己的动态也不展示 Chat
+    source: PRD 动态详情互动区
+    confidence: high
+  - text: Chat 隐藏后评论输入框自适应占用剩余宽度
+    source: PRD 动态详情互动区
+    confidence: high
+
+visualReferences:
+  - path: figma://7dOjirtlxF6MTSSWmmfcv1/363:12130
+    interpretation: Moment Find 列表右下角悬浮发布入口
+    linkedPageId: moment-feed
+  - path: figma://7dOjirtlxF6MTSSWmmfcv1/1082:10643
+    interpretation: My Moment 列表右下角悬浮发布入口
+    linkedPageId: my-moment
+  - path: figma://7dOjirtlxF6MTSSWmmfcv1/1808:12355
+    interpretation: 发布器输入、图片、圈子与可见范围结构
+    linkedPageId: feed-compose
+  - path: figma://7dOjirtlxF6MTSSWmmfcv1/363:11264
+    interpretation: 动态详情吸顶作者区与吸底互动区
+    linkedPageId: feed-detail
+
+conflicts: []
+
+openQuestions:
+  - 取消 Moment 礼包悬浮入口后，礼包是否迁移到其他入口？
+  - 发布失败恢复草稿是否必须恢复文案、图片、圈子、可见范围和输入焦点？
+  - 服务端拒绝纯文案时的错误码与面向用户的正式文案是什么？
+  - 新圈子红点是否跨设备同步；入口和选项红点的消费状态由前端还是后端保存？
+  - 旧版本兼容章节为空：旧版客户端是否收到新圈子及纯文案圈子配置？
+  - 数据埋点章节为空：发布 FAB 曝光/点击、发布来源、恢复草稿、底部互动点击是否需要新增事件？
+  - 加好友按钮仅写“UI 调整”，是否完全采用 Figma 视觉与现有点击逻辑？
+  - 动态详情图片加载失败、内容删除、无权限和网络错误是否纳入本期？

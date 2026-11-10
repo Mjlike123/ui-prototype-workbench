@@ -1,0 +1,143 @@
+schemaVersion: 1
+featureId: voice-room-status-v326
+platform: ios
+pages:
+  - id: profile-guest
+    name: 个人主页（客态）
+    purpose: 展示他人身份与当前可加入的语音房入口
+    entry:
+      - 从动态点头像
+      - 从搜索/推荐进入
+    exit:
+      - 返回上一页
+      - 进入语音房（点击在房状态）
+    states:
+      - id: in-room-visible
+        description: 用户在房且对当前查看者可见
+        conditions: 用户在房 ∧ 未隐身 ∧ 可见范围允许当前查看者
+      - id: online-only
+        description: 用户在线但不在房，或不在房
+        conditions: 不在房 ∨ 在房但不可见（对查看者显示在线或无色）
+      - id: hidden-by-invisible
+        description: 用户开启在线隐身
+        conditions: 隐身开启 → 不展示在房状态
+    elements:
+      - id: avatar
+        role: avatar
+        label: 用户头像
+      - id: status-slot
+        role: status-badge
+        label: 头像右侧状态位（在线 / 在房二选一）
+        behavior: 在房时展示在房条；否则展示在线状态
+      - id: in-room-chip
+        role: tappable-badge
+        label: 在语音房 + 进入房间
+        behavior: icon 动效 + 主副文案
+    transitions:
+      - trigger: 点击 in-room-chip
+        result: 进入对方当前语音房
+        targetPageId: voice-room
+        notes: 埋点进房来源=个人主页
+  - id: feed-surfaces
+    name: 动态列表/话题/详情
+    purpose: 在信息流中发现好友/陌生人的在房状态
+    entry:
+      - Feed 各 tab
+      - 话题详情
+      - 动态详情
+    states:
+      - id: in-room-on-avatar
+        description: 头像角标/描边展示在房（复用线上样式）
+      - id: no-status
+        description: 不可见时不展示在房标记
+    elements:
+      - id: feed-avatar
+        role: avatar-with-room-ring
+        label: 动态作者头像
+    transitions:
+      - trigger: 点击头像或在房标记区域
+        result: 按现有规则进入主页或进房（PRD 明确点击在房状态进房；头像点击行为需与现网一致）
+        notes: 埋点进房来源=动态；需确认头像点击是否仅进主页
+  - id: privacy-settings
+    name: 隐私设置
+    purpose: 管理在房状态可见范围
+    entry:
+      - Me → 设置 → 隐私设置
+    elements:
+      - id: row-invisible-room
+        role: switch-row
+        label: 隐身于房间（既有）
+      - id: row-voice-room-visibility
+        role: navigation-row
+        label: 语音房在房状态
+        behavior: 展示当前选项摘要；点击进入半窗
+    transitions:
+      - trigger: 点击 row-voice-room-visibility
+        result: 向上唤起 action sheet
+        targetOverlayId: privacy-voice-room-sheet
+overlays:
+  - id: privacy-voice-room-sheet
+    name: 语音房在房状态设置
+    hostPageId: privacy-settings
+    type: sheet
+    dismiss:
+      - 点击遮罩
+      - 选择选项后自动收起
+      - 取消按钮（若设计稿提供）
+    states:
+      - id: everyone-selected
+        description: 所有人可见
+      - id: friends-only-selected
+        description: 仅好友可见
+    transitions:
+      - trigger: 选择「所有人可见」
+        result: 立即生效；陌生人可见在房状态
+      - trigger: 选择「仅好友可见」
+        result: 立即生效；仅好友可见
+globalRules:
+  - 在线隐身 > 在房可见范围 > 大区默认策略
+  - 老版本客户端：默认仅好友可见；无法看到新版本用户的「所有人可见」在房状态
+  - 展示文案固定：标题「在语音房」、辅助「进入房间」
+kitMapping:
+  - pageId: profile-guest
+    region: 头像旁在房胶囊
+    componentId: prototype
+    source: prototype
+    kitGap: profileV3RoomFollow（profile-page-prototype）；对照 Figma V3.26.0
+  - pageId: feed-surfaces
+    region: 动态头像在房环
+    componentId: prototype
+    source: prototype
+    kitGap: prototypeFeedCard 头像 2px 描边 + 角标；复用线上样式
+  - pageId: privacy-settings
+    region: 设置列表行
+    componentId: regular-list
+    source: kit
+    notes: meSecondarySettingsGroup + meSecondaryActionRow / meSecondarySwitchRow
+  - pageId: privacy-voice-room-sheet
+    region: 底部选项半窗
+    componentId: prototype
+    source: prototype
+    kitGap: iOS 纯文字 action sheet 列表（分割线分隔，无卡片选项）；非 feedComposeAudience 卡片样式
+optimizations:
+  - type: design-completion
+    topic: 进房失败反馈
+    original: PRD 未写
+    proposal: 房间不可进时 Toast「房间已结束」并停留当前页
+    evidence: 交互补全，避免静默失败
+  - type: design-completion
+    topic: 隐身与在房设置关系
+    original: PRD 仅文字说明隐身优先
+    proposal: 隐身开启时，隐私设置内在房可见范围行置灰并附说明「隐身时已对他人不可见」
+    evidence: 减少用户误解
+  - type: ux-improvement
+    topic: 半窗确认按钮
+    original: PRD 示意有取消/确定
+    proposal: 选择即生效（PRD 正文），去掉多余确定步；若 Figma 有确定则以对稿为准
+    evidence: PRD 交互段「选择对应选项即生效」
+    suggested: true
+  - type: needs-product-confirm
+    topic: 动态列表点击头像 vs 点击在房标
+    original: PRD 只写点击在房状态进房
+    proposal: 明确头像点击仍进主页，仅状态条进房
+    evidence: 避免与现有 Feed 行为冲突

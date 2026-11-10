@@ -43,13 +43,13 @@ transitions:
   - from: open-dirty
     to: dismiss-confirmation
     trigger: any-dismiss-attempt
-    feedback: 保留当前输入并询问是否放弃未保存的重要内容。
+    feedback: 使用 center-dialog 呈现二次确认；保留当前输入并询问是否放弃或保存草稿。
     duration: 100ms
     easing: standard
   - from: dismiss-confirmation
     to: open-dirty
     trigger: continue-editing
-    feedback: 关闭确认对话框，返回原半屏并恢复此前焦点和输入。
+    feedback: 关闭 center-dialog 并返回编辑页，恢复此前焦点和输入。
     duration: 100ms
     easing: standard
   - from: dismiss-confirmation

@@ -20,6 +20,18 @@ tokens:
     name: 边缘间距优先
     value: fixed-gutter
     description: 模块与模块、模块与屏幕的边距优先保持固定，模块内容在剩余空间内延展。
+  - id: layout.list.content-fill
+    name: 列表内容填充容器
+    value: fill-container
+    description: 移动端列表和设置行的内容容器在左右各留 16pt 后填满可用宽度；自动布局使用 Fill 或固定容器宽度，不能因 Hug 内容而收窄整行。列表文字区域使用 Fill 占据头像与右侧操作之间的剩余宽度；文字到右侧元素的间距按语义选择 16pt（独立区域）、12pt（常规）、8pt（紧凑内联）。通栏背景可铺满屏宽，但其文字、头像和操作控件仍对齐 16pt 内容边距。
+  - id: layout.divider.same-attribute
+    name: 同类信息分割线与元素描边
+    value: 0.5
+    description: 同一属性或同一功能组内相邻 cell 的分割线，以及容器、控件等元素的轮廓描边使用 0.5pt；列表分割线沿用左右各 16pt 的内容边距，颜色使用 color.border.subtle（分割线透明/bordBg1）。不覆盖 icon Kit 矢量图形自身的笔画宽度。
+  - id: layout.divider.major-module
+    name: 不同功能模块分割线
+    value: 4
+    description: 不同属性的功能模块之间使用 4pt 分隔带，明确区分内容组；可铺满容器宽度，颜色使用 color.border.subtle（分割线透明/bordBg1）。
   - id: layout.dialog.max-height
     name: 对话框最大高度
     value: 70vh
@@ -32,3 +44,27 @@ tokens:
     name: 大模块图片适配
     value: contain
     description: 保持固定外边距与图片宽高比；只有设计明确标注固定高度时才允许按宽度裁切。
+  - id: layout.device.iphone-duo-outer
+    name: iPhone Duo 外屏（闭合）
+    value: 466x678
+    description: 5.4 英寸外屏逻辑画布（1398×2034 @3x）。Compact Width。系统把 Tab/Toolbar 放到侧边以保留垂直空间，见 Apple HIG Designing for iPhone Duo。
+  - id: layout.device.iphone-duo-inner
+    name: iPhone Duo 内屏（展开横持）
+    value: 890x626
+    description: 7.6 英寸内屏横持主画布（2670×1878 @3x）。Regular Width。侧边导航保持与外屏连续；有下级页则 NavigationSplitView 左右同屏。
+  - id: layout.device.iphone-duo-inner-portrait
+    name: iPhone Duo 内屏（展开竖持）
+    value: 626x890
+    description: 内屏竖持逻辑画布。HIG：竖持才恢复常规横向顶栏/底栏；控件高度仍固定。
+  - id: layout.fold.hinge-safe
+    name: 折叠铰链避让
+    value: center-crease
+    description: 折叠 ReservedRegion 随姿势变化。半折时分割可用区；全开不是固定中缝 gutter。主按钮和输入避开活动折痕，全宽媒体可跨折痕。
+  - id: layout.fold.outer-camera
+    name: 外屏前摄避让
+    value: 54
+    description: 外屏前摄始终在侧栏顶部的角落。侧栏 Tab 从 54pt 之下开始，不得压在相机 ReservedRegion 上。
+  - id: layout.device.iphone-duo-split
+    name: iPhone Duo 主从分栏
+    value: navigation-split-view
+    description: 按 Apple HIG：外屏 Compact 收成单栏，内屏 Regular 展开为 NavigationSplitView。右栏是原下级页。外屏与内屏横持把 Tab 放在侧边；列表专属控件留在列表一侧。禁止 Open/Join 占位。无下级页则只延展。

@@ -8,6 +8,7 @@ import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { ListTag } from "@/components/kit/list-tag";
 import { PrimaryNavigation } from "@/components/kit/primary-navigation";
+import { RegularNavigation } from "@/components/kit/regular-navigation";
 import { SystemIcon } from "@/components/kit/system-icon";
 import { SearchControl } from "@/components/kit/search-control";
 import { PrimaryNavigationSearchIcon } from "@/components/primary-navigation-search-icon";
@@ -28,6 +29,8 @@ type PrototypeDestinationPageProps = {
   onOpenPrivateChat?: (friend: PrivateChatFriend) => void;
   onOpenCompose?: () => void;
   onOpenFeedDetail?: () => void;
+  feedVariant?: "default" | "liked";
+  onFeedBack?: () => void;
   width?: number;
   height?: number;
   theme?: "light" | "dark";
@@ -43,6 +46,8 @@ export function PrototypeDestinationPage({
   onOpenPrivateChat,
   onOpenCompose,
   onOpenFeedDetail,
+  feedVariant = "default",
+  onFeedBack,
   width = 375,
   height = 812,
   theme = "light",
@@ -72,6 +77,8 @@ export function PrototypeDestinationPage({
           <FeedScreen
             onAction={setToast}
             onOpenDetail={onOpenFeedDetail}
+            variant={feedVariant}
+            onBack={onFeedBack}
           />
         ) : screen === "room" ? (
           <RoomScreen onAction={setToast} />
@@ -87,7 +94,7 @@ export function PrototypeDestinationPage({
             ) : null}
           </main>
         )}
-        {screen === "feed" ? (
+        {screen === "feed" && feedVariant === "default" ? (
           <button
             type="button"
             className="prototypeFeedCompose"
@@ -101,10 +108,12 @@ export function PrototypeDestinationPage({
             </span>
           </button>
         ) : null}
-        <DestinationBottomNavigation
-          selected={screen}
-          onChange={onNavigate}
-        />
+        {screen !== "feed" || feedVariant === "default" ? (
+          <DestinationBottomNavigation
+            selected={screen}
+            onChange={onNavigate}
+          />
+        ) : null}
       </div>
       {toast ? (
         <div className="profilePrototypeToast" role="status" aria-live="polite">
@@ -274,15 +283,23 @@ function RoomScreen({ onAction }: { onAction: (message: string) => void }) {
 function FeedScreen({
   onAction,
   onOpenDetail,
+  variant = "default",
+  onBack,
 }: {
   onAction: (message: string) => void;
   onOpenDetail?: () => void;
+  variant?: "default" | "liked";
+  onBack?: () => void;
 }) {
   const [tab, setTab] = useState<"Mine" | "Recommend" | "Beijing">("Recommend");
   const [followed, setFollowed] = useState<Record<string, boolean>>({
     Andrew: true,
   });
-  const [liked, setLiked] = useState<Record<string, boolean>>({});
+  const [liked, setLiked] = useState<Record<string, boolean>>(
+    variant === "liked"
+      ? { "Latifa Alghanim": true, Andrew: true }
+      : {},
+  );
   const [publishedPosts] = useState(() => readPublishedFeedPosts());
   const basePosts = [
     {
@@ -337,26 +354,34 @@ function FeedScreen({
   return (
     <>
       <h1 className="visuallyHidden">Feed</h1>
-      <PrimaryNavigation
-        className="prototypeFeedNavigation"
-        ariaLabel="Feed 分类"
-        items={["Mine", "Recommend", "Beijing"].map((item) => ({
-          key: item,
-          label: item,
-        }))}
-        value={tab}
-        onChange={(value) =>
-          setTab(value as "Mine" | "Recommend" | "Beijing")
-        }
-        actions={[
-          {
-            key: "notifications",
-            label: "Feed 通知",
-            icon: <SystemIcon name="notification" />,
-            onPress: () => onAction("打开 Feed 通知"),
-          },
-        ]}
-      />
+      {variant === "liked" ? (
+        <RegularNavigation
+          title="我赞过的"
+          onBack={onBack}
+          ariaLabel="我赞过的动态导航"
+        />
+      ) : (
+        <PrimaryNavigation
+          className="prototypeFeedNavigation"
+          ariaLabel="Feed 分类"
+          items={["Mine", "Recommend", "Beijing"].map((item) => ({
+            key: item,
+            label: item,
+          }))}
+          value={tab}
+          onChange={(value) =>
+            setTab(value as "Mine" | "Recommend" | "Beijing")
+          }
+          actions={[
+            {
+              key: "notifications",
+              label: "Feed 通知",
+              icon: <SystemIcon name="notification" />,
+              onPress: () => onAction("打开 Feed 通知"),
+            },
+          ]}
+        />
+      )}
       <main className="prototypeDestinationScroll prototypeFeedScroll">
         <section className="prototypeFeedList" aria-label={`${tab} Feed`}>
           {posts.map((post) => (
@@ -385,7 +410,7 @@ function FeedScreen({
                     gender={post.gender}
                     age={post.age}
                   />
-                  {post.level ? (
+                  {"level" in post && post.level ? (
                     <Image
                       className="prototypeFeedLevel"
                       src="/prototypes/feed/n8-badge.png"

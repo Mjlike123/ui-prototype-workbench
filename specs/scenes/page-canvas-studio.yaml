@@ -1,16 +1,16 @@
 schemaVersion: 1
 id: page-canvas-studio
-version: 1.0.0
-title: 原型创作 · Page Canvas
+version: 2.0.0
+title: 原型创作 · Studio 项目画廊
 status: review
-description: 个人探索画布；通过 prompt / 模板生成 PageCanvasPlan，在固定设备视口内用 Kit 块拼装页面。历史仅存浏览器，不进入 Git。
+description: 以项目卡片浏览已实现的 Studio 原型；进入独立详情页验证页面、场景与交互，不再保留浏览器历史。
 route: /canvas/studio
 platforms:
   - h5
 storage:
-  kind: localStorage
-  key: toptop-page-canvas-history-v1
-  description: 创作历史、参考图与 prompt 草稿；禁止 push 到 GitHub。
+  kind: git
+  key: apps/design-system-portal/data/studio-projects.json
+  description: 项目画廊状态；详情路由为 /canvas/studio/[projectId]。不保留创作历史，进入画廊时清理旧 toptop-page-canvas-history-v1。
 shell:
   viewportWidth: 375
   viewportHeight: 812
@@ -30,9 +30,19 @@ kitRequirements:
   - secondary-tab 块 variant underline 映射 secondary-tab-underline
   - 导航、搜索、列表、图标须用 Kit；禁止手写重复 Kit 标记
   - Studio 页面壳使用 components/studio/* 与 studio-* session 键，不得写入 Core 命名空间
+  - 新页面、整页改版和重大视觉变化须携带质量方向卡，明确首屏主角、产品特异性、真实内容素材与验收标准
+  - 选定方向的主 CTA 必须完成可观察且可恢复的端到端结果，不能只显示 Toast
+  - 选定方向至少保留两轮截图审查证据，并验证 375×812、466×678、890×626
+  - 同一素材不得伪装多个作者、品类或内容实体；素材不足时减少内容或诚实标记 gap
+  - 项目删除使用 center-dialog 二次确认，只移除 catalog 记录与白名单 Studio session 数据
+  - 删除不得触碰 Kit、Core、共享 Studio 实现、图标、Token、Core session、共享 CSS 或 .monkren 设计资料
 implementationRefs:
   - apps/design-system-portal/src/app/canvas/studio/page.tsx
-  - apps/design-system-portal/src/components/page-canvas-showcase.tsx
+  - apps/design-system-portal/src/app/canvas/studio/[projectId]/page.tsx
+  - apps/design-system-portal/src/components/studio/studio-project-gallery.tsx
+  - apps/design-system-portal/src/components/studio/studio-project-workspace.tsx
+  - apps/design-system-portal/src/lib/studio-project-catalog.ts
+  - apps/design-system-portal/src/lib/studio-project-store.ts
   - apps/design-system-portal/src/components/page-canvas-stage.tsx
   - apps/design-system-portal/src/lib/page-canvas-parser.ts
   - apps/design-system-portal/src/lib/page-canvas-templates.ts

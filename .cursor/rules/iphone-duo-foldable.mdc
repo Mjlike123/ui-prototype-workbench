@@ -1,0 +1,48 @@
+---
+description: Adapt TopTop layouts to iPhone Duo (outer closed + inner unfolded), without scaling the 375 canvas
+globs: "apps/design-system-portal/src/components/{prototypes,studio,kit}/**/*.{ts,tsx},apps/design-system-portal/src/app/{canvas,prototype-runtime,prototypes}/**/*.{ts,tsx},specs/foundations/responsive-layout.yaml,content/foundations/responsive-layout.mdx"
+alwaysApply: false
+---
+
+# iPhone Duo 折叠屏适配
+
+权威来源：[Apple HIG · Designing for iPhone Duo](https://developer.apple.com/design/human-interface-guidelines/designing-for-iphone-duo)。这仍是 iPhone，不是第二套 iPad 设计。逻辑画布（@3x）：**外屏 466×678**，**内屏横持 890×626**，**内屏竖持 626×890**。不要写死 375、不要按机型名分支。
+
+## 尺寸类别
+
+- 外屏：Compact Width，更宽更矮。
+- 内屏：Regular Width。同一信息架构；更大时多展示一层层级（如列表+详情），不改任务。
+- 用 size class、margin、safe area 随可用空间延展。禁止整页 scale。
+
+## Vertical controls（官方必守）
+
+外屏、**内屏横持**：Tab / Toolbar / 导航放到**侧边**，让出垂直空间；开合时侧边位置保持连续。
+**内屏竖持**：才用常规横向顶栏/底栏。
+列表专属控件跟着列表走；不要把底栏横铺过铰链盖住详情。
+
+## 主从分栏
+
+有下级页：外屏单栏（列表或详情），内屏 `NavigationSplitView` 左右同屏。右栏是原来 push 的那一页（聊天、Profile、动态详情、房间内），不是 Open/Join 占位。
+没有下级页（TopTop 首页）：只延展均分，不伪造分栏。
+
+## Reserved regions
+
+折痕 ReservedRegion **只在半折时**分割可用区。全开不是固定 24pt 中缝。Alert/Sheet/Split View 让系统避让；自定义锚点再查 API。网格跨折痕时优先偶数列。
+
+外屏前摄始终在侧栏顶部角落（约 54pt）。侧边 Tab 必须从该 ReservedRegion 之下开始，不得压在相机上。内屏前摄未启用时不占位。Home Indicator 底部约 21pt。
+
+## 验收
+
+至少验 **375×812、466×678、890×626**。外屏与内屏横持侧边导航成立；详情输入框不被底栏挡住。
+
+```tsx
+// ❌ 底栏横跨内屏，或整页 scale
+<nav className="bottomNavigation" />
+
+// ✅ 外屏/内屏横持：侧边栏；有下级页再分栏
+{iphoneDuoChromeAxis(width, height) === "vertical" ? (
+  <SideTabBar />
+) : (
+  <BottomTabBar />
+)}
+```

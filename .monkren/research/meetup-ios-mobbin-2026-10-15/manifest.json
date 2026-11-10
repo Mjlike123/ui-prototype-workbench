@@ -1,0 +1,60 @@
+{
+  "source": "Meetup iOS _ Mobbin",
+  "sourcePath": "/Users/tiantian/Documents/ui-audit-tool/Meetup iOS _ Mobbin",
+  "platform": "iOS",
+  "screenCount": 146,
+  "captureSize": "1179x2556",
+  "fileFormatNote": "Files use .png extension but are WebP (VP8) payloads from Mobbin export.",
+  "analyzedAt": "2026-10-15",
+  "sampleScreens": ".monkren/research/meetup-ios-mobbin-2026-10-15/samples/",
+  "flowIndex": [
+    {
+      "id": "discovery",
+      "label": "发现 / Explore",
+      "screens": "1-2, 16, 19-21, 23",
+      "notes": "列表 + 地图双模、时间筛选、分类 Tab、大图活动卡"
+    },
+    {
+      "id": "onboarding",
+      "label": "注册与冷启动",
+      "screens": "3-15, 17",
+      "notes": "账号表单、城市搜索、兴趣 Tag、单选问卷、进度点"
+    },
+    {
+      "id": "event-detail-rsvp",
+      "label": "活动详情与 RSVP",
+      "screens": "22, 24, 30, 44-46, 76",
+      "notes": "Hero 图、紫色状态条、底部 Attend/Ticket、Sheet 报名与改出席"
+    },
+    {
+      "id": "attendees-ops",
+      "label": "参与者与现场",
+      "screens": "38, 50, 105",
+      "notes": "参会者列表、QR 签到黑卡、搜索过滤"
+    },
+    {
+      "id": "social-trust",
+      "label": "社交与信任",
+      "screens": "57, 64, 70, 72, 90",
+      "notes": "个人页、举报表单、评论/回复、群组菜单"
+    },
+    {
+      "id": "groups-home",
+      "label": "群组与 Home",
+      "screens": "85, 98-100, 146",
+      "notes": "群组详情、Home 卡片流、通知与增长 Banner"
+    },
+    {
+      "id": "hosting-create",
+      "label": "主办与创建活动",
+      "screens": "115, 120, 128, 135",
+      "notes": "活动设置表单、描述编辑器、主办态详情"
+    }
+  ],
+  "anomalies": [
+    {
+      "screen": 8,
+      "note": "截图为 Airwallex 登录页，非 Meetup；Mobbin 批次中偶发混入，分析时已排除。"
+    }
+  ]
+}

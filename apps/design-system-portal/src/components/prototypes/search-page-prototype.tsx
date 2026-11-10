@@ -14,6 +14,9 @@ type SearchPagePrototypeProps = {
   theme?: "light" | "dark";
   autoFocus?: boolean;
   onBack: () => void;
+  initialQuery?: string;
+  onQueryChange?: (value: string) => void;
+  onSubmit?: (value: string) => void;
 };
 
 const people: Array<{
@@ -79,8 +82,11 @@ export function SearchPagePrototype({
   theme = "light",
   autoFocus = true,
   onBack,
+  initialQuery = "",
+  onQueryChange,
+  onSubmit,
 }: SearchPagePrototypeProps) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [history, setHistory] = useState<readonly string[]>(recentSearches);
   const [toast, setToast] = useState<string | null>(null);
   const normalizedQuery = query.trim().toLocaleLowerCase();
@@ -111,6 +117,10 @@ export function SearchPagePrototype({
   }, [toast]);
 
   const hasResults = filteredPeople.length + filteredGames.length > 0;
+  const updateQuery = (value: string) => {
+    setQuery(value);
+    onQueryChange?.(value);
+  };
 
   return (
     <div
@@ -133,8 +143,9 @@ export function SearchPagePrototype({
           autoFocus={autoFocus}
           ariaLabel="TopTop 搜索"
           onActivate={() => undefined}
-          onChange={setQuery}
+          onChange={updateQuery}
           onCancel={onBack}
+          onSubmit={(value) => onSubmit?.(value.trim())}
         />
       </header>
 
@@ -161,7 +172,7 @@ export function SearchPagePrototype({
                 <button
                   key={item}
                   type="button"
-                  onClick={() => setQuery(item)}
+                  onClick={() => updateQuery(item)}
                 >
                   <Image
                     src="/icons/search-control/search.svg"

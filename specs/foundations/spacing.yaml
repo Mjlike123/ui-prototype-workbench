@@ -19,7 +19,7 @@ tokens:
   - id: spacing.4
     name: 内容边距
     value: 16
-    description: 移动端常用水平边距和卡片内边距。
+    description: 移动端页面内容区左右各留 16pt；卡片与列表内部也优先使用 16pt 水平内边距。
   - id: spacing.6
     name: 分区间距
     value: 24

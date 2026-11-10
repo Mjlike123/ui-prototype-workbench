@@ -1,0 +1,152 @@
+schemaVersion: 1
+id: center-dialog
+version: 1.0.0
+title: 中间弹窗
+owner: TopTop Design System
+category: Overlay
+status: review
+since: 1.0.0
+tags:
+  - dialog
+  - modal
+  - alert
+  - confirmation
+  - overlay
+platforms:
+  - ios
+  - android
+  - h5
+description: 屏幕居中模态弹窗，用于重要信息提示或需要用户决策的短任务；支持单按钮、双按钮横排与双按钮纵排布局，以及可选配图与「不再提醒」行。
+previewKey: center-dialog
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=735-6530
+  nodeId: "735:6530"
+  observations:
+    - 固定宽 300pt、圆角 16pt；文字区顶部内边距 24pt、左右 24pt
+    - 标题 18pt Semibold primary，居中；描述 14pt Regular secondary，居中，建议不超过 3 行
+    - 标题与描述间距 8pt；文字区与按钮区间距 16pt；按钮区内边距 24pt
+    - 单按钮宽 260pt、高 40pt；双按钮横排各 122pt、间距 16pt，左中性灰右品牌主色
+    - 双按钮纵排各 260pt 通栏，主操作在上、次要操作在下，间距 16pt
+    - 可选 100pt 配图；可选「No more reminders」复选行
+    - 呈现与关闭动效见 center-dialog-behavior
+anatomy:
+  - id: shell
+    label: 弹窗容器
+    description: 白色圆角卡片，固定宽 300pt，高度随内容自适应。
+  - id: textRegion
+    label: 文字区
+    description: 标题、描述与可选配图。
+  - id: title
+    label: 标题
+    description: 18pt Semibold，居中。
+  - id: description
+    label: 描述
+    description: 14pt Regular secondary，居中，可滚动。
+  - id: illustration
+    label: 配图
+    description: 可选装饰或说明配图，100pt。
+  - id: reminder
+    label: 不再提醒
+    description: 可选复选行，14pt secondary。
+  - id: actionRegion
+    label: 按钮区
+    description: 单按钮或双按钮组合。
+  - id: primaryAction
+    label: 主操作
+    description: 40pt 品牌主色按钮。
+  - id: secondaryAction
+    label: 次要操作
+    description: 40pt 中性灰按钮。
+variants:
+  - name: actionLayout
+    values:
+      - single
+      - horizontal
+      - vertical
+    defaultValue: single
+props:
+  - name: open
+    type: boolean
+    required: true
+    description: 是否显示弹窗。
+  - name: title
+    type: string
+    required: true
+    description: 对话框标题。
+  - name: description
+    type: string
+    description: 说明文案；内容过长时中间区域滚动。
+  - name: illustration
+    type: ReactNode
+    description: 可选配图，显示在标题与描述之间或描述下方。
+  - name: reminder
+    type: CenterDialogReminder
+    description: 可选「不再提醒」复选配置。
+  - name: actions
+    type: CenterDialogAction[]
+    required: true
+    description: 操作按钮列表；1 个为单按钮，2 个为横排或纵排。
+  - name: actionLayout
+    type: "'single' | 'horizontal' | 'vertical'"
+    description: 按钮布局；省略时按 actions 数量推断。
+  - name: dismissible
+    type: boolean
+    defaultValue: false
+    description: 是否允许蒙层点击与 Escape 关闭。
+  - name: onDismiss
+    type: () => void
+    description: dismissible 时蒙层/Escape 的回调。
+tokenRefs:
+  - color.surface.panel
+  - color.text.primary
+  - color.text.secondary
+  - color.brand.primary
+  - color.button.primary
+  - radius.16
+  - typography.heading.section
+  - typography.body.regular
+interactionIds:
+  - center-dialog-behavior
+accessibility:
+  - 弹窗必须使用 dialog 语义与可感知标题。
+  - 每个操作按钮为可聚焦 button，并提供明确 aria-label。
+  - dismissible=false 时不得将蒙层作为唯一退出路径。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "735:6530"
+    - "40:3105"
+    - "736:5236"
+    - "736:5243"
+    - "736:5338"
+  nameAliases:
+    - 中间弹窗
+    - center dialog
+    - modal dialog
+    - alert dialog
+    - 对话框
+roles:
+  - container
+  - title
+  - content
+  - trailingAction
+rules:
+  - id: shell.width
+    title: 弹窗固定宽度
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: shell.borderRadius
+    title: 弹窗圆角
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: actionButton.height
+    title: 操作按钮高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule

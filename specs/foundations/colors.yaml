@@ -328,7 +328,7 @@ tokens:
     modes:
       light: "rgba(24, 25, 35, 0.04)"
       dark: "rgba(255, 255, 255, 0.04)"
-    description: "边框、间隔线"
+    description: "同类列表 cell、设置行与操作项之间的 0.5pt 分割线和元素轻描边，以及不同功能模块之间的 4pt 分隔带；使用此语义 Token，不以普通灰色填充替代。"
     figmaVariableId: "VariableID:9022:174175"
     platforms:
       h5: var(--color-border-subtle)

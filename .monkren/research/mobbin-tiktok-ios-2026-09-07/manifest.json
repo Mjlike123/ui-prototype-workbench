@@ -1,0 +1,20 @@
+{
+  "sourceUrl": "https://mobbin.com/apps/tik-tok-ios-0191844d-7844-4d73-bd76-9009a4984dd8",
+  "app": "TikTok iOS",
+  "downloadedAt": "2026-09-07",
+  "note": "Mobbin full screen library requires login. Only public preview screens downloaded automatically.",
+  "screens": [
+    {
+      "file": "f0fe2bb8-654b-423f-b93d-dd7278750d39.png",
+      "url": "https://bytescale.mobbin.com/FW25bBB/image/mobbin.com/prod/content/app_screens/f0fe2bb8-654b-423f-b93d-dd7278750d39.png?f=png&w=1920&q=50&fit=shrink-cover",
+      "bytes": 8352,
+      "source": "tiktok-preview"
+    },
+    {
+      "file": "34a92614-90ce-40c0-b560-6fd09e5ab9c1.png",
+      "url": "https://bytescale.mobbin.com/FW25bBB/image/mobbin.com/prod/content/app_screens/34a92614-90ce-40c0-b560-6fd09e5ab9c1.png?f=png&w=1920&q=50&fit=shrink-cover",
+      "bytes": 456748,
+      "source": "tiktok-preview"
+    }
+  ]
+}

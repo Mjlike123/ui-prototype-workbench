@@ -47,4 +47,24 @@ describe("parsePageCanvasPrompt", () => {
     expect(plan.blocks.map((b) => b.kind)).toContain("search-control");
     expect(plan.blocks.map((b) => b.kind)).toContain("regular-list");
   });
+
+  it("routes the v3.19 Moment brief to its Studio prototype", () => {
+    const plan = parsePageCanvasPrompt(
+      "Moment v3.19.0：右下角发布入口、纯文案圈子、失败草稿恢复与动态详情吸底互动",
+    );
+
+    expect(plan.intent).toBe("moment-publish-detail");
+    expect(plan.title).toBe("Moment 发布与动态详情优化");
+    expect(plan.blocks).toEqual([]);
+  });
+
+  it("routes the TikTok-inspired search flow to Studio", () => {
+    const plan = parsePageCanvasPrompt(
+      "TikTok 式搜索优化：搜索前推荐、输入联想、分类结果与相关搜索",
+    );
+
+    expect(plan.intent).toBe("search-flow");
+    expect(plan.title).toBe("全局搜索流程优化");
+    expect(plan.blocks).toEqual([]);
+  });
 });

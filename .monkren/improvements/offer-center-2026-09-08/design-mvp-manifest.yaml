@@ -1,0 +1,44 @@
+schemaVersion: 1
+id: offer-center-information-optimization
+intent: 让用户快速理解当前 Offer 进度、下一档目标、奖励状态，并完成充值到领取闭环
+route: /canvas/studio/offer-center-optimization
+viewport:
+  width: 375
+  height: 812
+reference:
+  type: structural
+  file: image-c4d6db0d-5a27-4aec-976e-b8cc7be05324.jpg
+componentStack:
+  - componentId: ios-status-bar
+    spec: specs/components/ios-status-bar.yaml
+    role: 系统状态栏
+  - componentId: regular-navigation
+    spec: specs/components/regular-navigation.yaml
+    role: Offer Center、History 与返回操作
+  - componentId: secondary-tab-underline
+    spec: specs/components/secondary-tab-underline.yaml
+    role: Active 与 Available 分区
+  - componentId: button
+    spec: specs/components/button.yaml
+    role: Recharge、Activate 与 Claim
+  - componentId: toast
+    spec: specs/components/toast.yaml
+    role: 激活和充值结果反馈
+  - componentId: center-dialog
+    spec: specs/components/center-dialog.yaml
+    role: 奖励到账反馈
+states:
+  - active-progress
+  - available-offers
+  - history
+  - recharge-sheet
+  - recharge-success
+  - reward-unlocked
+  - reward-claimed
+kitGaps:
+  - id: PrototypeOfferSummary
+    reason: Offer 充值进度与下一档目标属于业务专用摘要
+  - id: PrototypeOfferMilestones
+    reason: 金额门槛、组合奖励和领取状态尚无 Kit 契约
+  - id: PrototypeOfferRechargeSheet
+    reason: 余额与 SKU 购买面板不是通用 ActionPanel

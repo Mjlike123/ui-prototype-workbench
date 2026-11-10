@@ -1,10 +1,10 @@
 schemaVersion: 1
 id: regular-navigation
-version: 1.0.0
+version: 1.1.1
 title: 常规导航栏
 owner: TopTop Design System
 category: Navigation
-status: review
+status: stable
 since: 1.0.0
 tags:
   - navigation
@@ -29,10 +29,11 @@ reference:
     - 左右操作内容不得覆盖标题，标题区与操作区至少保留 8pt 间距
     - 操作文案区域最大宽 130pt；超过限制时应修改文案，不能继续挤压标题区
     - 尾部按钮基准尺寸为 63×32pt，主色背景；半弹层使用关闭而不是返回
+    - 导航容器使用当前页面的 color.surface.canvas（背景色/bgPrimary），不得自行切换为 color.surface.panel
 anatomy:
   - id: container
     label: 导航容器
-    description: 固定高 44pt、宽度跟随页面，背景使用页面内容面板色。
+    description: 固定高 44pt、宽度跟随页面；背景使用宿主页面的 color.surface.canvas（背景色/bgPrimary），保持同一页面表面连续。
   - id: leadingAction
     label: 前置操作
     description: 可选返回、关闭或无操作；返回表达页面层级回退，关闭用于半弹层等临时容器。
@@ -98,7 +99,7 @@ tokenRefs:
   - color.text.primary
   - color.text.primary-a50
   - color.text.tertiary
-  - color.surface.panel
+  - color.surface.canvas
   - color.brand.primary
   - typography.navigation.regular-title
   - typography.navigation.regular-subtitle
@@ -130,6 +131,12 @@ roles:
   - container
   - label
 rules:
+  - id: container.backgroundColor
+    title: 导航栏与页面背景一致
+    category: structure
+    metric: backgroundColor
+    tolerance: 12
+    aggregate: rule
   - id: container.height
     title: 导航栏高度
     category: structure

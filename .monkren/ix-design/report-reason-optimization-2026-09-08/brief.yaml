@@ -1,0 +1,283 @@
+schemaVersion: 1
+feature:
+  id: report-reason-optimization
+  name: 用户举报页面举报原因优化
+  platform: web
+  viewport:
+    width: 375
+    height: 812
+  goals:
+    - 补齐骚扰、隐私安全、暴力恐怖及政治宗教违规等系统举报出口
+    - 让用户准确理解资料类举报将自动提交哪些资料作为案件证据
+    - 保持新版 H5 举报流程一致，降低用户转向人工反馈的比例
+  personas:
+    - 在语音房遭遇跟踪、挑衅或其他骚扰，需要通过系统举报的用户
+    - 举报个人资料或房间资料违规、需要理解证据提交范围的用户
+    - 负责接收系统举报并减少人工反馈压力的运营与审核人员
+
+sources:
+  - type: feishu-doc
+    ref: https://micoworld.feishu.cn/wiki/IfGRweekNi2Ls5kUJ16cpm87nVh?from=from_copylink
+    extractedAt: 2026-09-08
+    confidence: high
+  - type: feishu-doc
+    ref: Btemw4k6bimFfMkmpCzcjrtlnTd（【V3.15.0】内容生态：用户举证通道、CS 举证通道）
+    extractedAt: 2026-09-08
+    confidence: high
+  - type: image
+    ref: .monkren/ix-design/report-reason-optimization-2026-09-08/report-reasons-source.png
+    extractedAt: 2026-09-08
+    confidence: high
+  - type: image
+    ref: .monkren/ix-design/report-reason-optimization-2026-09-08/report-profile-source.png
+    extractedAt: 2026-09-08
+    confidence: high
+  - type: figma
+    ref: https://www.figma.com/design/htlg4y0s5KILcYdRykUOfS/v3.21.0?node-id=26-4454
+    extractedAt: 2026-09-08
+    confidence: high
+
+scope:
+  newBehavior:
+    - 举报原因新增 Harrassment、Privacy & Safety、Violence / gore / terrorism、Political / religious violations
+    - 选择 Other 后展示具体违规原因输入框，最多输入 100 字符
+    - 个人资料举报页增加自动提交头像、昵称、签名、个人主页背景作为判断证据的提示
+    - 房间资料举报页增加自动提交封面、名称、公告作为判断证据的提示
+  existingModified:
+    - Porn/soft porn 更名为 Pornography
+    - Advertising 更名为 Advertising / Diversion
+    - Pretend to be official 更名为 Impersonation
+    - 原有举报原因列表扩展为更长列表，需要保持原因单选、列表滚动和底部操作可用
+    - Other 的后台 reason 值改为 other-%AA，其中 %AA 为用户输入内容
+  existingUnchanged:
+    - item: 举报对象名称显示在原因选择区上方
+      evidence: V3.15.0 历史文档与当前 H5 截图均已有“You are about to report”对象提示
+    - item: 举报原因保持必选单选
+      evidence: V3.15.0 历史文档“Choose reason：原因选择，为必选，原逻辑”
+    - item: 违规描述输入与图片、视频证据上传
+      evidence: V3.15.0 历史文档已定义最多 200 字描述、4 个文件、大小校验和提交时上传
+    - item: Cancel 与 Submit 操作及必填未满足时 Submit 禁用
+      evidence: V3.15.0 历史文档与当前 H5 截图
+    - item: 个人资料类型与房间资料类型保持必选、可多选
+      evidence: V3.15.0 历史文档资料类举报章节
+    - item: Under age user 只在 FR 区展示
+      evidence: 当前 PRD 明确“保持原逻辑”
+  uncertain: []
+
+visualDirections:
+  - statement: UI 必须沿用 TopTop H5 与 Kit 的默认颜色、字体、间距、单选、输入、按钮和反馈规范
+    sourceRef: 用户要求“严格按照平台组件和 UI 规范搭建”
+    confidence: high
+  - statement: Report 资料页采用 50px 类型标题区、40px 原因标题区、60px 选择行、4px 分区隔断与底部 16px 滚动渐隐
+    sourceRef: Figma v3.21.0 node 26:4454
+    confidence: high
+  - statement: 资料证据提示作为辅助说明，不应抢占必填问题标题和举报对象的视觉优先级
+    sourceRef: 当前 PRD“增加一句提示”
+    confidence: high
+  - statement: 长原因名称必须支持本地化后的自然换行，不缩小字号、不横向滚动
+    sourceRef: All region 上线范围与 TopTop 包容开放原则
+    confidence: medium
+
+designImpacts:
+  - sourceType: operation
+    sourceRef: PRD 背景
+    statement: 用户因缺少骚扰原因而放弃系统举报，转向人工渠道
+    impact: 原因列表需要使用可快速扫描的清晰标签，并确保 Harassment 在首屏高优先级位置可见
+    target: both
+    confidence: high
+  - sourceType: product
+    sourceRef: PRD 需求详情
+    statement: 新增和改名后原因数量显著增加
+    impact: 顶部导航和底部操作固定，原因及补充内容在独立滚动区中完整可达
+    target: interaction
+    confidence: high
+  - sourceType: technical
+    sourceRef: PRD Other 后台规则
+    statement: 后台 reason 需要展示 other-%AA
+    impact: 提交前保留并校验 Other 输入；UI 不直接展示后台拼接格式
+    target: interaction
+    confidence: high
+  - sourceType: operation
+    sourceRef: PRD 多语言说明
+    statement: C 端 H5 使用多语言，后台原因仅推送英语
+    impact: 原型验证长文案布局；前端展示文案与后台枚举值分离，不把英语枚举直接当多语言 UI 文案
+    target: both
+    confidence: high
+  - sourceType: product
+    sourceRef: PRD 资料类提示
+    statement: 系统会自动提交对应个人或房间资料作为案件证据
+    impact: 在资料类型选择区与原因选择区之间增加上下文提示，明确证据范围但不新增确认步骤
+    target: both
+    confidence: high
+  - sourceType: technical
+    sourceRef: V3.15.0 历史文档
+    statement: 提交后才上传已选图片或视频，可能出现上传进度和文件错误
+    impact: 作为存量状态在原型中保留提交中、文件过大和失败重试反馈，不重新设计上传器
+    target: interaction
+    confidence: high
+
+ignoredItems:
+  - item: 审核后台仅展示英语原因及 other-%AA 的数据库或接口实现
+    reason: no-user-facing-impact
+    sourceRef: PRD 多语言及后台 reason 规则
+  - item: 各地区进入 110 或 dashboard report management 的审核路由
+    reason: existing-unchanged
+    sourceRef: V3.15.0 历史文档
+  - item: CS 内部员工举证通道
+    reason: out-of-release-scope
+    sourceRef: V3.15.0 历史文档
+  - item: 重新设计证据上传数量、格式、大小和上传时机
+    reason: existing-unchanged
+    sourceRef: V3.15.0 历史文档
+  - item: PRD 截图中的 DBG 浮层、水印和非产品标注
+    reason: no-user-facing-impact
+    sourceRef: PRD 内嵌截图
+
+pages:
+  - id: report-reason-form
+    name: 通用举报原因页
+    description: 复用新版 H5 举报表单，只调整举报原因集合、名称与 Other 条件输入
+    knownStates:
+      - 未选择原因、Submit 禁用
+      - 已选择普通原因、Submit 可用
+      - 选择 Other、具体原因输入展开
+      - Other 输入 0 至 100 字
+      - Other 输入达到上限
+      - 提交中
+      - 提交成功
+      - 提交失败并可重试
+      - 文件校验失败（存量）
+    sourceRefs:
+      - 当前 PRD 需求详情
+      - V3.15.0 历史文档
+      - .monkren/ix-design/report-reason-optimization-2026-09-08/report-reasons-source.png
+  - id: profile-report-form
+    name: 个人资料举报页
+    description: 复用资料类型多选和通用原因页，新增个人资料自动取证说明
+    knownStates:
+      - 未选择资料类型和原因
+      - 已选择一个或多个资料类型
+      - 证据范围提示
+      - 原因与 Other 条件输入状态
+      - Submit 禁用或可用
+    sourceRefs:
+      - 当前 PRD 资料类新增提示
+      - V3.15.0 历史文档资料类举报
+      - .monkren/ix-design/report-reason-optimization-2026-09-08/report-profile-source.png
+  - id: room-profile-report-form
+    name: 房间资料举报页
+    description: 复用房间资料类型多选和通用原因页，新增房间资料自动取证说明
+    knownStates:
+      - 未选择资料类型和原因
+      - 已选择一个或多个资料类型
+      - 证据范围提示
+      - 原因与 Other 条件输入状态
+      - Submit 禁用或可用
+    sourceRefs:
+      - 当前 PRD 资料类新增提示
+      - V3.15.0 历史文档资料类举报
+
+flows:
+  - name: 提交普通原因举报
+    type: primary
+    steps:
+      - 用户从现有举报入口进入新版 H5 举报页
+      - 页面明确展示被举报用户或房间
+      - 用户选择一个举报原因
+      - 如为资料类举报，用户先选择一个或多个资料类型并看到自动取证提示
+      - 用户按需填写违规描述或上传证据
+      - 必填项满足后 Submit 可用
+      - 用户提交并看到进度
+      - 提交成功后退出举报任务并反馈成功
+  - name: 提交 Other 具体原因
+    type: secondary
+    steps:
+      - 用户选择 Other
+      - 页面就近展开具体违规原因输入框并聚焦
+      - 用户输入不超过 100 字的具体原因
+      - 提交时前端传递具体内容，后台按 other-%AA 记录
+  - name: 取消举报
+    type: cancel
+    steps:
+      - 用户点击 Cancel 或导航返回
+      - 无已填内容时直接退出
+      - 有已填描述、Other 内容或已选证据时按既有离开策略处理
+  - name: 提交失败恢复
+    type: error
+    steps:
+      - 用户点击 Submit
+      - 上传或提交失败
+      - 页面保留原因、文字和已选择的本地证据
+      - 通过 TopTop 反馈组件说明失败原因并提供重试
+
+rules:
+  - text: 举报原因单选且必填；未选择时 Submit 禁用
+    source: V3.15.0 历史文档“Choose reason：为必选，原逻辑”
+    confidence: high
+  - text: Other 具体原因最多 100 字，超过后不能继续输入
+    source: 当前 PRD Other 规则
+    confidence: high
+  - text: Under age user 仅在 FR 区展示，其他地区不显示
+    source: 当前 PRD“当前仅 FR 区有此选项，保持原逻辑”
+    confidence: high
+  - text: 个人资料自动取证范围为头像、昵称、签名和个人主页背景
+    source: 当前 PRD 个人资料页文案
+    confidence: high
+  - text: 房间资料自动取证范围为封面、名称和公告
+    source: 当前 PRD 房间资料页文案
+    confidence: high
+  - text: 前端使用多语言展示原因，审核后台暂只接收英语原因
+    source: 当前 PRD 多语言说明
+    confidence: high
+  - text: 资料类型保持必选、可多选，仅上报用户选择的对应资料
+    source: V3.15.0 历史文档资料类举报
+    confidence: high
+  - text: 违规描述和证据上传保持可选，提交时才进入文件上传过程
+    source: V3.15.0 历史文档用户举证流程
+    confidence: high
+
+visualReferences:
+  - path: .monkren/ix-design/report-reason-optimization-2026-09-08/report-reasons-source.png
+    interpretation: 新版 H5 通用举报页现状；复用顶部对象提示、原因单选、描述区和底部双操作结构
+    linkedPageId: report-reason-form
+  - path: .monkren/ix-design/report-reason-optimization-2026-09-08/report-profile-source.png
+    interpretation: 个人资料举报页现状；复用资料类型多选与原因单选的纵向表单结构
+    linkedPageId: profile-report-form
+  - path: .monkren/ix-design/report-reason-optimization-2026-09-08/figma-report-reference.png
+    interpretation: v3.21.0 Report 视觉参考；采用其标题区、60px 列表、分区隔断、滚动渐隐与底部双按钮几何，不沿用旧原因文案和拼写
+    linkedPageId: profile-report-form
+
+competitiveInsights:
+  competitors:
+    - TikTok
+    - Instagram
+    - Discord
+  adopt:
+    - 从具体违规对象附近进入举报并持续明确当前对象
+    - 使用用户可理解的原因名称，不暴露审核后台枚举
+    - 将具体原因和证据放在原因选择之后，并在失败时保留上下文
+  avoid:
+    - 为本期新增多级原因分类而增加步骤
+    - 复制竞品视觉或承诺未定义的审核时长和处罚结果
+    - 把所有高风险问题压缩到 Other
+  researchReport: .monkren/ix-design/report-reason-optimization-2026-09-08/research.md
+
+conflicts:
+  - topic: Harassment 正式英文拼写
+    sources:
+      - 当前 PRD 选项写为 Harrassment
+      - 英文标准拼写为 Harassment，背景法语为 harcèlement
+    resolution: 用户于 2026-09-08 确认使用正确拼写 Harassment
+  - topic: Other 输入与现有 Violation Description 的关系
+    sources:
+      - 当前 PRD 要求选择 Other 后展示最多 100 字输入框
+      - V3.15.0 已有最多 200 字的可选 Violation Description
+    resolution: 用户于 2026-09-08 确认为独立字段，选择 Other 时必填且最多 100 字
+  - topic: 原因集合的场景范围
+    sources:
+      - 当前 PRD 表述为新版 H5 举报页面调整且上线 All region
+      - Under age user 明确仅 FR 区保持原逻辑
+    resolution: 用户于 2026-09-08 确认所有新版 H5 举报场景统一集合与顺序，仅 Under age user 按 FR 条件展示
+
+openQuestions:
+  - 提交成功后的现有落点和成功反馈是什么？原型默认沿用当前 H5 行为，不新增结果页。

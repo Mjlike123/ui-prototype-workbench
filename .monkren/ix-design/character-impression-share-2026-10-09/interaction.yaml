@@ -1,0 +1,113 @@
+schemaVersion: 1
+featureId: character-impression-share
+pages:
+  - id: generate
+    purpose: 上传人物图并生成或使用形象码导入
+    entry: 玩法 / 形象入口
+    exit: Use 成功或返回上级
+    states:
+      - id: form
+      - id: first-free-dialog
+      - id: generating
+      - id: view
+    elements:
+      - region: nav
+        semantics: 标题 + Characters Code 入口
+      - region: image-upload
+        semantics: 人物图上传 / 删除
+      - region: instruction
+        semantics: 文本描述 0/400
+      - region: templates
+        semantics: 风格模板单选
+      - region: primary-cta
+        semantics: Generate + 金币
+    transitions:
+      - trigger: tap-generate-first-time
+        result: open first-free dialog
+      - trigger: confirm-first-free
+        result: generating → view
+      - trigger: tap-characters-code
+        result: open code modal
+  - id: library
+    purpose: 浏览我的生成与热门形象
+    entry: All character
+    states: [mine-tab, hot-tab, card-add, card-generating, card-failed, card-ready]
+    transitions:
+      - trigger: tap-ready-card
+        target: detail
+      - trigger: tap-failed-card
+        target: error
+  - id: detail
+    purpose: 预览形象、复制码、Use、分享、私密开关
+    transitions:
+      - trigger: tap-use
+        feedback: toast
+      - trigger: tap-share
+        result: action-panel
+      - trigger: toggle-private
+        result: update visibility copy
+  - id: share-landing
+    purpose: 站外 H5，结构参考抖音分享落地（沉浸预览 + 顶/底打开 App）
+    elements:
+      - region: top-bar
+        semantics: 品牌 + 打开 App + 关闭
+      - region: immersive-preview
+        semantics: 形象预览 + 底部作者叠层
+      - region: hook-line
+        semantics: 一句转化文案
+      - region: primary-dock
+        semantics: 打开 TopTop + 复制形象码 + 安装说明
+    transitions:
+      - trigger: tap-open-app-top-or-bottom
+        result: deep-link import + 推荐房间
+      - trigger: tap-copy-code
+        feedback: toast
+  - id: error
+    purpose: 生成失败或数据损坏恢复
+    transitions:
+      - trigger: try-again
+        target: generate
+overlays:
+  - id: character-code-modal
+    layer: center-dialog
+    dismiss: backdrop / 关闭
+  - id: first-free-dialog
+    layer: center-dialog
+  - id: share-sheet
+    layer: action-panel
+kitMapping:
+  - pageId: generate
+    region: nav
+    componentId: regular-navigation
+    source: kit
+  - pageId: generate
+    region: first-free-dialog
+    componentId: center-dialog
+    source: kit
+  - pageId: library
+    region: tabs
+    componentId: pill-secondary-tab
+    source: kit
+  - pageId: detail
+    region: author
+    componentId: avatar
+    source: kit
+  - pageId: detail
+    region: share-sheet
+    componentId: action-panel
+    source: kit
+  - pageId: generate
+    region: preview-3d
+    componentId: prototype
+    source: prototype
+    kitGap: Kit 无 3D 全身形象预览，原型用静态示意
+  - pageId: library
+    region: generation-grid
+    componentId: prototype
+    source: prototype
+    kitGap: 多状态生成卡片组合未沉淀为 Kit
+  - pageId: share-landing
+    region: invite-hero
+    componentId: prototype
+    source: prototype
+    kitGap: 站外落地页布局为业务特例

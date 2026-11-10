@@ -1,0 +1,118 @@
+schemaVersion: 1
+id: selector-button
+version: 1.1.0
+title: 选择器按钮
+owner: TopTop Design System
+category: Input
+status: stable
+since: 1.0.0
+tags:
+  - selector
+  - checkbox
+  - choice
+  - list
+platforms:
+  - ios
+  - android
+  - h5
+description: 24×24pt 圆形选择器，用于列表、半窗或工具条中的单选/多选确认；选中时显示品牌色实心圆与白勾，未选中时为浅灰描边空心圆。
+previewKey: selector-button
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=9088-176887
+  nodeId: "9088:176887"
+  observations:
+    - 控件固定 24×24pt，圆形，不可拉伸
+    - 选中态使用品牌主色实心圆（#16D8C8）与白色对勾
+    - 未选中态为 1.5pt 描边空心圆，描边使用 color.border.image（描边透明/bordBg2），自动适配明暗模式
+    - 常用于列表尾部的选择确认、工具条开关或半窗选项
+    - 与 44×27pt 胶囊开关（switch）语义不同：选择器强调“选中/未选中”，开关强调“即时切换设置”
+anatomy:
+  - id: control
+    label: 选择圆
+    description: 24×24pt 圆形点击区域，承载描边或实心填充与对勾。
+  - id: checkmark
+    label: 对勾
+    description: 仅选中态显示，白色矢量勾，位于圆心区域。
+variants:
+  - name: selectionMode
+    values:
+      - single
+      - multiple
+    defaultValue: multiple
+  - name: state
+    values:
+      - off
+      - on
+    defaultValue: off
+  - name: interaction
+    values:
+      - default
+      - disabled
+    defaultValue: default
+props:
+  - name: selected
+    type: boolean
+    required: true
+    description: 当前是否选中；受控实现必须由业务层同步更新。
+  - name: onChange
+    type: (selected:boolean)=>void
+    required: true
+    description: 用户切换选择时回调新的布尔值。
+  - name: disabled
+    type: boolean
+    defaultValue: false
+    description: 禁用时不响应点击并保持半透明视觉。
+  - name: selectionMode
+    type: single|multiple
+    defaultValue: multiple
+    description: single 使用原生 radio 语义；multiple 使用原生 checkbox 语义，视觉保持一致。
+  - name: name
+    type: string
+    description: single 模式下同组控件共享的原生 radio group 名称。
+  - name: aria-label
+    type: string
+    description: 独立使用时的可访问名称；嵌入带文案的 label 时可省略。
+tokenRefs:
+  - color.brand.primary
+  - color.border.image
+  - color.text.white-primary
+accessibility:
+  - 单选使用原生 radio，多选使用原生 checkbox，保证同组方向键与 Space/Enter 的平台语义。
+  - 与行内文案组合时，应通过 label 或 aria-labelledby 关联完整含义。
+  - 禁用态必须同步暴露 disabled 并移除指针交互。
+  - 焦点可见时使用品牌色描边，outline-offset 为 2px。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "9088:176887"
+    - "9088:176886"
+    - "9088:176885"
+  nameAliases:
+    - 选择器按钮
+    - 选择器
+    - selector button
+    - selector
+    - 圆形选择
+    - check circle
+roles:
+  - trailing
+rules:
+  - id: control.width
+    title: 选择器宽度
+    category: structure
+    metric: width
+    tolerance: 1
+    aggregate: rule
+  - id: control.height
+    title: 选择器高度
+    category: structure
+    metric: height
+    tolerance: 1
+    aggregate: rule
+  - id: control.backgroundColor
+    title: 选中态填充色
+    category: selected
+    metric: backgroundColor
+    tolerance: 8
+    aggregate: rule

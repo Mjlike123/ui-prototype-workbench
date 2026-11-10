@@ -1,0 +1,10 @@
+{
+  "source": "touchine-ojo/OJO-Design-Skills",
+  "ref": "main",
+  "target": "generic",
+  "targetName": "Generic Agent Skills",
+  "home": "/Users/tiantian/.agents",
+  "dest": "/Users/tiantian/Documents/ui-audit-tool/.agents/skills",
+  "installedAt": "20260826T064511Z",
+  "skills": ["app-ui-ux-best-practices"]
+}

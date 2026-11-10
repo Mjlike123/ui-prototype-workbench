@@ -1,14 +1,23 @@
 import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/breadcrumb";
-import { PageCanvasShowcase } from "@/components/page-canvas-showcase";
+import { StudioProjectGallery } from "@/components/studio/studio-project-gallery";
 import { getPrototypePreviewBreadcrumb } from "@/lib/prototype-preview-nav";
+import { STUDIO_PROJECTS } from "@/lib/studio-project-catalog";
+import { readStudioProjectState } from "@/lib/studio-project-store";
 
 export const metadata: Metadata = {
   title: "原型创作 · 原型预览",
-  description: "个人探索画布，历史记录保存在本浏览器，不进入 Git。",
+  description: "以项目卡片浏览并打开 TopTop Studio 交互原型。",
 };
 
-export default function CanvasStudioPage() {
+export const dynamic = "force-dynamic";
+
+export default async function CanvasStudioPage() {
+  const state = await readStudioProjectState();
+  const projects = STUDIO_PROJECTS.filter((project) =>
+    state.activeProjectIds.includes(project.id),
+  );
+
   return (
     <>
       <header className="pageHeader">
@@ -17,12 +26,11 @@ export default function CanvasStudioPage() {
           <p className="eyebrow">PROTOTYPE STUDIO</p>
           <h1 className="pageTitle">原型创作</h1>
           <p className="pageDescription">
-            在此探索布局与参考图对齐。历史记录仅保存在当前浏览器，未确定方案不要提交到
-            GitHub。
+            以项目为单位查看交互方案。点击封面进入项目，继续验证页面、状态与流程。
           </p>
         </div>
       </header>
-      <PageCanvasShowcase />
+      <StudioProjectGallery initialProjects={projects} />
     </>
   );
 }

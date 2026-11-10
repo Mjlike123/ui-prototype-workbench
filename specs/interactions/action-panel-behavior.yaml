@@ -1,0 +1,59 @@
+schemaVersion: 1
+id: action-panel-behavior
+title: 动作面板呈现、关闭与滚动
+status: stable
+description: 动作面板（半屏动作列表）的进入/离开动效、工具栏关闭位置、内容高度与底部滚动遮罩；嵌套、蒙层关闭与未保存确认仍遵循 bottom-sheet-behavior。
+componentIds:
+  - action-panel
+states:
+  - closed
+  - presenting
+  - open
+  - open-scrollable
+  - closing
+transitions:
+  - from: closed
+    to: presenting
+    trigger: present-action-panel
+    feedback: 黑色蒙层不透明度 0%→50%；操作面板自底部 Y 轴滑入（0→1）；焦点移入说明标题、工具栏或首个操作项。
+    duration: 250ms
+    easing: standard
+  - from: presenting
+    to: open
+    trigger: enter-animation-complete
+    feedback: 进入动效完成，背景页面不可误触。
+    duration: 0ms
+    easing: standard
+  - from: open
+    to: closing
+    trigger: dismiss-action-panel
+    feedback: 蒙层 50%→0%；操作面板 Y 轴滑出（1→0）；关闭后将焦点恢复到触发元素。
+    duration: 200ms
+    easing: standard
+  - from: closing
+    to: closed
+    trigger: exit-animation-complete
+    feedback: 面板卸载，恢复页面滚动与焦点。
+    duration: 0ms
+    easing: standard
+  - from: open
+    to: open-scrollable
+    trigger: content-exceeds-viewport
+    feedback: 标题、取消与 Home Indicator 固定；操作列表或内容区内部滚动；有底部主按钮时显示白色渐变遮罩。
+    duration: 0ms
+    easing: standard
+accessibility:
+  - 面板容器使用 dialog 或 menu 语义，并关联可感知标题（description、header.title 或 aria-label）。
+  - 打开后约束焦点在面板内；关闭后恢复到触发元素；Web 支持 Escape 关闭当前层。
+  - 工具栏关闭图标必须提供可访问名称（如「关闭」），不能只依赖 X 图形。
+  - 取消行、工具栏返回/确认与操作项均须可聚焦并具有可读名称。
+edgeCases:
+  - 进入动效 250ms、Ease In/Out；与通用半屏 200ms 不同，动作面板以 Y 轴位移为主，不使用中心弹窗的缩放动效。
+  - 离开动效约 200ms 反向播放；面板位移可略早于蒙层淡出完成。
+  - 工具栏关闭默认右上角（16pt 边距）；右侧存在更高优先级操作（更多、设置、规则）时，关闭移至左上角，避免操作争抢。
+  - 无底部主操作、取消或开关时，面板内容区可延伸至屏幕底部（通底），仍保留 Home Indicator 安全区。
+  - 存在底部通栏主按钮时，滚动内容区底部叠加 20pt 高白色渐变（#FFFFFF 0%→100%），与按钮贴合无间距；滚至最后一项时内容与按钮间距 20pt。
+  - 动作面板（纵向文字操作列表）优先内容自适应高度；复杂表单或按钮矩阵应使用半屏内容页（内容自由适配高度），不强行套用动作面板结构。
+  - 操作项点击默认关闭并执行业务回调；打开子层半屏时保持打开，遵循 bottom-sheet-behavior 嵌套规则。
+  - 未保存内容退出时通过 center-dialog 二次确认，规则见 bottom-sheet-behavior dismiss-confirmation。
+  - 减少动态效果开启时跳过 Y 轴位移，仅保留蒙层透明度或直接切换终态。

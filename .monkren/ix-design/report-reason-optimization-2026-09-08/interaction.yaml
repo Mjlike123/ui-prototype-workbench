@@ -1,0 +1,265 @@
+schemaVersion: 1
+featureId: report-reason-optimization
+platform: web
+
+pages:
+  - id: report-reason-form
+    name: 通用举报原因页
+    purpose: 让用户在新版 H5 举报流程中快速选择准确原因，并在选择 Other 时补充可审核的具体原因。
+    entry:
+      - 任一现有新版 H5 举报入口
+    exit:
+      - 点击 Back 或 Cancel 返回原举报入口
+      - 提交成功后沿用现有 H5 成功退出行为
+    states:
+      - id: incomplete
+        description: 未选择原因，Submit report 禁用。
+        conditions: selectedReason 为空。
+      - id: reason-selected
+        description: 单个普通原因已选中，选择器显示品牌色与白勾，Submit report 可用。
+        conditions: selectedReason 非空且不为 Other。
+      - id: other-expanded
+        description: Other 已选中，其下方展开独立的 100 字必填输入并聚焦。
+        conditions: selectedReason 为 Other。
+      - id: other-incomplete
+        description: Other 已选中但具体原因为空，Submit report 禁用。
+        conditions: selectedReason 为 Other 且 otherReason trim 后为空。
+      - id: other-complete
+        description: Other 具体原因已有 1–100 字，Submit report 可用。
+        conditions: selectedReason 为 Other 且 otherReason trim 后非空。
+      - id: submitting
+        description: Submit report 禁用并显示 Submitting…；Toast 播报正在提交，防止重复提交。
+        conditions: 提交或存量文件上传尚未完成。
+      - id: success
+        description: Toast 确认 Report submitted，不承诺审核结论或处理时长。
+        conditions: 举报提交成功。
+      - id: error
+        description: 固定操作区上方显示可恢复错误，保留原因、文字与已选证据，Submit report 恢复可用。
+        conditions: 上传或举报提交失败。
+    elements:
+      - id: report-navigation
+        role: navigation
+        label: Report
+        behavior: Back 返回原举报入口；导航固定，不随表单滚动。
+      - id: reported-object
+        role: status
+        label: You are about to report
+        behavior: 展示被举报用户或房间名称，长名称单行省略但保留完整可访问名称。
+      - id: reason-group
+        role: radiogroup
+        label: Please select a violation
+        behavior: 所有新版 H5 场景使用统一原因集合与顺序；整行可点，一次只选一个。
+      - id: other-reason
+        role: textbox
+        label: Tell us what happened
+        behavior: 仅 Other 选中时显示；独立于 Violation description，必填且 maxLength=100。
+      - id: violation-description
+        role: textbox
+        label: Violation description Optional
+        behavior: 沿用存量可选描述，maxLength=200。
+      - id: evidence-upload
+        role: group
+        label: Photos or video
+        behavior: 沿用存量最多 4 个文件与文件校验；原型模拟添加和移除一个文件。
+      - id: cancel-action
+        role: button
+        label: Cancel
+        behavior: 退出举报任务；有内容时的离开策略沿用现状。
+      - id: submit-action
+        role: button
+        label: Submit report
+        behavior: 原因有效后可用；Other 还需具体原因；提交中禁用，失败后可重试。
+    transitions:
+      - trigger: 点击任一普通原因行或其 SelectorButton
+        result: 该原因成为唯一选中项；Other 字段如已展开则收起并清空；重新计算 Submit report。
+      - trigger: 点击 Other
+        result: Other 成为唯一选中项；100 字具体原因输入展开并聚焦，Submit report 保持禁用直至输入有效。
+      - trigger: Other 输入达到 100 字
+        result: 保留前 100 字并阻止继续输入，字数显示 100/100。
+      - trigger: 点击 Add evidence
+        result: 调用存量文件选择；原型显示已选择 evidence.png 和移除入口。
+      - trigger: 点击启用的 Submit report
+        result: 进入 submitting，阻止重复提交并播报正在提交。
+      - trigger: 提交成功
+        result: 进入 success，Toast 播报 Report submitted；沿用现有 H5 退出行为。
+      - trigger: 提交或文件上传失败
+        result: 进入 error，保留全部本地输入，显示原因明确的恢复提示并允许再次提交。
+
+  - id: profile-report-form
+    name: 个人资料举报页
+    purpose: 让用户选择违规个人资料、理解自动提交的证据范围，并完成统一原因举报。
+    entry:
+      - 个人 Profile 或房间用户卡 → More → Report → Profile Violation
+    exit:
+      - 与 report-reason-form 相同
+    states:
+      - id: type-incomplete
+        description: 未选择资料类型，Submit report 禁用。
+        conditions: selectedTypes 为空。
+      - id: type-selected
+        description: 已选择一个或多个资料类型；自动取证提示持续可见。
+        conditions: selectedTypes 至少一项。
+      - id: form-complete
+        description: 至少一个资料类型与有效原因均已选择；若为 Other，具体原因非空。
+        conditions: selectedTypes、selectedReason 与 otherReason 规则全部满足。
+      - id: submitting
+        description: 与通用举报页一致。
+      - id: error
+        description: 与通用举报页一致，所有资料类型选择保留。
+    elements:
+      - id: profile-type-group
+        role: group
+        label: Select the profile details that violate our rules
+        behavior: Avatar、Nickname、Signature、Profile background 可多选且至少选择一项。
+      - id: profile-evidence-notice
+        role: note
+        label: We’ll submit the profile details you select as evidence for review.
+        behavior: 解释系统自动提交用户所选资料，不新增确认步骤。
+      - id: shared-report-form
+        role: form
+        label: 举报原因与补充证据
+        behavior: 复用 report-reason-form 的原因、Other、描述、上传和底部操作。
+    transitions:
+      - trigger: 选择或取消任一资料类型
+        result: 更新多选状态；与原因规则共同决定 Submit report 是否可用。
+      - trigger: 资料类型和原因均有效
+        result: Submit report 可用；后续提交流程与通用举报页一致。
+
+  - id: room-profile-report-form
+    name: 房间资料举报页
+    purpose: 让用户选择违规房间资料、理解自动提交的证据范围，并完成统一原因举报。
+    entry:
+      - 房间 Profile → Report → Room Profile Violation
+    exit:
+      - 与 report-reason-form 相同
+    states:
+      - id: type-incomplete
+        description: 未选择房间资料类型，Submit report 禁用。
+      - id: type-selected
+        description: 已选择一个或多个房间资料类型；自动取证提示持续可见。
+      - id: form-complete
+        description: 至少一个房间资料类型与有效原因均已选择。
+      - id: submitting
+        description: 与通用举报页一致。
+      - id: error
+        description: 与通用举报页一致，房间资料类型选择保留。
+    elements:
+      - id: room-type-group
+        role: group
+        label: Select the room details that violate our rules
+        behavior: Room cover、Room name、Room announcement 可多选且至少选择一项。
+      - id: room-evidence-notice
+        role: note
+        label: We’ll submit the room details you select as evidence for review.
+        behavior: 解释系统自动提交用户所选房间资料，不新增确认步骤。
+      - id: shared-report-form
+        role: form
+        label: 举报原因与补充证据
+        behavior: 复用 report-reason-form 的原因、Other、描述、上传和底部操作。
+    transitions:
+      - trigger: 选择或取消任一房间资料类型
+        result: 更新多选状态；与原因规则共同决定 Submit report 是否可用。
+      - trigger: 房间资料类型和原因均有效
+        result: Submit report 可用；后续提交流程与通用举报页一致。
+
+overlays:
+  - id: report-submit-feedback
+    name: 举报提交反馈
+    hostPageId: report-reason-form
+    type: toast
+    dismiss:
+      - 新状态替换旧状态
+      - 成功反馈短时自动消失
+    states:
+      - id: loading
+        description: loading 图标与 Submitting report。
+      - id: success
+        description: success 图标与 Report submitted。
+      - id: error
+        description: 关键错误不只依赖 Toast，固定操作区同时显示可重试说明。
+
+globalRules:
+  - 正式英文使用 Harassment，不沿用 PRD 的 Harrassment 拼写。
+  - 所有新版 H5 举报场景使用同一原因集合与顺序；Under age user 仅 FR 区展示。
+  - 原因顺序为 Insult、Harassment、Pornography、Advertising / Diversion、Fraud、Hacker、Privacy & Safety、Violence / gore / terrorism、Political / religious violations、条件性 Under age user、Impersonation、Other。
+  - Other 具体原因是独立 100 字必填字段，不替代现有 200 字可选 Violation description。
+  - 资料类型保持可多选且至少选择一项，只提交用户选择的对应资料证据。
+  - 顶部导航和底部操作坞固定，内容为独立滚动区；375px 宽度保持 16px gutter，最后一项不得被操作坞遮挡。
+  - 长本地化文案允许原因行增高和自然换行，不缩小字号，不产生横向滚动。
+  - 选中、禁用和错误不能只依赖颜色；原生 radio / checkbox 与 label 提供完整语义。
+  - 提交成功只确认系统已收到举报，不承诺审核结论、处罚或处理时长。
+  - reduced motion 下取消 Other 字段展开动画，但字段状态和焦点行为不变。
+
+kitMapping:
+  - pageId: report-reason-form
+    region: 顶部标题与返回
+    componentId: regular-navigation
+    source: kit
+  - pageId: report-reason-form
+    region: 原因单选与资料类型多选
+    componentId: selector-button
+    source: kit
+  - pageId: report-reason-form
+    region: Cancel 与 Submit report
+    componentId: button
+    source: kit
+  - pageId: report-reason-form
+    region: 提交中与成功反馈
+    componentId: toast
+    source: kit
+  - pageId: report-reason-form
+    region: 返回、说明、照片与移除图标
+    componentId: system-icon
+    source: kit
+  - pageId: report-reason-form
+    region: 原因列表整行与原生 textarea
+    componentId: primitive
+    source: primitive
+    kitGap: Kit 没有表单字段、textarea 或可变高 radio row 契约；使用原生 fieldset、label、radio、checkbox、textarea 与 Foundations Token。
+  - pageId: profile-report-form
+    region: 自动取证说明
+    componentId: prototype
+    source: prototype
+    kitGap: 现有通知组件面向房间事件或发布状态，不适合持久的表单证据说明；使用最小 PrototypeReportEvidenceNotice。
+  - pageId: room-profile-report-form
+    region: 自动取证说明
+    componentId: prototype
+    source: prototype
+    kitGap: 与个人资料页共享 PrototypeReportEvidenceNotice，不提名 Kit candidate。
+  - pageId: report-reason-form
+    region: 图片与视频证据上传
+    componentId: prototype
+    source: prototype
+    kitGap: 历史产品已有上传能力，但 Portal 尚无可复用举报证据上传模块；原型仅模拟添加和移除，不改上传契约。
+  - pageId: report-reason-form
+    region: 完整举报表单页面
+    componentId: prototype
+    source: prototype
+    kitGap: Core 与 Studio 均没有现成 Report 页面；采用 Kit 锚点与原生表单原语组合，不注册 Core。
+
+optimizations:
+  - type: design-completion
+    topic: Other 的提交完整性
+    original: PRD 只说明点击 Other 展示 100 字输入。
+    proposal: 用户已确认该字段独立且必填；为空时 Submit report 禁用，切换到其他原因时清空。
+    evidence: 后台需要 other-%AA，空内容无法形成有效 %AA。
+  - type: ux-improvement
+    topic: 自动取证说明位置
+    original: PRD 只要求资料类页面增加一句提示。
+    proposal: 放在资料类型选择之后、原因选择之前，并使用辅助层级说明“只提交所选资料”。
+    evidence: 历史规则只提交用户所选资料；就近说明可减少隐私疑虑且不打断任务。
+  - type: design-completion
+    topic: 长列表与固定操作
+    original: 新增原因后未描述滚动和按钮布局。
+    proposal: 导航与底部操作坞固定，原因、描述和证据使用独立滚动容器。
+    evidence: button 与 regular-navigation 组件规范及 375×812 基础布局门禁。
+  - type: design-completion
+    topic: 提交失败恢复
+    original: 当前 PRD 未描述网络或上传失败。
+    proposal: 提交中禁用重复操作；失败后保留全部内容，并在固定操作区显示可重试错误。
+    evidence: V3.15.0 存在提交时上传，异步失败不能让高压力举报任务丢失上下文。
+  - type: ux-improvement
+    topic: 提交动作命名
+    original: 现状按钮为 Submit。
+    proposal: 使用 Submit report 明确操作对象；Loading 使用 Submitting…。
+    evidence: UI clarity 规则要求动作说明结果，避免孤立的通用动词。

@@ -1,0 +1,85 @@
+schemaVersion: 1
+id: report-reason-optimization
+intent: 统一新版 H5 举报原因、补齐 Other 具体原因和资料自动取证提示，并验证可恢复提交
+route: /canvas/studio/report-reason-optimization
+viewport:
+  default:
+    width: 375
+    height: 812
+  responsive:
+    - 390x844
+    - 430x932
+reference:
+  requirement: https://micoworld.feishu.cn/wiki/IfGRweekNi2Ls5kUJ16cpm87nVh
+  historicalRequirement: Btemw4k6bimFfMkmpCzcjrtlnTd
+  figma:
+    url: https://www.figma.com/design/htlg4y0s5KILcYdRykUOfS/v3.21.0?node-id=26-4454
+    fileKey: htlg4y0s5KILcYdRykUOfS
+    nodeId: "26:4454"
+  images:
+    - report-reasons-source.png
+    - report-profile-source.png
+    - figma-report-reference.png
+    - prototype-figma-refined.png
+componentStack:
+  - id: ios-status-bar
+    source: kit
+    role: iOS WebView 参考状态栏
+  - id: regular-navigation
+    source: kit
+    role: Report 标题与返回
+  - id: selector-button
+    source: kit
+    role: 原因单选和资料类型多选
+  - id: button
+    source: kit
+    role: Cancel、Submit report 和添加证据
+  - id: system-icon
+    source: kit
+    role: 导航、说明、照片和移除图标
+  - id: toast
+    source: kit
+    role: 提交中和成功反馈
+  - id: form-primitives
+    source: primitive
+    role: fieldset、label、radio、checkbox、textarea 与滚动区域
+  - id: report-evidence-notice
+    source: prototype
+    role: 个人或房间资料自动取证说明
+  - id: report-evidence-upload
+    source: prototype
+    role: 模拟存量图片或视频证据添加与移除
+states:
+  - general-incomplete
+  - general-selected
+  - other-required
+  - profile-type-required
+  - room-type-required
+  - fr-under-age-visible
+  - evidence-added
+  - submitting
+  - success
+  - error-preserved
+kitGaps:
+  - Kit 无通用表单字段、textarea 和可变高 radio row 契约
+  - Kit 无适用于持久表单说明的通用 notice
+  - Portal 无可复用举报证据上传模块
+  - Core 与 Studio 无完整 Report 页面
+validation:
+  required:
+    - specs:validate
+    - selector-button tests
+    - studio report reason tests
+    - portal build
+    - 375x812 runtime bounds and computed Token inspection
+  result:
+    status: passed
+    tests: 308
+    testFiles: 81
+    contractFiles: 60
+    skillCheck: passed
+    productionBuild: passed
+    runtime:
+      - 375x812 no-horizontal-overflow
+      - 320x568 no-horizontal-overflow
+      - light-and-dark-token-resolution

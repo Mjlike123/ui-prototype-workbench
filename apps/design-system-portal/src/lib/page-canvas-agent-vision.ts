@@ -54,10 +54,52 @@ export const CANVAS_COMPONENT_CATALOG = [
     note: "底部按钮栏 layout single|double, primaryLabel, secondaryLabel",
   },
   {
+    componentId: "text-button",
+    kind: "text-button",
+    spec: "specs/components/text-button.yaml",
+    note: "文字+图标链式操作 size brand|neutral iconPosition",
+  },
+  {
     componentId: "switch",
     kind: "switch",
     spec: "specs/components/switch.yaml",
     note: "设置行二元开关 checked / disabled",
+  },
+  {
+    componentId: "selector-button",
+    kind: "selector-button",
+    spec: "specs/components/selector-button.yaml",
+    note: "24pt 圆形选择器 selected / disabled",
+  },
+  {
+    componentId: "action-panel",
+    kind: "action-panel",
+    spec: "specs/components/action-panel.yaml",
+    note: "半屏动作列表 + 取消 + 可选开关",
+  },
+  {
+    componentId: "in-room-notification",
+    kind: "in-room-notification",
+    spec: "specs/components/in-room-notification.yaml",
+    note: "房间内浮层通知条 light/dark + 按钮/文字链",
+  },
+  {
+    componentId: "toast",
+    kind: "toast",
+    spec: "specs/components/toast.yaml",
+    note: "短时非模态提示 纯文案/状态图标 短/长",
+  },
+  {
+    componentId: "publish-status-notification",
+    kind: "publish-status-notification",
+    spec: "specs/components/publish-status-notification.yaml",
+    note: "动态发布流程 上传中/成功/失败 缩略图+进度条",
+  },
+  {
+    componentId: "center-dialog",
+    kind: "center-dialog",
+    spec: "specs/components/center-dialog.yaml",
+    note: "居中模态弹窗 single / horizontal / vertical",
   },
   {
     componentId: "bottom-navigation",

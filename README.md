@@ -24,10 +24,16 @@ component contracts, React reference previews, interaction patterns,
 platform mappings, and Lookin audit coverage.
 
 ```bash
-npm run portal:dev
+npm run portal:dev          # start if down; skip duplicate next dev
+npm run portal:status       # quick health check (/canvas/core)
+npm run portal:dev:restart  # stop + start (add -- --clean to clear .next)
 ```
 
-Open `http://localhost:3000`. The portal remains useful without the audit
+Open `http://localhost:3000`. If the browser shows **Error -102**, the dev
+server is not listening — run `npm run portal:dev` or
+`npm run portal:dev:restart` in a dedicated terminal and keep it open.
+
+The portal remains useful without the audit
 service; run `npm run ui` in a second terminal to show live profile status in
 the audit center.
 
@@ -44,6 +50,7 @@ npm run check:kit
 ```
 
 - `toptop-design-bundle`：统一入口与 Skill 路由
+- `toptop-ix-designer`：飞书/PDF/截图/Figma → 竞品研究、黑白交互稿与 UX 文档
 - `toptop-prototype-studio`：Kit 不完整时使用基础原语和创意模块搭建混合原型
 - `toptop-design-system`：使用较完整 Kit 严格实现页面
 - `toptop-design-review`：只读检查视觉、规范和交互逻辑
@@ -53,7 +60,7 @@ npm run check:kit
 搭建 → 预览 → 审查的最小路径：
 
 ```bash
-npm run portal:dev   # http://localhost:3000/canvas 原型预览目录
+npm run portal:dev   # http://localhost:3000/canvas — use portal:status if page won't load
 npm run verify:mvp   # 契约 + 单测门禁
 ```
 

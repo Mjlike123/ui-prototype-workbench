@@ -19,6 +19,9 @@ type StudioSpinBottlePageProps = {
 };
 
 type SeatState = "empty" | "locked" | "occupied";
+type Gender = "male" | "female";
+type QuestionLevel = 1 | 2 | 3;
+type GamePhase = "idle" | "spinning" | "confirm" | "qa" | "vote";
 
 type MicSeatData = {
   id: number;
@@ -27,16 +30,18 @@ type MicSeatData = {
   avatar?: string;
   muted?: boolean;
   framed?: boolean;
-  gender?: "male" | "female";
+  gender: Gender;
   joinPrice?: number;
   heat?: number;
+  isBot?: boolean;
 };
-
-type GamePhase = "idle" | "spinning" | "confirm" | "paired" | "vote";
 
 type ChatItem =
   | { id: string; kind: "system"; text: string }
   | { id: string; kind: "text"; user: string; text: string };
+
+type WithoutId<T> = T extends { id: string } ? Omit<T, "id"> : never;
+type ChatItemInput = WithoutId<ChatItem>;
 
 const AVATARS = {
   andrew: "/prototypes/toptop-home/avatar-andrew.png",
@@ -54,25 +59,57 @@ type SeatCount = 8 | 9 | 10 | 11 | 12;
 
 const SEAT_COUNT_OPTIONS: SeatCount[] = [8, 9, 10, 11, 12];
 const DEFAULT_SEAT_COUNT: SeatCount = 10;
+const VOTE_PASS_THRESHOLD = 60;
+const MALE_JOIN_PRICE = 5;
+const OFFICIAL_ROOM_INDEX = 1;
+const OFFICIAL_ROOM_TOTAL = 3;
+const ROOM_QUESTION_LEVEL: QuestionLevel = 2;
 
-const PLAYER_POOL: Array<Omit<MicSeatData, "id" | "state">> = [
-  { name: "Mia", avatar: AVATARS.cassie, muted: true, gender: "female", heat: 1200 },
-  { name: "Omar", avatar: AVATARS.andrew, muted: true, gender: "male", framed: true, heat: 980 },
-  { name: "Lily", avatar: AVATARS.estelle, muted: false, gender: "female", heat: 1560 },
-  { name: "Ken", avatar: AVATARS.felix, muted: true, gender: "male", heat: 880 },
-  { name: "Zara", avatar: AVATARS.latifa, muted: true, gender: "female", heat: 1120 },
-  { name: "Jay", avatar: AVATARS.online1, muted: true, gender: "male", heat: 760 },
-  { name: "Nora", avatar: AVATARS.online2, muted: false, gender: "female", heat: 1340 },
-  { name: "Leo", avatar: AVATARS.online3, muted: true, gender: "male", framed: true, heat: 920 },
-  { name: "Amy", avatar: AVATARS.online4, muted: true, gender: "female", heat: 1050 },
-  { name: "Rin", avatar: AVATARS.cassie, muted: true, gender: "female", heat: 890 },
+const QUESTION_LEVEL_LABEL: Record<QuestionLevel, string> = {
+  1: "Lv.1 破冰",
+  2: "Lv.2 暧昧",
+  3: "Lv.3 火辣",
+};
+
+const TRUTH_BANK: Record<QuestionLevel, string[]> = {
+  1: [
+    "你理想中的第一次约会会选哪里？",
+    "最近让你开心的一件小事是什么？",
+    "你更喜欢语音聊天还是文字聊天？",
+  ],
+  2: [
+    "你觉得异性身上最吸引你的特质是什么？",
+    "如果只能问对方一个问题，你会问什么？",
+    "你会因为声音好听而心动吗？",
+  ],
+  3: [
+    "你接受异地恋吗？最长能接受多久？",
+    "你会为喜欢的人改变生活习惯吗？",
+    "你觉得暧昧期和确认关系之间，差的是什么？",
+  ],
+};
+
+const PLAYER_POOL: Array<Omit<MicSeatData, "id" | "state" | "gender">> = [
+  { name: "Mia", avatar: AVATARS.cassie, muted: true, heat: 1200 },
+  { name: "Omar", avatar: AVATARS.andrew, muted: true, framed: true, heat: 980 },
+  { name: "Lily", avatar: AVATARS.estelle, muted: false, heat: 1560 },
+  { name: "Ken", avatar: AVATARS.felix, muted: true, heat: 880, isBot: true },
+  { name: "Zara", avatar: AVATARS.latifa, muted: true, heat: 1120 },
+  { name: "Jay", avatar: AVATARS.online1, muted: true, heat: 760, isBot: true },
+  { name: "Nora", avatar: AVATARS.online2, muted: false, heat: 1340 },
+  { name: "Leo", avatar: AVATARS.online3, muted: true, framed: true, heat: 920 },
+  { name: "Amy", avatar: AVATARS.online4, muted: true, heat: 1050 },
+  { name: "Rin", avatar: AVATARS.cassie, muted: true, heat: 890, isBot: true },
 ];
+
+function genderForSeatIndex(index: number): Gender {
+  return index % 2 === 0 ? "female" : "male";
+}
 
 function seatLayoutFor(
   count: SeatCount,
   ringSize?: { width: number; height: number },
 ) {
-  // Slightly smaller seats leave more chord spacing on the booth cushion ring.
   const seatScale = count <= 8 ? 0.9 : count <= 10 ? 0.8 : 0.72;
   const fallbackBooth = 320;
   const fallbackRadius = fallbackBooth * 0.385;
@@ -85,7 +122,6 @@ function seatLayoutFor(
     };
   }
 
-  // Booth fills the ring stage; seats sit on the velvet cushion mid-ring (~0.385 of diameter).
   const boothSize = Math.min(ringSize.width, ringSize.height) * 0.98;
   const cushionRadius = boothSize * 0.385;
   const radialClearance = 28 * seatScale;
@@ -98,24 +134,35 @@ function seatLayoutFor(
 function buildSeats(count: SeatCount): MicSeatData[] {
   const emptySlots = Math.max(1, Math.round(count * 0.22));
   const occupiedCount = count - emptySlots;
+  let playerIndex = 0;
 
   return Array.from({ length: count }, (_, id) => {
+    const gender = genderForSeatIndex(id);
+
     if (id < occupiedCount) {
-      const profile = PLAYER_POOL[id % PLAYER_POOL.length];
-      return {
-        id,
-        state: "occupied" as const,
-        ...profile,
-      };
+      while (playerIndex < PLAYER_POOL.length) {
+        const profile = PLAYER_POOL[playerIndex++];
+        const profileGender: Gender =
+          profile.name && ["Omar", "Ken", "Jay", "Leo"].includes(profile.name)
+            ? "male"
+            : "female";
+        if (profileGender === gender) {
+          return {
+            id,
+            state: "occupied" as const,
+            gender,
+            joinPrice: gender === "male" ? MALE_JOIN_PRICE : undefined,
+            ...profile,
+          };
+        }
+      }
     }
 
-    const emptyIndex = id - occupiedCount;
-    const isMale = emptyIndex % 2 === 0;
     return {
       id,
       state: "empty" as const,
-      gender: isMale ? "male" : "female",
-      joinPrice: isMale ? 5 : undefined,
+      gender,
+      joinPrice: gender === "male" ? MALE_JOIN_PRICE : undefined,
     };
   });
 }
@@ -150,18 +197,76 @@ function firstOccupiedIndex(seats: MicSeatData[]) {
   return seats.findIndex((seat) => seat.state === "occupied");
 }
 
+function nextClockwiseOccupied(
+  from: number,
+  seats: MicSeatData[],
+  seatCount: number,
+  predicate?: (index: number) => boolean,
+) {
+  for (let step = 1; step <= seatCount; step++) {
+    const index = (from + step) % seatCount;
+    const seat = seats[index];
+    if (seat?.state !== "occupied") continue;
+    if (predicate && !predicate(index)) continue;
+    return index;
+  }
+  return from;
+}
+
+function pickQuestion(level: QuestionLevel) {
+  const pool = TRUTH_BANK[level];
+  return pool[Math.floor(Math.random() * pool.length)] ?? pool[0] ?? "";
+}
+
+function resolveQaRoles(
+  spinnerSeat: MicSeatData | undefined,
+  targetSeat: MicSeatData | undefined,
+) {
+  if (spinnerSeat?.gender === "female") {
+    return { asker: spinnerSeat, answerer: targetSeat };
+  }
+  if (targetSeat?.gender === "female") {
+    return { asker: targetSeat, answerer: spinnerSeat };
+  }
+  return { asker: spinnerSeat, answerer: targetSeat };
+}
+
+function voteTargetSeat(
+  spinnerSeat: MicSeatData | undefined,
+  targetSeat: MicSeatData | undefined,
+) {
+  if (spinnerSeat?.gender === "male") return spinnerSeat;
+  if (targetSeat?.gender === "male") return targetSeat;
+  return spinnerSeat;
+}
+
 const INITIAL_CHAT: ChatItem[] = [
-  { id: "s1", kind: "system", text: "Kiss Kiss room · spin the bottle, feel the spark ✨" },
-  { id: "s2", kind: "text", user: "Nora", text: "Who gets the first spin? 😏" },
+  {
+    id: "s1",
+    kind: "system",
+    text: "官方固定房 #01 · 冷启动集中流量，AI 机器人补位中",
+  },
+  {
+    id: "s2",
+    kind: "system",
+    text: "规则：男女专属位 · 男席 5◆ 入座 · 女席免费 · >2 人即可开局",
+  },
+  { id: "s3", kind: "text", user: "Nora", text: "顺时针转瓶，谁先被点到？😏" },
 ];
 
 const PHASE_LABEL: Record<GamePhase, string> = {
-  idle: "围桌就绪 · 点击 Spin 开始暧昧轮转",
-  spinning: "瓶口转向中…",
-  confirm: "心动瞬间 · Kiss 还是 Pass？",
-  paired: "配对成功 · 真心话即将开始",
-  vote: "公屏投票 · 12s",
+  idle: "围桌就绪 · 顺时针轮转，双向 Kiss 进入真心话",
+  spinning: "瓶口顺时针转向中…",
+  confirm: "心动瞬间 · 双向 Kiss 才进入问答",
+  qa: "真心话 · 默认女问男答 · 题库已合规审核",
+  vote: "公屏投票 · 赞率 >60% 男性留座",
 };
+
+const GUIDE_TASKS = [
+  { id: "seat", label: "首次落座", done: true },
+  { id: "kiss", label: "完成 Kiss", done: false },
+  { id: "vote", label: "参与投票", done: false },
+];
 
 /** Studio-only spin-bottle voice room — circular mic ring, not Core catalog. */
 export function StudioSpinBottlePage({
@@ -186,6 +291,7 @@ export function StudioSpinBottlePage({
   const [feedback, setFeedback] = useState<string | null>(null);
   const [confirmSheetOpen, setConfirmSheetOpen] = useState(false);
   const [voteProgress, setVoteProgress] = useState(72);
+  const [activeQuestion, setActiveQuestion] = useState("");
   const [ringSize, setRingSize] = useState({ width: 0, height: 0 });
 
   const { ringRadius, seatScale, boothSize } = seatLayoutFor(seatCount, ringSize);
@@ -194,7 +300,11 @@ export function StudioSpinBottlePage({
     .map((seat, index) => (seat.state === "occupied" ? index : -1))
     .filter((index) => index >= 0);
 
-  const pushChat = useCallback((item: Omit<ChatItem, "id">) => {
+  const occupiedCount = occupiedIndices.length;
+  const canStartGame = occupiedCount > 2;
+  const botCount = seats.filter((seat) => seat.isBot).length;
+
+  const pushChat = useCallback((item: ChatItemInput) => {
     setChat((current) => [
       ...current,
       { ...item, id: `chat-${sequence.current++}` },
@@ -211,7 +321,7 @@ export function StudioSpinBottlePage({
     const list = chatRef.current;
     if (!list) return;
     list.scrollTop = list.scrollHeight;
-  }, [chat, confirmSheetOpen]);
+  }, [chat, confirmSheetOpen, phase]);
 
   useEffect(() => {
     const ring = ringRef.current;
@@ -242,25 +352,25 @@ export function StudioSpinBottlePage({
 
   const pickTarget = useCallback(
     (from: number) => {
-      const candidates = occupiedIndices.filter((index) => index !== from);
-      if (candidates.length === 0) return from;
       const oppositeGender = seats[from]?.gender;
-      const preferred = candidates.filter(
-        (index) =>
-          oppositeGender &&
-          seats[index]?.gender &&
-          seats[index]?.gender !== oppositeGender,
-      );
-      const pool = preferred.length > 0 ? preferred : candidates;
-      return pool[Math.floor(Math.random() * pool.length)] ?? from;
+      return nextClockwiseOccupied(from, seats, seatCount, (index) => {
+        const seatGender = seats[index]?.gender;
+        return Boolean(oppositeGender && seatGender && seatGender !== oppositeGender);
+      });
     },
-    [occupiedIndices, seats],
+    [seatCount, seats],
   );
 
+  const advanceSpinner = useCallback(() => {
+    setSpinnerIndex((current) =>
+      nextClockwiseOccupied(current, seats, seatCount),
+    );
+  }, [seatCount, seats]);
+
   const startSpin = () => {
-    if (phase !== "idle" && phase !== "paired") return;
-    if (occupiedIndices.length < 2) {
-      setFeedback("Need at least 2 players on mic");
+    if (phase !== "idle") return;
+    if (!canStartGame) {
+      setFeedback("需 >2 人在麦才能开局");
       return;
     }
 
@@ -270,7 +380,9 @@ export function StudioSpinBottlePage({
 
     const nextTarget = pickTarget(spinnerIndex);
     const seatAngle = 360 / seatCount;
-    const targetRotation = 720 + nextTarget * seatAngle;
+    const clockwiseSteps =
+      (nextTarget - spinnerIndex + seatCount) % seatCount || seatCount;
+    const targetRotation = 720 + clockwiseSteps * seatAngle;
 
     setBottleRotation(targetRotation);
 
@@ -280,23 +392,28 @@ export function StudioSpinBottlePage({
       setConfirmSheetOpen(true);
       pushChat({
         kind: "system",
-        text: `@${seats[spinnerIndex]?.name ?? "Player"} spun the bottle → @${seats[nextTarget]?.name ?? "Player"}`,
+        text: `@${seats[spinnerIndex]?.name ?? "玩家"} 顺时针转瓶 → @${seats[nextTarget]?.name ?? "玩家"}`,
       });
     }, 2200);
   };
 
   const handleKiss = () => {
     setConfirmSheetOpen(false);
-    setPhase("paired");
+    const question = pickQuestion(ROOM_QUESTION_LEVEL);
+    setActiveQuestion(question);
+    setPhase("qa");
+
+    const asker = resolveQaRoles(seats[spinnerIndex], seats[targetIndex ?? -1]);
     pushChat({
       kind: "system",
-      text: `💋 Both chose Kiss — truth or dare starts`,
+      text: `💋 双向 Kiss · ${QUESTION_LEVEL_LABEL[ROOM_QUESTION_LEVEL]} 真心话开始`,
     });
-    setFeedback("Kiss match · Open truth prompts next");
-    window.setTimeout(() => {
-      setPhase("vote");
-      setVoteProgress(68);
-    }, 1800);
+    pushChat({
+      kind: "text",
+      user: asker.asker?.name ?? "女方",
+      text: question,
+    });
+    setFeedback(`${asker.asker?.name ?? "女方"} 提问 · ${asker.answerer?.name ?? "男方"} 作答`);
   };
 
   const handlePass = () => {
@@ -304,31 +421,48 @@ export function StudioSpinBottlePage({
     setTargetIndex(null);
     setPhase("idle");
     setBottleRotation(0);
-    pushChat({ kind: "system", text: "Pass — back to seats, no penalty" });
-    setFeedback("Passed · Next spin");
+    pushChat({ kind: "system", text: "Pass · 回到座位，无惩罚" });
+    setFeedback("已 Pass · 下一位顺时针轮转");
+    advanceSpinner();
+  };
+
+  const finishQa = () => {
+    setPhase("vote");
+    setVoteProgress(68);
+    pushChat({
+      kind: "system",
+      text: "问答结束 · 公屏投票中（仅考核男性留座，女性免疫）",
+    });
   };
 
   const handleVote = (approved: boolean) => {
+    const maleSeat = voteTargetSeat(seats[spinnerIndex], seats[targetIndex ?? -1]);
+    const passed = approved && voteProgress >= VOTE_PASS_THRESHOLD;
+
     setPhase("idle");
     setTargetIndex(null);
     setBottleRotation(0);
-    setSpinnerIndex((current) => {
-      const order = occupiedIndices;
-      const pos = order.indexOf(current);
-      return order[(pos + 1) % order.length] ?? current;
-    });
-    pushChat({
-      kind: "system",
-      text: approved
-        ? "Vote passed · player keeps the seat"
-        : "Vote failed · seat opens for queue",
-    });
-    setFeedback(approved ? "Vote passed" : "Player removed · fee refunded");
+    setActiveQuestion("");
+    advanceSpinner();
+
+    if (passed) {
+      pushChat({
+        kind: "system",
+        text: `投票通过 ${voteProgress}% · @${maleSeat?.name ?? "男方"} 留座`,
+      });
+      setFeedback("赞率达标 · 男性留座");
+    } else {
+      pushChat({
+        kind: "system",
+        text: `投票未达 60% · @${maleSeat?.name ?? "男方"} 离座，5◆ 退还`,
+      });
+      setFeedback("男性离座 · 入座费退还");
+    }
   };
 
   const changeSeatCount = (next: SeatCount) => {
     if (next === seatCount) return;
-    if (phase !== "idle" && phase !== "paired") {
+    if (phase !== "idle") {
       setFeedback("玩法进行中 · 结束后再调整席位数");
       return;
     }
@@ -341,17 +475,20 @@ export function StudioSpinBottlePage({
     setBottleRotation(0);
     setConfirmSheetOpen(false);
     setPhase("idle");
+    setActiveQuestion("");
     pushChat({
       kind: "system",
-      text: `Room layout switched to ${next} seats`,
+      text: `房间切换为 ${next} 麦（满房 8–12 人）`,
     });
     setFeedback(`已切换为 ${next} 麦围桌`);
   };
 
   const spinnerSeat = seats[spinnerIndex];
   const targetSeat = targetIndex !== null ? seats[targetIndex] : null;
+  const qaRoles = resolveQaRoles(spinnerSeat, targetSeat ?? undefined);
+  const votingMale = voteTargetSeat(spinnerSeat, targetSeat ?? undefined);
   const showPairLink =
-    (phase === "paired" || phase === "vote" || phase === "confirm") &&
+    (phase === "qa" || phase === "vote" || phase === "confirm") &&
     targetIndex !== null;
 
   const pairArc =
@@ -364,7 +501,7 @@ export function StudioSpinBottlePage({
       className={[
         "pageCanvasDevice studioSpinBottleDevice",
         confirmSheetOpen ? "studioSpinBottleDevice--sheetOpen" : "",
-        phase === "paired" || phase === "vote"
+        phase === "qa" || phase === "vote"
           ? "studioSpinBottleDevice--heated"
           : "",
         phase === "spinning" ? "studioSpinBottleDevice--spinning" : "",
@@ -387,28 +524,61 @@ export function StudioSpinBottlePage({
             <SystemIcon name="back" size={24} />
           </button>
           <div className="studioSpinBottleRoomMeta">
-            <strong>Kiss · Truth Circle</strong>
+            <strong>官方心动房 #{String(OFFICIAL_ROOM_INDEX).padStart(2, "0")}</strong>
             <span>
-              {seatCount} 麦 · ID 366998
+              {occupiedCount}/{seatCount} 人 · ID 366998
             </span>
           </div>
-          <button type="button" className="studioSpinBottleIconBtn" aria-label="收藏房间">
-            <SystemIcon name="like" size={20} />
-          </button>
-          <span className="studioSpinBottleBossPill">BOSS</span>
+          <span className="studioSpinBottleOfficialBadge">官方</span>
           <button type="button" className="studioSpinBottleIconBtn" aria-label="分享房间">
             <SystemIcon name="link" size={20} />
           </button>
         </header>
 
+        <div className="studioSpinBottleColdStartBar" aria-label="冷启动状态">
+          <span>
+            固定房 {OFFICIAL_ROOM_INDEX}/{OFFICIAL_ROOM_TOTAL}
+          </span>
+          <span className="studioSpinBottleColdStartBarDivider" aria-hidden="true">
+            ·
+          </span>
+          <span>{canStartGame ? "可开局" : "等待 >2 人"}</span>
+          <span className="studioSpinBottleColdStartBarDivider" aria-hidden="true">
+            ·
+          </span>
+          <span>AI 补位 {botCount}</span>
+          <span className="studioSpinBottleColdStartBarFill" aria-hidden="true">
+            <span style={{ width: `${(occupiedCount / seatCount) * 100}%` }} />
+          </span>
+        </div>
+
         <div className="studioSpinBottleTagRow" aria-label="房间标签">
-          <span className="studioSpinBottleTag studioSpinBottleTag--pink">Flirt</span>
-          <span className="studioSpinBottleTag studioSpinBottleTag--gold">Spicy Lv.2</span>
-          <span className="studioSpinBottleTag">♀ ask · ♂ answer</span>
+          <span className="studioSpinBottleTag studioSpinBottleTag--pink">男女专属位</span>
+          <span className="studioSpinBottleTag studioSpinBottleTag--gold">
+            {QUESTION_LEVEL_LABEL[ROOM_QUESTION_LEVEL]}
+          </span>
+          <span className="studioSpinBottleTag">♀ 问 · ♂ 答</span>
+          <span className="studioSpinBottleTag">合规题库</span>
           <button type="button" className="studioSpinBottleRoomGifts">
             <SystemIcon name="gift" size={14} />
-            Room gifts
+            房主分成
           </button>
+        </div>
+
+        <div className="studioSpinBottleGuideTasks" aria-label="冷启动引导任务">
+          {GUIDE_TASKS.map((task) => (
+            <span
+              key={task.id}
+              className={[
+                "studioSpinBottleGuideTask",
+                task.done ? "studioSpinBottleGuideTask--done" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              {task.done ? "✓" : "○"} {task.label}
+            </span>
+          ))}
         </div>
 
         <section className="studioSpinBottleStage" aria-label="围桌麦位">
@@ -430,7 +600,7 @@ export function StudioSpinBottlePage({
               role="group"
               aria-label="选择座位数"
             >
-              <span className="studioSpinBottleSeatPickerLabel">席位数</span>
+              <span className="studioSpinBottleSeatPickerLabel">满房 8–12</span>
               {SEAT_COUNT_OPTIONS.map((option) => (
                 <button
                   key={option}
@@ -525,20 +695,20 @@ export function StudioSpinBottlePage({
               <div
                 className={[
                   "studioSpinBottleWaveform",
-                  phase === "spinning" || phase === "paired"
+                  phase === "spinning" || phase === "qa"
                     ? "studioSpinBottleWaveform--active"
                     : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}
               >
-                {WAVEFORM_BARS.map((height, index) => (
+                {WAVEFORM_BARS.map((barHeight, index) => (
                   <span
                     key={index}
                     className="studioSpinBottleWaveBar"
                     style={
                       {
-                        "--bar-height": `${height}px`,
+                        "--bar-height": `${barHeight}px`,
                         "--bar-delay": `${index * 0.04}s`,
                       } as CSSProperties
                     }
@@ -564,6 +734,7 @@ export function StudioSpinBottlePage({
                   <span className="studioSpinBottleCenterHeart">♥</span>
                 ) : null}
               </div>
+              <span className="studioSpinBottleSpinHint">顺时针</span>
             </div>
 
             {seats.map((seat, index) => {
@@ -589,16 +760,56 @@ export function StudioSpinBottlePage({
           </div>
         </section>
 
+        {phase === "qa" && activeQuestion ? (
+          <section className="studioSpinBottleQaCard" aria-label="真心话问答">
+            <div className="studioSpinBottleQaCardHead">
+              <span className="studioSpinBottleTag studioSpinBottleTag--gold">
+                {QUESTION_LEVEL_LABEL[ROOM_QUESTION_LEVEL]}
+              </span>
+              <span className="studioSpinBottleQaCompliance">已合规审核</span>
+            </div>
+            <p className="studioSpinBottleQaQuestion">{activeQuestion}</p>
+            <p className="studioSpinBottleQaRoles">
+              <strong>{qaRoles.asker?.name ?? "女方"}</strong> 提问 ·{" "}
+              <strong>{qaRoles.answerer?.name ?? "男方"}</strong> 作答
+            </p>
+            <p className="studioSpinBottleQaNote">
+              题库 AI 生成 + 竞品采集 · 暂不开放用户出题
+            </p>
+            <button
+              type="button"
+              className="kitButton kitButton--height40 kitButton--primary studioSpinBottleQaBtn"
+              onClick={finishQa}
+            >
+              回答完毕 · 进入投票
+            </button>
+          </section>
+        ) : null}
+
         <div className="studioSpinBottleStateBar" aria-live="polite">
           <span>{PHASE_LABEL[phase]}</span>
-          {phase === "idle" || phase === "paired" ? (
-            <button type="button" className="studioSpinBottleSpinBtn" onClick={startSpin}>
-              Spin ♡
+          {phase === "idle" ? (
+            <button
+              type="button"
+              className="studioSpinBottleSpinBtn"
+              onClick={startSpin}
+              disabled={!canStartGame}
+            >
+              顺时针 Spin ♡
             </button>
           ) : null}
           {phase === "vote" ? (
             <div className="studioSpinBottleVoteInline">
+              <div className="studioSpinBottleVoteMeta">
+                <span>@{votingMale?.name ?? "男方"} · 赞率 {voteProgress}%</span>
+                <span className="studioSpinBottleVoteImmune">女性免疫请出</span>
+              </div>
               <div className="studioSpinBottleVoteTrack">
+                <span
+                  className="studioSpinBottleVoteThreshold"
+                  style={{ left: `${VOTE_PASS_THRESHOLD}%` }}
+                  aria-hidden="true"
+                />
                 <span style={{ width: `${voteProgress}%` }} />
               </div>
               <button type="button" onClick={() => handleVote(true)}>
@@ -627,7 +838,7 @@ export function StudioSpinBottlePage({
           </div>
           <span className="studioSpinBottleOnlineCount">
             <SystemIcon name="contacts" size={14} />
-            {occupiedIndices.length}
+            {occupiedCount}
           </span>
         </div>
 
@@ -660,7 +871,7 @@ export function StudioSpinBottlePage({
           </button>
           <label className="studioSpinBottleTypeField">
             <span className="visuallyHidden">输入消息</span>
-            <input type="text" readOnly placeholder="Type…" />
+            <input type="text" readOnly placeholder="公屏发言…" />
           </label>
           <button type="button" aria-label="更多">
             <SystemIcon name="more" size={22} />
@@ -685,7 +896,7 @@ export function StudioSpinBottlePage({
           <section className="feedComposeMediaSheet studioSpinBottleSheet" aria-label="Kiss 或 Pass">
             <div className="feedComposeMediaSheetHandle" aria-hidden="true" />
             <header className="studioSpinBottleSheetHeader">
-              <p>心动确认</p>
+              <p>双向心动确认</p>
               <div className="studioSpinBottleSheetPair">
                 <AvatarVisual size={48} src={spinnerSeat.avatar} alt="" />
                 <span aria-hidden="true">♥</span>
@@ -693,6 +904,9 @@ export function StudioSpinBottlePage({
               </div>
               <p className="studioSpinBottleSheetNames">
                 {spinnerSeat.name} & {targetSeat.name}
+              </p>
+              <p className="studioSpinBottleSheetRule">
+                双方均选 Kiss 才进入 {QUESTION_LEVEL_LABEL[ROOM_QUESTION_LEVEL]} 真心话
               </p>
             </header>
             <div className="studioSpinBottleSheetActions">
@@ -711,16 +925,6 @@ export function StudioSpinBottlePage({
                 Pass
               </button>
             </div>
-            <button
-              type="button"
-              className="studioSpinBottleSkipLink"
-              onClick={() => {
-                handleKiss();
-                setFeedback("Skipped Q&A · back to spin");
-              }}
-            >
-              Skip truth round
-            </button>
           </section>
         </div>
       ) : null}
@@ -749,7 +953,7 @@ function MicSeatCell({
   highlight?: "spinner" | "target";
   style?: CSSProperties;
 }) {
-  const auraTone = seatIndex % 2 === 0 ? "cyan" : "magenta";
+  const auraTone = seat.gender === "female" ? "magenta" : "cyan";
 
   const cellClass = [
     "studioSpinBottleMicCell",
@@ -777,6 +981,24 @@ function MicSeatCell({
         </span>
       ) : null}
 
+      {seat.isBot ? (
+        <span className="studioSpinBottleBotBadge" aria-label="AI 机器人">
+          AI
+        </span>
+      ) : null}
+
+      <span
+        className={[
+          "studioSpinBottleGenderBadge",
+          seat.gender === "male"
+            ? "studioSpinBottleGenderBadge--male"
+            : "studioSpinBottleGenderBadge--female",
+        ].join(" ")}
+        aria-hidden="true"
+      >
+        {seat.gender === "male" ? "♂" : "♀"}
+      </span>
+
       <div className={auraClass}>
         <div className="studioSpinBottleMicAvatarWrap">
           {seat.state === "occupied" ? (
@@ -796,8 +1018,8 @@ function MicSeatCell({
           ) : (
             <button type="button" className="studioSpinBottleMicEmpty" aria-label="入座">
               <SystemIcon name="addCircle" size={24} />
-              {seat.joinPrice ? (
-                <span className="studioSpinBottleMicPrice">{seat.joinPrice}◆</span>
+              {seat.gender === "male" ? (
+                <span className="studioSpinBottleMicPrice">{MALE_JOIN_PRICE}◆</span>
               ) : (
                 <span className="studioSpinBottleMicPrice">Free</span>
               )}
@@ -817,11 +1039,11 @@ function MicSeatCell({
           </>
         ) : seat.state === "locked" ? (
           <span className="studioSpinBottleMicName studioSpinBottleMicName--muted">
-            Locked
+            锁定
           </span>
         ) : (
           <span className="studioSpinBottleMicName studioSpinBottleMicName--muted">
-            {seat.gender === "male" ? "男席 · 5◆" : "女席 · Free"}
+            {seat.gender === "male" ? `男席 · ${MALE_JOIN_PRICE}◆` : "女席 · Free"}
           </span>
         )}
       </div>

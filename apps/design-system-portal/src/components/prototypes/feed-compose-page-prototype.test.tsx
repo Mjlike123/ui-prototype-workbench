@@ -5,9 +5,11 @@ import {
   loadFeedComposeDraft,
   readPublishedFeedPosts,
 } from "@/lib/feed-compose-session";
+import { readFeedPublishJob } from "@/lib/feed-publish-status";
 
 describe("FeedComposePagePrototype", () => {
   afterEach(() => {
+    vi.useRealTimers();
     window.sessionStorage.clear();
     vi.useRealTimers();
   });
@@ -16,10 +18,15 @@ describe("FeedComposePagePrototype", () => {
     const onBack = vi.fn();
     render(<FeedComposePagePrototype onBack={onBack} />);
 
-    expect(screen.getByRole("heading", { name: "New post" })).toBeInTheDocument();
+    expect(document.querySelector(".regularNavigation")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "New post" }),
+    ).toBeInTheDocument();
+    expect(document.querySelector(".feedComposeHeader")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "发布动态" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "关闭" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "返回" }));
+    fireEvent.click(screen.getByRole("button", { name: "关闭" }));
     expect(onBack).toHaveBeenCalledOnce();
   });
 
@@ -30,16 +37,15 @@ describe("FeedComposePagePrototype", () => {
     fireEvent.change(screen.getByLabelText("动态文案"), {
       target: { value: "Draft post" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "返回" }));
+    fireEvent.click(screen.getByRole("button", { name: "关闭" }));
 
-    expect(screen.getByRole("heading", { name: "Save this post?" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Save draft" }));
+    expect(screen.getByRole("dialog")).toHaveAccessibleName("Save this draft?");
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     expect(onBack).toHaveBeenCalledOnce();
     expect(loadFeedComposeDraft()?.caption).toBe("Draft post");
   });
 
-  it("supports caption, album photos, publish feedback, and feed return", async () => {
-    vi.useFakeTimers();
+  it("starts publish job, returns immediately, and leaves feed to show status", async () => {
     const onPublished = vi.fn();
     render(
       <FeedComposePagePrototype onBack={vi.fn()} onPublished={onPublished} />,
@@ -50,67 +56,44 @@ describe("FeedComposePagePrototype", () => {
     });
     expect(screen.getByRole("button", { name: "发布动态" })).toBeEnabled();
 
-    fireEvent.click(screen.getByRole("button", { name: "添加照片" }));
-    fireEvent.click(screen.getByRole("button", { name: "从相册选择" }));
     fireEvent.click(
-      screen.getByRole("button", { name: "选择 Latifa pool" }),
+      screen.getByRole("button", { name: "添加照片，还可添加 9 张" }),
     );
-    fireEvent.click(screen.getByRole("button", { name: "完成" }));
-    expect(screen.getByLabelText("已选图片 1 张，还可添加 3 张")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "继续添加照片，还可添加 3 张" }),
-    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "选择 app-login-hero-0" }));
+    fireEvent.click(screen.getByRole("button", { name: "Done (1)" }));
+    expect(screen.getByLabelText("已选图片 1 张，还可添加 8 张")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "发布动态" }));
-    expect(screen.getByRole("button", { name: "发布中" })).toBeDisabled();
-
-    await act(async () => {
-      vi.advanceTimersByTime(900);
-    });
-    expect(screen.getByRole("status")).toHaveTextContent("动态已发布");
-    expect(readPublishedFeedPosts()[0]?.caption).toBe("Late night swim #OOTD");
-
-    await act(async () => {
-      vi.advanceTimersByTime(520);
-    });
     expect(onPublished).toHaveBeenCalledOnce();
-  });
-
-  it("supports camera capture through permission and media picker", () => {
-    vi.useFakeTimers();
-    render(<FeedComposePagePrototype onBack={vi.fn()} />);
-
-    fireEvent.click(screen.getByRole("button", { name: "添加照片" }));
-    fireEvent.click(screen.getByRole("button", { name: "拍照" }));
-    fireEvent.click(screen.getByRole("button", { name: "允许" }));
-    fireEvent.click(screen.getByRole("button", { name: "拍摄照片" }));
-    act(() => {
-      vi.advanceTimersByTime(500);
+    expect(readFeedPublishJob()).toMatchObject({
+      phase: "uploading",
+      caption: "Late night swim #OOTD",
+      thumbnail: "/prototypes/studio/app-login-hero.jpg",
     });
-
-    expect(screen.getByLabelText("已选图片 1 张，还可添加 3 张")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "发布动态" })).toBeEnabled();
+    expect(readPublishedFeedPosts()).toHaveLength(0);
+    expect(loadFeedComposeDraft()).toBeNull();
   });
 
-  it("shows permission education when camera access is denied", () => {
-    render(<FeedComposePagePrototype onBack={vi.fn()} />);
-
-    fireEvent.click(screen.getByRole("button", { name: "添加照片" }));
-    fireEvent.click(screen.getByRole("button", { name: "拍照" }));
-    fireEvent.click(screen.getByRole("button", { name: "不允许" }));
-
-    expect(screen.getByRole("heading", { name: "无法使用相机" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "从相册选择" }));
-    expect(screen.getByRole("heading", { name: "相册" })).toBeInTheDocument();
-  });
-
-  it("opens audience sheet instead of inline toggle", () => {
+  it("opens the album picker directly from the add button", () => {
     render(<FeedComposePagePrototype onBack={vi.fn()} />);
 
     fireEvent.click(
-      screen.getByRole("button", { name: "可见范围：所有人" }),
+      screen.getByRole("button", { name: "添加照片，还可添加 9 张" }),
     );
-    expect(screen.getByRole("heading", { name: "Who can reply" })).toBeInTheDocument();
+
+    expect(screen.getByRole("button", { name: "相册：Recents" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Done (0)" })).toBeDisabled();
+  });
+
+  it("opens audience sheet from visibility pill", () => {
+    render(<FeedComposePagePrototype onBack={vi.fn()} />);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "可见范围：公开" }),
+    );
+    expect(
+      screen.getByRole("heading", { name: "Who can see this post" }),
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Friends only" }));
     expect(
@@ -118,11 +101,46 @@ describe("FeedComposePagePrototype", () => {
     ).toBeInTheDocument();
   });
 
-  it("inserts hashtags from toolbar", () => {
+  it("keeps the audience sheet mounted for its exit motion", () => {
+    vi.useFakeTimers();
+    const { container } = render(
+      <FeedComposePagePrototype onBack={vi.fn()} />,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "可见范围：公开" }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "关闭可见范围设置" }),
+    );
+
+    expect(container.querySelector(".feedComposeOverlay")).toHaveAttribute(
+      "data-state",
+      "exit",
+    );
+    act(() => vi.advanceTimersByTime(200));
+    expect(
+      container.querySelector(".feedComposeOverlay"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("inserts hashtags from dock and topic chips", () => {
     render(<FeedComposePagePrototype onBack={vi.fn()} />);
 
     fireEvent.click(screen.getByRole("button", { name: "插入话题标签" }));
     expect(screen.getByLabelText("动态文案")).toHaveValue("#OOTD");
+
+    fireEvent.click(screen.getAllByRole("button", { name: "插入 #OOTD" })[0]);
+    expect(screen.getByLabelText("动态文案")).toHaveValue("#OOTD #OOTD");
+  });
+
+  it("toggles local pill", () => {
+    render(<FeedComposePagePrototype onBack={vi.fn()} />);
+
+    const localControl = screen.getByRole("checkbox", { name: "Local 定位" });
+    expect(localControl).toBeChecked();
+    fireEvent.click(localControl);
+    expect(localControl).not.toBeChecked();
   });
 
   it("restores saved drafts on mount", async () => {
@@ -139,6 +157,7 @@ describe("FeedComposePagePrototype", () => {
     render(<FeedComposePagePrototype onBack={vi.fn()} />);
     expect(screen.getByLabelText("动态文案")).toHaveValue("Saved draft");
     await waitFor(() => {
+      expect(screen.getByRole("status")).toHaveClass("kitToast");
       expect(screen.getByRole("status")).toHaveTextContent("已恢复草稿");
     });
   });

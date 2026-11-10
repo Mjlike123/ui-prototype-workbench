@@ -1,0 +1,58 @@
+featureId: moment-publish-detail-v319
+reviewedAt: 2026-09-07
+status: conditionally-deliverable
+summary:
+  p0: 0
+  p1: 0
+  p2: 2
+  openQuestions: 7
+
+scores:
+  visualAesthetics:
+    score: 8
+    evidence: 复用现有 Feed、Compose、Detail 视觉与 Kit Token；新增元素保持最小
+  designConsistency:
+    score: 9
+    evidence: 导航、列表、按钮、头像、标签与图标均可追溯到 Kit 或已标记 Prototype
+  interactionLogic:
+    score: 8
+    evidence: 主路径、服务端拒绝、草稿恢复、红点消费、本人和大区差异均可操作
+  deliveryCompleteness:
+    score: 8
+    evidence: brief、research、interaction、design doc、Studio 原型与测试齐全；埋点和旧版兼容仍未定义
+
+findings:
+  - severity: P2
+    location: Studio / Moment 发布失败入口
+    issue: 当前原型固定展示一个失败项用于走查，尚未模拟失败项随发布结果动态出现和消失
+    impact: 不影响主路径验证，但不能代表生产数据生命周期
+    direction: 生产实现由发布任务状态驱动，并在重新发布成功后移除
+  - severity: P2
+    location: Studio / Feed Detail
+    issue: 本人及 ME/KSA 差异通过 Studio variant 控制，未接真实用户关系与大区数据
+    impact: 可验证布局变化，不能验证线上策略数据
+    direction: 生产实现接入 relationship 与 region capability
+
+designCompletions:
+  - FAB 与底部导航、安全区及内容 inset
+  - 评论输入跟随键盘
+  - 服务端拒绝与网络失败保留草稿
+  - 新圈子两级红点消费
+  - 点赞失败回滚
+
+kitGaps:
+  - id: floating-action-button-contract
+    candidate: false
+    reason: 本期直接复用 Core prototypeFeedCompose，暂不新增或提名 Kit 组件
+  - id: sticky-feed-detail-layout
+    candidate: false
+    reason: 页面组合规则，不应包装成独立 Kit 组件
+
+openQuestions:
+  - 礼包入口去向
+  - 草稿完整恢复字段与设备边界
+  - 服务端错误码和正式文案
+  - 红点跨设备同步与状态归属
+  - 旧版本兼容
+  - 数据埋点
+  - 详情异常态是否属于本期

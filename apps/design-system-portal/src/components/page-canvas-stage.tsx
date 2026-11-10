@@ -52,7 +52,7 @@ export function PageCanvasStage({
   height,
   referenceOverlay,
 }: PageCanvasStageProps) {
-  const [primaryKey, setPrimaryKey] = useState(
+  const [primaryKey, setPrimaryKey] = useState<string>(
     PRIMARY_NAV_LABELS[plan.initialState?.primaryNavIndex ?? 0],
   );
   const [secondaryKey, setSecondaryKey] = useState("tab-0");

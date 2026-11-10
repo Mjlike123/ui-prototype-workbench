@@ -1,0 +1,86 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "capturedAt": "2026-10-22T11:25:29.674Z",
+  "files": [
+    {
+      "scene": "quality",
+      "state": "default",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/selected-quality-direction-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=quality&width=375&height=812"
+    },
+    {
+      "scene": "quality",
+      "state": "slot-selection",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/selected-quality-write-slots-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=quality&width=375&height=812"
+    },
+    {
+      "scene": "quality",
+      "state": "write-success",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/selected-quality-write-success-375.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=quality&width=375&height=812"
+    },
+    {
+      "scene": "quality",
+      "state": "default",
+      "width": 466,
+      "height": 678,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/selected-quality-direction-466.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=quality&width=466&height=678"
+    },
+    {
+      "scene": "quality",
+      "state": "default",
+      "width": 890,
+      "height": 626,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/selected-quality-direction-890.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=quality&width=890&height=626"
+    },
+    {
+      "scene": "filmsim",
+      "state": "default",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/scheme-d-filmsim-reference-home.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=filmsim&width=375&height=812"
+    },
+    {
+      "scene": "fujistyle",
+      "state": "default",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/scheme-a-fujistyle-home.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=fujistyle&width=375&height=812"
+    },
+    {
+      "scene": "fuji-recipes",
+      "state": "default",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/scheme-b-fuji-recipes-home.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=fuji-recipes&width=375&height=812"
+    },
+    {
+      "scene": "recipe-room",
+      "state": "default",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/scheme-c-recipe-room-home.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=recipe-room&width=375&height=812"
+    },
+    {
+      "scene": "compare",
+      "state": "default",
+      "width": 375,
+      "height": 812,
+      "path": "/Users/tiantian/Documents/ui-audit-tool/.monkren/ix-design/recipe-community-home-2026-10-16/exports/module-comparison-table.png",
+      "url": "http://localhost:3000/prototype-runtime/studio/recipe-community-redesign?theme=dark&scene=compare&width=375&height=812"
+    }
+  ]
+}

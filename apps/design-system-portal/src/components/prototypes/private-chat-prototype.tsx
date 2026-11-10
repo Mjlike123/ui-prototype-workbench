@@ -320,13 +320,15 @@ export function PrivateChatPrototype({
   width = 375,
   height = 812,
   theme = "light",
+  embedded = false,
   onBack,
 }: {
   friend: PrivateChatFriend;
   width?: number;
   height?: number;
   theme?: "light" | "dark";
-  onBack: () => void;
+  embedded?: boolean;
+  onBack?: () => void;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [draft, setDraft] = useState("");
@@ -658,25 +660,39 @@ export function PrivateChatPrototype({
   return (
     <div
       ref={deviceRef}
-      className={`pageCanvasDevice privateChatDevice${
-        menuMessageId ? " hasMessageMenu" : ""
-      }${menuClosing ? " isMessageMenuExiting" : ""}`}
+      className={`${embedded ? "" : "pageCanvasDevice "}privateChatDevice${
+        embedded ? " privateChatDevice--embedded" : ""
+      }${menuMessageId ? " hasMessageMenu" : ""}${
+        menuClosing ? " isMessageMenuExiting" : ""
+      }`}
       style={
-        {
-          "--page-canvas-width": `${width}px`,
-          "--page-canvas-height": `${height}px`,
-        } as CSSProperties
+        embedded
+          ? undefined
+          : ({
+              "--page-canvas-width": `${width}px`,
+              "--page-canvas-height": `${height}px`,
+            } as CSSProperties)
       }
       aria-label={`与 ${friend.name} 私聊原型 · ${width}×${height}`}
     >
-      <IosStatusBar
-        appearance={theme === "dark" ? "light-content" : "dark-content"}
-      />
+      {embedded ? null : (
+        <IosStatusBar
+          appearance={theme === "dark" ? "light-content" : "dark-content"}
+        />
+      )}
       <div className="pageCanvasContentShell">
         <header className="privateChatNavigation">
-          <button type="button" aria-label="返回 Message" onClick={onBack}>
-            <SystemIcon name="back" />
-          </button>
+          {embedded ? (
+            <span className="privateChatNavigationSpacer" aria-hidden="true" />
+          ) : (
+            <button
+              type="button"
+              aria-label="返回 Message"
+              onClick={onBack}
+            >
+              <SystemIcon name="back" />
+            </button>
+          )}
           <div className="privateChatIdentity">
             <h1>{friend.name}</h1>
             <span className="privateChatPresence">
@@ -961,7 +977,9 @@ export function PrivateChatPrototype({
             {feedback}
           </output>
         ) : null}
-        <div className="privateChatSafeArea" aria-hidden="true" />
+        {embedded ? null : (
+          <div className="privateChatSafeArea" aria-hidden="true" />
+        )}
       </div>
       {menuMessageId ? (
         <button

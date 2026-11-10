@@ -13,6 +13,13 @@ Keep this concise. The goal is to constrain implementation, not write a brand bo
 - Primary user task:
 - Main risk if the design is wrong:
 
+## Personal Taste Profile
+
+- Applied preference IDs:
+- Tentative preferences being tested:
+- Preferences intentionally overridden:
+- Override reason:
+
 ## Brand / VI Audit
 
 - Existing logo or wordmark:

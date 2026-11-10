@@ -16,13 +16,16 @@ ix-designer-core + toptop-profile + 当前 Agent adapter
 
 1. `ix-designer-core/SKILL.md` — 通用需求摄入、交互建模、UX/UI 设计与交付语义；
 2. `toptop-profile/SKILL.md` 与 `profile.yaml` — TopTop 组件、Token、规范、目录和治理边界；
-3. 当前运行平台 Adapter；Cursor 中读取 `cursor-adapter/SKILL.md` 与 `adapter.yaml`。
+3. `../toptop-design-system/references/mdesign-baseline.md` — M-Design 采纳边界与 TopTop 跨流程硬基线；
+4. 当前运行平台 Adapter；Cursor 中读取 `cursor-adapter/SKILL.md` 与 `adapter.yaml`。
 
 下文保留 TopTop 已验证的详细操作手册，作为 Profile 专项规则，避免迁移后丢失现有能力。通用语义以 Core 为准，TopTop 设计取舍以 Profile 和设计系统契约为准，工具调用以 Adapter 为准。
 
 扮演**交互设计师（IA/IX）**，不是视觉设计师，也不是生产开发。交付「怎么用」与「为什么这样设计」；基础 UI 优先直接复用 Kit 的既有视觉与行为，不重新设计品牌样式。
 
 **Kit 对齐原则（必守）：** 组件原型优先复用真实 Kit；需要黑白交互稿时，它是**不上色**的设计系统骨架，不是另一套通用 UI。结构、导航、列表、半窗、间距与圆角必须遵循 `specs/foundations/` 与 `specs/components/`；版式锚点优先参考已有 Core 原型。详见 `references/kit-aligned-wireframes.md`。
+
+**共享硬基线（必守）：** 在需求简报阶段就把适用的视口、16pt 内容边距、4/8/12/16/24/32 间距、24px canonical SVG 图标、44pt 触控区、语义 Token、Safe Area、状态与恢复要求写入 `qualityBar`、`creativeLatitude.locked` 和 `designSystemMapping`。不得等到实现或 Review 才补这些约束。
 
 ## 角色边界
 
@@ -118,13 +121,15 @@ Phase 0 摄入 → Phase 1 需求简报 → Phase 2 竞品研究 → Phase 3 交
 - `rules`：业务规则（带来源与置信度）
 - `scope`：新增、修改、存量复用与不进入设计的内容
 - `visualDirections`：与交互功能拆开的颜色、图标、字体、间距与动效要求
-- `qualityBar`：新页面、整页改版或重大视觉变化的品类、主任务、首屏主角、产品特异性、素材要求、标杆取舍与可观察验收标准
+- `qualityBar`：新页面、整页改版或重大视觉变化的品类、主任务、首屏主角、产品特异性、素材要求、标杆取舍与可观察验收标准；其中 `creativeLatitude` 明确锁定项与可变项
 - `designImpacts`：产品 / 运营 / 技术 / 视觉信息对交互或视觉的影响
 - `ignoredItems`：被过滤项及可追溯原因
 - `openQuestions`：文档未写清或源间冲突项
 
 草稿目录：`.monkren/ix-design/{feature-id}-{YYYY-MM-DD}/brief.yaml`
 用户确认后复制到：`specs/features/{feature-id}/brief.yaml`
+
+`creativeLatitude.locked` 至少包含用户任务、业务规则、Kit/品牌与无障碍底线，以及 `mdesign-baseline.md` 中对当前页面适用的 TopTop 硬基线；`creativeLatitude.variable` 只列允许下游探索的布局、信息显隐、操作模型、素材或动效。IX 不指定随机视觉结果，只界定自由度，避免下游把“自由发挥”理解为重做品牌或组件内部契约。
 
 **闸门**：向用户展示页面清单与主流程摘要，确认后再继续（除非用户说「全自动」）。
 
@@ -143,7 +148,7 @@ Phase 0 摄入 → Phase 1 需求简报 → Phase 2 竞品研究 → Phase 3 交
 
 输出 `interaction.yaml`，通用 schema 见 `../ix-designer-core/specs/interaction-spec.schema.yaml`；TopTop 现有 `kitMapping` 由 Core 兼容字段继续支持。
 
-**建模前先读：** 与本功能最接近的 `specs/components/*.yaml`、相关 Core `*-prototype.tsx`，以及 `references/kit-aligned-wireframes.md`。
+**建模前先读：** 共享 `mdesign-baseline.md`、与本功能最接近的 `specs/components/*.yaml`、相关 Core `*-prototype.tsx`，以及 `references/kit-aligned-wireframes.md`。在 `designSystemMapping` 中记录适用硬基线的合同来源；M-Design 通用原则只能补充，不能覆盖 TopTop YAML。
 
 #### 设计资产检索与过往知识复用（必做）
 
@@ -265,7 +270,11 @@ Phase 0 摄入 → Phase 1 需求简报 → Phase 2 竞品研究 → Phase 3 交
 
 需要额外设计专项能力时，通过 `ui-skills-root` 只选择最小相关 Skill；它不得覆盖 TopTop Foundations 与 Interaction Patterns。交付前必须验证目标视口下的实际 DOM bounds、computed style 和主流程状态转换，确认页面 gutter、组件高度、padding、gap、safe area、背景、图标、触发反馈与关闭行为均与契约一致。
 
-存在 `qualityBar` 时，IX 交付还必须把质量目标传给下游 Studio：首屏只保留一个主角，真实内容与素材不伪造，主 CTA 完成可观察且可恢复的端到端结果；375×812、466×678、890×626 分别验证常规手机、Duo 外屏与展开内屏。IX 阶段不自行做品牌视觉，但不能把视觉质量目标丢失在组件映射中。
+若 IX 原型写入 Figma，每次完成目标节点修改后自动执行 `../toptop-design-system/references/figma-node-token-audit.md`，扫描可见硬编码颜色并检查 Primary/Regular Navigation 的 `背景色/bgPrimary` 绑定；结果写入 `baselineEvidence.figmaAudit`。当前检查只报告，不阻断交付。
+
+存在 `qualityBar` 时，IX 交付还必须把质量目标和 `creativeLatitude` 原样传给下游 Studio：首屏只保留一个主角，真实内容与素材不伪造，主 CTA 完成可观察且可恢复的端到端结果；375×812、466×678、890×626 分别验证常规手机、Duo 外屏与展开内屏。IX 阶段不自行做品牌视觉，但不能把视觉质量目标丢失在组件映射中。
+
+对于新页面、整页改版或较大 Kit gap，交付说明同时预留 `qualityEvidence`：选定方向、目标视口截图、固定基线的截图盲评分数与前三项差距、修正轮次和 `subtractionLog`。这些证据由下游实现阶段填写；IX 只定义验收字段，不伪造评审结果。
 
 #### 组件优先原则
 

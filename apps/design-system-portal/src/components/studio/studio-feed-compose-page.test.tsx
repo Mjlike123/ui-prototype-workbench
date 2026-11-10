@@ -34,7 +34,7 @@ describe("StudioFeedComposePage", () => {
     expect(screen.getByLabelText("发布中")).toBeInTheDocument();
 
     act(() => {
-      vi.advanceTimersByTime(1420);
+      vi.advanceTimersByTime(1520);
     });
     expect(onPublished).toHaveBeenCalledOnce();
     vi.useRealTimers();
@@ -49,6 +49,8 @@ describe("StudioFeedComposePage", () => {
     fireEvent.click(screen.getByLabelText("返回"));
 
     expect(screen.getByRole("heading", { name: "Save this post?" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toHaveClass("kitCenterDialog");
+    expect(document.querySelector(".feedComposeLeaveSheet")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Save draft" })).toHaveClass(
       "kitButton",
     );

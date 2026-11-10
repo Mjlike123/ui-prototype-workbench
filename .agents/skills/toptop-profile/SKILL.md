@@ -20,6 +20,44 @@ Load `profile.yaml`, then apply it to `ix-designer-core`.
 
 Structured YAML is the contract. MDX and previews explain it but cannot override it.
 
+## Shared baseline entry
+
+Every TopTop IX, implementation, and acceptance-review workflow must read
+`../toptop-design-system/references/mdesign-baseline.md` through this Profile.
+It is the shared adoption boundary and hard-baseline checklist for M-Design
+references; its summaries never override the structured contracts above.
+
+Apply it at these gates:
+
+- **IX**: lock applicable viewport, gutter, spacing, icon, Token, touch-target,
+  state, and recovery requirements into `RequirementBrief.qualityBar`,
+  `creativeLatitude.locked`, and `designSystemMapping`.
+- **Implementation**: use it as the preflight checklist before component
+  mapping, then verify rendered bounds, Tokens, canonical icons, Safe Area,
+  interaction states, and observable completion.
+- **Review**: keep Pass 1 screenshot-blind; read the baseline in Pass 2 and
+  require evidence for every applicable hard baseline.
+
+If a user request or approved business screen conflicts with a structured
+contract, preserve the business objective, record the conflict, and request or
+route the required contract change. Do not silently make the screen or current
+implementation the new system rule.
+
+## Figma automatic checks
+
+After every Agent-authored Figma write, and during Pass 2 of a Figma review,
+automatically run
+`../toptop-design-system/references/figma-node-token-audit.md` against the
+smallest task root node:
+
+1. report visible hardcoded colors separately as actionable page layers and
+   component-internal source issues;
+2. verify every Primary/Regular Navigation root is bound to
+   `背景色/bgPrimary`.
+
+Write the result to `baselineEvidence.figmaAudit`. These checks are currently
+non-blocking: report findings and do not silently repair or suppress them.
+
 ## TopTop-specific behavior
 
 - Reuse order: Core page → shared business module → Kit component/pattern → Foundation primitive → isolated `Prototype*` gap.

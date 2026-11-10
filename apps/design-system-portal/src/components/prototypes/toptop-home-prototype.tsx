@@ -7,10 +7,20 @@ import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { ListTag } from "@/components/kit/list-tag";
 import { PrototypeAvatarImage } from "@/components/kit/prototype-avatar-image";
 import { SystemIcon } from "@/components/kit/system-icon";
+import { Toast } from "@/components/kit/toast";
+import { PrototypePrivateRoomGameSheet } from "@/components/prototypes/prototype-private-room-game-sheet";
 import {
   BOTTOM_NAV_DESTINATIONS,
   type BottomNavKey,
 } from "@/lib/profile-prototype-model";
+import {
+  bottomNavigationAxisClass,
+  iphoneDuoChromeAxis,
+  iphoneDuoContentShellClass,
+  iphoneDuoDeviceChromeClass,
+  iphoneDuoReservedVars,
+  isIphoneDuoInnerCanvas,
+} from "@/lib/iphone-duo-layout";
 import { getTopTopFriendStripLayout } from "@/lib/top-top-home-layout";
 
 /*
@@ -29,6 +39,7 @@ type TopTopHomePrototypeProps = {
   onNavigate?: (destination: BottomNavKey) => void;
   onOpenProfile?: () => void;
   onOpenSearch?: () => void;
+  onCreatePrivateRoom?: (gameName: string) => void;
 };
 
 const friendsForCollage = [
@@ -81,6 +92,21 @@ const friendRoster = [
     image: "/prototypes/toptop-home/avatar-cassie.png",
     status: "room",
   },
+  {
+    name: "Hana",
+    image: "/prototypes/toptop-home/avatar-estelle.png",
+    status: "voice",
+  },
+  {
+    name: "Omar",
+    image: "/prototypes/toptop-home/avatar-andrew.png",
+    status: "game",
+  },
+  {
+    name: "Lina",
+    image: "/prototypes/toptop-home/susan-avatar.png",
+    status: "room",
+  },
 ] as const;
 
 const games = [
@@ -128,9 +154,12 @@ export function TopTopHomePrototype({
   onNavigate,
   onOpenProfile,
   onOpenSearch,
+  onCreatePrivateRoom,
 }: TopTopHomePrototypeProps) {
   const [destination, setDestination] = useState<BottomNavKey>("toptop");
   const [toast, setToast] = useState<string | null>(null);
+  const [privateRoomSheetOpen, setPrivateRoomSheetOpen] = useState(false);
+  const [privateRoomGame, setPrivateRoomGame] = useState<string | null>(null);
 
   useEffect(() => {
     if (!toast) return;
@@ -139,23 +168,28 @@ export function TopTopHomePrototype({
   }, [toast]);
 
   const showAction = (message: string) => setToast(message);
+  const innerCanvas = isIphoneDuoInnerCanvas(width);
+  const chromeAxis = iphoneDuoChromeAxis(width, height);
   const friendStrip = getTopTopFriendStripLayout(width);
   const visibleFriends = friendRoster.slice(0, friendStrip.visibleFriendCount);
 
   return (
     <div
-      className={`pageCanvasDevice topTopHomeDevice topTopHomeDevice--${destination}`}
+      className={`pageCanvasDevice topTopHomeDevice topTopHomeDevice--${destination}${
+        innerCanvas ? " topTopHomeDevice--duoInner" : ""
+      }${iphoneDuoDeviceChromeClass(width, height)}`}
       style={
         {
           "--page-canvas-width": `${width}px`,
           "--page-canvas-height": `${height}px`,
+          ...iphoneDuoReservedVars(width, height),
         } as CSSProperties
       }
       aria-label={`TopTop 首页原型 · ${width}×${height}`}
     >
-      <div className="pageCanvasContentShell">
+      <div className={iphoneDuoContentShellClass(width, height)}>
         {destination === "toptop" ? (
-          <>
+          <div className="pageCanvasMainColumn">
             <TopTopHomeHeader
               onOpenProfile={onOpenProfile}
               onOpenSearch={onOpenSearch}
@@ -229,11 +263,19 @@ export function TopTopHomePrototype({
                 <button
                   type="button"
                   className="topTopPrivateRoomButton"
-                  aria-label="创建 private room"
-                  onClick={() => showAction("创建 private room")}
+                  aria-label={
+                    privateRoomGame
+                      ? `Change ${privateRoomGame} private room game`
+                      : "Create private room"
+                  }
+                  onClick={() => setPrivateRoomSheetOpen(true)}
                 >
-                  private room
-                  <span aria-hidden="true">＋</span>
+                  <span className="topTopPrivateRoomPill">
+                    {privateRoomGame
+                      ? `${privateRoomGame} room`
+                      : "private room"}
+                    <SystemIcon name="add" size={16} />
+                  </span>
                 </button>
               </div>
               <div className="topTopGameGrid">
@@ -258,7 +300,6 @@ export function TopTopHomePrototype({
                 ))}
               </div>
             </section>
-
             <section
               className="topTopHomeSection topTopFindSection"
               aria-labelledby="toptop-find-title"
@@ -307,7 +348,7 @@ export function TopTopHomePrototype({
               </div>
             </section>
             </main>
-          </>
+          </div>
         ) : (
           <main className="topTopDestinationPlaceholder">
             <span className="topTopPlaceholderGlyph" aria-hidden="true" />
@@ -327,6 +368,7 @@ export function TopTopHomePrototype({
 
         <TopTopBottomNavigation
           selected={destination}
+          axis={chromeAxis}
           onChange={(key) => {
             if (onNavigate) {
               onNavigate(key);
@@ -345,10 +387,23 @@ export function TopTopHomePrototype({
         />
       </div>
 
+      <PrototypePrivateRoomGameSheet
+        open={privateRoomSheetOpen}
+        games={games.filter((game) => game.name !== "More Games")}
+        onDismiss={() => setPrivateRoomSheetOpen(false)}
+        onCreateRoom={(game) => {
+          setPrivateRoomGame(game.name);
+          setToast(`${game.name} private room is ready`);
+          onCreatePrivateRoom?.(game.name);
+        }}
+      />
+
       {toast ? (
-        <div className="profilePrototypeToast" role="status" aria-live="polite">
-          {toast}
-        </div>
+        <Toast
+          message={toast}
+          longText={toast.length > 24}
+          className="topTopHomeToast"
+        />
       ) : null}
     </div>
   );
@@ -473,13 +528,15 @@ function TopTopHomeHeader({
 function TopTopBottomNavigation({
   selected,
   onChange,
+  axis = "horizontal",
 }: {
   selected: BottomNavKey;
   onChange: (key: BottomNavKey) => void;
+  axis?: "horizontal" | "vertical";
 }) {
   return (
     <nav
-      className="bottomNavigation bottomNavigationDark pageCanvasBottomNav topTopHomeBottomNav"
+      className={`bottomNavigation bottomNavigationDark pageCanvasBottomNav topTopHomeBottomNav${bottomNavigationAxisClass(axis)}`}
       aria-label="App 一级目的地"
     >
       <div className="bottomNavigationItems">

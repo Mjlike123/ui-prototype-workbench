@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AppShell } from "@/components/app-shell";
+import { FigmaCaptureBootstrap } from "@/components/figma-capture-bootstrap";
 import { getCatalog } from "@/lib/catalog";
 import "./globals.css";
 
@@ -22,6 +23,7 @@ export default async function RootLayout({
   return (
     <html lang="zh-CN">
       <body>
+        <FigmaCaptureBootstrap />
         <AppShell
           interactionTabs={catalog.interactions.map((interaction) => ({
             href: `/interactions/${interaction.id}`,

@@ -1,0 +1,156 @@
+schemaVersion: 1
+id: in-room-notification
+version: 1.0.0
+title: 房间内通知
+owner: TopTop Design System
+category: Feedback
+status: stable
+since: 1.0.0
+tags:
+  - notification
+  - banner
+  - toast
+  - in-room
+  - voice-room
+platforms:
+  - ios
+  - android
+  - h5
+description: 语音房间内浮层通知条，用于展示头像、标题/描述与可选操作按钮或文字链；支持浅色与深色两种表面语气。
+previewKey: in-room-notification
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=1510-9347
+  nodeId: "1510:9347"
+  observations:
+    - 容器固定宽 343pt（375 屏左右各 16pt 边距）、最小高 80pt、圆角 12pt、内边距 16pt、子项间距 12pt
+    - 浅色：白 90% 实底 + 0.5pt 浅描边 + 下投影 0 8 12.5 rgba(0,0,0,0.1)
+    - 深色：黑 80% 实底 + 背景模糊 10pt + 下投影 0 4 12 rgba(0,0,0,0.2)
+    - 左侧可选 48pt 圆形头像，0.5pt 浅描边
+    - 文本区支持双行（16pt 标题 + 14pt 描述）或单行 14pt 描述
+    - 右侧操作可为 32pt 高品牌主按钮、14pt 品牌文字链 + 20pt 箭头，或无操作
+anatomy:
+  - id: shell
+    label: 通知容器
+    description: 圆角浮层条，承载头像、文案与操作。
+  - id: avatar
+    label: 头像
+    description: 可选 48pt 圆形头像。
+  - id: content
+    label: 文案区
+    description: 双行标题+描述，或单行描述。
+  - id: title
+    label: 标题
+    description: 16pt Regular；浅色 primary、深色 white。
+  - id: description
+    label: 描述
+    description: 14pt Regular secondary。
+  - id: actionButton
+    label: 操作按钮
+    description: 32pt 高品牌主色胶囊按钮。
+  - id: actionLink
+    label: 文字操作
+    description: 14pt 品牌色文案 + 20pt 右箭头。
+variants:
+  - name: tone
+    values:
+      - light
+      - dark
+    defaultValue: light
+  - name: layout
+    values:
+      - stacked
+      - compact
+    defaultValue: stacked
+  - name: action
+    values:
+      - button
+      - link
+      - none
+    defaultValue: button
+props:
+  - name: tone
+    type: InRoomNotificationTone
+    defaultValue: light
+    description: 表面语气；浅色用于亮背景，深色用于暗色房间场景。
+  - name: layout
+    type: InRoomNotificationLayout
+    defaultValue: stacked
+    description: stacked 为标题+描述；compact 为单行描述。
+  - name: action
+    type: InRoomNotificationAction
+    defaultValue: button
+    description: 右侧操作类型。
+  - name: showAvatar
+    type: boolean
+    defaultValue: true
+    description: 是否展示左侧头像。
+  - name: avatarSrc
+    type: string
+    description: 头像图片地址；省略时使用 Kit 默认占位。
+  - name: title
+    type: string
+    description: stacked 布局标题。
+  - name: description
+    type: string
+    description: stacked 布局描述或 compact 布局单行文案。
+  - name: actionLabel
+    type: string
+    description: 按钮或文字链文案。
+  - name: onAction
+    type: () => void
+    description: 用户点击按钮或文字链时触发。
+tokenRefs:
+  - color.text.primary
+  - color.text.secondary
+  - color.text.white-primary
+  - color.brand.primary
+  - color.border.subtle
+  - radius.12
+  - typography.body.regular
+  - typography.caption.regular
+accessibility:
+  - 容器使用 region 语义，并提供 aria-label 或由标题/描述组合的可感知名称。
+  - 操作按钮与文字链必须是可聚焦 button，并提供明确 aria-label。
+  - 头像仅作装饰时 aria-hidden；有业务含义时写入 alt。
+  - 通知进入视口时不应抢占全部焦点；操作区应可键盘触达。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "1510:9347"
+    - "1356:9249"
+    - "1356:9255"
+    - "1517:9497"
+    - "1517:9505"
+    - "1519:9620"
+  nameAliases:
+    - 房间内通知
+    - 通知
+    - in-room notification
+    - room notification banner
+    - 房间内消息样式
+roles:
+  - container
+  - avatarImage
+  - title
+  - subtitle
+  - trailingAction
+rules:
+  - id: shell.minHeight
+    title: 通知条最小高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: shell.borderRadius
+    title: 容器圆角
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: actionButton.height
+    title: 操作按钮高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule

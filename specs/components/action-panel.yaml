@@ -1,0 +1,174 @@
+schemaVersion: 1
+id: action-panel
+version: 1.0.0
+title: 动作面板
+owner: TopTop Design System
+category: Overlay
+status: stable
+since: 1.0.0
+tags:
+  - action-sheet
+  - bottom-sheet
+  - panel
+  - menu
+  - overlay
+platforms:
+  - ios
+  - android
+  - h5
+description: 自底部弹出的半屏动作面板，用于呈现一组互斥或并列的操作项；支持可选说明标题、工具栏标题、取消区与底部开关说明行。
+previewKey: action-panel
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=3035-23231
+  nodeId: "3035:23231"
+  observations:
+    - 面板自底部升起，顶部圆角 16pt；背景为纯白 surface.panel
+    - 可选说明标题区高 44pt，文案 14pt Regular，颜色 secondary，水平居中，容器顶部内边距 8pt
+    - 工具栏标题区高 44pt：左侧返回 24pt、居中标题 16pt Semibold、右侧确认 16pt Semibold 品牌色
+    - 每个操作项行高 64pt，文案 16pt 居中；强调项使用品牌主色 Semibold
+    - 操作项之间使用 0.5pt 分割线；取消区前使用 4pt 浅灰分隔条（#F3F5F9）
+    - 取消按钮行高 64pt，文案 16pt Regular secondary
+    - 底部开关说明行左右 16pt、上下 11pt；主文案 16pt，说明 14pt secondary，右侧复用 switch
+    - 面板底部保留 34pt Home Indicator 占位
+    - 进入动效 250ms：蒙层 0%→50%，面板 Y 轴自底部滑入；离开约 200ms 反向
+    - 无底部主操作时内容区可通底；有底部通栏按钮时滚动区叠加 20pt 白色渐变遮罩
+    - 工具栏关闭默认右上角，右侧有高优先级操作时移至左上角
+    - 嵌套、蒙层关闭与未保存确认见 bottom-sheet-behavior；动效与滚动见 action-panel-behavior
+anatomy:
+  - id: shell
+    label: 面板容器
+    description: 白色半屏容器，顶部 radius.16，自底部对齐。
+  - id: description
+    label: 说明标题
+    description: 可选，描述当前操作上下文，不可点击。
+  - id: toolbar
+    label: 工具栏标题
+    description: 可选，含返回、居中标题与右侧确认文字按钮。
+  - id: actionList
+    label: 操作列表
+    description: 纵向操作项集合，每项独占 64pt 行。
+  - id: actionItem
+    label: 操作项
+    description: 可点击行，支持 default、emphasis、destructive 语气。
+  - id: sectionGap
+    label: 分区间隔
+    description: 取消区或底部附加区前的 4pt 浅灰分隔。
+  - id: cancelAction
+    label: 取消操作
+    description: 独立取消行，用于无风险退出。
+  - id: footerSwitch
+    label: 底部开关行
+    description: 标题 + 说明 + switch，用于附带即时设置。
+  - id: homeIndicator
+    label: Home Indicator
+    description: 34pt 底部安全区占位。
+variants:
+  - name: header
+    values:
+      - none
+      - description
+      - toolbar
+    defaultValue: none
+  - name: footer
+    values:
+      - none
+      - cancel
+      - switch
+      - cancel-and-switch
+    defaultValue: cancel
+props:
+  - name: description
+    type: string
+    description: 可选说明标题，显示在操作列表上方。
+  - name: header
+    type: ActionPanelHeader
+    description: 工具栏标题配置；与 description 互斥，优先使用 header。
+  - name: actions
+    type: ActionPanelItem[]
+    required: true
+    description: 操作项列表；每项需提供 id 与 label。
+  - name: cancelLabel
+    type: string
+    defaultValue: 取消
+    description: 取消按钮文案；省略时不渲染取消区。
+  - name: onCancel
+    type: () => void
+    description: 用户点击取消时触发，并应关闭面板。
+  - name: footerSwitch
+    type: ActionPanelFooterSwitch
+    description: 底部开关说明行；与取消区之间仍保留 4pt 分隔。
+  - name: showHomeIndicator
+    type: boolean
+    defaultValue: true
+    description: 是否渲染 34pt Home Indicator 占位。
+  - name: onAction
+    type: (item:ActionPanelItem)=>void
+    description: 用户点选某一操作项时触发；默认执行 item.onPress。
+  - name: closeOnAction
+    type: boolean
+    defaultValue: "true"
+    description: ActionPanelSheet 点击操作项后是否关闭当前层；需要打开子层半屏时设为 false。
+tokenRefs:
+  - color.surface.panel
+  - color.text.primary
+  - color.text.secondary
+  - color.text.white-primary
+  - color.brand.primary
+  - color.border.subtle
+  - color.button.secondary
+  - color.switch.track-on
+  - color.switch.track-off
+  - radius.16
+  - typography.body.regular
+  - typography.body.semibold
+  - typography.caption.regular
+interactionIds:
+  - action-panel-behavior
+  - bottom-sheet-behavior
+accessibility:
+  - 面板容器使用 dialog 或 menu 语义，并关联可感知标题（description、header.title 或 aria-label）。
+  - 每个操作项必须是可聚焦 button，并提供明确 aria-label；destructive 项使用 aria-description 或文案本身表达风险。
+  - 取消按钮必须可聚焦，且为无风险退出路径；不能只依赖蒙层关闭。
+  - 打开后焦点移入标题或首个操作项，关闭后恢复到触发元素。
+  - 工具栏返回与确认按钮必须提供可访问名称。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "740:5334"
+    - "1276:19724"
+    - "1276:19743"
+    - "1382:8643"
+    - "1382:8715"
+    - "1255:9478"
+  nameAliases:
+    - 动作面板
+    - action panel
+    - action sheet
+    - 半屏动作面板
+    - bottom action sheet
+roles:
+  - container
+  - label
+  - content
+  - trailingAction
+  - trailing
+rules:
+  - id: actionItem.height
+    title: 操作项行高
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule
+  - id: actionItem.textColor
+    title: 强调操作文字色
+    category: selected
+    metric: textColor
+    tolerance: 8
+    aggregate: rule
+  - id: sectionGap.height
+    title: 分区间隔高度
+    category: spacing
+    metric: height
+    tolerance: 1
+    aggregate: rule

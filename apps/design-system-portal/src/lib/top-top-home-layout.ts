@@ -9,7 +9,11 @@ export type TopTopFriendStripLayout = {
   visibleFriendCount: number;
 };
 
-/** 固定 56px 头像列宽；末列留给 7 More，宽屏优先增加可见好友数。 */
+function friendStripGap(contentWidth: number, columns: number) {
+  return (contentWidth - columns * TOP_TOP_FRIEND_CELL) / (columns - 1);
+}
+
+/** 固定 56px 头像列宽；末列留给 7 More。能加列就加列，否则把现有槽位均分铺满。 */
 export function getTopTopFriendStripLayout(
   canvasWidth: number,
 ): TopTopFriendStripLayout {
@@ -24,9 +28,8 @@ export function getTopTopFriendStripLayout(
     return fallback;
   }
 
-  for (let columns = 10; columns >= 5; columns -= 1) {
-    const gap =
-      (contentWidth - columns * TOP_TOP_FRIEND_CELL) / (columns - 1);
+  for (let columns = 14; columns >= 5; columns -= 1) {
+    const gap = friendStripGap(contentWidth, columns);
     if (gap >= TOP_TOP_FRIEND_GAP_MIN && gap <= TOP_TOP_FRIEND_GAP_MAX) {
       return {
         columns,
@@ -36,7 +39,12 @@ export function getTopTopFriendStripLayout(
     }
   }
 
-  return fallback;
+  const stretchedGap = friendStripGap(contentWidth, 5);
+  return {
+    columns: 5,
+    gap: Math.max(stretchedGap, TOP_TOP_FRIEND_GAP_MIN),
+    visibleFriendCount: 4,
+  };
 }
 
 export const MESSAGE_ONLINE_FRIEND_CELL = 70;

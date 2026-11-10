@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "intent": "发布或评论动态时提及好友，并处理由提及产生的动态通知",
+  "viewport": { "width": 375, "height": 812 },
+  "reference": {
+    "figmaUrl": "https://www.figma.com/design/JbG9tc63Ro1d4OrMTdNcbK/V3.30.0?node-id=14-812",
+    "nodeId": "18:815",
+    "type": "flattened-image"
+  },
+  "componentStack": [
+    { "componentId": "regular-navigation", "spec": "specs/components/regular-navigation.yaml", "role": "发布、评论和通知页面导航" },
+    { "componentId": "avatar", "spec": "specs/components/avatar.yaml", "role": "好友与通知发送者" },
+    { "componentId": "search-control", "spec": "specs/components/search-control.yaml", "role": "提及好友搜索" },
+    { "componentId": "regular-list", "spec": "specs/components/regular-list.yaml", "role": "好友选择与通知列表" },
+    { "componentId": "empty-state", "spec": "specs/components/empty-state.yaml", "role": "我赞过的列表空态" },
+    { "componentId": "center-dialog", "spec": "specs/components/center-dialog.yaml", "role": "清空全部通知确认" },
+    { "componentId": "toast", "spec": "specs/components/toast.yaml", "role": "点赞列表操作反馈" }
+  ],
+  "interactionStates": [
+    "发布正文和评论输入 @ 打开好友选择",
+    "搜索、选中、取消及完成提及",
+    "在光标位置插入好友名称并保留原草稿",
+    "通知单条划动删除与撤回划动",
+    "清空全部通知的取消、确认与空态"
+  ],
+  "kitGaps": [
+    { "id": "mention-picker-sheet", "type": "componentGap", "status": "keep-prototype" },
+    { "id": "notification-swipe-action", "type": "interactionGap", "status": "keep-prototype" }
+  ],
+  "kitCandidates": []
+}

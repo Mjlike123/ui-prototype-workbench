@@ -1,0 +1,332 @@
+schemaVersion: 1
+featureId: app-login-flow
+platform: ios
+pages:
+  - id: login-landing
+    name: 登录首页
+    purpose: 建立品牌信任并让用户快速选择登录方式。
+    entry:
+      - 冷启动且无有效会话
+      - 主动退出登录
+    exit:
+      - 进入手机号输入
+      - 进入 TopTop ID 输入
+      - 第三方授权成功后进入登录成功
+    terminal: false
+    states:
+      - id: default
+        description: 展示主视觉、上次使用的 Apple 方式及其他登录方式。
+      - id: provider-loading
+        description: Apple 或 Google 授权进行中；当前按钮显示进度并禁止重复提交。
+      - id: provider-error
+        description: 授权失败，在按钮组附近显示原因与重试操作。
+    elements:
+      - id: hero
+        role: img
+        label: Toppy 正在进入 TopTop 社交世界
+        behavior: 装饰与品牌表达，不承担操作。
+      - id: apple-login
+        role: button
+        label: 使用 Apple 继续，上次使用
+        behavior: 进入第三方授权模拟。
+      - id: google-login
+        role: button
+        label: 使用 Google 继续
+        behavior: 进入第三方授权模拟。
+      - id: phone-login
+        role: button
+        label: 使用手机号继续
+        behavior: 进入手机号输入页。
+      - id: toptop-id-login
+        role: button
+        label: 使用 TopTop ID 继续
+        behavior: 切换为 TopTop ID 输入模式。
+    transitions:
+      - fromStateId: default
+        trigger: 点击 Apple 或 Google
+        result: 当前方式显示加载状态并锁定重复提交
+        toStateId: provider-loading
+        feedback: 按钮内进度与“正在连接”文案
+        duration: 800ms
+      - fromStateId: provider-loading
+        trigger: 授权成功
+        result: 展示登录成功页
+        targetPageId: login-success
+      - fromStateId: provider-loading
+        trigger: 模拟授权失败
+        result: 保留登录首页并显示可恢复错误
+        toStateId: provider-error
+      - fromStateId: default
+        trigger: 点击手机号
+        result: 展示手机号输入页并聚焦输入框
+        targetPageId: phone-entry
+      - fromStateId: default
+        trigger: 点击 TopTop ID
+        result: 展示 TopTop ID 登录页并聚焦 ID 输入框
+        targetPageId: id-entry
+  - id: phone-entry
+    name: 手机号输入
+    purpose: 以最小输入成本收集可验证手机号。
+    entry:
+      - 从登录首页选择手机号
+    exit:
+      - 返回登录首页
+      - 发送成功后进入验证码页
+    terminal: false
+    states:
+      - id: empty
+        description: 输入为空，继续按钮禁用。
+      - id: typing
+        description: 用户输入并实时格式化数字。
+      - id: valid
+        description: 号码满足基本格式，继续按钮可用。
+      - id: invalid
+        description: 号码长度或格式不正确，字段下方显示内联错误。
+      - id: sending
+        description: 正在发送验证码，按钮显示加载且防止重复提交。
+      - id: network-error
+        description: 验证码发送失败，保留手机号并提供重试。
+    elements:
+      - id: back
+        role: button
+        label: 返回登录方式
+      - id: country-code
+        role: button
+        label: 国家或地区代码
+        behavior: 原型中在 +86 与 +1 间切换。
+      - id: phone-input
+        role: textbox
+        label: 手机号
+        behavior: 仅接收数字并显示清除按钮。
+      - id: next
+        role: button
+        label: 获取验证码
+        behavior: 校验后发送验证码。
+    transitions:
+      - fromStateId: empty
+        trigger: 输入数字
+        result: 格式化号码并重新判断有效性
+        toStateId: typing
+      - fromStateId: typing
+        trigger: 号码满足基本格式
+        result: 启用获取验证码
+        toStateId: valid
+      - fromStateId: typing
+        trigger: 失焦且格式不完整
+        result: 显示内联错误并把焦点留在字段
+        toStateId: invalid
+      - fromStateId: valid
+        trigger: 点击获取验证码
+        result: 显示发送中，随后进入验证码页
+        toStateId: sending
+        targetPageId: otp-verification
+  - id: otp-verification
+    name: 验证码验证
+    purpose: 验证手机号归属并允许用户从错误或过期状态恢复。
+    entry:
+      - 验证码发送成功
+    exit:
+      - 返回修改手机号
+      - 验证成功后进入登录成功
+    terminal: false
+    states:
+      - id: empty
+        description: 六个输入槽为空，展示发送目标和倒计时。
+      - id: typing
+        description: 数字逐位填充，支持退格。
+      - id: verifying
+        description: 六位输入完整后自动验证并锁定输入。
+      - id: incorrect
+        description: 验证码错误，清除输入并显示内联错误。
+      - id: expired
+        description: 验证码过期，提供重新发送。
+      - id: resend-ready
+        description: 倒计时结束，可重新发送验证码。
+    elements:
+      - id: otp-input
+        role: textbox
+        label: 六位验证码
+        behavior: 使用单个数字输入承载六槽视觉，支持粘贴。
+      - id: resend
+        role: button
+        label: 重新发送验证码
+        behavior: 倒计时结束后可用。
+      - id: change-phone
+        role: button
+        label: 修改手机号
+    transitions:
+      - fromStateId: typing
+        trigger: 输入第六位
+        result: 自动开始验证
+        toStateId: verifying
+        feedback: 验证进度
+      - fromStateId: verifying
+        trigger: 输入原型成功码 123456
+        result: 展示登录成功
+        targetPageId: login-success
+      - fromStateId: verifying
+        trigger: 输入其他六位数字
+        result: 显示错误并允许重新输入
+        toStateId: incorrect
+      - fromStateId: resend-ready
+        trigger: 点击重新发送
+        result: 清空输入、恢复倒计时并播报已发送
+        toStateId: empty
+  - id: id-entry
+    name: TopTop ID 登录
+    purpose: 让已有账号用户通过 TopTop ID 与密码完成登录。
+    entry:
+      - 从登录首页选择 TopTop ID
+    exit:
+      - 返回登录首页
+      - 校验成功后进入登录成功
+    terminal: false
+    states:
+      - id: empty
+        description: ID 或密码为空，登录按钮禁用。
+      - id: filled
+        description: 两个字段均已填写，登录按钮可用。
+      - id: submitting
+        description: 正在验证账号并禁止重复提交。
+      - id: invalid
+        description: ID 或密码不正确，保留 ID 并清空密码。
+      - id: network-error
+        description: 网络失败，保留输入并提供重试。
+    elements:
+      - id: id-input
+        role: textbox
+        label: TopTop ID
+      - id: password-input
+        role: textbox
+        label: 密码
+        behavior: 默认隐藏，支持切换显示。
+      - id: password-visibility
+        role: button
+        label: 显示或隐藏密码
+      - id: submit
+        role: button
+        label: 登录
+    transitions:
+      - fromStateId: filled
+        trigger: 点击登录
+        result: 验证账号
+        toStateId: submitting
+      - fromStateId: submitting
+        trigger: 输入演示账号 toptop 和密码 123456
+        result: 展示登录成功
+        targetPageId: login-success
+      - fromStateId: submitting
+        trigger: 账号或密码不匹配
+        result: 显示内联错误并聚焦密码
+        toStateId: invalid
+  - id: login-success
+    name: 登录成功
+    purpose: 明确认证完成并提供进入 App 的终点。
+    entry:
+      - 手机验证码验证成功
+      - Apple 或 Google 授权成功
+    exit:
+      - 进入 TopTop
+    terminal: true
+    states:
+      - id: success
+        description: 展示 Toppy 成功反馈、账号方式和进入 App 主操作。
+    elements:
+      - id: enter-app
+        role: button
+        label: 进入 TopTop
+        behavior: 原型中显示已进入 App 的完成状态。
+overlays:
+  - id: provider-error-sheet
+    name: 第三方授权失败
+    hostPageId: login-landing
+    type: inline-status
+    dismiss:
+      - 点击重试
+      - 选择其他登录方式
+    states:
+      - id: error
+        description: 显示授权未完成和重试按钮。
+globalRules:
+  - 所有交互控件最小触控区域为 44×44pt。
+  - 输入错误使用内联文案并关联 aria-describedby，不依赖 Toast。
+  - 页面切换后焦点移到页面标题；返回时恢复到来源按钮。
+  - 支持 prefers-reduced-motion，减少主视觉和页面转场动画。
+  - iOS 状态栏高 44pt，底部内容避让 Home Indicator。
+  - 375×812 为单列；466×678 压缩主视觉；890×626 使用品牌视觉与表单双栏。
+designSystemMapping:
+  - pageId: login-landing
+    region: ios-status
+    assetId: ios-status-bar
+    source: component
+    sourceRef: specs/components/ios-status-bar.yaml
+  - pageId: login-landing
+    region: primary-actions
+    assetId: button
+    source: component
+    sourceRef: specs/components/button.yaml
+  - pageId: phone-entry
+    region: back-and-clear-icons
+    assetId: system-icon
+    source: component
+    sourceRef: apps/design-system-portal/src/components/kit/system-icon.tsx
+  - pageId: phone-entry
+    region: phone-field
+    source: prototype
+    sourceRef: PrototypeAuthField
+    gapType: componentGap
+    gap: Kit 尚无通用表单输入框与国家区号组合字段。
+    notes: 使用原生 input、语义 Token、label、错误关联和 48pt 高度。
+  - pageId: otp-verification
+    region: otp-field
+    source: prototype
+    sourceRef: PrototypeOtpInput
+    gapType: componentGap
+    gap: Kit 尚无验证码输入组件。
+    notes: 单一原生 input 承载六槽视觉，避免六个独立焦点。
+  - pageId: id-entry
+    region: credential-fields
+    source: prototype
+    sourceRef: PrototypeAuthField
+    gapType: componentGap
+    gap: Kit 尚无通用账号与密码输入框。
+    notes: 使用原生 input、语义 Token、可见 label、错误关联与密码显示切换。
+  - pageId: login-landing
+    region: provider-icons
+    source: prototype
+    sourceRef: PrototypeAuthProviderMark
+    gapType: contentGap
+    gap: Kit 未登记 Apple、Google 和 TopTop ID 品牌标记。
+    notes: 原型使用文字型品牌标记，不注册为语义 SystemIcon。
+  - pageId: login-landing
+    region: hero
+    source: prototype
+    sourceRef: PrototypeLoginHero
+    gapType: contentGap
+    gap: 登录流程需要原创品牌主视觉。
+    notes: 使用本次生成的原创 Toppy 3D 图，不复制参考图资产。
+kitMapping:
+  - pageId: login-landing
+    componentIds: [ios-status-bar, button]
+  - pageId: phone-entry
+    componentIds: [ios-status-bar, button, system-icon]
+  - pageId: otp-verification
+    componentIds: [ios-status-bar, button, system-icon]
+  - pageId: id-entry
+    componentIds: [ios-status-bar, button, system-icon]
+optimizations:
+  - type: ux-improvement
+    topic: 登录方式层级
+    original: 参考图同时平铺多个低频社交方式。
+    proposal: 首屏突出上次使用的 Apple，保留 Google，并把手机号与 TopTop ID 收敛为次级入口。
+    evidence: 用户确认仅保留四种方式。
+  - type: design-completion
+    topic: 错误恢复
+    original: 参考图未展示发送失败、验证码错误或过期。
+    proposal: 在原上下文加入内联错误、重试和重发倒计时。
+    evidence: 完整登录流程需要可恢复终点。
+  - type: needs-product-confirm
+    topic: 认证业务规则
+    original: 无真实验证码规则和 TopTop ID 账号规则。
+    proposal: 原型使用六位验证码与 30 秒倒计时；生产前由产品和工程确认。
+    evidence: 当前输入仅为参考图与用户范围确认。

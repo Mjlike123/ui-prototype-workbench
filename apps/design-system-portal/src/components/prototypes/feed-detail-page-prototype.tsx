@@ -19,7 +19,11 @@ type FeedDetailPagePrototypeProps = {
   width?: number;
   height?: number;
   theme?: "light" | "dark";
-  onBack: () => void;
+  embedded?: boolean;
+  onBack?: () => void;
+  onMention?: () => void;
+  initialReplyDraft?: string;
+  mentionInsertion?: { id: number; text: string };
 };
 
 type FeedDetailComment =
@@ -122,17 +126,47 @@ export function FeedDetailPagePrototype({
   width = 375,
   height = 812,
   theme = "light",
+  embedded = false,
   onBack,
+  onMention,
+  initialReplyDraft = "",
+  mentionInsertion,
 }: FeedDetailPagePrototypeProps) {
   const [tab, setTab] = useState<(typeof DETAIL_TABS)[number]["key"]>("comments");
   const [followed, setFollowed] = useState(false);
   const [liked, setLiked] = useState(true);
   const [feedback, setFeedback] = useState("");
-  const [replyComposerActive, setReplyComposerActive] = useState(false);
+  const [replyComposerActive, setReplyComposerActive] = useState(
+    Boolean(initialReplyDraft),
+  );
   const [replyPanelOpen, setReplyPanelOpen] = useState(false);
-  const [replyDraft, setReplyDraft] = useState("");
+  const [replyDraft, setReplyDraft] = useState(initialReplyDraft);
   const [recentEmojis, setRecentEmojis] = useState<EmojiSelection[]>([]);
   const replyInputRef = useRef<HTMLTextAreaElement>(null);
+  const mentionRangeRef = useRef<{ start: number; end: number } | null>(null);
+
+  useEffect(() => {
+    if (!mentionInsertion) return;
+    const input = replyInputRef.current;
+    const range = mentionRangeRef.current ?? {
+      start: input?.selectionStart ?? 0,
+      end: input?.selectionEnd ?? 0,
+    };
+    const inserted = `${mentionInsertion.text} `;
+    mentionRangeRef.current = null;
+    const timer = window.setTimeout(() => {
+      setReplyComposerActive(true);
+      setReplyDraft((current) =>
+        `${current.slice(0, range.start)}${inserted}${current.slice(range.end)}`,
+      );
+      window.requestAnimationFrame(() => {
+        input?.focus();
+        const cursor = range.start + inserted.length;
+        input?.setSelectionRange(cursor, cursor);
+      });
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [mentionInsertion]);
 
   useEffect(() => {
     if (!feedback) return;
@@ -204,28 +238,38 @@ export function FeedDetailPagePrototype({
   return (
     <div
       className={[
-        "pageCanvasDevice feedDetailDevice",
+        embedded ? null : "pageCanvasDevice",
+        "feedDetailDevice",
+        embedded ? "feedDetailDevice--embedded" : null,
         replyPanelOpen ? "hasReplyPanelOpen" : "",
       ]
         .filter(Boolean)
         .join(" ")}
       style={
-        {
-          "--page-canvas-width": `${width}px`,
-          "--page-canvas-height": `${height}px`,
-        } as CSSProperties
+        embedded
+          ? undefined
+          : ({
+              "--page-canvas-width": `${width}px`,
+              "--page-canvas-height": `${height}px`,
+            } as CSSProperties)
       }
       aria-label={`动态详情 · ${width}×${height}`}
     >
-      <IosStatusBar
-        appearance={theme === "dark" ? "light-content" : "dark-content"}
-      />
+      {embedded ? null : (
+        <IosStatusBar
+          appearance={theme === "dark" ? "light-content" : "dark-content"}
+        />
+      )}
 
       <div className="pageCanvasContentShell">
         <header className="feedDetailNavigation">
-          <button type="button" aria-label="返回" onClick={onBack}>
-            <SystemIcon name="back" />
-          </button>
+          {embedded ? (
+            <span className="feedDetailNavigationSpacer" aria-hidden="true" />
+          ) : (
+            <button type="button" aria-label="返回" onClick={onBack}>
+              <SystemIcon name="back" />
+            </button>
+          )}
 
           <div className="feedDetailAuthor">
             <AvatarVisual size={36} src={POST.avatar} alt="" />
@@ -358,10 +402,42 @@ export function FeedDetailPagePrototype({
                       rows={1}
                       value={replyDraft}
                       placeholder={`reply to ${POST.user}`}
-                      onChange={(event) => setReplyDraft(event.target.value)}
+                      onChange={(event) => {
+                        const next = event.target.value;
+                        const cursor = event.target.selectionStart;
+                        setReplyDraft(next);
+                        if (
+                          onMention &&
+                          !(event.nativeEvent as InputEvent).isComposing &&
+                          next.length > replyDraft.length &&
+                          next[cursor - 1] === "@"
+                        ) {
+                          mentionRangeRef.current = {
+                            start: cursor - 1,
+                            end: cursor,
+                          };
+                          onMention();
+                        }
+                      }}
                       onFocus={closeReplyPanel}
                     />
                     <div className="feedDetailReplyFieldActions">
+                      {onMention ? (
+                        <button
+                          type="button"
+                          className="feedDetailReplyMention"
+                          aria-label="提及好友"
+                          onClick={() => {
+                            mentionRangeRef.current = {
+                              start: replyInputRef.current?.selectionStart ?? replyDraft.length,
+                              end: replyInputRef.current?.selectionEnd ?? replyDraft.length,
+                            };
+                            onMention();
+                          }}
+                        >
+                          @
+                        </button>
+                      ) : null}
                       <button
                         type="button"
                         aria-label={replyPanelOpen ? "切换到键盘" : "选择表情"}
@@ -397,8 +473,8 @@ export function FeedDetailPagePrototype({
                       readOnly
                       value=""
                       placeholder={`reply to ${POST.user}`}
-                      onFocus={openReplyComposer}
-                      onClick={openReplyComposer}
+                      onFocus={() => openReplyComposer()}
+                      onClick={() => openReplyComposer()}
                     />
                     <button
                       type="button"
@@ -461,7 +537,9 @@ export function FeedDetailPagePrototype({
             {feedback}
           </output>
         ) : null}
-        <div className="feedDetailSafeArea" aria-hidden="true" />
+        {embedded ? null : (
+          <div className="feedDetailSafeArea" aria-hidden="true" />
+        )}
       </div>
     </div>
   );

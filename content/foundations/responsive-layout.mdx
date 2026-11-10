@@ -26,6 +26,34 @@
 
 最大高度为视口的 70%。内容超出时使用对话框内部滚动，并按任务需要提供“查看更多”或分页；操作区不得被滚动内容挤出可见范围。最大宽度必须由未来的 Dialog 组件契约给出，本规范不补造数值。
 
+## iPhone Duo
+
+仍是 iPhone。权威：[Designing for iPhone Duo](https://developer.apple.com/design/human-interface-guidelines/designing-for-iphone-duo)。用 Compact / Regular、安全区和 ReservedRegion 适配，不要为每个铰链角写一套 UI。
+
+| 状态 | 逻辑画布（@3x） | 用法 |
+|------|-----------------|------|
+| 外屏闭合 | 466 × 678 | Compact。Tab/Toolbar **在侧边**，给内容留高度 |
+| 内屏展开 · 横持 | 890 × 626 | Regular。侧边导航保持连续；有下级页则左右同屏 |
+| 内屏展开 · 竖持 | 626 × 890 | 才恢复常规横向顶栏/底栏 |
+
+### Vertical controls
+
+外屏更宽更矮，系统把 Tab、Toolbar、状态放到侧边。内屏横持继续侧边，避免开合后控件换边。列表过滤、会话搜索等跟内容走，不要横铺过折痕盖住详情。
+
+外屏前摄在侧栏顶部的角落，始终占用 ReservedRegion。第一个 Tab 必须从约 54pt 之下开始，不能压在相机上。内屏前摄未启用时不占位。
+
+### 主从分栏
+
+Mail 示例：合上只显示列表或邮件；打开后左右同屏。右栏必须是原来 push 的页面。
+
+- Message → 聊天页
+- Me → Profile
+- Feed → 动态详情
+- Room → 房间内
+- TopTop 首页无下级页 → 好友/游戏/找朋友延展均分，不伪造分栏
+
+禁止 “Open chat / Open detail / Join room” 占位。折痕 ReservedRegion 只在半折时分割画布；全开不要留一条假中缝。对话框仍限宽居中、高度 ≤70vh。
+
 ## 跨端验收
 
 - H5 与 Native 的顶部导航、底部操作栏、Safe Area 和操作尺寸是否一致？
@@ -33,5 +61,6 @@
 - 页面水平边距是否优先保持稳定，内容是否只在剩余空间延展？
 - 背景和大图是否保持宽高比，裁切行为是否有明确设计标注？
 - 对话框是否限宽居中、高度不超过 70vh，并能访问全部内容与操作？
+- iPhone Duo 是否同时通过 466×678 外屏与 890×626 内屏，且折痕未挡住主操作？
 
-来源：[UI & 开发宽屏适配规则](https://micoworld.feishu.cn/wiki/XUkVws9BoiTXurklykQcrsYRntf)
+来源：[Apple HIG · Designing for iPhone Duo](https://developer.apple.com/design/human-interface-guidelines/designing-for-iphone-duo)；[UI & 开发宽屏适配规则](https://micoworld.feishu.cn/wiki/XUkVws9BoiTXurklykQcrsYRntf)

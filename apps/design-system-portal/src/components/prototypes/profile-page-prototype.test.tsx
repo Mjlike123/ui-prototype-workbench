@@ -65,4 +65,42 @@ describe("ProfilePagePrototype", () => {
     expect(onNavigate).toHaveBeenCalledWith("room");
     expect(roomEntry).toHaveTextContent("Join room");
   });
+
+  it("shows the private liked-moments entry only when the host enables it", () => {
+    const onOpenLikedMoments = vi.fn();
+    const { rerender } = render(<ProfilePagePrototype />);
+
+    expect(
+      screen.queryByRole("button", {
+        name: "我赞过的，2 条动态，仅你可见",
+      }),
+    ).not.toBeInTheDocument();
+
+    rerender(
+      <ProfilePagePrototype
+        likedMomentsCount={2}
+        onOpenLikedMoments={onOpenLikedMoments}
+      />,
+    );
+
+    const likedEntry = screen.getByRole("button", {
+      name: "我赞过的，2 条动态，仅你可见",
+    });
+    expect(likedEntry).toHaveTextContent("我赞过的");
+    expect(likedEntry).toHaveTextContent("仅你可见");
+
+    fireEvent.click(likedEntry);
+    expect(onOpenLikedMoments).toHaveBeenCalledOnce();
+  });
+
+  it("embeds into a Duo pane without a second status bar or back control", () => {
+    const { container } = render(
+      <ProfilePagePrototype embedded />,
+    );
+
+    expect(container.querySelector(".profileV3Device--embedded")).toBeInTheDocument();
+    expect(container.querySelector(".iosStatusBar")).toBeNull();
+    expect(screen.queryByRole("button", { name: "返回" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Andrew" })).toBeInTheDocument();
+  });
 });

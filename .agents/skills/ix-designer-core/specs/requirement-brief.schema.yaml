@@ -90,6 +90,17 @@ properties:
       contentRequirements:
         type: array
         items: { type: string }
+      creativeLatitude:
+        type: object
+        description: Constrained exploration boundary passed to the visual prototype stage.
+        required: [locked, variable]
+        properties:
+          locked:
+            type: array
+            items: { type: string }
+          variable:
+            type: array
+            items: { type: string }
       acceptance:
         type: array
         items: { type: string }

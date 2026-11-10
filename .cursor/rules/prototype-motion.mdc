@@ -1,0 +1,22 @@
+---
+description: Require spec-aligned interaction motion in Core and Studio prototypes
+alwaysApply: true
+---
+
+# Prototype Motion
+
+When creating or updating a Core or Studio prototype:
+
+1. Treat interaction motion as part of the prototype, not optional polish. Add motion wherever it explains page, sheet, dialog, navigation, or state changes.
+2. Read `specs/foundations/motion.yaml` and the matching file under `specs/interactions/` before implementation. A component-specific interaction spec overrides a generic example.
+3. Use the shared motion Tokens:
+   - instant feedback: `--motion-duration-instant` (100ms)
+   - standard transition: `--motion-duration-standard` (200ms)
+   - emphasized transition: `--motion-duration-emphasized` (320ms)
+   - standard easing: `--motion-easing-standard`
+   - gesture-driven motion: `motion.spring.standard`
+4. Preserve spatial continuity. Full-screen pages and bottom sheets enter from their source direction and exit along the reverse path; bottom sheets move from and to the bottom edge.
+5. Keep content mounted until exit motion completes. Do not remove overlays immediately on close.
+6. Animate compositor-friendly `transform` and `opacity`; do not animate layout properties when an equivalent transform exists.
+7. Always add `prefers-reduced-motion`: remove positional or scaling motion and retain only a short opacity transition when feedback is still useful.
+8. Verify enter, open, exit, interruption, and reduced-motion behavior. Add tests for presence/exit timing when the component is conditionally rendered.

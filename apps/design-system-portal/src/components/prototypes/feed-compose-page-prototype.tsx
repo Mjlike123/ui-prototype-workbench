@@ -1,35 +1,48 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { AvatarVisual } from "@/components/kit/avatar-visual";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
+import { CenterDialog } from "@/components/kit/center-dialog";
 import { RegularNavigation } from "@/components/kit/regular-navigation";
+import { SelectorButton } from "@/components/kit/selector-button";
 import { SystemIcon } from "@/components/kit/system-icon";
+import { Toast } from "@/components/kit/toast";
 import { PrototypeFeedMediaPicker } from "@/components/prototypes/prototype-feed-media-picker";
 import {
-  appendPublishedFeedPost,
   clearFeedComposeDraft,
-  createPublishedFeedPost,
   loadFeedComposeAudience,
   loadFeedComposeDraft,
   saveFeedComposeAudience,
   saveFeedComposeDraft,
   type FeedComposeAudience,
 } from "@/lib/feed-compose-session";
+import { beginFeedPublish } from "@/lib/feed-publish-status";
+import type { FeedComposeCaptureScene } from "@/lib/feed-compose-capture-scenes";
+import { useTimedPresence } from "@/lib/use-timed-presence";
 
 type FeedComposePagePrototypeProps = {
   width?: number;
   height?: number;
   theme?: "light" | "dark";
+  captureScene?: FeedComposeCaptureScene;
   onBack: () => void;
   onPublished?: () => void;
+  onMention?: () => void;
+  mentionInsertion?: { id: number; text: string };
 };
 
-const MAX_MEDIA = 4;
+const MAX_MEDIA = 9;
 const MAX_CHARS = 280;
-const USER_AVATAR = "/prototypes/feed/andrew-avatar.png";
-const PUBLISH_DELAY_MS = 900;
+const BOTTOM_SHEET_EXIT_MS = 200;
+const SUGGESTED_TOPICS = ["#OOTD", "#OOTD", "#OOTD", "#OOTD", "#OOTD"];
 
 const AUDIENCE_OPTIONS: Array<{
   value: FeedComposeAudience;
@@ -38,37 +51,119 @@ const AUDIENCE_OPTIONS: Array<{
 }> = [
   {
     value: "everyone",
-    label: "Everyone can reply",
-    description: "Anyone on TopTop can see and reply",
+    label: "Public",
+    description: "Anyone on TopTop can see this post",
   },
   {
     value: "friends",
     label: "Friends only",
-    description: "Only people you follow can reply",
+    description: "Only people you follow can see this post",
   },
 ];
+
+function renderCaptionSegments(text: string): ReactNode[] {
+  const parts = text.split(/(#[\p{L}\p{N}_]+)/gu);
+  return parts.map((part, index) =>
+    part.startsWith("#") ? (
+      <span key={`${part}-${index}`} className="feedComposeHashtag">
+        {part}
+      </span>
+    ) : (
+      <span key={`text-${index}`}>{part}</span>
+    ),
+  );
+}
 
 /** Core catalog compose screen — do not use in Studio; see StudioFeedComposePage. */
 export function FeedComposePagePrototype({
   width = 375,
   height = 812,
   theme = "light",
+  captureScene,
   onBack,
   onPublished,
+  onMention,
+  mentionInsertion,
 }: FeedComposePagePrototypeProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const mentionRangeRef = useRef<{ start: number; end: number } | null>(null);
   const [caption, setCaption] = useState("");
   const [media, setMedia] = useState<string[]>([]);
   const [audience, setAudience] = useState<FeedComposeAudience>("everyone");
+  const [isLocal, setIsLocal] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
-  const [publishError, setPublishError] = useState<string | null>(null);
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
   const [audienceSheetOpen, setAudienceSheetOpen] = useState(false);
-  const [leaveSheetOpen, setLeaveSheetOpen] = useState(false);
+  const [leaveDialogOpen, setLeaveDialogOpen] = useState(false);
   const [posting, setPosting] = useState(false);
   const [draftRestored, setDraftRestored] = useState(false);
+  const audienceSheetPresence = useTimedPresence(
+    audienceSheetOpen,
+    BOTTOM_SHEET_EXIT_MS,
+  );
+
+  const [pickerInitialDraft, setPickerInitialDraft] = useState<string[]>([]);
 
   useEffect(() => {
+    if (!mentionInsertion) return;
+    const input = inputRef.current;
+    const range = mentionRangeRef.current ?? {
+      start: input?.selectionStart ?? 0,
+      end: input?.selectionEnd ?? 0,
+    };
+    const inserted = `${mentionInsertion.text} `;
+    mentionRangeRef.current = null;
+    const timer = window.setTimeout(() => {
+      setCaption((current) =>
+        `${current.slice(0, range.start)}${inserted}${current.slice(range.end)}`.slice(
+          0,
+          MAX_CHARS,
+        ),
+      );
+      window.requestAnimationFrame(() => {
+        input?.focus();
+        const cursor = Math.min(range.start + inserted.length, MAX_CHARS);
+        input?.setSelectionRange(cursor, cursor);
+      });
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [mentionInsertion]);
+
+  useEffect(() => {
+    if (captureScene) {
+      clearFeedComposeDraft();
+      setAudience(loadFeedComposeAudience());
+      setCaption("");
+      setMedia([]);
+      setMediaPickerOpen(false);
+      setAudienceSheetOpen(false);
+      setLeaveDialogOpen(false);
+      setPickerInitialDraft([]);
+
+      if (captureScene === "filled") {
+        setCaption("Late night swim #OOTD");
+        setMedia(["/prototypes/studio/app-login-hero.jpg"]);
+      }
+      if (
+        captureScene === "photo-picker" ||
+        captureScene === "photo-picker-selected"
+      ) {
+        setMediaPickerOpen(true);
+        if (captureScene === "photo-picker-selected") {
+          setPickerInitialDraft(["/prototypes/studio/app-login-hero.jpg"]);
+        }
+      }
+      if (captureScene === "audience") {
+        setCaption("Share what's on your mind…");
+        setAudienceSheetOpen(true);
+      }
+      if (captureScene === "leave") {
+        setCaption("Share what's on your mind…");
+        setLeaveDialogOpen(true);
+      }
+      return;
+    }
+
     const draft = loadFeedComposeDraft();
     if (draft) {
       setCaption(draft.caption);
@@ -79,7 +174,7 @@ export function FeedComposePagePrototype({
       setAudience(loadFeedComposeAudience());
     }
     inputRef.current?.focus();
-  }, []);
+  }, [captureScene]);
 
   useEffect(() => {
     if (!toast) return;
@@ -88,8 +183,11 @@ export function FeedComposePagePrototype({
   }, [toast]);
 
   useEffect(() => {
+    if (captureScene) {
+      return;
+    }
     saveFeedComposeDraft({ caption, media, audience });
-  }, [audience, caption, media]);
+  }, [audience, caption, captureScene, media]);
 
   useEffect(() => {
     if (!draftRestored) return;
@@ -97,10 +195,13 @@ export function FeedComposePagePrototype({
     setDraftRestored(false);
   }, [draftRestored]);
 
-  const remaining = MAX_CHARS - caption.length;
   const remainingMedia = MAX_MEDIA - media.length;
   const hasContent = caption.trim().length > 0 || media.length > 0;
   const canPost = hasContent && !posting;
+  const audienceLabel =
+    audience === "everyone" ? "Public" : "Friends only";
+
+  const captionMirror = useMemo(() => renderCaptionSegments(caption), [caption]);
 
   const addPhotos = (photos: string[]) => {
     setMedia((current) => {
@@ -119,6 +220,15 @@ export function FeedComposePagePrototype({
     setMedia((current) => current.filter((item) => item !== photo));
   };
 
+  const insertHashtag = (tag: string) => {
+    const normalized = tag.startsWith("#") ? tag : `#${tag}`;
+    setCaption((current) => {
+      const spacer = current.length > 0 && !current.endsWith(" ") ? " " : "";
+      return `${current}${spacer}${normalized}`.slice(0, MAX_CHARS);
+    });
+    inputRef.current?.focus();
+  };
+
   const selectAudience = (next: FeedComposeAudience) => {
     setAudience(next);
     saveFeedComposeAudience(next);
@@ -131,14 +241,14 @@ export function FeedComposePagePrototype({
       setCaption("");
       setMedia([]);
     }
-    setLeaveSheetOpen(false);
+    setLeaveDialogOpen(false);
     onBack();
   };
 
   const requestBack = () => {
     if (posting) return;
     if (hasContent) {
-      setLeaveSheetOpen(true);
+      setLeaveDialogOpen(true);
       return;
     }
     clearFeedComposeDraft();
@@ -149,25 +259,17 @@ export function FeedComposePagePrototype({
     if (!hasContent || posting) return;
 
     setPosting(true);
-    setPublishError(null);
-
-    window.setTimeout(() => {
-      const post = createPublishedFeedPost({ caption, media });
-      appendPublishedFeedPost(post);
-      clearFeedComposeDraft();
-      setCaption("");
-      setMedia([]);
-      setMediaPickerOpen(false);
-      setPosting(false);
-      setToast("动态已发布");
-      window.setTimeout(() => {
-        onPublished?.() ?? onBack();
-      }, 520);
-    }, PUBLISH_DELAY_MS);
+    beginFeedPublish({ caption, media });
+    clearFeedComposeDraft();
+    setCaption("");
+    setMedia([]);
+    setMediaPickerOpen(false);
+    if (onPublished) {
+      onPublished();
+    } else {
+      onBack();
+    }
   };
-
-  const audienceLabel =
-    audience === "everyone" ? "Everyone can reply" : "Friends only";
 
   return (
     <div
@@ -184,11 +286,14 @@ export function FeedComposePagePrototype({
         appearance={theme === "dark" ? "light-content" : "dark-content"}
       />
 
-      <div className="pageCanvasContentShell">
+      <div className="pageCanvasContentShell feedComposeShell">
         <RegularNavigation
           title="New post"
+          leading="close"
+          closeLabel="关闭"
           onBack={requestBack}
           trailingKind="button"
+          ariaLabel="发布导航"
           trailing={
             <button
               type="button"
@@ -207,29 +312,59 @@ export function FeedComposePagePrototype({
         />
 
         <main className="feedComposeScroll">
-          <section className="feedComposeEditor" aria-label="动态内容">
-            <AvatarVisual size={40} src={USER_AVATAR} alt="" />
-            <textarea
-              ref={inputRef}
-              className="feedComposeInput"
-              value={caption}
-              onChange={(event) =>
-                setCaption(event.target.value.slice(0, MAX_CHARS))
-              }
-              placeholder="What's happening?"
-              aria-label="动态文案"
-              rows={4}
-            />
-          </section>
+          <section
+            className="feedComposeEditor feedComposeEditor--singleColumn"
+            aria-label="动态内容"
+          >
+            <div className="feedComposeCaptionField">
+              <div
+                className="feedComposeCaptionMirror"
+                aria-hidden="true"
+                data-placeholder="Share what's on your mind…"
+              >
+                {caption.length > 0 ? (
+                  captionMirror
+                ) : (
+                  <span className="feedComposeCaptionPlaceholder">
+                    Share what&apos;s on your mind…
+                  </span>
+                )}
+              </div>
+              <textarea
+                ref={inputRef}
+                className="feedComposeInput"
+                value={caption}
+                onChange={(event) => {
+                  const next = event.target.value.slice(0, MAX_CHARS);
+                  const cursor = event.target.selectionStart;
+                  setCaption(next);
+                  if (
+                    onMention &&
+                    !(event.nativeEvent as InputEvent).isComposing &&
+                    next.length > caption.length &&
+                    next[cursor - 1] === "@"
+                  ) {
+                    mentionRangeRef.current = { start: cursor - 1, end: cursor };
+                    onMention();
+                  }
+                }}
+                placeholder="Share what's on your mind…"
+                aria-label="动态文案"
+                rows={3}
+              />
+            </div>
 
-          {media.length > 0 ? (
             <section
               className="feedComposeMediaGrid"
-              aria-label={`已选图片 ${media.length} 张，还可添加 ${remainingMedia} 张`}
+              aria-label={
+                media.length > 0
+                  ? `已选图片 ${media.length} 张，还可添加 ${remainingMedia} 张`
+                  : "添加图片"
+              }
             >
               {media.map((photo) => (
                 <div className="feedComposeMediaItem" key={photo}>
-                  <Image src={photo} alt="" width={108} height={108} />
+                  <Image src={photo} alt="" width={112} height={112} />
                   <button
                     type="button"
                     className="feedComposeMediaRemove"
@@ -244,81 +379,127 @@ export function FeedComposePagePrototype({
                 <button
                   type="button"
                   className="feedComposeMediaAdd"
-                  aria-label={`继续添加照片，还可添加 ${remainingMedia} 张`}
+                  aria-label={`添加照片，还可添加 ${remainingMedia} 张`}
                   onClick={() => setMediaPickerOpen(true)}
                 >
-                  <SystemIcon name="photo" size={20} />
-                  <span>{remainingMedia}</span>
+                  <SystemIcon name="add" size={24} />
                 </button>
               ) : null}
             </section>
-          ) : null}
-
-          <section className="feedComposeToolbar" aria-label="发布工具">
-            <button
-              type="button"
-              onClick={() => setMediaPickerOpen(true)}
-              aria-label="添加照片"
-            >
-              <SystemIcon name="photo" size={20} />
-              <span>Photo</span>
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                setCaption(
-                  (current) => `${current}${current ? " " : ""}#OOTD`,
-                )
-              }
-              aria-label="插入话题标签"
-            >
-              <span className="feedComposeHashtagGlyph">#</span>
-              <span>Hashtag</span>
-            </button>
           </section>
 
-          <section className="feedComposeMeta" aria-label="发布设置">
+        </main>
+
+        <section className="feedComposeTopicRow" aria-label="话题标签">
+          <button
+            type="button"
+            className="feedComposeTopicChip feedComposeTopicChip--add"
+            aria-label="添加话题"
+            onClick={() => setToast("话题选择器 · 原型占位")}
+          >
+            <span>#添加话题</span>
+            <SystemIcon name="chevronRight" size={10} />
+          </button>
+          <div className="feedComposeTopicSuggestions">
+            {SUGGESTED_TOPICS.map((topic, index) => (
+              <button
+                key={`${topic}-${index}`}
+                type="button"
+                className="feedComposeTopicChip"
+                aria-label={`插入 ${topic}`}
+                onClick={() => insertHashtag(topic)}
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <footer className="feedComposeDock" aria-label="发布工具栏">
+          <div className="feedComposeDockTools">
             <button
               type="button"
-              className="feedComposeAudience"
-              aria-label={`可见范围：${audience === "everyone" ? "所有人" : "好友"}`}
+              className="feedComposeDockIconBtn"
+              aria-label="表情"
+              onClick={() => setToast("表情面板 · 原型占位")}
+            >
+              <SystemIcon name="emoji" size={24} />
+            </button>
+            <button
+              type="button"
+              className="feedComposeDockIconBtn"
+              aria-label="插入话题标签"
+              onClick={() => insertHashtag("OOTD")}
+            >
+              <SystemIcon name="hashtag" size={24} />
+            </button>
+            {onMention ? (
+              <button
+                type="button"
+                className="feedComposeDockIconBtn feedComposeDockMentionBtn"
+                aria-label="提及好友"
+                onClick={() => {
+                  mentionRangeRef.current = {
+                    start: inputRef.current?.selectionStart ?? caption.length,
+                    end: inputRef.current?.selectionEnd ?? caption.length,
+                  };
+                  onMention();
+                }}
+              >
+                @
+              </button>
+            ) : null}
+          </div>
+          <div className="feedComposeDockPills">
+            <label className="feedComposeLocalPill">
+              <span>Local</span>
+              <SelectorButton
+                selected={isLocal}
+                onChange={setIsLocal}
+                aria-label="Local 定位"
+              />
+            </label>
+            <button
+              type="button"
+              className="feedComposeVisibilityPill"
+              aria-label={`可见范围：${audience === "everyone" ? "公开" : "好友"}`}
               onClick={() => setAudienceSheetOpen(true)}
             >
-              <SystemIcon name="contacts" size={16} />
+              <SystemIcon name="globe" size={20} />
               <span>{audienceLabel}</span>
               <SystemIcon name="chevronRight" size={16} />
             </button>
-            <span
-              className={`feedComposeCounter${
-                remaining <= 20 ? " feedComposeCounter--warn" : ""
-              }`}
-              aria-live="polite"
-            >
-              {remaining}
-            </span>
-          </section>
+          </div>
+        </footer>
 
-          {publishError ? (
-            <div className="feedComposePublishError" role="alert">
-              <p>{publishError}</p>
-              <button type="button" onClick={publish}>
-                重试
-              </button>
-            </div>
-          ) : null}
-        </main>
+        <div className="feedComposeHomeArea" aria-hidden="true">
+          <span className="bottomNavigationHomeIndicator" />
+        </div>
       </div>
 
       <PrototypeFeedMediaPicker
         open={mediaPickerOpen}
         selected={media}
+        initialDraftSelection={pickerInitialDraft}
         maxCount={MAX_MEDIA}
+        theme={theme}
         onClose={() => setMediaPickerOpen(false)}
         onAddPhotos={addPhotos}
       />
 
-      {audienceSheetOpen ? (
-        <div className="feedComposeOverlay" role="presentation">
+      {audienceSheetPresence.mounted ? (
+        <div
+          className={[
+            "feedComposeOverlay",
+            audienceSheetPresence.phase === "exit"
+              ? "feedComposeOverlay--exit"
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          data-state={audienceSheetPresence.phase}
+          role="presentation"
+        >
           <button
             type="button"
             className="feedComposeOverlayBackdrop"
@@ -328,22 +509,28 @@ export function FeedComposePagePrototype({
           <section
             className="feedComposeMediaSheet feedComposeAudienceSheet"
             aria-label="选择可见范围"
+            role="dialog"
+            aria-modal="true"
+            data-kit-gap="single-choice-sheet"
           >
             <div className="feedComposeMediaSheetHandle" aria-hidden="true" />
             <header className="feedComposeMediaSheetHeader">
-              <h2>Who can reply</h2>
-              <p>Choose who can see and reply to this post</p>
+              <h2>Who can see this post</h2>
+              <p>Choose who can view your post in the feed</p>
             </header>
             <div className="feedComposeAudienceOptions">
               {AUDIENCE_OPTIONS.map((option) => (
                 <button
                   key={option.value}
                   type="button"
-                  className={`feedComposeAudienceOption${
+                  className={[
+                    "feedComposeAudienceOption",
                     audience === option.value
-                      ? " feedComposeAudienceOption--selected"
-                      : ""
-                  }`}
+                      ? "feedComposeAudienceOption--selected"
+                      : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                   aria-label={option.label}
                   aria-pressed={audience === option.value}
                   onClick={() => selectAudience(option.value)}
@@ -353,7 +540,10 @@ export function FeedComposePagePrototype({
                     <small>{option.description}</small>
                   </span>
                   {audience === option.value ? (
-                    <span className="feedComposeAudienceOptionMark" aria-hidden="true">
+                    <span
+                      className="feedComposeAudienceOptionMark"
+                      aria-hidden="true"
+                    >
                       ✓
                     </span>
                   ) : null}
@@ -364,50 +554,31 @@ export function FeedComposePagePrototype({
         </div>
       ) : null}
 
-      {leaveSheetOpen ? (
-        <div className="feedComposeOverlay" role="presentation">
-          <button
-            type="button"
-            className="feedComposeOverlayBackdrop"
-            aria-label="继续编辑"
-            onClick={() => setLeaveSheetOpen(false)}
-          />
-          <section
-            className="feedComposeMediaSheet feedComposeLeaveSheet"
-            aria-label="离开确认"
-          >
-            <div className="feedComposeMediaSheetHandle" aria-hidden="true" />
-            <header className="feedComposeMediaSheetHeader">
-              <h2>Save this post?</h2>
-              <p>Your draft will stay on this device until you publish or discard it.</p>
-            </header>
-            <div className="feedComposeLeaveActions">
-              <button type="button" onClick={() => leaveCompose("save")}>
-                Save draft
-              </button>
-              <button
-                type="button"
-                className="feedComposeLeaveActions--danger"
-                onClick={() => leaveCompose("discard")}
-              >
-                Discard
-              </button>
-              <button
-                type="button"
-                className="feedComposeMediaCancel"
-                onClick={() => setLeaveSheetOpen(false)}
-              >
-                Keep editing
-              </button>
-            </div>
-          </section>
-        </div>
-      ) : null}
+      <CenterDialog
+        open={leaveDialogOpen}
+        title="Save this draft?"
+        description="Your draft will stay on this device until you publish or discard it."
+        dismissible
+        onDismiss={() => setLeaveDialogOpen(false)}
+        actionLayout="horizontal"
+        actions={[
+          {
+            id: "discard",
+            label: "Discard",
+            tone: "neutral",
+            onPress: () => leaveCompose("discard"),
+          },
+          {
+            id: "save",
+            label: "Save",
+            tone: "primary",
+            onPress: () => leaveCompose("save"),
+          },
+        ]}
+      />
 
       {toast ? (
-        <div className="profilePrototypeToast" role="status" aria-live="polite">
-          {toast}
-        </div>
+        <Toast message={toast} className="feedComposeToast" />
       ) : null}
     </div>
   );

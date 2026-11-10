@@ -35,10 +35,18 @@ designSystem:
       kind: repository
       location: content/
       authority: guidance
+    adoptionBaseline:
+      kind: repository
+      location: .agents/skills/toptop-design-system/references/mdesign-baseline.md
+      authority: guidance
+    figmaNodeAudit:
+      kind: repository
+      location: .agents/skills/toptop-design-system/references/figma-node-token-audit.md
+      authority: guidance
     implementation:
       kind: repository
       location: apps/design-system-portal/src/components/kit/
-      authority: contract
+      authority: reference
     catalog:
       kind: api
       location: /api/catalog

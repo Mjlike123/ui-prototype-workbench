@@ -2,6 +2,9 @@ export type PageCanvasIntent =
   | "profile"
   | "feed-compose"
   | "im-custom-emoji"
+  | "voice-room-status"
+  | "moment-publish-detail"
+  | "search-flow"
   | "live-room"
   | "spin-bottle"
   | "settings"
@@ -71,7 +74,10 @@ const EXAMPLE_PROMPTS = [
   "发布动态：文案编辑、相册选图或拍照上传、可见范围与 Post",
   "IM 私聊自定义表情：Recent / Emoji / Custom，点击添加图片表情",
   "直播间 UI：视频画面、评论流、送礼面板与数量选择",
-  "转瓶子语音房：16 麦位、转瓶匹配、Kiss/Pass 与公屏投票",
+  "转瓶子语音房：8–12 麦男女专属位、顺时针转瓶、双向 Kiss、女问男答真心话与公屏投票",
+  "语音房在房状态 v3.26.0：客态主页进房、动态在房环、隐私设置与 iOS 纯文字半窗",
+  "Moment v3.19.0：右下角发布入口、纯文案圈子、失败草稿恢复与动态详情吸底互动",
+  "TikTok 式搜索优化：搜索前推荐、输入联想、分类结果与相关搜索",
   "首页：一级导航 Mine / Popular，底部 Tab，中间是消息列表",
   "设置页：返回 + 标题「账号与安全」，操作列表 5 行，底部主按钮「保存」",
   "搜索页：返回 + 搜索框，下方好友列表，列表项带箭头",

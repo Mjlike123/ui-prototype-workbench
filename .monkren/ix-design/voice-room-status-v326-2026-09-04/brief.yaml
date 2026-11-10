@@ -1,0 +1,98 @@
+schemaVersion: 1
+feature:
+  id: voice-room-status-v326
+  name: 语音房在房状态非好友可见
+  platform: ios
+  viewport: { width: 375, height: 812 }
+  goals:
+    - 提升社交互动率
+    - 提升语音房渗透
+    - 让陌生人能通过在房状态发现可加入的语音房
+  personas:
+    - 开放关系大区普通用户（默认所有人可见）
+    - 非开放关系大区用户（默认仅好友可见）
+    - 查看他人主页/动态的陌生人（非好友）
+sources:
+  - type: feishu-doc
+    ref: https://micoworld.feishu.cn/wiki/Td63w1TQsildtrkbNrHckc61n9c
+    extractedAt: "2026-09-04"
+    confidence: high
+  - type: figma
+    ref: https://www.figma.com/design/GQAC7GUTofQV64CNR7IfE8/V3.26.0?node-id=26-604
+    confidence: high
+pages:
+  - id: profile-guest
+    name: 个人主页（客态）
+    description: 头像右侧展示在房状态，替换原在线状态位
+    knownStates: [in-room-visible, online-only, hidden-by-privacy, hidden-by-invisible]
+    sourceRefs: [feishu:table-row-1]
+  - id: feed-surfaces
+    name: 动态各列表/详情
+    description: 头像复用线上在房样式；含各 tab、话题详情、动态详情
+    knownStates: [in-room-on-avatar, no-status]
+    sourceRefs: [feishu:table-row-2]
+  - id: privacy-settings
+    name: 隐私设置
+    description: 新增「语音房在房状态」入口行
+    knownStates: [default-display]
+    sourceRefs: [feishu:table-row-3]
+  - id: privacy-voice-room-sheet
+    name: 语音房在房状态设置半窗
+    description: 所有人可见 / 仅好友可见
+    knownStates: [everyone-selected, friends-only-selected]
+    sourceRefs: [feishu:table-row-3]
+flows:
+  - name: 从在房状态进房
+    type: primary
+    steps:
+      - 在主页客态或动态列表看到对方在房状态
+      - 点击在房状态区域
+      - 直接进入对应语音房
+  - name: 修改在房可见范围
+    type: secondary
+    steps:
+      - 进入隐私设置
+      - 点击「语音房在房状态」
+      - 半窗选择「所有人可见」或「仅好友可见」
+      - 选择即生效并收起半窗
+  - name: 隐身优先
+    type: error
+    steps:
+      - 用户开启在线隐身
+      - 所有场景不展示在房状态（无论可见范围设置）
+rules:
+  - text: 在房时，在房状态与在线状态共用头像右侧位置；在房优先于在线
+    source: feishu-prd
+    confidence: high
+  - text: 在房状态展示：icon（动效）+ 标题「在语音房」+ 辅助文案「进入房间」
+    source: feishu-prd
+    confidence: high
+  - text: 点击在房状态直接进入对应语音房
+    source: feishu-prd
+    confidence: high
+  - text: 动态广场各 tab、话题详情、动态详情均展示（若对方未隐身且可见范围允许）
+    source: feishu-prd
+    confidence: high
+  - text: 默认：开放关系大区=所有人可见；ME&KSA=仅好友可见（后端控制）
+    source: feishu-prd
+    confidence: high
+  - text: 在线隐身优先级最高，开启后所有场景不可见在房状态
+    source: feishu-prd
+    confidence: high
+  - text: 老版本用户默认仅好友可见；老版本看新版本「所有人可见」用户也不可见
+    source: feishu-prd
+    confidence: high
+competitiveInsights:
+  competitors: [Discord, Clubhouse, 抖音/TikTok 隐私设置模式]
+  adopt:
+    - 在房状态可点击直达房间（降低路径摩擦）
+    - 隐私设置提供「所有人 / 仅好友」分级
+    - 与「在线隐身」分层，隐身覆盖一切外显状态
+  avoid:
+    - 无提示直接暴露房间给陌生人（需可见范围 + 大区默认策略）
+  researchReport: .monkren/ix-design/voice-room-status-v326-2026-09-04/research.md
+openQuestions:
+  - PRD 未定义：陌生人从动态进房失败（房间已满/已结束）时的反馈文案
+  - PRD 未定义：用户同时在房但开关为「仅好友」时，非好友是否完全无占位（与在线状态回退关系）
+  - PRD 表格引用 Tinder/抖音示意，最终 UI 以 Figma V3.26.0 为准
+  - 「复用线上样式」的具体 token/动效需对照 Figma 与现有语音房组件

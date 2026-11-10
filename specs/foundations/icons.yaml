@@ -2,12 +2,12 @@ schemaVersion: 1
 id: icons
 title: 图标系统
 category: icon
-description: 语义单色图标统一使用 24px Frame 的 SVG，默认使用一级文字色，并由业务场景通过语义颜色 Token 覆盖；彩色业务图标、身份标签与 PAG 动画图标使用正式资源，并保持原始配色与比例。
+description: 语义单色图标优先复用 TopTop icon Kit 的矢量组件实例，统一使用 24px Frame，默认使用一级文字色，并由业务场景通过语义颜色 Token 覆盖；不得用 Unicode 字符或文字层代画搜索、添加、更多、箭头等图标。彩色业务图标、身份标签与 PAG 动画图标使用正式资源，并保持原始配色与比例。
 tokens:
   - id: icon.frame.default
     name: 默认图标框
     value: 24
-    description: 导航、按钮和列表中的常规图标统一放入 24px × 24px Frame；H5 原型通过 SystemIcon 选择规范资产，不直接拼接资源路径。
+    description: 导航、按钮和列表中的常规图标统一复用 TopTop icon Kit 矢量组件，并放入 24px × 24px Frame；H5 原型通过 SystemIcon 选择规范资产，不直接拼接资源路径或以字体字符替代。
     platforms:
       ios: 24pt
       android: 24dp
@@ -28,6 +28,10 @@ tokens:
       ios: TTColor.textPrimary
       android: TopColor.TextPrimary
       h5: var(--color-text-primary)
+  - id: icon.color.adjacent-text
+    name: 文案相邻图标颜色
+    value: inherit-text-token
+    description: 跟在文字后或与文字组成同一操作的图标，绑定该文字实际使用的语义颜色 Token；如二级文案后的下拉、刷新、右箭头使用 color.text.secondary，品牌色按钮中的图标与白色按钮文案使用同一白色 Token。独立操作图标按所在业务场景选择颜色。
   - id: icon.color.semantic
     name: 业务语义图标颜色
     value: semantic color token

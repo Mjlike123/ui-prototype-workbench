@@ -1,0 +1,72 @@
+schemaVersion: 1
+featureId: report-reason-optimization
+reviewedAt: 2026-09-08
+framework: toptop-design-review
+status: conditionally-deliverable
+summary: 主任务、需求增量、Kit 映射、固定布局、明暗 Token 与关键失败恢复已覆盖；可作为 Studio 评审原型。生产实现仍需接入真实举报接口、文件选择器和现有成功退出行为。
+
+scores:
+  visualAesthetics:
+    score: 8
+    evidence:
+      - Harassment 位于首屏，原因列表单列且层级清晰
+      - 选择状态仅使用品牌色 SelectorButton 与白勾，列表表面保持稳定，符合 Figma 长列表节奏
+      - 资料自动取证说明使用辅助层级，不压过必填问题
+  designConsistency:
+    score: 9
+    evidence:
+      - 导航、选择器、按钮、图标和 Toast 均复用真实 Kit
+      - 背景、文字、边框、选中、按钮和动效均引用 Foundations Token
+      - 未覆盖区域明确标为 primitive 或 Prototype gap
+  interactionLogic:
+    score: 9
+    evidence:
+      - 普通原因、Other、资料多选、FR 条件、上传演示、提交中、成功和错误均可操作
+      - Other 与 200 字描述分离并在选择时必填
+      - 失败后保留原因、描述和证据上下文
+  deliveryCompleteness:
+    score: 8
+    evidence:
+      - brief、research、interaction、design doc、manifest、测试与 Studio 路由齐全
+      - 375×812 与 320×568 已做实际 DOM bounds 和 computed Token 验收
+      - 真实接口、文件选择和生产成功落点属于后续工程接入
+
+findings:
+  p0: []
+  p1: []
+  p2:
+    - location: PrototypeReportEvidenceUpload
+      issue: Studio 只模拟一个文件的添加与移除，未实现 4 文件、格式、大小、预览和上传进度的完整存量能力。
+      impact: 不影响本期原因和提示设计评审，但不能作为生产上传器验收依据。
+      evidence: interaction.yaml kitMapping 已标注 Portal 无可复用举报证据上传模块。
+      direction: 生产接入 V3.15.0 既有上传器；若 Portal 后续需要跨项目复用，再单独提取共享模块。
+    - location: 提交成功
+      issue: PRD 未明确成功后的现有落点与反馈时长。
+      impact: Studio 只能展示 Report submitted，不能验证真实退出栈。
+      evidence: brief.yaml openQuestions。
+      direction: 工程接入时沿用线上 H5 成功行为，不新增结果页。
+
+completedImprovements:
+  - type: design-completion
+    topic: Other 有效性
+    result: 独立 100 字必填；空内容无法提交。
+  - type: design-completion
+    topic: 单选无障碍语义
+    result: SelectorButton 补齐 single 模式并使用原生 radio。
+  - type: design-completion
+    topic: 固定布局
+    result: 导航和底部操作坞与滚动内容分离，320–414px 宽度无水平溢出。
+  - type: design-completion
+    topic: 暗色模式
+    result: 选择器描边和禁用按钮改用语义 Token。
+  - type: ux-improvement
+    topic: 文案清晰度
+    result: 使用 Tell us what happened、Submit report 和可恢复错误文案。
+
+unresolvedKitGaps:
+  - 通用表单字段与 textarea 契约
+  - 持久表单 notice
+  - 举报证据上传共享模块
+  - Report 完整页面
+
+decision: Studio 可评审；保持 Prototype，不晋升 Core。

@@ -1,0 +1,246 @@
+schemaVersion: 1
+featureId: message-conversation-pin
+platform: ios
+
+pages:
+  - id: message-list
+    name: Message 消息列表
+    purpose: 让用户在不进入会话设置的情况下，将重要会话固定在列表顶部并清楚识别其置顶状态。
+    entry:
+      - App 一级导航 Message
+    exit:
+      - 点击会话主体进入对应私聊、群聊或 Room Group
+      - 点击底部导航前往其他一级页面
+    states:
+      - id: default
+        description: 置顶分区在前、普通分区在后；所有会话行均处于收起状态。
+        conditions: 初次进入页面或没有正在操作的会话。
+      - id: swipe-tracking
+        description: 当前会话行随手指向左移动，操作区从右侧逐步露出。
+        conditions: 横向位移意图明确，且会话类型支持置顶。
+      - id: pin-action-open
+        description: 未置顶会话停留在动作阈值，右侧显示“置顶”。
+        conditions: 未置顶会话左滑超过展开阈值。
+      - id: unpin-action-open
+        description: 已置顶会话停留在动作阈值，右侧显示“取消置顶”。
+        conditions: 已置顶会话左滑超过展开阈值。
+      - id: pinned
+        description: 会话位于置顶分区，使用弱背景和置顶图标表达状态，可访问名称包含“已置顶”。
+        conditions: 账号置顶状态为 true。
+      - id: context-menu-open
+        description: 长按会话后出现上下文菜单，未置顶显示“置顶”，已置顶显示“取消置顶”。
+        conditions: 支持类型的会话长按达到阈值。
+      - id: sync-pending
+        description: 原型先乐观更新位置和视觉，后台同步账号状态。
+        conditions: 用户执行置顶或取消置顶后，服务端尚未返回。
+      - id: sync-error
+        description: 会话恢复操作前位置和状态，并显示“操作失败，请重试”。
+        conditions: 账号置顶状态写入失败。
+      - id: navigation-quick-menu-open
+        description: 页面覆盖黑色透明蒙层，加号下方显示含“创建群聊”和“添加朋友”的气泡菜单。
+        conditions: 用户点击顶部导航加号。
+      - id: empty
+        description: 没有会话时沿用 Message 空状态，不显示置顶分区或管理入口。
+        conditions: 会话数据为空。
+    elements:
+      - id: message-navigation
+        role: navigation
+        label: Message 顶部导航
+        behavior: 沿用 Core Message 的联系人与新消息操作。
+      - id: message-search
+        role: search
+        label: 搜索消息
+        behavior: 沿用现有 SearchControl。
+      - id: navigation-add-trigger
+        role: button
+        label: 创建新消息
+        behavior: 点击后打开消息快捷菜单。
+      - id: navigation-quick-menu
+        role: menu
+        label: 消息快捷菜单
+        behavior: 使用气泡容器显示“创建群聊”和“添加朋友”，打开后焦点进入第一项。
+      - id: pinned-region
+        role: list
+        label: 置顶会话
+        behavior: 仅在存在置顶会话时出现；新置顶会话插入首位，分区内后续新消息不改变顺序。
+      - id: regular-region
+        role: list
+        label: 其他会话
+        behavior: 沿用现有消息时间排序。
+      - id: conversation-row
+        role: listitem
+        label: 会话行
+        behavior: 点击主体进入会话；支持左滑和长按；未读、时间与摘要不因置顶改变。
+      - id: pin-action
+        role: button
+        label: 置顶
+        behavior: 仅未置顶且非系统通知会话显示；点击后阻止触发会话跳转。
+      - id: unpin-action
+        role: button
+        label: 取消置顶
+        behavior: 仅已置顶会话显示；点击后阻止触发会话跳转。
+      - id: pinned-indicator
+        role: status
+        label: 已置顶
+        behavior: 使用图标与弱背景共同表达；图标为辅助视觉，可访问名称由会话行统一播报。
+    transitions:
+      - trigger: 在支持类型的会话行上向左拖动且横向意图大于纵向意图
+        result: 进入 swipe-tracking；若此前有其他行展开，先收起其他行。
+        notes: 垂直滚动优先，不劫持正常列表滚动。
+      - trigger: 左滑距离达到展开阈值后释放
+        result: 未置顶进入 pin-action-open，已置顶进入 unpin-action-open。
+      - trigger: 左滑距离未达到展开阈值后释放
+        result: 会话行回弹到 default，不改变数据。
+      - trigger: 点击“置顶”或在长按菜单选择“置顶”
+        result: 操作区或菜单关闭；会话立即插入置顶分区首位，显示 pinned 状态并播报“已置顶”。
+      - trigger: 点击“取消置顶”或在长按菜单选择“取消置顶”
+        result: 操作区或菜单关闭；会话移出置顶分区，按普通排序回位并播报“已取消置顶”。
+      - trigger: 点击展开行之外区域、开始纵向滚动或按 Escape
+        result: 当前操作区或上下文菜单关闭，不改变置顶状态。
+      - trigger: 长按支持类型会话达到 520ms
+        result: 打开 context-menu-open，并将焦点移到置顶或取消置顶菜单项。
+      - trigger: 点击系统通知会话或尝试对其执行管理手势
+        result: 维持普通会话行为，不出现置顶动作。
+      - trigger: 账号同步失败
+        result: 回滚原排序和 pinned 状态，显示可重试错误反馈。
+      - trigger: 点击顶部导航加号
+        result: 页面出现黑色透明蒙层，气泡菜单从加号方向缩放淡入，焦点进入“创建群聊”。
+        targetOverlayId: navigation-quick-menu
+      - trigger: 点击“创建群聊”
+        result: 气泡菜单缩放淡出并关闭，进入创建群聊流程。
+      - trigger: 点击“添加朋友”
+        result: 气泡菜单缩放淡出并关闭，进入添加朋友流程。
+      - trigger: 点击黑色蒙层或按 Escape
+        result: 气泡菜单和蒙层执行退出动画后关闭，焦点返回加号。
+
+overlays:
+  - id: navigation-quick-menu
+    name: 消息快捷菜单
+    hostPageId: message-list
+    type: dialog
+    dismiss:
+      - 点击黑色透明蒙层
+      - 按 Escape
+      - 选择任一菜单按钮
+    states:
+      - id: entering
+        description: 蒙层淡入；气泡从右上角缩放并向下淡入。
+      - id: open
+        description: 显示“创建群聊”和“添加朋友”，焦点停留在菜单内。
+      - id: exiting
+        description: 气泡向右上角缩放淡出，蒙层同步淡出，结束后卸载。
+  - id: conversation-context-menu
+    name: 会话操作菜单
+    hostPageId: message-list
+    type: dialog
+    dismiss:
+      - 点击菜单外区域
+      - 按 Escape
+      - 选择任一操作
+    states:
+      - id: unpinned-actions
+        description: 提供“置顶”。
+      - id: pinned-actions
+        description: 提供“取消置顶”。
+  - id: pin-feedback
+    name: 置顶操作反馈
+    hostPageId: message-list
+    type: toast
+    dismiss:
+      - 短时自动消失
+      - 新反馈替换旧反馈
+    states:
+      - id: pinned
+        description: 播报“已置顶 {会话名}”。
+      - id: unpinned
+        description: 播报“已取消置顶 {会话名}”。
+      - id: failed
+        description: 播报“操作失败，请重试”。
+
+globalRules:
+  - 私聊、普通群聊和 Room Group 支持置顶；系统通知不支持。
+  - 置顶数量不设上限，本期不折叠置顶会话。
+  - 新置顶会话固定进入置顶分区首位；置顶分区按置顶时间倒序，收到新消息不改变内部顺序。
+  - 普通会话继续按最新消息时间排序。
+  - 置顶状态账号级跨设备同步；原型只模拟结果，生产数据以服务端为准。
+  - 左滑是主入口，长按菜单是补充入口。
+  - 同一时间最多一个会话行展开；动作按钮不能触发会话主体跳转。
+  - 置顶不改变未读数、免打扰、摘要、消息时间或会话成员关系。
+  - 状态不能只依赖颜色；会话可访问名称必须包含“已置顶”。
+  - reduced motion 下取消跟手后的装饰性重排动画，但保留最终位置和状态反馈。
+  - 加号点击菜单为模态临时层；打开时阻断页面其他操作，关闭后焦点返回加号。
+  - 气泡菜单进出动画只使用 transform 与 opacity；reduced motion 下直接显示或关闭。
+
+kitMapping:
+  - pageId: message-list
+    region: 顶部 Message 导航
+    componentId: primary-navigation
+    source: kit
+  - pageId: message-list
+    region: 搜索
+    componentId: search-control
+    source: kit
+  - pageId: message-list
+    region: 会话行主体
+    componentId: regular-list
+    source: kit
+  - pageId: message-list
+    region: 头像
+    componentId: avatar
+    source: kit
+  - pageId: message-list
+    region: 底部一级导航
+    componentId: bottom-navigation
+    source: kit
+  - pageId: message-list
+    region: 置顶弱背景与状态图标
+    componentId: prototype
+    source: prototype
+    kitGap: regular-list 的 messageStatus 当前没有 pinned；先在 Studio 以 PrototypePinnedConversationState 验证。
+  - pageId: message-list
+    region: 会话行侧滑动作容器
+    componentId: prototype
+    source: prototype
+    kitGap: regular-list-action 只定义主体与尾部点击，尚无 swipe-action 状态机和手势契约。
+  - pageId: message-list
+    region: 会话长按菜单
+    componentId: prototype
+    source: prototype
+    kitGap: 当前 Kit 没有适用于会话列表的上下文菜单契约。
+  - pageId: message-list
+    region: 顶部加号点击气泡菜单
+    componentId: prototype
+    source: prototype
+    kitGap: primary-navigation 可复用加号按钮，但 Kit 尚无锚定导航操作的气泡菜单契约。
+
+optimizations:
+  - type: design-completion
+    topic: 取消置顶闭环
+    original: 用户只描述点击置顶。
+    proposal: 已置顶会话左滑或长按时显示“取消置顶”，执行后按普通排序回位。
+    evidence: 置顶属于可逆状态，必须提供对称退出路径。
+  - type: design-completion
+    topic: 手势冲突与单行展开
+    original: 用户只描述向左滑动。
+    proposal: 横向意图明确后才跟手；纵向滚动优先；一次只展开一行，点击外部或滚动时收起。
+    evidence: 移动消息列表需要避免侧滑劫持垂直浏览。
+  - type: ux-improvement
+    topic: 非手势补充入口
+    original: 仅左滑入口。
+    proposal: 长按菜单同时提供置顶或取消置顶。
+    evidence: 用户已确认；提升可发现性并服务无法稳定执行侧滑的用户。
+  - type: ux-improvement
+    topic: 双重状态表达
+    original: UI 做视觉区分。
+    proposal: 低强调度背景加置顶图标，并在可访问名称中播报“已置顶”。
+    evidence: regular-list accessibility 要求关键信息不能只依赖颜色。
+  - type: design-completion
+    topic: 账号同步失败
+    original: 用户确认账号同步，未描述失败。
+    proposal: 乐观重排，失败时回滚原位置和视觉并显示可重试反馈。
+    evidence: 跨设备状态写入可能失败，不能留下客户端假成功。
+  - type: design-completion
+    topic: 导航加号点击快捷菜单
+    original: 用户要求点击加号显示两个快捷操作。
+    proposal: 点击后使用黑透蒙层和锚定气泡菜单提供“创建群聊 / 添加朋友”，并补齐退出动画、Escape 与焦点恢复。
+    evidence: primary-navigation 继续作为 Kit 锚点，新增能力隔离为 Prototype gap。

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>语音房在房状态 v3.26.0 · Kit 对齐灰度交互稿</title>
+  <style>
+    /* Foundations grayscale — maps to specs/foundations/semantic-colors */
+    :root {
+      --surface-canvas: #f7f8fa;
+      --surface-panel: #ffffff;
+      --surface-subtle: rgba(24, 25, 35, 0.04);
+      --text-primary: #181923;
+      --text-secondary: #5c5d6b;
+      --text-tertiary: #8e8f9a;
+      --text-muted: #bababd;
+      --border-subtle: rgba(24, 25, 35, 0.08);
+      --border-image: rgba(24, 25, 35, 0.1);
+      /* brand slot in wireframe — hatched fill instead of teal */
+      --brand-slot: #3a3a3c;
+      --brand-slot-a10: rgba(58, 58, 60, 0.1);
+      --brand-slot-a50: rgba(58, 58, 60, 0.18);
+      --radius-4: 4px;
+      --radius-8: 8px;
+      --radius-12: 12px;
+      --radius-16: 16px;
+      --radius-24: 24px;
+      --radius-full: 999px;
+      --font: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--surface-canvas);
+      color: var(--text-primary);
+      padding: 40px 32px 64px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .deck-header { max-width: 1240px; margin: 0 auto 28px; }
+    .deck-header h1 {
+      font: 700 26px/32px var(--font);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .deck-header p {
+      font: 400 14px/20px var(--font);
+      color: var(--text-secondary);
+      max-width: 720px;
+    }
+    .deck-header a { color: var(--text-primary); }
+
+    .legend {
+      max-width: 1240px;
+      margin: 0 auto 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font: 400 12px/16px var(--font);
+      color: var(--text-tertiary);
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--surface-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+    }
+    .legend code {
+      font: 500 11px/14px ui-monospace, monospace;
+      color: var(--text-secondary);
+    }
+
+    .grid {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 36px 28px;
+    }
+
+    .screen-card { display: flex; flex-direction: column; gap: 12px; }
+
+    .screen-title {
+      font: 590 15px/20px var(--font);
+      color: var(--text-primary);
+    }
+
+    .screen-sub {
+      font: 400 12px/17px var(--font);
+      color: var(--text-tertiary);
+      margin-top: -4px;
+      max-width: 320px;
+    }
+
+    .kit-ref {
+      font: 400 11px/15px var(--font);
+      color: var(--text-muted);
+    }
+    .kit-ref code {
+      font-family: ui-monospace, monospace;
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+
+    /* pageCanvasDevice — 375×812 */
+    .pageCanvasDevice {
+      width: 320px;
+      height: 692px;
+      background: var(--surface-panel);
+      border-radius: 28px;
+      box-shadow: 0 16px 48px rgba(24, 25, 35, 0.12), inset 0 0 0 1px var(--border-subtle);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pageCanvasContentShell {
+      display: flex;
+      min-height: 0;
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .ph-img {
+      background:
+        linear-gradient(135deg, #e8e9ec 25%, transparent 25%),
+        linear-gradient(225deg, #e8e9ec 25%, transparent 25%),
+        linear-gradient(45deg, #e8e9ec 25%, transparent 25%),
+        linear-gradient(315deg, #e8e9ec 25%, #f0f1f4 25%);
+      background-size: 10px 10px;
+      background-color: #f0f1f4;
+    }
+
+    .ph-line {
+      height: 8px;
+      border-radius: var(--radius-4);
+      background: var(--surface-subtle);
+    }
+
+    .systemIcon {
+      display: inline-grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+      color: var(--text-muted);
+      font: 400 16px/1 var(--font);
+    }
+    .systemIcon--16 { width: 16px; height: 16px; font-size: 14px; }
+    .systemIcon--24 { width: 24px; height: 24px; font-size: 20px; }
+
+    /* regularNavigation */
+    .regularNavigation {
+      display: flex;
+      width: 100%;
+      height: 44px;
+      flex: 0 0 44px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: var(--surface-panel);
+    }
+    .regularNavigationLeading button {
+      display: grid;
+      width: 24px;
+      height: 32px;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      font: 400 22px/1 var(--font);
+      color: var(--text-primary);
+      cursor: default;
+    }
+    .regularNavigationTitleText {
+      font: 590 17px/22px var(--font);
+      text-align: center;
+    }
+    .regularNavigationTrailing { width: 24px; }
+
+    /* primaryNavigation */
+    .primaryNavigation {
+      display: flex;
+      width: 100%;
+      height: 44px;
+      flex: 0 0 44px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 16px;
+      background: var(--surface-panel);
+    }
+    .primaryNavigationItems {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      gap: 16px;
+      overflow: hidden;
+    }
+    .primaryNavigationItems button {
+      padding: 0;
+      background: transparent;
+      border: 0;
+      font: 590 16px/20px var(--font);
+      color: var(--text-muted);
+      white-space: nowrap;
+      cursor: default;
+    }
+    .primaryNavigationItems button.selected {
+      color: var(--text-primary);
+    }
+    .primaryNavigationActions button {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      color: var(--text-primary);
+    }
+
+    /* profileV3 — profile-page-prototype */
+    .profileV3Scroll { flex: 1; overflow: hidden; background: var(--surface-canvas); }
+
+    .profileV3Navigation {
+      position: absolute;
+      z-index: 10;
+      top: 8px;
+      left: 0;
+      right: 0;
+      display: flex;
+      height: 44px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      color: #fff;
+    }
+    .profileV3Navigation button {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      background: rgba(0,0,0,.25);
+      border: 0;
+      border-radius: var(--radius-full);
+      color: #fff;
+      font-size: 18px;
+    }
+    .profileV3NavigationActions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .profileV3Hero {
+      position: relative;
+      height: 120px;
+      background: linear-gradient(180deg, #c8c9cc 0%, #dfe0e4 100%);
+    }
+    .profileV3HeroFigure {
+      position: absolute;
+      right: 24px;
+      bottom: 0;
+      width: 48px;
+      height: 100px;
+      background: var(--surface-subtle);
+      border-radius: var(--radius-4);
+    }
+
+    .profileV3Card {
+      position: relative;
+      z-index: 2;
+      margin-top: -24px;
+      flex: 1;
+      background: var(--surface-panel);
+      border-radius: var(--radius-24) var(--radius-24) 0 0;
+    }
+
+    .profileV3Identity {
+      position: relative;
+      padding: 18px 0 10px;
+    }
+
+    .profileV3AvatarButton {
+      display: block;
+      width: 72px;
+      height: 72px;
+      margin-left: 18px;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      border: 0;
+    }
+    .profileV3AvatarButton .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-full);
+      box-shadow: inset 0 0 0 0.5px var(--border-image);
+    }
+
+    /* profileV3RoomFollow — grayscale brand slot */
+    .profileV3RoomFollow {
+      position: absolute;
+      top: 20px;
+      right: 16px;
+      display: flex;
+      max-width: 176px;
+      height: 40px;
+      padding: 0 8px 0 12px;
+      align-items: center;
+      gap: 4px;
+      color: var(--brand-slot);
+      background: var(--brand-slot-a10);
+      border: 1px dashed var(--brand-slot);
+      border-radius: var(--radius-full);
+      cursor: default;
+    }
+    .profileV3RoomFollowIcon {
+      display: grid;
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      place-items: center;
+      color: #fff;
+      background: var(--brand-slot);
+      border-radius: var(--radius-full);
+      font-size: 10px;
+    }
+    .profileV3RoomFollowCopy {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .profileV3RoomFollowCopy small {
+      font: 590 13px/14px var(--font);
+      white-space: nowrap;
+    }
+    .profileV3RoomFollowCopy strong {
+      font: 400 12px/12px var(--font);
+      opacity: 0.8;
+      white-space: nowrap;
+    }
+
+    .profileV3Identity h1 {
+      margin: 10px 18px 0;
+      font: 590 20px/24px var(--font);
+    }
+    .profileV3Id {
+      display: inline-flex;
+      margin: 4px 18px 0;
+      padding: 0;
+      gap: 4px;
+      background: transparent;
+      border: 0;
+      font: 400 12px/16px var(--font);
+      color: var(--text-tertiary);
+    }
+    .profileV3Id strong { color: var(--text-secondary); font-weight: 590; }
+
+    .profileV3Facts {
+      display: flex;
+      gap: 8px;
+      margin: 10px 18px 0;
+    }
+    .profileV3Facts span {
+      padding: 4px 8px;
+      background: var(--surface-subtle);
+      border-radius: var(--radius-full);
+      font: 400 11px/14px var(--font);
+      color: var(--text-secondary);
+    }
+
+    .profileV3StickyTabs { padding-top: 8px; }
+
+    .secondaryTabUnderline {
+      display: flex;
+      height: 40px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .secondaryTabUnderline .tabItem {
+      position: relative;
+      display: inline-flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      font: 590 14px/18px var(--font);
+      color: var(--text-muted);
+    }
+    .secondaryTabUnderline .tabItem.selected {
+      color: var(--text-primary);
+    }
+    .secondaryTabUnderline .tabItem.selected::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background: var(--text-primary);
+    }
+
+    .profileV3About {
+      padding: 12px 16px 80px;
+    }
+    .profileV3SectionHeader {
+      display: flex;
+      height: 40px;
+      align-items: center;
+      justify-content: space-between;
+      font: 590 16px/20px var(--font);
+    }
+    .profileV3SectionHeader span {
+      font: 400 12px/16px var(--font);
+      color: var(--text-muted);
+    }
+
+    .profileV3GuestBar {
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      right: 0;
+      bottom: 52px;
+      display: flex;
+      gap: 8px;
+      padding: 8px 16px 12px;
+      background: linear-gradient(180deg, transparent, var(--surface-panel) 24%);
+    }
+
+    .kitButton {
+      display: grid;
+      flex: 1;
+      height: 44px;
+      place-items: center;
+      border-radius: var(--radius-full);
+      font: 590 15px/20px var(--font);
+      border: 0;
+    }
+    .kitButton--secondary {
+      color: var(--text-primary);
+      background: var(--surface-subtle);
+    }
+    .kitButton--primary {
+      color: #fff;
+      background: var(--text-primary);
+    }
+
+    /* prototypeFeed — prototype-destination-page */
+    .prototypeFeedScroll {
+      flex: 1;
+      overflow: hidden;
+      background: var(--surface-canvas);
+    }
+    .prototypeFeedCard {
+      padding-top: 16px;
+      background: var(--surface-canvas);
+      border-bottom: 0.5px solid var(--border-image);
+    }
+    .prototypeFeedAuthor {
+      display: grid;
+      height: 48px;
+      padding: 0 16px;
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .prototypeFeedAvatarWrap {
+      position: relative;
+      width: 48px;
+      height: 48px;
+    }
+    .prototypeFeedAvatarWrap.inRoom {
+      padding: 2px;
+      border: 2px solid var(--brand-slot);
+      border-radius: var(--radius-full);
+    }
+    .prototypeFeedAvatarWrap .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-full);
+    }
+    .prototypeFeedAvatarWrap.inRoom .avatar {
+      width: 40px;
+      height: 40px;
+    }
+    .prototypeFeedRoomBadge {
+      position: absolute;
+      right: -2px;
+      bottom: -2px;
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      background: var(--brand-slot);
+      border: 2px solid var(--surface-canvas);
+      border-radius: var(--radius-full);
+      color: #fff;
+      font-size: 8px;
+    }
+    .prototypeFeedIdentity strong {
+      display: block;
+      font: 590 16px/16px var(--font);
+    }
+    .prototypeFeedTags {
+      display: flex;
+      height: 14px;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .prototypeFeedTags i {
+      display: inline-block;
+      height: 14px;
+      padding: 0 4px;
+      background: var(--surface-subtle);
+      border-radius: var(--radius-4);
+      font: 400 10px/14px var(--font);
+      font-style: normal;
+      color: var(--text-secondary);
+    }
+    .prototypeFeedInRoomLabel {
+      margin-top: 2px;
+      font: 400 12px/14px var(--font);
+      color: var(--brand-slot);
+    }
+    .prototypeFeedMedia {
+      height: 200px;
+      margin-top: 8px;
+    }
+    .prototypeFeedActions {
+      display: flex;
+      height: 44px;
+      padding: 0 16px;
+      align-items: center;
+      justify-content: space-between;
+      font: 400 12px/16px var(--font);
+      color: var(--text-tertiary);
+    }
+    .prototypeFeedFollow {
+      height: 32px;
+      padding: 0 16px;
+      border-radius: var(--radius-full);
+      background: var(--surface-subtle);
+      font: 590 13px/32px var(--font);
+      color: var(--text-primary);
+    }
+
+    /* meSecondary — me-secondary-prototypes */
+    .meSecondaryScroll {
+      flex: 1;
+      overflow: hidden;
+      background: var(--surface-canvas);
+    }
+    .meSecondarySettingsGroup {
+      margin-top: 8px;
+      background: var(--surface-panel);
+    }
+    .meSecondarySettingsGroup > h2 {
+      margin: 0;
+      padding: 20px 16px 8px;
+      font: 590 13px/18px var(--font);
+      color: var(--text-secondary);
+    }
+    .meSecondarySettingsGroup > div {
+      padding: 0 16px;
+    }
+    .meSecondarySwitchRow {
+      display: flex;
+      min-height: 68px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: transparent;
+      border: 0;
+      text-align: left;
+      width: 100%;
+      cursor: default;
+    }
+    .meSecondaryActionRow {
+      display: block;
+      width: 100%;
+      min-height: 68px;
+      padding: 14px 0;
+      background: transparent;
+      border: 0;
+      text-align: left;
+      cursor: default;
+    }
+    .meSecondarySwitchRow + .meSecondarySwitchRow,
+    .meSecondarySwitchRow + .meSecondaryActionRow,
+    .meSecondaryActionRow + .meSecondaryActionRow {
+      border-top: 1px solid var(--border-subtle);
+    }
+    .meSecondarySwitchRow > span {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .meSecondaryActionRow strong {
+      display: block;
+      font: 590 16px/20px var(--font);
+    }
+    .meSecondarySwitchRow strong {
+      font: 590 16px/20px var(--font);
+    }
+    .meSecondarySwitchRow small,
+    .meSecondaryActionRow small {
+      display: block;
+      margin-top: 4px;
+      font: 400 13px/18px var(--font);
+      color: var(--text-secondary);
+    }
+    .meSecondaryActionRow em {
+      display: block;
+      margin-top: 6px;
+      font: 400 14px/18px var(--font);
+      font-style: normal;
+      color: var(--text-tertiary);
+    }
+    .kitSwitch {
+      position: relative;
+      width: 48px;
+      height: 28px;
+      flex-shrink: 0;
+      background: var(--border-subtle);
+      border-radius: 14px;
+    }
+    .kitSwitch::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      background: #fff;
+      border-radius: var(--radius-full);
+      box-shadow: 0 1px 2px rgba(0,0,0,.12);
+    }
+    .kitSwitch.on { background: var(--text-primary); }
+    .kitSwitch.on::after { left: 22px; }
+
+    /* feedComposeOverlay — feed-compose-page-prototype */
+    .feedComposeOverlay {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .feedComposeOverlayBackdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+    }
+    .feedComposeMediaSheet {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      max-height: 78%;
+      flex-direction: column;
+      background: var(--surface-panel);
+      border-radius: var(--radius-16) var(--radius-16) 0 0;
+    }
+    .feedComposeMediaSheetHandle {
+      width: 36px;
+      height: 4px;
+      margin: 8px auto 0;
+      background: var(--border-image);
+      border-radius: var(--radius-full);
+    }
+    .feedComposeMediaSheetHeader {
+      padding: 12px 16px 8px;
+      text-align: center;
+    }
+    .feedComposeMediaSheetHeader h2 {
+      font: 590 16px/22px var(--font);
+    }
+    .feedComposeMediaSheetHeader p {
+      margin-top: 4px;
+      font: 400 12px/16px var(--font);
+      color: var(--text-tertiary);
+    }
+
+    /* iOS plain-text action sheet list — no option cards */
+    .iosSheetList {
+      margin-top: 4px;
+      border-top: 0.5px solid var(--border-subtle);
+    }
+    .iosSheetList button {
+      display: block;
+      width: 100%;
+      padding: 14px 20px;
+      text-align: center;
+      background: transparent;
+      border: 0;
+      border-bottom: 0.5px solid var(--border-subtle);
+      cursor: default;
+    }
+    .iosSheetList button:last-child {
+      border-bottom: 0;
+    }
+    .iosSheetList button strong {
+      display: block;
+      font: 400 17px/22px var(--font);
+      color: var(--text-primary);
+    }
+    .iosSheetList button.selected strong {
+      font-weight: 600;
+    }
+    .iosSheetList button small {
+      display: block;
+      margin-top: 3px;
+      font: 400 13px/18px var(--font);
+      color: var(--text-tertiary);
+    }
+
+    /* bottomNavigation */
+    .bottomNavigation {
+      display: flex;
+      width: 100%;
+      height: 52px;
+      flex: 0 0 52px;
+      flex-direction: column;
+      background: var(--surface-panel);
+      border-radius: var(--radius-16) var(--radius-16) 0 0;
+      border-top: 0.5px solid var(--border-subtle);
+    }
+    .bottomNavigationItems {
+      display: grid;
+      height: 52px;
+      grid-template-columns: repeat(5, 1fr);
+    }
+    .bottomNavigationItem {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font: 400 10px/12px var(--font);
+      color: var(--text-muted);
+    }
+    .bottomNavigationItem .ico {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-4);
+      background: var(--surface-subtle);
+    }
+    .bottomNavigationItem.selected {
+      color: var(--brand-slot);
+      font-weight: 590;
+    }
+    .bottomNavigationItem.selected .ico {
+      background: var(--brand-slot);
+      opacity: 0.35;
+    }
+
+    .dimmed { opacity: 0.45; }
+
+    .anno {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      max-width: 320px;
+      font: 400 11px/16px var(--font);
+      color: var(--text-tertiary);
+    }
+    .anno-num {
+      display: grid;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      place-items: center;
+      background: var(--text-primary);
+      color: #fff;
+      border-radius: var(--radius-full);
+      font: 700 10px/1 var(--font);
+    }
+  </style>
+</head>
+<body>
+  <header class="deck-header">
+    <h1>Kit 对齐灰度交互稿</h1>
+    <p>
+      语音房在房状态非好友可见 · v3.26.0 · 375×812 等比缩放<br />
+      结构对齐 TopTop Kit / Core 原型（非通用 iOS·Material 模板）·
+      <a href="https://micoworld.feishu.cn/wiki/Td63w1TQsildtrkbNrHckc61n9c">飞书 PRD</a>
+    </p>
+  </header>
+
+  <div class="legend">
+    <span>灰度 = 不上色，非换设计系统</span>
+    <span>省略：状态栏时间 · 列表行右侧值/chevron 左右排布</span>
+    <span><code>profileV3RoomFollow</code> 虚线框 = 品牌色位</span>
+    <span>参考 <code>profile-page-prototype</code> · <code>prototype-destination-page</code> · <code>me-secondary</code> · <code>feed-compose</code></span>
+  </div>
+
+  <div class="grid">
+    <!-- 01 Profile guest -->
+    <article class="screen-card">
+      <div class="screen-title">01 · 个人主页（客态）</div>
+      <div class="screen-sub">在房状态占头像旁单槽；对齐 profileV3RoomFollow 胶囊，点击整行进房</div>
+      <p class="kit-ref">Kit: <code>profile-page-prototype</code> · <code>underline-secondary-tab</code> · <code>button</code></p>
+      <div class="pageCanvasDevice" aria-label="个人主页客态">
+        <div class="pageCanvasContentShell">
+          <div class="profileV3Scroll">
+            <nav class="profileV3Navigation" aria-label="个人资料导航">
+              <button type="button" aria-label="返回">‹</button>
+              <span></span>
+              <span class="profileV3NavigationActions">
+                <button type="button" aria-label="更多">⋯</button>
+              </span>
+            </nav>
+            <section class="profileV3Hero ph-img" aria-hidden="true">
+              <div class="profileV3HeroFigure"></div>
+            </section>
+            <article class="profileV3Card">
+              <header class="profileV3Identity">
+                <button type="button" class="profileV3AvatarButton" aria-label="查看头像">
+                  <div class="avatar ph-img"></div>
+                </button>
+                <button type="button" class="profileV3RoomFollow" aria-label="进入语音房">
+                  <span class="profileV3RoomFollowIcon" aria-hidden="true">♪</span>
+                  <span class="profileV3RoomFollowCopy">
+                    <small>在语音房</small>
+                    <strong>进入房间</strong>
+                  </span>
+                </button>
+                <h1>Intisar</h1>
+                <button type="button" class="profileV3Id"><strong>ID</strong> 1231231</button>
+                <div class="profileV3Facts">
+                  <span>Dubai</span>
+                  <span>2y</span>
+                </div>
+              </header>
+              <div class="profileV3StickyTabs">
+                <div class="secondaryTabUnderline" role="tablist">
+                  <span class="tabItem selected" role="tab">About</span>
+                  <span class="tabItem" role="tab">Movement</span>
+                </div>
+              </div>
+              <div class="profileV3About">
+                <div class="profileV3SectionHeader">
+                  <strong>About me</strong>
+                </div>
+                <div class="ph-line" style="width:90%;margin-top:12px"></div>
+                <div class="ph-line" style="width:70%;margin-top:8px"></div>
+              </div>
+            </article>
+          </div>
+          <div class="profileV3GuestBar">
+            <div class="kitButton kitButton--secondary">Add</div>
+            <div class="kitButton kitButton--primary">Chat</div>
+          </div>
+          <nav class="bottomNavigation" aria-label="底部导航">
+            <div class="bottomNavigationItems">
+              <div class="bottomNavigationItem"><span class="ico"></span>SEA</div>
+              <div class="bottomNavigationItem"><span class="ico"></span>Room</div>
+              <div class="bottomNavigationItem"><span class="ico"></span>Play</div>
+              <div class="bottomNavigationItem"><span class="ico"></span>Message</div>
+              <div class="bottomNavigationItem selected"><span class="ico"></span>Me</div>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <div class="anno"><span class="anno-num">1</span><span>替换原在线状态槽位；profileV3RoomFollow 整行可点进房</span></div>
+    </article>
+
+    <!-- 02 Feed -->
+    <article class="screen-card">
+      <div class="screen-title">02 · 动态列表</div>
+      <div class="screen-sub">primaryNavigation + prototypeFeedCard；头像在房环复用线上 2px 描边样式</div>
+      <p class="kit-ref">Kit: <code>primary-navigation</code> · <code>prototypeFeedCard</code> · <code>bottom-navigation</code></p>
+      <div class="pageCanvasDevice" aria-label="动态列表">
+        <div class="pageCanvasContentShell">
+          <nav class="primaryNavigation" aria-label="Feed 分类">
+            <div class="primaryNavigationItems">
+              <button type="button" class="selected">Mine</button>
+              <button type="button">Recommend</button>
+              <button type="button">Beijing</button>
+            </div>
+            <div class="primaryNavigationActions">
+              <button type="button" aria-label="通知"><span class="systemIcon">🔔</span></button>
+            </div>
+          </nav>
+          <main class="prototypeFeedScroll">
+            <article class="prototypeFeedCard">
+              <header class="prototypeFeedAuthor">
+                <div class="prototypeFeedAvatarWrap inRoom">
+                  <div class="avatar ph-img"></div>
+                  <span class="prototypeFeedRoomBadge" aria-hidden="true">♪</span>
+                </div>
+                <div class="prototypeFeedIdentity">
+                  <strong>Kann</strong>
+                  <div class="prototypeFeedTags">
+                    <i>🇸🇦</i><i>♀24</i><i>V10</i>
+                  </div>
+                  <div class="prototypeFeedInRoomLabel">In room voice</div>
+                </div>
+                <div class="prototypeFeedFollow">Chat</div>
+              </header>
+              <div class="prototypeFeedMedia ph-img"></div>
+              <div class="prototypeFeedActions">
+                <span>♡ 12 · 💬 3</span>
+                <span>Share</span>
+              </div>
+            </article>
+            <article class="prototypeFeedCard">
+              <header class="prototypeFeedAuthor">
+                <div class="prototypeFeedAvatarWrap">
+                  <div class="avatar ph-img"></div>
+                </div>
+                <div class="prototypeFeedIdentity">
+                  <strong>Sarah</strong>
+                  <div class="prototypeFeedTags">
+                    <i>🇦🇪</i><i>♀22</i>
+                  </div>
+                </div>
+                <div class="prototypeFeedFollow">Follow</div>
+              </header>
+              <div class="prototypeFeedMedia ph-img" style="height:120px"></div>
+            </article>
+          </main>
+          <nav class="bottomNavigation" aria-label="底部导航">
+            <div class="bottomNavigationItems">
+              <div class="bottomNavigationItem"><span class="ico"></span>SEA</div>
+              <div class="bottomNavigationItem selected"><span class="ico"></span>Moment</div>
+              <div class="bottomNavigationItem"><span class="ico"></span>Play</div>
+              <div class="bottomNavigationItem"><span class="ico"></span>Message</div>
+              <div class="bottomNavigationItem"><span class="ico"></span>Me</div>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <div class="anno"><span class="anno-num">2</span><span>非好友可见时展示在房环；点头像→主页，点在房标记→进房（待产品确认）</span></div>
+    </article>
+
+    <!-- 03 Privacy -->
+    <article class="screen-card">
+      <div class="screen-title">03 · 隐私设置</div>
+      <div class="screen-sub">meSecondarySettingsGroup；当前值纵向展示，不画右侧 chevron</div>
+      <p class="kit-ref">Kit: <code>regular-navigation</code> · <code>regular-list</code> · <code>switch</code></p>
+      <div class="pageCanvasDevice" aria-label="隐私设置">
+        <div class="pageCanvasContentShell">
+          <nav class="regularNavigation" aria-label="二级页面导航">
+            <div class="regularNavigationLeading">
+              <button type="button" aria-label="返回">‹</button>
+            </div>
+            <div class="regularNavigationTitleText">Privacy</div>
+            <div class="regularNavigationTrailing"></div>
+          </nav>
+          <main class="meSecondaryScroll">
+            <section class="meSecondarySettingsGroup" aria-labelledby="settings-room">
+              <h2 id="settings-room">Room</h2>
+              <div>
+                <label class="meSecondarySwitchRow">
+                  <span>
+                    <strong>Invisible in Room</strong>
+                    <small>Hide your presence while in a voice room</small>
+                  </span>
+                  <span class="kitSwitch" aria-hidden="true"></span>
+                </label>
+              </div>
+            </section>
+            <section class="meSecondarySettingsGroup" aria-labelledby="settings-voice">
+              <h2 id="settings-voice">Voice room status</h2>
+              <div>
+                <button type="button" class="meSecondaryActionRow">
+                  <strong>语音房在房状态</strong>
+                  <small>可设置可见范围：所有人或仅好友</small>
+                  <em>当前：所有人可见</em>
+                </button>
+              </div>
+            </section>
+            <section class="meSecondarySettingsGroup" aria-labelledby="settings-social">
+              <h2 id="settings-social">Social</h2>
+              <div>
+                <label class="meSecondarySwitchRow">
+                  <span>
+                    <strong>Block strangers' messages</strong>
+                    <small>Only people you follow can message you</small>
+                  </span>
+                  <span class="kitSwitch on" aria-hidden="true"></span>
+                </label>
+                <button type="button" class="meSecondaryActionRow">
+                  <strong>Anonymous on leaderboard</strong>
+                </button>
+              </div>
+            </section>
+          </main>
+          <nav class="bottomNavigation" aria-label="底部导航">
+            <div class="bottomNavigationItems">
+              <div class="bottomNavigationItem"><span class="ico"></span>SEA</div>
+              <div class="bottomNavigationItem"><span class="ico"></span>Moment</div>
+              <div class="bottomNavigationItem"><span class="ico"></span>Play</div>
+              <div class="bottomNavigationItem"><span class="ico"></span>Message</div>
+              <div class="bottomNavigationItem selected"><span class="ico"></span>Me</div>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <div class="anno"><span class="anno-num">3</span><span>当前值纵向展示；点击整行唤起半窗。默认：开放大区=所有人；ME&amp;KSA=仅好友（后端）</span></div>
+    </article>
+
+    <!-- 04 Sheet -->
+    <article class="screen-card">
+      <div class="screen-title">04 · 在房状态设置半窗</div>
+      <div class="screen-sub">iOS 纯文字 action sheet；选项无卡片框，分割线分隔，选择即生效</div>
+      <p class="kit-ref">交互：overlay + 半窗把手 · 选项列表为 iOS 纯文字行（非 feed-compose 卡片选项）</p>
+      <div class="pageCanvasDevice" aria-label="在房状态半窗">
+        <div class="pageCanvasContentShell">
+          <nav class="regularNavigation dimmed" aria-label="二级页面导航">
+            <div class="regularNavigationLeading">
+              <button type="button" aria-label="返回">‹</button>
+            </div>
+            <div class="regularNavigationTitleText">Privacy</div>
+            <div class="regularNavigationTrailing"></div>
+          </nav>
+          <main class="meSecondaryScroll dimmed">
+            <section class="meSecondarySettingsGroup">
+              <h2>Voice room status</h2>
+              <div>
+                <button type="button" class="meSecondaryActionRow">
+                  <strong>语音房在房状态</strong>
+                  <em>当前：所有人可见</em>
+                </button>
+              </div>
+            </section>
+          </main>
+          <div class="feedComposeOverlay" role="presentation">
+            <div class="feedComposeOverlayBackdrop" aria-hidden="true"></div>
+            <section class="feedComposeMediaSheet feedComposeAudienceSheet" aria-label="选择可见范围">
+              <div class="feedComposeMediaSheetHandle" aria-hidden="true"></div>
+              <header class="feedComposeMediaSheetHeader">
+                <h2>语音房在房状态</h2>
+                <p>选择谁可以看到你正在语音房中</p>
+              </header>
+              <div class="iosSheetList">
+                <button type="button" class="selected" aria-pressed="true">
+                  <strong>所有人可见</strong>
+                  <small>陌生人与非好友也可看到你的在房状态</small>
+                </button>
+                <button type="button" aria-pressed="false">
+                  <strong>仅好友可见</strong>
+                  <small>仅互相关注的好友可见</small>
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <div class="anno"><span class="anno-num">4</span><span>iOS 纯文字单选列表；选中项加粗，无卡片框与勾选图标。选择即生效收起</span></div>
+    </article>
+  </div>
+</body>
+</html>

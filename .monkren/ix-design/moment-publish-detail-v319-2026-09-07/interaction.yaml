@@ -1,0 +1,374 @@
+schemaVersion: 1
+featureId: moment-publish-detail-v319
+platform: ios
+
+pages:
+  - id: moment-feed
+    name: Moment 列表
+    purpose: 浏览动态时随时发起发布，降低发布入口触达成本
+    entry:
+      - 底部导航进入 Moment
+      - 切换 Friend、Find 或 Room members
+    exit:
+      - 点击动态进入 feed-detail
+      - 点击发布 FAB 进入 feed-compose
+    states:
+      - id: default
+        description: Feed 正常浏览，发布 FAB 固定在底部导航上方
+      - id: scrolling
+        description: 内容滚动，FAB 与底部导航保持固定，不遮挡卡片操作
+      - id: new-community
+        description: 后端为当前大区上线新圈子，发布器圈子入口后续显示红点
+      - id: publish-failed
+        description: 最近发布失败，列表中展示可点击失败控件
+    elements:
+      - id: feed-primary-navigation
+        role: primary-navigation
+        label: Friend / Find / Room members
+        behavior: 切换 Feed 表面，发布 FAB 在所有表面持续存在
+      - id: feed-list
+        role: content-feed
+        label: 动态列表
+        behavior: 保持现有卡片、点赞、评论和 Chat 行为
+      - id: publish-fab
+        role: primary-action
+        label: 发布动态
+        behavior: 固定右下角；点击进入现有发布器并携带入口上下文
+      - id: failed-post-entry
+        role: recoverable-error
+        label: Post failed
+        behavior: 点击恢复该次发布的完整草稿
+    transitions:
+      - trigger: 点击 publish-fab
+        result: 保存 sourceTab 与 sourceCommunity，进入发布器
+        targetPageId: feed-compose
+        notes: Friend / Room members 默认不预选圈子；从 Find 具体圈子进入时沿用当前圈子
+      - trigger: 点击 failed-post-entry
+        result: 恢复失败草稿并进入发布器，焦点落在首个需修正字段
+        targetPageId: feed-compose
+      - trigger: 点击动态内容
+        result: 进入该动态详情
+        targetPageId: feed-detail
+
+  - id: my-moment
+    name: My Moment
+    purpose: 浏览个人历史动态时快速继续创作
+    entry:
+      - 从个人主页进入 My Moment
+    exit:
+      - 返回个人主页
+      - 点击发布 FAB 进入 feed-compose
+    states:
+      - id: populated
+        description: 展示自己的动态列表与固定发布 FAB
+      - id: empty
+        description: 无动态时保留发布 FAB，并提供空态发布引导
+      - id: scrolling
+        description: FAB 固定在底部安全区上方
+    elements:
+      - id: my-moment-list
+        role: content-feed
+        label: 我的动态
+      - id: publish-fab
+        role: primary-action
+        label: 发布动态
+        behavior: 进入发布器且不预选任何圈子
+    transitions:
+      - trigger: 点击 publish-fab
+        result: 创建空草稿，community=null，进入发布器
+        targetPageId: feed-compose
+
+  - id: feed-compose
+    name: 动态发布器
+    purpose: 编辑文案、媒体、圈子和可见范围，并由服务端判断圈子发布约束
+    entry:
+      - Moment 发布 FAB
+      - My Moment 发布 FAB
+      - 发布失败控件
+    exit:
+      - 发布成功返回来源 Feed
+      - 保存草稿后返回
+      - 放弃草稿后返回
+    states:
+      - id: empty
+        description: 无文案、无媒体、未选择圈子，Post 禁用
+      - id: editable
+        description: 文案或媒体至少一项存在，Post 可用
+      - id: community-preselected
+        description: 从 Find 具体圈子进入，默认携带该圈子
+      - id: no-community
+        description: 从 My Moment 或非具体圈子进入，不预选圈子
+      - id: new-community-unread
+        description: Select Community 入口显示红点
+      - id: submitting
+        description: Post 防重复点击并展示提交中反馈
+      - id: server-rejected
+        description: 服务端判定所选圈子不允许纯文案，保留草稿并说明需添加图片
+      - id: network-error
+        description: 网络失败，保留完整草稿，可重试
+      - id: restored
+        description: 从发布失败控件进入，恢复文案、媒体、圈子和可见范围
+    elements:
+      - id: compose-navigation
+        role: navigation
+        label: 关闭 / Post
+        behavior: Post 的可用性只按是否有内容判断，不在客户端按圈子强制配图
+      - id: caption-editor
+        role: text-editor
+        label: Say something
+      - id: media-picker
+        role: media-picker
+        label: 添加图片
+      - id: community-row
+        role: navigation-row
+        label: Select Community
+        behavior: 打开圈子选择面板；有新圈子时显示入口红点
+      - id: visibility-control
+        role: audience-selector
+        label: Visible To
+      - id: publish-error
+        role: inline-error
+        label: 发布失败
+        behavior: 展示服务端原因且不清空草稿
+    transitions:
+      - trigger: 点击 community-row
+        result: 消费入口红点并打开圈子选择面板
+        targetOverlayId: community-picker
+      - trigger: 点击可用的 Post
+        result: 提交文案、媒体、圈子与可见范围至服务端
+        notes: 禁止使用客户端圈子配图规则提前拦截
+      - trigger: 服务端允许纯文案
+        result: 发布成功，清理草稿并返回来源 Feed
+        targetPageId: moment-feed
+      - trigger: 服务端拒绝纯文案
+        result: 保持编辑页与草稿，展示“该圈子发布需要添加图片”
+      - trigger: 提交发生网络错误
+        result: 保持草稿并显示重试
+      - trigger: 有内容时点击关闭
+        result: 打开保存草稿确认
+        targetOverlayId: leave-compose-sheet
+
+  - id: feed-detail
+    name: 动态详情
+    purpose: 阅读动态与评论时持续识别作者并便捷互动
+    entry:
+      - 从 Moment 动态卡片进入
+      - 从 My Moment 动态卡片进入
+    exit:
+      - 返回来源列表
+      - 点击 Chat 进入私聊
+    states:
+      - id: stranger-open-region
+        description: 他人动态、未添加、开放关系大区；显示添加、更多与 Chat
+      - id: followed-open-region
+        description: 已添加用户；隐藏添加，保留更多与 Chat
+      - id: own-post
+        description: 自己的动态；隐藏添加与 Chat，评论输入框扩展
+      - id: closed-region
+        description: ME 或 KSA；隐藏 Chat，评论输入框扩展
+      - id: image-loading
+        description: 图片区域展示既有加载态，固定栏保持可用
+      - id: no-comments
+        description: 评论区展示首评引导
+      - id: reply-idle
+        description: 底栏展示输入框、点赞、评论及可选 Chat
+      - id: reply-active
+        description: 键盘打开，输入栏跟随键盘并聚焦
+      - id: liked
+        description: 当前用户已点赞，图标与计数即时反馈
+    elements:
+      - id: sticky-author-header
+        role: sticky-header
+        label: 作者信息
+        behavior: 固定顶部；显示头像、名称、性别年龄、VIP、魅力等级、条件性添加与更多
+      - id: detail-scroll
+        role: scroll-region
+        label: 动态正文与评论
+        behavior: 预留作者栏和互动栏空间，焦点元素不被遮挡
+      - id: sticky-interaction-bar
+        role: sticky-footer
+        label: 动态互动栏
+        behavior: 固定底部安全区上方；输入框按可见动作自适应宽度
+      - id: comment-input
+        role: text-input
+        label: Comment on the post
+        behavior: 点击或聚焦后唤起键盘
+      - id: like-action
+        role: toggle-button
+        label: 点赞
+        behavior: 直接切换当前动态点赞状态并更新计数
+      - id: comment-action
+        role: button
+        label: 评论
+        behavior: 聚焦评论输入框并唤起键盘
+      - id: chat-action
+        role: button
+        label: Chat
+        behavior: 仅开放关系大区的他人动态展示
+    transitions:
+      - trigger: 点击添加
+        result: 执行线上添加逻辑；成功后隐藏添加按钮
+      - trigger: 点击 comment-input 或 comment-action
+        result: 激活回复输入，输入栏跟随键盘顶部
+      - trigger: 点击 like-action
+        result: 立即更新选中态与计数；失败时回滚并提示
+      - trigger: 点击 chat-action
+        result: 进入与作者的私聊
+        targetPageId: private-chat
+      - trigger: 键盘收起
+        result: 底部互动栏回到安全区上方
+
+overlays:
+  - id: community-picker
+    name: 选择圈子
+    hostPageId: feed-compose
+    type: sheet
+    dismiss:
+      - 选择圈子后关闭
+      - 点击关闭或遮罩
+      - 下滑关闭
+    states:
+      - id: no-selection
+        description: No Posting to Any Community 选中
+      - id: selected
+        description: 某个圈子选中
+      - id: new-community
+        description: 新圈子行展示红点，本次关闭后消费
+      - id: loading
+        description: 圈子配置加载中
+      - id: load-error
+        description: 加载失败，允许重试并保留当前选择
+
+  - id: leave-compose-sheet
+    name: 离开发布器确认
+    hostPageId: feed-compose
+    type: sheet
+    dismiss:
+      - 继续编辑
+      - 保存草稿后关闭
+      - 放弃草稿后关闭
+    states:
+      - id: edited
+        description: 提供保存草稿、放弃、继续编辑
+
+  - id: transient-feedback
+    name: 操作反馈
+    hostPageId: feed-detail
+    type: toast
+    dismiss:
+      - 自动消失
+    states:
+      - id: like-failed
+        description: 点赞失败并回滚
+      - id: follow-result
+        description: 添加或取消添加结果
+
+globalRules:
+  - 所有新增交互在 v3.19.0 所有大区上线
+  - Moment 每个 Feed 表面只保留一个悬浮主操作，礼包悬浮入口不与发布 FAB 并存
+  - FAB 位于底部导航与安全区上方，滚动内容需预留不被遮挡的 bottom inset
+  - 从 My Moment 进入发布器时 community=null
+  - 从 Find 具体圈子进入时可预选当前圈子
+  - 客户端不按圈子校验是否必须配图；统一提交服务端判断
+  - 所有提交失败均不得清空草稿
+  - 新圈子入口红点在打开面板时消费；选项红点在关闭面板后消费
+  - 动态详情作者栏吸顶、互动栏吸底；中间内容独立滚动
+  - 已添加或自己的动态隐藏添加按钮
+  - ME、KSA 及自己的动态隐藏 Chat，输入框扩展填充剩余宽度
+  - 输入栏必须跟随键盘并尊重 iOS safe area
+  - 动效只表达按压、状态切换与层级进入；支持 prefers-reduced-motion
+
+kitMapping:
+  - pageId: moment-feed
+    region: 一级分类导航
+    componentId: primary-navigation
+    source: kit
+  - pageId: moment-feed
+    region: 动态列表
+    componentId: prototype
+    source: prototype
+    kitGap: 复用现有 PrototypeFeedCard；Feed 卡片尚非 stable Kit
+  - pageId: moment-feed
+    region: 悬浮发布入口
+    componentId: prototype
+    source: prototype
+    kitGap: 复用 Core prototypeFeedCompose 发布 FAB；当前 Kit 尚无正式 Floating Action Button 契约
+  - pageId: my-moment
+    region: 二级页导航
+    componentId: regular-navigation
+    source: kit
+  - pageId: feed-compose
+    region: 发布按钮
+    componentId: button
+    source: kit
+  - pageId: feed-compose
+    region: 图片入口
+    componentId: prototype
+    source: prototype
+    kitGap: 复用 PrototypeFeedMediaPicker
+  - pageId: feed-compose
+    region: 圈子选择行
+    componentId: regular-list
+    source: kit
+  - pageId: feed-compose
+    region: 圈子选择面板
+    componentId: regular-list
+    source: kit
+  - pageId: feed-detail
+    region: 作者头像
+    componentId: avatar
+    source: kit
+  - pageId: feed-detail
+    region: 作者标签
+    componentId: list-tag
+    source: kit
+  - pageId: feed-detail
+    region: 评论输入
+    componentId: chat-input
+    source: kit
+  - pageId: feed-detail
+    region: 点赞评论私聊图标
+    componentId: icon
+    source: kit
+  - pageId: feed-detail
+    region: 吸顶作者与吸底互动组合
+    componentId: prototype
+    source: prototype
+    kitGap: 固定布局是页面业务组合，不新增 Kit componentId
+
+optimizations:
+  - type: design-completion
+    topic: FAB 遮挡与安全区
+    original: PRD 仅指定右下角悬浮
+    proposal: FAB 固定于底部导航上方，列表增加等高 bottom inset，最后一项可完整滚出遮挡区
+    evidence: Material FAB 定位规范与移动端安全区要求
+  - type: design-completion
+    topic: 评论输入与键盘
+    original: PRD 仅写唤起键盘
+    proposal: 互动栏跟随键盘顶部；输入态收敛次要动作并保持发送入口可达
+    evidence: Apple UIKeyboardLayoutGuide
+  - type: design-completion
+    topic: 服务端拒绝后的草稿保护
+    original: PRD 仅写失败控件可点击恢复草稿
+    proposal: 服务端拒绝与网络失败均保留完整草稿，恢复后聚焦首个需修正字段
+    evidence: 降低用户重复输入成本
+  - type: ux-improvement
+    topic: 新圈子红点消费模型
+    original: 入口点击消失；选项下次唤起消失
+    proposal: 打开面板即消费入口红点；关闭面板消费选项红点，并分别记录状态
+    evidence: 保证用户既发现新增又能定位具体圈子
+  - type: needs-product-confirm
+    topic: 草稿恢复范围
+    original: 发布失败控件点击进入当前发布草稿
+    proposal: 恢复文案、媒体、圈子、可见范围与来源上下文
+    evidence: PRD 未定义完整字段与跨设备边界
+  - type: needs-product-confirm
+    topic: 礼包入口去向
+    original: 取消 Moment 页面礼包漂浮入口
+    proposal: 明确是彻底下线还是迁移到其他入口
+    evidence: 避免礼包核心任务无入口
+  - type: needs-product-confirm
+    topic: 数据埋点
+    original: 数据埋点章节为空
+    proposal: 至少记录 FAB 曝光/点击/来源、发布结果、失败恢复、底部互动点击
+    evidence: 两个业务目标均为渗透率提升，必须可衡量

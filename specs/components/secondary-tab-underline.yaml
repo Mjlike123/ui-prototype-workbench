@@ -1,6 +1,6 @@
 schemaVersion: 1
 id: secondary-tab-underline
-version: 1.1.0
+version: 1.2.0
 title: 二级 Tab（下划线）
 owner: TopTop Design System
 category: Navigation
@@ -24,6 +24,7 @@ reference:
     - 两个 Tab 等分可用宽度，Tab 间距为 0
     - 选中态底部指示线高 2pt，颜色为 #181923
     - 文本为 SF Pro Semibold 14pt；选中态 #181923，未选中态 rgba(24,25,35,0.3)
+    - 容器背景使用 color.surface.canvas（背景色/bgPrimary），底部分割线使用 color.border.subtle（分割线透明/bordBg1）
 anatomy:
   - id: container
     label: 容器
@@ -67,6 +68,8 @@ props:
     defaultValue: true
     description: 是否允许在内容列表上左右滑动切换相邻 Tab。
 tokenRefs:
+  - color.surface.canvas
+  - color.border.subtle
   - color.text.primary
   - color.text.tertiary
   - typography.body.semibold

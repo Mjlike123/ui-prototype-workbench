@@ -9,7 +9,7 @@ alwaysApply: true
 The portal splits prototype work into two product areas:
 
 1. **核心模块** (`/canvas/core`) — Git-backed interaction templates maintained by the platform owner.
-2. **原型创作** (`/canvas/studio`) — Personal exploration canvas; history lives in browser `localStorage` only.
+2. **原型创作** (`/canvas/studio`) — Project-card gallery for local Studio explorations; each active project opens on its own detail route.
 
 ## What belongs in GitHub (push / PR)
 
@@ -24,7 +24,7 @@ Include when the work is reviewed and intended for the whole team:
 
 Never commit or push:
 
-- Browser `localStorage` session data from **原型创作** (e.g. `toptop-page-canvas-history-v1`)
+- Studio-only session data and local project catalog mutations from **原型创作**
 - Unvalidated studio drafts, throwaway prompts, or experimental layouts that are not approved for core
 - Personal reference screenshots uploaded only for local studio exploration unless explicitly requested for the repo
 
@@ -40,11 +40,19 @@ Studio exploration → review → implement as core TSX → register in catalog 
 
 Until promotion, studio work stays local.
 
+## Agent default (unless the user says otherwise)
+
+- **New pages, visual redesigns, and reference-driven explorations** (e.g. Mobbin / Meetup-style layouts) → implement under **原型创作** (`components/studio/*`, `/canvas/studio/[projectId]`), with Studio session keys and `.studio*` CSS.
+- **Do not change 核心模块** (`components/prototypes/*-prototype.tsx`, core feed/room/message shells, core catalog registration) unless the user explicitly approves promoting the work **or** adding/stabilizing a **Kit component** and core page module.
+- When unsure, build in Studio first and note the promotion path in handoff; never register a Studio draft in `prototype-app-routes` / preview catalog until promoted.
+
 ## UI separation (Core vs Studio)
 
 - **Core** (`components/prototypes/*-prototype.tsx`, `.feedCompose*` CSS): Git-backed catalog screens. Do not wire Studio-only experiments here.
 - **Studio** (`components/studio/*`, `.studioFeedCompose*` CSS): Personal exploration UI in `/canvas/studio`. Iterate layout and interaction here without changing Core previews.
 - Shared Kit, media picker sheets (`.feedComposeOverlay` / sheets), and tokens may be reused; page shell layout and draft storage keys must stay split (`feed-compose-session` vs `studio-feed-compose-session`).
+- Deleting a Studio project may only remove its catalog record and explicitly allowlisted Studio session data. Never delete Kit, Core prototypes, shared Studio implementations, icons, tokens, shared CSS, Core session data, or `.monkren` design deliverables.
+- The legacy `toptop-page-canvas-history-v1` history is retired; do not reintroduce prompt/history persistence into the Studio gallery.
 
 ## Studio UI Kit requirement
 

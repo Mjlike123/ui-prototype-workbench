@@ -1,0 +1,185 @@
+schemaVersion: 1
+feature:
+  id: moment-structure-liked-mention
+  name: 动态结构优化 · 我赞过的 · @好友
+  platform: ios
+  viewport:
+    width: 375
+    height: 812
+  goals:
+    - 按大区关系策略统一动态卡片结构与操作区
+    - 让用户在个人页找回已点赞动态
+    - 发布与评论支持 @ 好友并复用提醒选择交互
+    - 动态通知可理解、可清理
+  personas:
+    - 浏览 Moment 推荐/关注流的用户
+    - 在个人页回顾互动历史的用户
+    - 发布动态并希望提醒好友的用户
+    - 在评论中 @ 好友参与讨论的用户
+
+sources:
+  - type: image
+    ref: .monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/reference-feed-liked-profile.jpg
+    extractedAt: 2026-10-28
+    confidence: high
+  - type: image
+    ref: .monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/reference-mention-notifications.png
+    extractedAt: 2026-10-28
+    confidence: high
+  - type: existing-ix
+    ref: .monkren/ix-design/moment-publish-detail-v319-2026-09-07/
+    extractedAt: 2026-10-28
+    confidence: high
+
+scope:
+  newBehavior:
+    - 动态卡片结构按开放关系 / 非开放关系大区展示差异化操作（关注、Chat、Add 等）
+    - 本人 Profile 增加「我赞过的」私密入口，进入仅含当前用户点赞过的动态列表；Me 功能列表不重复展示
+    - 发布器输入 @ 或点击 @ 入口，打开「Choose who to remind」好友选择面板（可搜索、多选）
+    - 评论输入同样支持 @ 与同一好友选择面板
+    - 正文中 @ 提及以可点击高亮展示；被 @ 用户收到动态通知
+    - 动态通知列表支持单条删除与「Clear all」二次确认
+  existingModified:
+    - Moment 列表卡片信息层级与操作按钮排列（结构优化，非全新页面）
+    - 发布器键盘工具栏增加 @ 入口（与现有 emoji 栏并列）
+    - 动态详情评论 composer 增加 @ 入口
+  existingUnchanged:
+    - item: 发布 FAB、圈子选择、可见范围、点赞/评论/Chat 主语义
+      evidence: moment-publish-detail-v319 IX + Core FeedCompose / FeedDetail
+    - item: 动态详情吸顶作者区与吸底互动区
+      evidence: moment-publish-detail-v319
+    - item: ME/KSA 无 Chat、本人动态无 Chat
+      evidence: moment-publish-detail-v319 brief.rules
+  uncertain:
+    - 「我赞过的」是否同步取消点赞后即时从列表移除
+    - @ 好友人数上限与重复 @ 同一人的规则
+    - 非互关好友是否可被 @
+    - 动态通知「Unexposed Comment」等业务子类型的完整清单
+
+visualDirections:
+  - statement: @ 提及使用品牌主色链接样式，与正文区分
+    sourceRef: 参考图「好友@显示」
+    confidence: medium
+  - statement: 好友选择半窗标题沿用 Choose who to remind，列表含搜索与已选态
+    sourceRef: 参考图 @ 选择交互
+    confidence: high
+  - statement: 我赞过的列表复用 Moment 卡片组件，顶栏标题「我赞过的」
+    sourceRef: 参考图个人页与列表
+    confidence: high
+
+designImpacts:
+  - sourceType: product
+    sourceRef: 开放关系 vs 非开放关系
+    statement: 同一张动态卡片在不同大区操作集不同
+    impact: 卡片 footer 按钮组与 Add/Chat 显隐需配置化，避免两套布局
+    target: interaction
+    confidence: high
+  - sourceType: product
+    sourceRef: 我赞过的
+    statement: 点赞是轻量动作，回看需要独立入口
+    impact: 个人页增加一行入口；列表空态与隐私（仅自己可见）需明确
+    target: both
+    confidence: high
+  - sourceType: operation
+    sourceRef: @ 好友
+    statement: 提醒会触发通知
+    impact: 发布/评论提交需携带 mention 列表；通知页新增 mention 类型
+    target: interaction
+    confidence: high
+
+pages:
+  - id: moment-feed
+    name: Moment 列表
+    description: 推荐/关注流下统一卡片结构，按大区切换操作区
+    knownStates:
+      - 开放关系大区
+      - 非开放关系大区
+      - 已关注作者
+      - 未关注作者
+  - id: profile-mine
+    name: 本人 Profile
+    description: 在既有 Profile 结构中增加仅本人可见的「我赞过的」入口行
+    knownStates:
+      - 默认
+      - 有点赞历史
+      - 无点赞历史（入口仍可见或灰态需产品确认）
+  - id: liked-moments
+    name: 我赞过的
+    description: 当前用户点赞过的动态列表，卡片与 Moment 一致
+    knownStates:
+      - 有内容
+      - 空态
+      - 加载中
+      - 网络错误
+  - id: feed-compose
+    name: 发布器
+    description: 文案中 @ 好友，工具栏 @ 按钮
+    knownStates:
+      - 编辑中
+      - mention-picker-open
+      - 已选 mention 展示在正文
+  - id: feed-detail
+    name: 动态详情
+    description: 评论 composer 支持 @；正文展示 mention 链接
+    knownStates:
+      - 评论输入激活
+      - mention-picker-open
+  - id: moment-notifications
+    name: 动态通知
+    description: 点赞、回复、评论、@ 等通知聚合
+    knownStates:
+      - 有通知
+      - 空态
+      - 单条删除
+      - clear-all-confirm
+
+flows:
+  - name: 从个人页查看赞过的动态
+    type: primary
+    steps:
+      - 进入 Mine 个人页
+      - 点击「我赞过的」
+      - 浏览列表
+      - 点击卡片进入动态详情
+  - name: 发布时 @ 好友
+    type: primary
+    steps:
+      - 打开发布器
+      - 输入 @ 或点击工具栏 @
+      - 在 Choose who to remind 中搜索并选择好友
+      - 正文中插入 @昵称
+      - 发布成功；被 @ 用户收到通知
+  - name: 评论时 @ 好友
+    type: primary
+    steps:
+      - 在动态详情激活评论输入
+      - 输入 @ 或点击 @
+      - 复用同一好友选择面板
+      - 发送评论；被 @ 用户收到通知
+  - name: 清理全部动态通知
+    type: secondary
+    steps:
+      - 打开 Moment notification
+      - 点击 Clear all
+      - 确认弹窗 Sure to clear all notifications?
+      - 确认后列表清空
+
+rules:
+  - text: 发布与评论必须使用同一 mention-picker 交互与组件结构
+    source: 参考图「选择@好友交互复用」
+    confidence: high
+  - text: 我赞过的列表仅展示当前账号点赞且仍可访问的动态
+    source: 产品意图（参考图）
+    confidence: medium
+  - text: Clear all 必须二次确认，取消不改变列表
+    source: 参考图通知页
+    confidence: high
+  - text: 开放关系大区卡片可展示 Chat；非开放关系按现有大区策略隐藏或替换
+    source: 参考图非开放/开放关系对比
+    confidence: high
+
+openQuestions:
+  - 我赞过的动态被作者删除或不可见时列表如何展示？
+  - @ 列表是否计入发布字数上限？
+  - 通知 Clear all 是否可撤销？
+  - 动态结构优化是否包含 Find 圈子流与 Room members 流？

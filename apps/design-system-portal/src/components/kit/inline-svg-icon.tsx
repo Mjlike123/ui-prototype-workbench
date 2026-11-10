@@ -1,17 +1,21 @@
 import type { CSSProperties } from "react";
 
+type InlineSvgIconProps = {
+  markup: string;
+  size: number;
+  className?: string;
+  title?: string;
+} & {
+  [key: `data-${string}`]: string | undefined;
+};
+
 export function InlineSvgIcon({
   markup,
   size,
   className,
   title,
   ...dataAttributes
-}: {
-  markup: string;
-  size: number;
-  className?: string;
-  title?: string;
-} & Record<string, string | undefined>) {
+}: InlineSvgIconProps) {
   const dataProps = Object.fromEntries(
     Object.entries(dataAttributes).filter(
       (entry): entry is [string, string] => entry[1] !== undefined,

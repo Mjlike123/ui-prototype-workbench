@@ -48,6 +48,22 @@ import {
   AvatarGroupVisual,
   type AvatarGroupVariant,
 } from "@/components/kit/avatar-group-visual";
+import { ActionPanel, ActionPanelSheet } from "@/components/kit/action-panel";
+import { CenterDialog } from "@/components/kit/center-dialog";
+import { InRoomNotification } from "@/components/kit/in-room-notification";
+import { Toast, type ToastStatus } from "@/components/kit/toast";
+import {
+  PublishStatusNotification,
+  type PublishStatusNotificationStatus,
+} from "@/components/kit/publish-status-notification";
+import { SelectorButton } from "@/components/kit/selector-button";
+import {
+  TextButton,
+  type TextButtonAppearance,
+  type TextButtonEmphasis,
+  type TextButtonIconPosition,
+  type TextButtonSize,
+} from "@/components/kit/text-button";
 import { Switch } from "@/components/kit/switch";
 import { ImageEmptyState } from "@/components/kit/image-empty-state";
 import { EmptyState, EMPTY_STATE_ILLUSTRATIONS } from "@/components/kit/empty-state";
@@ -83,8 +99,17 @@ export function ComponentPreview({
     component.previewKey === "chat-emoji-gif-panel";
   const isChatBubble = component.previewKey === "chat-bubble";
   const isSwitch = component.previewKey === "switch";
+  const isSelectorButton = component.previewKey === "selector-button";
+  const isActionPanel = component.previewKey === "action-panel";
+  const isInRoomNotification =
+    component.previewKey === "in-room-notification";
+  const isToast = component.previewKey === "toast";
+  const isPublishStatusNotification =
+    component.previewKey === "publish-status-notification";
+  const isCenterDialog = component.previewKey === "center-dialog";
   const isRegularList = component.previewKey === "regular-list";
   const isButton = component.previewKey === "button";
+  const isTextButton = component.previewKey === "text-button";
   const isBottomNavigation =
     component.previewKey === "bottom-navigation";
   const isRegularNavigation =
@@ -141,6 +166,14 @@ export function ComponentPreview({
   const [buttonLayout, setButtonLayout] = useState<"single" | "double">(
     "single",
   );
+  const [textButtonSize, setTextButtonSize] = useState<TextButtonSize>("size16");
+  const [textButtonAppearance, setTextButtonAppearance] =
+    useState<TextButtonAppearance>("brand");
+  const [textButtonEmphasis, setTextButtonEmphasis] =
+    useState<TextButtonEmphasis>("body");
+  const [textButtonIconPosition, setTextButtonIconPosition] =
+    useState<TextButtonIconPosition>("leading");
+  const [textButtonDisabled, setTextButtonDisabled] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [searchActive, setSearchActive] = useState(false);
   const [chatDraft, setChatDraft] = useState("");
@@ -158,6 +191,31 @@ export function ComponentPreview({
   const [chatBubbleReadStatusUpsell, setChatBubbleReadStatusUpsell] =
     useState(false);
   const [switchChecked, setSwitchChecked] = useState(true);
+  const [selectorButtonSelected, setSelectorButtonSelected] = useState(true);
+  const [actionPanelVariant, setActionPanelVariant] = useState<
+    "description" | "toolbar" | "destructive"
+  >("description");
+  const [actionPanelOpen, setActionPanelOpen] = useState(false);
+  const [actionPanelSwitchChecked, setActionPanelSwitchChecked] =
+    useState(true);
+  const [inRoomNotificationLayout, setInRoomNotificationLayout] = useState<
+    "stacked" | "compact"
+  >("stacked");
+  const [inRoomNotificationAction, setInRoomNotificationAction] = useState<
+    "button" | "link" | "none"
+  >("button");
+  const [inRoomNotificationShowAvatar, setInRoomNotificationShowAvatar] =
+    useState(true);
+  const [toastStatus, setToastStatus] = useState<ToastStatus>("none");
+  const [toastLongText, setToastLongText] = useState(false);
+  const [toastShowChevron, setToastShowChevron] = useState(false);
+  const [publishStatus, setPublishStatus] =
+    useState<PublishStatusNotificationStatus>("uploading");
+  const [publishStatusProgress, setPublishStatusProgress] = useState(42);
+  const [centerDialogLayout, setCenterDialogLayout] = useState<
+    "single" | "horizontal" | "vertical"
+  >("horizontal");
+  const [centerDialogOpen, setCenterDialogOpen] = useState(true);
   const [emojiGifTab, setEmojiGifTab] = useState(
     DEFAULT_CHAT_EMOJI_GIF_TAB_ITEMS[0]?.key ?? "emoji",
   );
@@ -262,11 +320,49 @@ export function ComponentPreview({
           <div className="switchKitCompact" aria-hidden="true">
             <Switch checked onChange={() => undefined} aria-label="开启" />
           </div>
+        ) : isSelectorButton ? (
+          <div className="selectorButtonKitCompact" aria-hidden="true">
+            <SelectorButton
+              selected
+              onChange={() => undefined}
+              aria-label="选中"
+            />
+          </div>
+        ) : isActionPanel ? (
+          <div className="actionPanelKitCompact" aria-hidden="true">
+            <ActionPanel
+              description="Action panel"
+              actions={[{ id: "a", label: "Action" }]}
+              onCancel={() => undefined}
+            />
+          </div>
+        ) : isInRoomNotification ? (
+          <div className="inRoomNotificationKitCompact" aria-hidden="true">
+            <InRoomNotification />
+          </div>
+        ) : isToast ? (
+          <div className="toastKitCompact" aria-hidden="true">
+            <Toast message="我是一条提示" />
+          </div>
+        ) : isPublishStatusNotification ? (
+          <div className="publishStatusNotificationKitCompact" aria-hidden="true">
+            <PublishStatusNotification status="uploading" progress={42} />
+          </div>
+        ) : isCenterDialog ? (
+          <div className="centerDialogKitCompact" aria-hidden="true">
+            <span className="kitButton kitButton--height40 kitButton--primary">
+              Confirm
+            </span>
+          </div>
         ) : isButton ? (
           <div className="buttonKitCompact" aria-hidden="true">
             <span className="kitButton kitButton--height48 kitButton--primary">
               Confirm
             </span>
+          </div>
+        ) : isTextButton ? (
+          <div className="textButtonKitCompact" aria-hidden="true">
+            <TextButton label="文字+icon" size="size14" iconPosition="trailing" trailingPreset="chevron" />
           </div>
         ) : isBottomNavigation ? (
           <div
@@ -360,6 +456,42 @@ export function ComponentPreview({
     <SwitchKitPreview
       checked={switchChecked}
       onChange={setSwitchChecked}
+    />
+  ) : isSelectorButton ? (
+    <SelectorButtonKitPreview
+      selected={selectorButtonSelected}
+      onChange={setSelectorButtonSelected}
+    />
+  ) : isActionPanel ? (
+    <ActionPanelKitPreview
+      variant={actionPanelVariant}
+      open={actionPanelOpen}
+      onOpenChange={setActionPanelOpen}
+      switchChecked={actionPanelSwitchChecked}
+      onSwitchChange={setActionPanelSwitchChecked}
+    />
+  ) : isInRoomNotification ? (
+    <InRoomNotificationKitPreview
+      layout={inRoomNotificationLayout}
+      action={inRoomNotificationAction}
+      showAvatar={inRoomNotificationShowAvatar}
+    />
+  ) : isToast ? (
+    <ToastKitPreview
+      status={toastStatus}
+      longText={toastLongText}
+      showChevron={toastShowChevron}
+    />
+  ) : isPublishStatusNotification ? (
+    <PublishStatusNotificationKitPreview
+      status={publishStatus}
+      progress={publishStatusProgress}
+    />
+  ) : isCenterDialog ? (
+    <CenterDialogKitPreview
+      open={centerDialogOpen}
+      layout={centerDialogLayout}
+      onOpenChange={setCenterDialogOpen}
     />
   ) : isListTag ? (
     <ListTagKitPreview />
@@ -587,6 +719,14 @@ export function ComponentPreview({
       state={buttonState}
       layout={buttonLayout}
     />
+  ) : isTextButton ? (
+    <TextButtonKitPreview
+      size={textButtonSize}
+      appearance={textButtonAppearance}
+      emphasis={textButtonEmphasis}
+      iconPosition={textButtonIconPosition}
+      disabled={textButtonDisabled}
+    />
   ) : isBottomNavigation ? (
     <BottomNavigation
       selectedIndex={Math.min(selectedIndex, 4)}
@@ -706,6 +846,18 @@ export function ComponentPreview({
               ? "对照文字、语音、图片和业务卡片的收发与反馈状态"
               : isSwitch
               ? "对照关闭、开启与禁用态，并体验受控切换"
+              : isSelectorButton
+              ? "对照未选中、选中与禁用态，并体验受控切换"
+              : isActionPanel
+              ? "切换变体并体验进入/离开动效、蒙层关闭与取消"
+              : isInRoomNotification
+              ? "对照浅色与深色表面、布局与右侧操作类型"
+              : isToast
+              ? "切换状态图标、长文案与可点击箭头提示"
+              : isPublishStatusNotification
+              ? "切换上传中、成功与失败三种发布状态"
+              : isCenterDialog
+              ? "切换单按钮、横排与纵排布局，体验进入/离开动效"
               : isButton
               ? "切换尺寸、视觉类型、状态与按钮组布局"
               : isBottomNavigation
@@ -741,7 +893,13 @@ export function ComponentPreview({
             isAvatar ||
             isListTag ||
             isIosStatusBar ||
-            isSwitch
+            isSwitch ||
+            isSelectorButton ||
+            isActionPanel ||
+            isInRoomNotification ||
+            isToast ||
+            isPublishStatusNotification ||
+            isCenterDialog
               ? " previewDeviceFlush"
               : ""
           }${
@@ -753,17 +911,33 @@ export function ComponentPreview({
             isChatEmojiGifTabBar ||
             isChatEmojiGifPanel ||
             isChatBubble ||
-            isSwitch
+            isSwitch ||
+            isSelectorButton ||
+            isActionPanel ||
+            isInRoomNotification ||
+            isToast ||
+            isPublishStatusNotification ||
+            isCenterDialog
               ? " previewDevicePrimary"
               : ""
           }${isRegularList ? " previewDeviceList" : ""}${
-            isButton ? " previewDeviceButton" : ""
+            isButton || isTextButton ? " previewDeviceButton" : ""
           }${isAvatar ? " previewDeviceAvatar" : ""}${
             isImageEmptyState ? " previewDeviceImageEmptyState" : ""
           }${isEmptyState ? " previewDeviceEmptyState" : ""}${
             isListTag ? " previewDeviceListTag" : ""
           }${isIosStatusBar ? " previewDeviceIosStatusBar" : ""}${
             isSwitch ? " previewDeviceSwitch" : ""
+          }${isSelectorButton ? " previewDeviceSelectorButton" : ""}${
+            isActionPanel ? " previewDeviceActionPanel" : ""
+          }${
+            isInRoomNotification ? " previewDeviceInRoomNotification" : ""
+          }${isToast ? " previewDeviceToast" : ""}${
+            isPublishStatusNotification
+              ? " previewDevicePublishStatusNotification"
+              : ""
+          }${
+            isCenterDialog ? " previewDeviceCenterDialog" : ""
           }`}
         >
           {preview}
@@ -810,6 +984,240 @@ export function ComponentPreview({
               >
                 <option value="off">关闭</option>
                 <option value="on">开启</option>
+              </select>
+            </div>
+          </>
+        ) : isSelectorButton ? (
+          <>
+            <p className="selectorButtonKitMatrixNote">
+              控件固定 24×24pt；选中为品牌主色实心圆 + 白勾，未选中为浅灰描边空心圆。
+            </p>
+            <div className="controlField">
+              <label htmlFor="selector-button-demo-selected">交互示例</label>
+              <select
+                id="selector-button-demo-selected"
+                value={selectorButtonSelected ? "on" : "off"}
+                onChange={(event) =>
+                  setSelectorButtonSelected(event.target.value === "on")
+                }
+              >
+                <option value="off">未选中</option>
+                <option value="on">选中</option>
+              </select>
+            </div>
+          </>
+        ) : isActionPanel ? (
+          <>
+            <p className="actionPanelKitMatrixNote">
+              顶部圆角 16pt；操作项 64pt；取消前 4pt 分隔。进入 250ms / 离开
+              200ms（蒙层 50%、Y 轴滑入）；嵌套与关闭遵循 bottom-sheet-behavior。
+            </p>
+            <div className="controlField">
+              <label htmlFor="action-panel-demo-variant">预览变体</label>
+              <select
+                id="action-panel-demo-variant"
+                value={actionPanelVariant}
+                onChange={(event) =>
+                  setActionPanelVariant(
+                    event.target.value as
+                      | "description"
+                      | "toolbar"
+                      | "destructive",
+                  )
+                }
+              >
+                <option value="description">说明标题 + 多操作</option>
+                <option value="toolbar">工具栏 + 底部开关</option>
+                <option value="destructive">危险操作</option>
+              </select>
+            </div>
+            <div className="controlField">
+              <label htmlFor="action-panel-demo-open">面板状态</label>
+              <select
+                id="action-panel-demo-open"
+                value={actionPanelOpen ? "open" : "closed"}
+                onChange={(event) =>
+                  setActionPanelOpen(event.target.value === "open")
+                }
+              >
+                <option value="open">打开</option>
+                <option value="closed">关闭</option>
+              </select>
+            </div>
+          </>
+        ) : isInRoomNotification ? (
+          <>
+            <p className="inRoomNotificationKitMatrixNote">
+              设计宽 343pt（375 屏左右各 16pt 边距）；最小高 80pt、圆角 12pt。
+            </p>
+            <div className="controlField">
+              <label htmlFor="in-room-notification-demo-layout">文案布局</label>
+              <select
+                id="in-room-notification-demo-layout"
+                value={inRoomNotificationLayout}
+                onChange={(event) =>
+                  setInRoomNotificationLayout(
+                    event.target.value as "stacked" | "compact",
+                  )
+                }
+              >
+                <option value="stacked">标题 + 描述</option>
+                <option value="compact">单行描述</option>
+              </select>
+            </div>
+            <div className="controlField">
+              <label htmlFor="in-room-notification-demo-action">右侧操作</label>
+              <select
+                id="in-room-notification-demo-action"
+                value={inRoomNotificationAction}
+                onChange={(event) =>
+                  setInRoomNotificationAction(
+                    event.target.value as "button" | "link" | "none",
+                  )
+                }
+              >
+                <option value="button">主按钮</option>
+                <option value="link">文字链 + 箭头</option>
+                <option value="none">无操作</option>
+              </select>
+            </div>
+            <div className="controlField">
+              <label htmlFor="in-room-notification-demo-avatar">头像</label>
+              <select
+                id="in-room-notification-demo-avatar"
+                value={inRoomNotificationShowAvatar ? "on" : "off"}
+                onChange={(event) =>
+                  setInRoomNotificationShowAvatar(
+                    event.target.value === "on",
+                  )
+                }
+              >
+                <option value="on">显示</option>
+                <option value="off">隐藏</option>
+              </select>
+            </div>
+          </>
+        ) : isToast ? (
+          <>
+            <p className="toastKitMatrixNote">
+              背景 rgba(47,48,57,0.9)、圆角 12pt；纯文案短/长与四种状态图标短/长布局。
+            </p>
+            <div className="controlField">
+              <label htmlFor="toast-demo-status">状态图标</label>
+              <select
+                id="toast-demo-status"
+                value={toastStatus}
+                onChange={(event) =>
+                  setToastStatus(event.target.value as ToastStatus)
+                }
+              >
+                <option value="none">无（纯文案）</option>
+                <option value="success">成功</option>
+                <option value="error">失败</option>
+                <option value="warning">警示</option>
+                <option value="loading">加载</option>
+              </select>
+            </div>
+            <div className="controlField">
+              <label htmlFor="toast-demo-long-text">长文案</label>
+              <select
+                id="toast-demo-long-text"
+                value={toastLongText ? "on" : "off"}
+                onChange={(event) =>
+                  setToastLongText(event.target.value === "on")
+                }
+              >
+                <option value="off">短</option>
+                <option value="on">长（最多两行）</option>
+              </select>
+            </div>
+            {toastStatus === "none" && !toastLongText ? (
+              <div className="controlField">
+                <label htmlFor="toast-demo-chevron">右箭头</label>
+                <select
+                  id="toast-demo-chevron"
+                  value={toastShowChevron ? "on" : "off"}
+                  onChange={(event) =>
+                    setToastShowChevron(event.target.value === "on")
+                  }
+                >
+                  <option value="off">隐藏</option>
+                  <option value="on">显示</option>
+                </select>
+              </div>
+            ) : null}
+          </>
+        ) : isPublishStatusNotification ? (
+          <>
+            <p className="publishStatusNotificationKitMatrixNote">
+              343×56pt、圆角 12pt；底部 2pt 进度条反映上传/成功/失败。
+            </p>
+            <div className="controlField">
+              <label htmlFor="publish-status-demo-status">发布状态</label>
+              <select
+                id="publish-status-demo-status"
+                value={publishStatus}
+                onChange={(event) =>
+                  setPublishStatus(
+                    event.target.value as PublishStatusNotificationStatus,
+                  )
+                }
+              >
+                <option value="uploading">上传中</option>
+                <option value="success">发布成功</option>
+                <option value="failed">发布失败</option>
+              </select>
+            </div>
+            {publishStatus === "uploading" ? (
+              <div className="controlField">
+                <label htmlFor="publish-status-demo-progress">上传进度</label>
+                <select
+                  id="publish-status-demo-progress"
+                  value={String(publishStatusProgress)}
+                  onChange={(event) =>
+                    setPublishStatusProgress(Number(event.target.value))
+                  }
+                >
+                  <option value="18">18%</option>
+                  <option value="42">42%</option>
+                  <option value="72">72%</option>
+                </select>
+              </div>
+            ) : null}
+          </>
+        ) : isCenterDialog ? (
+          <>
+            <p className="centerDialogKitMatrixNote">
+              固定宽 300pt、圆角 16pt；进入/离开 320ms（蒙层 50%、scale
+              0.85→1.03→1）。
+            </p>
+            <div className="controlField">
+              <label htmlFor="center-dialog-demo-layout">按钮布局</label>
+              <select
+                id="center-dialog-demo-layout"
+                value={centerDialogLayout}
+                onChange={(event) =>
+                  setCenterDialogLayout(
+                    event.target.value as "single" | "horizontal" | "vertical",
+                  )
+                }
+              >
+                <option value="single">单按钮</option>
+                <option value="horizontal">横排双按钮</option>
+                <option value="vertical">纵排双按钮</option>
+              </select>
+            </div>
+            <div className="controlField">
+              <label htmlFor="center-dialog-demo-open">弹窗状态</label>
+              <select
+                id="center-dialog-demo-open"
+                value={centerDialogOpen ? "open" : "closed"}
+                onChange={(event) =>
+                  setCenterDialogOpen(event.target.value === "open")
+                }
+              >
+                <option value="open">打开</option>
+                <option value="closed">关闭</option>
               </select>
             </div>
           </>
@@ -1109,6 +1517,82 @@ export function ComponentPreview({
               >
                 <option value="single">单按钮</option>
                 <option value="double">双按钮 · 间距 16px</option>
+              </select>
+            </div>
+          </>
+        ) : isTextButton ? (
+          <>
+            <div className="controlField">
+              <label htmlFor="text-button-size">字号</label>
+              <select
+                id="text-button-size"
+                value={textButtonSize}
+                onChange={(event) =>
+                  setTextButtonSize(event.target.value as TextButtonSize)
+                }
+              >
+                <option value="size16">16px</option>
+                <option value="size14">14px</option>
+                <option value="size12">12px</option>
+              </select>
+            </div>
+            <div className="controlField">
+              <label htmlFor="text-button-appearance">颜色</label>
+              <select
+                id="text-button-appearance"
+                value={textButtonAppearance}
+                onChange={(event) =>
+                  setTextButtonAppearance(
+                    event.target.value as TextButtonAppearance,
+                  )
+                }
+              >
+                <option value="brand">主题色</option>
+                <option value="neutral">中性色</option>
+              </select>
+            </div>
+            <div className="controlField">
+              <label htmlFor="text-button-emphasis">状态</label>
+              <select
+                id="text-button-emphasis"
+                value={textButtonEmphasis}
+                onChange={(event) =>
+                  setTextButtonEmphasis(
+                    event.target.value as TextButtonEmphasis,
+                  )
+                }
+              >
+                <option value="body">正文</option>
+                <option value="secondary">富文本</option>
+              </select>
+            </div>
+            <div className="controlField">
+              <label htmlFor="text-button-icon">图标</label>
+              <select
+                id="text-button-icon"
+                value={textButtonIconPosition}
+                onChange={(event) =>
+                  setTextButtonIconPosition(
+                    event.target.value as TextButtonIconPosition,
+                  )
+                }
+              >
+                <option value="none">无 icon</option>
+                <option value="leading">icon 左</option>
+                <option value="trailing">icon 右</option>
+              </select>
+            </div>
+            <div className="controlField">
+              <label htmlFor="text-button-disabled">交互</label>
+              <select
+                id="text-button-disabled"
+                value={textButtonDisabled ? "disabled" : "default"}
+                onChange={(event) =>
+                  setTextButtonDisabled(event.target.value === "disabled")
+                }
+              >
+                <option value="default">可点击</option>
+                <option value="disabled">禁用</option>
               </select>
             </div>
           </>
@@ -1529,10 +2013,14 @@ function RegularListTrailing({
 
   if (trailing === "text-action") {
     return (
-      <button className="regularListTextAction" type="button">
-        文字+icon
-        <span className="regularListBrandChevron" aria-hidden="true" />
-      </button>
+      <TextButton
+        label="文字+icon"
+        size="size14"
+        appearance="brand"
+        iconPosition="trailing"
+        trailingPreset="chevron"
+        onPress={() => undefined}
+      />
     );
   }
 
@@ -1662,6 +2150,368 @@ function IosStatusBarKitPreview() {
         <div className="iosStatusBarExample iosStatusBarExample--dark">
           <IosStatusBar appearance="light-content" />
         </div>
+      </section>
+    </div>
+  );
+}
+
+function CenterDialogKitPreview({
+  open,
+  layout,
+  onOpenChange,
+}: {
+  open: boolean;
+  layout: "single" | "horizontal" | "vertical";
+  onOpenChange: (open: boolean) => void;
+}) {
+  const actions =
+    layout === "single"
+      ? [{ id: "ok", label: "I see", tone: "primary" as const }]
+      : [
+          { id: "cancel", label: "Discard", tone: "neutral" as const },
+          { id: "confirm", label: "Save", tone: "primary" as const },
+        ];
+
+  return (
+    <div className="centerDialogKitStage">
+      <button
+        type="button"
+        className="kitButton kitButton--height40 kitButton--primary"
+        onClick={() => onOpenChange(true)}
+      >
+        打开弹窗
+      </button>
+      <CenterDialog
+        open={open}
+        title="Save this draft?"
+        description="Your draft will stay on this device until you publish or discard it."
+        dismissible
+        onDismiss={() => onOpenChange(false)}
+        actionLayout={layout}
+        actions={actions.map((action) => ({
+          ...action,
+          onPress: () => onOpenChange(false),
+        }))}
+      />
+    </div>
+  );
+}
+
+function ToastKitPreview({
+  status,
+  longText,
+  showChevron,
+}: {
+  status: ToastStatus;
+  longText: boolean;
+  showChevron: boolean;
+}) {
+  const shortMessage =
+    status === "success"
+      ? "成功提示"
+      : status === "error"
+        ? "失败提示"
+        : status === "warning"
+          ? "警示提示"
+          : status === "loading"
+            ? "加载中"
+            : "我是一条提示";
+  const longMessage = "我是一条提示最多不建议超过两行";
+
+  return (
+    <div className="toastKitStage">
+      <section aria-labelledby="toast-live-preview-title">
+        <div className="listTagKitSectionHeader">
+          <div>
+            <h3 id="toast-live-preview-title">实时预览</h3>
+            <p>根据右侧控制项切换当前 Toast 变体</p>
+          </div>
+        </div>
+        <div className="toastKitMatrixCell">
+          <Toast
+            message={longText ? longMessage : shortMessage}
+            status={status}
+            longText={longText}
+            showChevron={showChevron}
+            {...(showChevron ? { onPress: () => undefined } : {})}
+          />
+        </div>
+      </section>
+
+      <section aria-labelledby="toast-matrix-title">
+        <div className="listTagKitSectionHeader">
+          <div>
+            <h3 id="toast-matrix-title">Figma 变体矩阵</h3>
+            <p>纯文案短/长 + 成功/失败/警示/加载 短/长</p>
+          </div>
+        </div>
+        <div className="toastKitMatrix">
+          <Toast message="我是一条提示" showChevron onPress={() => undefined} />
+          <Toast message="我是一条提示最多显示是四个字" longText />
+          {(
+            [
+              ["success", "成功提示"],
+              ["error", "失败提示"],
+              ["warning", "警示提示"],
+              ["loading", "加载中"],
+            ] as const
+          ).flatMap(([variant, label]) => [
+            <Toast key={`${variant}-short`} message={label} status={variant} />,
+            <Toast
+              key={`${variant}-long`}
+              message={longMessage}
+              status={variant}
+              longText
+            />,
+          ])}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PublishStatusNotificationKitPreview({
+  status,
+  progress,
+}: {
+  status: PublishStatusNotificationStatus;
+  progress: number;
+}) {
+  const thumbnailSrc =
+    status === "failed"
+      ? undefined
+      : "/prototypes/feed/latifa-photo.png";
+
+  return (
+    <div className="publishStatusNotificationKitStage">
+      <section aria-labelledby="publish-status-live-preview-title">
+        <div className="listTagKitSectionHeader">
+          <div>
+            <h3 id="publish-status-live-preview-title">实时预览</h3>
+            <p>根据右侧控制项切换当前发布状态</p>
+          </div>
+        </div>
+        <div className="publishStatusNotificationKitMatrixCell">
+          <PublishStatusNotification
+            status={status}
+            thumbnailSrc={thumbnailSrc}
+            thumbnailPlaceholder="4517 Washington Ave."
+            progress={progress}
+            onRetry={status === "failed" ? () => undefined : undefined}
+            onDismiss={status === "failed" ? () => undefined : undefined}
+          />
+        </div>
+      </section>
+
+      <section aria-labelledby="publish-status-matrix-title">
+        <div className="listTagKitSectionHeader">
+          <div>
+            <h3 id="publish-status-matrix-title">Figma 变体矩阵</h3>
+            <p>上传中 / 发布成功 / 发布失败</p>
+          </div>
+        </div>
+        <div className="publishStatusNotificationKitMatrix">
+          <PublishStatusNotification
+            status="uploading"
+            thumbnailSrc="/prototypes/feed/latifa-photo.png"
+            progress={42}
+          />
+          <PublishStatusNotification
+            status="success"
+            thumbnailSrc="/prototypes/feed/latifa-photo.png"
+          />
+          <PublishStatusNotification
+            status="failed"
+            thumbnailPlaceholder="4517 Washington Ave."
+            onRetry={() => undefined}
+            onDismiss={() => undefined}
+          />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function InRoomNotificationKitPreview({
+  layout,
+  action,
+  showAvatar,
+}: {
+  layout: "stacked" | "compact";
+  action: "button" | "link" | "none";
+  showAvatar: boolean;
+}) {
+  const description =
+    layout === "compact"
+      ? "我是一段描述文本我是一段描述文本"
+      : "我是一段描述文本";
+
+  const notificationProps = {
+    layout,
+    action,
+    showAvatar,
+    title: "我是标题",
+    description,
+  };
+
+  return (
+    <div className="inRoomNotificationKitStage">
+      <div className="inRoomNotificationKitPhoneShell">
+        {(
+          [
+            ["浅色表面", "light", "inRoomNotificationKitMatrixCell--light"],
+            ["深色表面", "dark", "inRoomNotificationKitMatrixCell--dark"],
+          ] as const
+        ).map(([label, tone, cellClass]) => (
+          <div
+            className={`inRoomNotificationKitMatrixCell ${cellClass}`}
+            key={tone}
+            aria-label={label}
+          >
+            <InRoomNotification
+              {...notificationProps}
+              tone={tone}
+              onAction={() => undefined}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ActionPanelKitPreview({
+  variant,
+  open,
+  onOpenChange,
+  switchChecked,
+  onSwitchChange,
+}: {
+  variant: "description" | "toolbar" | "destructive";
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  switchChecked: boolean;
+  onSwitchChange: (checked: boolean) => void;
+}) {
+  const dismiss = () => onOpenChange(false);
+
+  const sheetProps =
+    variant === "toolbar"
+      ? {
+          header: {
+            title: "Screening country",
+            confirmLabel: "confirm",
+            onBack: dismiss,
+            onConfirm: dismiss,
+          },
+          actions: [
+            { id: "a", label: "文字操作" },
+            { id: "b", label: "文字操作", tone: "emphasis" as const },
+            { id: "c", label: "文字操作" },
+          ],
+          cancelLabel: undefined,
+          footerSwitch: {
+            title: "Hidden birthday",
+            description: "Showing more info helps make friends",
+            checked: switchChecked,
+            onChange: onSwitchChange,
+          },
+        }
+      : variant === "destructive"
+        ? {
+            description: "Choose how you want to manage this content.",
+            actions: [
+              { id: "edit", label: "Edit profile" },
+              { id: "hide", label: "Hide from others" },
+              {
+                id: "delete",
+                label: "Delete",
+                tone: "destructive" as const,
+              },
+            ],
+            onCancel: dismiss,
+          }
+        : {
+            description:
+              "This is a title that describes the current operation and is optional.",
+            actions: [
+              { id: "a", label: "文字操作" },
+              { id: "b", label: "文字操作", tone: "emphasis" as const },
+              { id: "c", label: "文字操作" },
+            ],
+            onCancel: dismiss,
+          };
+
+  return (
+    <div className="actionPanelKitStage">
+      <button
+        type="button"
+        className="kitButton kitButton--height40 kitButton--primary actionPanelKitTrigger"
+        onClick={() => onOpenChange(true)}
+      >
+        打开动作面板
+      </button>
+      <ActionPanelSheet
+        open={open}
+        dismissible
+        onDismiss={dismiss}
+        {...sheetProps}
+      />
+    </div>
+  );
+}
+
+function SelectorButtonKitPreview({
+  selected,
+  onChange,
+}: {
+  selected: boolean;
+  onChange: (selected: boolean) => void;
+}) {
+  return (
+    <div className="selectorButtonKitStage">
+      <section aria-labelledby="selector-button-state-title">
+        <div className="listTagKitSectionHeader">
+          <div>
+            <h3 id="selector-button-state-title">选择器状态</h3>
+            <p>24×24pt 圆形 · 品牌主色选中 · 浅灰描边未选中</p>
+          </div>
+          <span>4 variants</span>
+        </div>
+        <div className="selectorButtonKitStateRow">
+          {(
+            [
+              ["未选中", false, false],
+              ["选中", true, false],
+              ["禁用 · 未选中", false, true],
+              ["禁用 · 选中", true, true],
+            ] as const
+          ).map(([label, isSelected, disabled]) => (
+            <article className="selectorButtonKitStateCase" key={label}>
+              <SelectorButton
+                selected={isSelected}
+                disabled={disabled}
+                onChange={() => undefined}
+                aria-label={label}
+              />
+              <strong>{label}</strong>
+              <code>{isSelected ? "on" : "off"}</code>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section aria-labelledby="selector-button-interactive-title">
+        <div className="listTagKitSectionHeader">
+          <div>
+            <h3 id="selector-button-interactive-title">受控交互</h3>
+            <p>点击选择器或使用下方控件同步 selected 状态</p>
+          </div>
+        </div>
+        <SelectorButton
+          selected={selected}
+          onChange={onChange}
+          aria-label="受控选择器示例"
+        />
       </section>
     </div>
   );
@@ -1948,6 +2798,182 @@ function AvatarKitPreview() {
               <strong>{label}</strong>
               <p>{scene}</p>
             </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+const TEXT_BUTTON_MATRIX: Array<{
+  size: TextButtonSize;
+  label: string;
+  cases: Array<{
+    title: string;
+    appearance: TextButtonAppearance;
+    emphasis: TextButtonEmphasis;
+    disabled?: boolean;
+    iconPosition: TextButtonIconPosition;
+  }>;
+}> = [
+  {
+    size: "size16",
+    label: "16 号字",
+    cases: [
+      {
+        title: "中性 · 正文 · icon 左",
+        appearance: "neutral",
+        emphasis: "body",
+        iconPosition: "leading",
+      },
+      {
+        title: "中性 · 正文 · icon 右",
+        appearance: "neutral",
+        emphasis: "body",
+        iconPosition: "trailing",
+      },
+      {
+        title: "主题 · 正文 · icon 左",
+        appearance: "brand",
+        emphasis: "body",
+        iconPosition: "leading",
+      },
+      {
+        title: "主题 · 禁用 · icon 左",
+        appearance: "brand",
+        emphasis: "body",
+        disabled: true,
+        iconPosition: "leading",
+      },
+      {
+        title: "中性 · 富文本 · icon 左",
+        appearance: "neutral",
+        emphasis: "secondary",
+        iconPosition: "leading",
+      },
+    ],
+  },
+  {
+    size: "size14",
+    label: "14 号字",
+    cases: [
+      {
+        title: "中性 · 富文本 · icon 左",
+        appearance: "neutral",
+        emphasis: "secondary",
+        iconPosition: "leading",
+      },
+      {
+        title: "主题 · 正文 · icon 左",
+        appearance: "brand",
+        emphasis: "body",
+        iconPosition: "leading",
+      },
+      {
+        title: "中性 · 富文本 · 无 icon",
+        appearance: "neutral",
+        emphasis: "secondary",
+        iconPosition: "none",
+      },
+    ],
+  },
+  {
+    size: "size12",
+    label: "12 号字",
+    cases: [
+      {
+        title: "中性 · 正文 · icon 左",
+        appearance: "neutral",
+        emphasis: "body",
+        iconPosition: "leading",
+      },
+      {
+        title: "主题 · 正文 · icon 左",
+        appearance: "brand",
+        emphasis: "body",
+        iconPosition: "leading",
+      },
+      {
+        title: "中性 · 正文 · 无 icon",
+        appearance: "neutral",
+        emphasis: "body",
+        iconPosition: "none",
+      },
+    ],
+  },
+];
+
+function TextButtonKitPreview({
+  size,
+  appearance,
+  emphasis,
+  iconPosition,
+  disabled,
+}: {
+  size: TextButtonSize;
+  appearance: TextButtonAppearance;
+  emphasis: TextButtonEmphasis;
+  iconPosition: TextButtonIconPosition;
+  disabled: boolean;
+}) {
+  return (
+    <div className="textButtonKitStage">
+      <section aria-labelledby="text-button-live-title">
+        <div className="listTagKitSectionHeader">
+          <div>
+            <h3 id="text-button-live-title">当前配置</h3>
+            <p>字号、颜色、状态与图标位置由左侧控件驱动</p>
+          </div>
+        </div>
+        <TextButton
+          label="文字+icon"
+          size={size}
+          appearance={appearance}
+          emphasis={emphasis}
+          disabled={disabled}
+          iconPosition={iconPosition}
+          leadingIcon={iconPosition === "leading" ? "gift" : undefined}
+          trailingPreset={
+            iconPosition === "trailing" ? "chevron" : undefined
+          }
+          onPress={() => undefined}
+        />
+      </section>
+      <section aria-labelledby="text-button-matrix-title">
+        <div className="listTagKitSectionHeader">
+          <div>
+            <h3 id="text-button-matrix-title">Figma 变体矩阵</h3>
+            <p>对齐 node 40:3663 · 三档字号常用组合</p>
+          </div>
+          <span>40:3663</span>
+        </div>
+        <div className="textButtonKitMatrix" aria-label="文字按钮变体矩阵">
+          {TEXT_BUTTON_MATRIX.map((group) => (
+            <div className="textButtonKitMatrixGroup" key={group.size}>
+              <strong>{group.label}</strong>
+              <div className="textButtonKitMatrixRow">
+                {group.cases.map((item) => (
+                  <article className="textButtonKitMatrixCase" key={item.title}>
+                    <TextButton
+                      label="文字+icon"
+                      size={group.size}
+                      appearance={item.appearance}
+                      emphasis={item.emphasis}
+                      disabled={item.disabled}
+                      iconPosition={item.iconPosition}
+                      leadingIcon={
+                        item.iconPosition === "leading" ? "gift" : undefined
+                      }
+                      trailingPreset={
+                        item.iconPosition === "trailing" ? "chevron" : undefined
+                      }
+                      onPress={() => undefined}
+                    />
+                    <p>{item.title}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </section>

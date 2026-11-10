@@ -23,24 +23,23 @@ reference:
   observations:
     - 组件集包含外部样式、待输入、输入中、文案过长、输入完毕和输入完毕超长六个变体
     - 基准画布宽 375pt；输入态容器高 56pt并使用 16pt 水平边距，搜索框视觉高度 40pt
-    - 搜索框使用 #F7F8FA 背景和胶囊圆角，左右内容内边距为 8pt
-    - 搜索图标位于 24pt Frame 内；图标、文字及清除按钮之间保持 8pt
-    - 占位文案和搜索图标使用 #BABABD，输入文字和 Cancel 使用 #181923
+    - 搜索框使用 color.button.secondary（Figma：按钮透明/btnSecondary）背景和胶囊圆角，左右内容内边距为 8pt
+    - 占位文案、输入文字和搜索图标使用 textTertiary；Cancel 使用 textPrimary
     - 输入文字使用 SF Pro Regular 16pt/20pt；输入态显示右侧 Cancel，间距 12pt
     - 有内容时显示 24pt 清除按钮；超长内容保持单行并在尾部截断，不挤压 Cancel
 anatomy:
   - id: container
     label: 搜索控件容器
-    description: 在 375pt 基准宽度下使用 16pt 水平安全边距；输入状态整体高度为 56pt。
+    description: 在 375pt 基准宽度下使用 16pt 水平安全边距；输入状态整体高度为 56pt，容器背景透明并透传宿主页面的 color.surface.canvas（背景色/bgPrimary）。
   - id: field
     label: 搜索输入框
-    description: 视觉高度 40pt，使用 #F7F8FA 背景和胶囊圆角。
+    description: 视觉高度 40pt，使用 color.button.secondary（Figma：按钮透明/btnSecondary）背景和胶囊圆角；不得改用 bgPrimary、硬编码白色或近似透明色。
   - id: searchIcon
     label: 搜索图标
     description: 使用 24pt Frame，与输入文字保持 8pt 间距。
   - id: input
     label: 搜索文字
-    description: 单行 16pt 输入；占位态使用三级文字色，输入态使用一级文字色。
+    description: 单行 16pt 输入；占位与输入文字均使用 textTertiary。
   - id: clearButton
     label: 清除按钮
     description: 仅在存在输入内容时显示，点击后清空内容并保持输入焦点。

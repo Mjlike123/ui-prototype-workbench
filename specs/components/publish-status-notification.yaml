@@ -1,0 +1,121 @@
+schemaVersion: 1
+id: publish-status-notification
+version: 1.0.0
+title: 发布状态通知
+owner: TopTop Design System
+category: Feedback
+status: review
+since: 1.0.0
+tags:
+  - toast
+  - notification
+  - publish
+  - feed
+  - upload
+platforms:
+  - ios
+  - android
+  - h5
+description: 动态发布流程中的短时状态条，展示上传中、发布成功与发布失败；固定宽 343pt，底部进度条反馈当前状态。
+previewKey: publish-status-notification
+reference:
+  figmaUrl: https://www.figma.com/design/tyYEbtAXWTxSLduue3ixgp/TOP-UI-kit?node-id=14140-262086
+  nodeId: "14140:262086"
+  observations:
+    - 容器 343×56pt、圆角 12pt、白底 0.5pt 浅描边、下投影 0 8 12.5 rgba(0,0,0,0.1)
+    - 左侧缩略图 32×32pt、圆角 4pt、0.5pt 浅描边；无图失败态使用灰底占位
+    - 文案 15pt Regular；上传/成功 secondary，失败 danger
+    - 底部 2pt 进度条：上传/成功品牌色，失败警示色；上传中为部分宽度
+    - 失败态右侧 24pt 重试与关闭图标
+anatomy:
+  - id: shell
+    label: 通知容器
+    description: 固定宽浮层条，承载缩略图、文案、操作与进度条。
+  - id: thumbnail
+    label: 缩略图
+    description: 32pt 方图；失败无图时显示灰底占位。
+  - id: message
+    label: 状态文案
+    description: 上传、成功或失败提示。
+  - id: retryAction
+    label: 重试
+    description: 失败态 24pt 重试图标按钮。
+  - id: dismissAction
+    label: 关闭
+    description: 失败态 24pt 关闭图标按钮。
+  - id: progress
+    label: 底部进度条
+    description: 2pt 高，反映上传进度或终态结果。
+variants:
+  - name: status
+    values:
+      - uploading
+      - success
+      - failed
+    defaultValue: uploading
+props:
+  - name: status
+    type: PublishStatusNotificationStatus
+    required: true
+    description: 上传中、成功或失败。
+  - name: message
+    type: string
+    description: 自定义文案；默认 uploading... / 发布成功！ / post failed!
+  - name: thumbnailSrc
+    type: string
+    description: 左侧缩略图地址；失败无图时可省略。
+  - name: thumbnailPlaceholder
+    type: string
+    description: 无缩略图时的占位说明文案。
+  - name: progress
+    type: number
+    description: 上传进度 0–100；成功/失败默认 100。
+  - name: onRetry
+    type: () => void
+    description: 失败态点击重试时触发。
+  - name: onDismiss
+    type: () => void
+    description: 失败态点击关闭时触发。
+tokenRefs:
+  - color.surface.panel
+  - color.text.secondary
+  - color.text.white-primary
+  - color.brand.primary
+  - color.state.like
+  - color.border.subtle
+accessibility:
+  - 上传中与成功使用 role="status" + aria-live="polite"；失败使用 role="alert"。
+  - 重试与关闭必须是可聚焦 button，并提供可读名称。
+  - 进度条为装饰性元素，状态变化应同步更新文案。
+detection:
+  figmaFileKeys:
+    - tyYEbtAXWTxSLduue3ixgp
+  figmaComponentIds:
+    - "14140:262086"
+    - "1516:33863"
+    - "1516:33864"
+    - "1516:33865"
+    - "1393:8820"
+  nameAliases:
+    - 发布状态通知
+    - publish status notification
+    - 消息提示/发布
+    - 发布中
+    - post failed
+roles:
+  - container
+  - content
+  - trailingAction
+rules:
+  - id: shell.width
+    title: 通知条宽度
+    category: structure
+    metric: width
+    tolerance: 2
+    aggregate: rule
+  - id: shell.height
+    title: 通知条高度
+    category: structure
+    metric: height
+    tolerance: 2
+    aggregate: rule

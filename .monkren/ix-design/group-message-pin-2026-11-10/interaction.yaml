@@ -1,0 +1,78 @@
+schemaVersion: 1
+featureId: group-message-pin
+platform: ios
+
+pages:
+  - id: group-chat
+    name: 群聊
+    states:
+      - id: single-pin
+        description: 导航下展示一条置顶摘要。
+      - id: multiple-collapsed
+        description: 多条置顶收起为单行摘要。
+      - id: multiple-expanded
+        description: 展开显示全部置顶消息。
+      - id: manage
+        description: 有权限成员可逐条移除置顶。
+      - id: context-menu
+        description: 长按消息后显示含“置顶”的浮动操作菜单。
+      - id: located-highlight
+        description: 定位到原消息并短时显示 KU 橙色描边。
+    transitions:
+      - trigger: 点击收起态置顶摘要的展开入口
+        result: 进入 multiple-expanded。
+      - trigger: 点击展开态的收起入口或聊天空白区域
+        result: 返回 multiple-collapsed。
+      - trigger: 点击一条置顶消息
+        result: 关闭列表并滚动到原消息；成功时进入 located-highlight。
+      - trigger: 长按支持置顶的消息
+        result: 打开 context-menu，焦点落在菜单内。
+      - trigger: 点击“置顶”
+        result: 关闭菜单、更新置顶列表，并在屏幕居中反馈“已置顶”。
+      - trigger: 点击管理态中的移除按钮
+        result: 从置顶列表移除，不删除原消息；居中反馈“已移除置顶”。
+
+  - id: pinned-message-detail
+    name: 消息详情
+    states:
+      - id: unavailable
+        description: 展示发送人、时间和原摘要，并提示原消息已删除或超出可定位范围。
+    transitions:
+      - trigger: 点击不可定位的置顶消息
+        result: 进入 unavailable。
+      - trigger: 点击返回
+        result: 返回群聊并保留此前滚动位置。
+
+globalRules:
+  - 同一消息只保留一个置顶记录。
+  - 多条置顶按置顶时间倒序。
+  - 置顶和移除使用乐观反馈；失败时恢复操作前状态并居中提示重试。
+  - 浮层打开后，点击外部或按 Escape 关闭并将焦点返回触发消息。
+  - 列表展开、浮层进出和定位使用 transform/opacity；reduced motion 下取消位移和缩放。
+  - 高亮不能只依赖颜色；辅助技术播报“已定位到置顶消息”。
+
+kitMapping:
+  - region: 顶部导航
+    source: kit
+    componentId: primary-navigation
+  - region: 群聊消息
+    source: kit
+    componentId: chat-message-layout
+  - region: 聊天输入栏
+    source: kit
+    componentId: chat-bottom-bar
+  - region: 图标
+    source: kit
+    componentId: SystemIcon
+  - region: 置顶摘要与列表
+    source: prototype
+    componentId: PinnedMessageBanner
+    kitGap: 当前 Kit 没有群消息置顶组合契约。
+  - region: 消息浮动菜单
+    source: prototype
+    componentId: MessageContextMenu
+    kitGap: 当前 Kit 没有锚定消息气泡的上下文菜单契约。
+  - region: 定位高亮
+    source: prototype
+    componentId: LocateHighlight
+    kitGap: 属于页面级反馈行为。

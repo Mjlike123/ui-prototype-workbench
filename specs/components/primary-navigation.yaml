@@ -1,6 +1,6 @@
 schemaVersion: 1
 id: primary-navigation
-version: 1.0.0
+version: 1.1.0
 title: 一级导航
 owner: TopTop Design System
 category: Navigation
@@ -27,12 +27,13 @@ reference:
     - 选中标题使用 SF Pro 22pt/26pt、字重 590、颜色 #181923
     - 未选中标题使用 SF Pro 16pt/19pt、字重 590、颜色 #8B8C91
     - 标题支持 1–5 项；尾部操作支持无图标、单个搜索图标或三个 28pt 图标
-    - 标题超出可用宽度时在操作区前使用白色渐隐，不允许覆盖尾部图标
+    - 标题超出可用宽度时在操作区前使用渐隐遮罩，不允许覆盖尾部图标
+    - 导航容器使用 color.surface.canvas（背景色/bgPrimary）；标题与尾部操作按钮背景透明
     - 导航容器固定在页面顶部安全区下方，不参与下方内容列表的纵向滚动；列表使用独立滚动容器
 anatomy:
   - id: container
     label: 导航容器
-    description: 固定在页面顶部安全区下方，高 44pt，使用 16pt 水平安全边距和 6pt 垂直内边距，不随内容列表滚动。
+    description: 固定在页面顶部安全区下方，高 44pt，使用 16pt 水平安全边距和 6pt 垂直内边距；容器使用 color.surface.canvas，操作按钮背景透明。
   - id: tabItem
     label: 导航标题
     description: 支持 1–5 项，选中项通过字号和颜色共同提升层级。
@@ -89,6 +90,7 @@ props:
     type: "(action:string)=>void"
     description: 用户点击尾部操作图标时触发。
 tokenRefs:
+  - color.surface.canvas
   - color.text.primary
   - color.text.navigation-inactive
   - typography.navigation.primary-selected

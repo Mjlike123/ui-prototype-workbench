@@ -66,4 +66,15 @@ describe("FeedDetailPagePrototype", () => {
     fireEvent.click(screen.getByLabelText("返回"));
     expect(onBack).toHaveBeenCalledOnce();
   });
+
+  it("embeds into a Duo pane without a second status bar or back control", () => {
+    const { container } = render(<FeedDetailPagePrototype embedded />);
+
+    expect(
+      container.querySelector(".feedDetailDevice--embedded"),
+    ).toBeInTheDocument();
+    expect(container.querySelector(".iosStatusBar")).toBeNull();
+    expect(screen.queryByRole("button", { name: "返回" })).toBeNull();
+    expect(screen.getByPlaceholderText(/reply to Latifa/i)).toBeInTheDocument();
+  });
 });

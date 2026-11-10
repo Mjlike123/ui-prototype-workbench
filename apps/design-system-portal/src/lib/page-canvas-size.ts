@@ -11,12 +11,24 @@ export const PAGE_CANVAS_SIZE_PRESETS: PageCanvasSizePreset[] = [
   { id: "375", label: "375 × 812（设计基准 · 默认）", width: 375, height: 812 },
   { id: "390", label: "390 × 844（iPhone 14）", width: 390, height: 844 },
   { id: "414", label: "414 × 896（Plus / Max）", width: 414, height: 896 },
+  {
+    id: "duo-outer",
+    label: "466 × 678（iPhone Duo 外屏）",
+    width: 466,
+    height: 678,
+  },
+  {
+    id: "duo-inner",
+    label: "890 × 626（iPhone Duo 内屏展开）",
+    width: 890,
+    height: 626,
+  },
 ];
 
 export const DEFAULT_PAGE_CANVAS_PRESET_ID = "375";
 
 export const PAGE_CANVAS_WIDTH_MIN = 320;
-export const PAGE_CANVAS_WIDTH_MAX = 480;
+export const PAGE_CANVAS_WIDTH_MAX = 890;
 export const PAGE_CANVAS_HEIGHT_MIN = 480;
 export const PAGE_CANVAS_HEIGHT_MAX = 960;
 

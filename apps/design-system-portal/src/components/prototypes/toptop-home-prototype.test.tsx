@@ -33,6 +33,53 @@ describe("TopTopHomePrototype", () => {
     expect(header?.parentElement).toBe(scroll?.parentElement);
   });
 
+  it("moves the tab bar to the side on the iPhone Duo outer canvas", () => {
+    const { container } = render(
+      <TopTopHomePrototype width={466} height={678} />,
+    );
+
+    const tabBar = screen.getByRole("navigation", { name: "App 一级目的地" });
+    expect(tabBar).toHaveClass("bottomNavigation--vertical");
+    expect(
+      container.querySelector(".pageCanvasContentShell--sideChrome"),
+    ).toContainElement(tabBar);
+    expect(container.querySelector(".topTopHomeDevice")).toHaveStyle({
+      "--duo-reserved-top": "54px",
+    });
+  });
+
+  it("spreads Join friends evenly across the iPhone Duo outer canvas", () => {
+    const { container } = render(
+      <TopTopHomePrototype width={466} height={678} />,
+    );
+
+    const grid = container.querySelector(".topTopFriendGrid");
+    expect(grid).toHaveStyle({
+      gridTemplateColumns: "repeat(5, 56px)",
+    });
+    const gap = Number.parseFloat(grid?.style.gap ?? "0");
+    expect(5 * 56 + 4 * gap).toBeCloseTo(434, 1);
+    expect(
+      container.querySelectorAll(".topTopFriend:not(.topTopFriend--more)"),
+    ).toHaveLength(4);
+  });
+
+  it("keeps find Friend in the home scroll on iPhone Duo inner canvas", () => {
+    const { container } = render(
+      <TopTopHomePrototype width={890} height={626} />,
+    );
+
+    expect(container.querySelector(".topTopHomeDevice--duoInner")).toBeInTheDocument();
+    expect(container.querySelector(".prototypePrimaryDuo--inner")).toBeNull();
+    const scroll = container.querySelector(".topTopHomeScroll");
+    expect(scroll).toContainElement(
+      screen.getByRole("heading", { name: "find Friend" }),
+    );
+    expect(scroll).toContainElement(
+      screen.getByRole("heading", { name: "Game" }),
+    );
+  });
+
   it("switches destinations through the bottom navigation", () => {
     render(<TopTopHomePrototype />);
 
@@ -51,6 +98,37 @@ describe("TopTopHomePrototype", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "搜索" }));
     expect(onOpenSearch).toHaveBeenCalledOnce();
+  });
+
+  it("creates a private room through the game selection sheet", () => {
+    const onCreatePrivateRoom = vi.fn();
+    render(
+      <TopTopHomePrototype onCreatePrivateRoom={onCreatePrivateRoom} />,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Create private room" }),
+    );
+    expect(
+      screen.getByRole("dialog", {
+        name: "Choose a game for your private room",
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Select Jackaroo" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Start private room" }),
+    );
+
+    expect(onCreatePrivateRoom).toHaveBeenCalledWith("Jackaroo");
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Jackaroo private room is ready",
+    );
+    expect(
+      screen.getByRole("button", {
+        name: "Change Jackaroo private room game",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("accepts wide viewport width for layout adaptation tokens", () => {

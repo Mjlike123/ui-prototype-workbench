@@ -1,0 +1,97 @@
+schemaVersion: 1
+featureId: moment-structure-liked-mention
+reviewedAt: 2026-10-28T19:32:00+08:00
+stage: studio-evidence-round-2
+verdict: 有条件可交付
+
+pass1:
+  isolation: 独立上下文截图盲评
+  referenceBaseline: Moment Core 卡片；附件开放/非开放与 @ 半窗参考
+  fixedGaps:
+    - 「我赞过的」与普通 Feed 无法区分 — 已增加 Core RegularNavigation 标题/返回并移除底部导航和 FAB
+    - "@ 半窗横向裁切、缺头像/选择态/完成操作 — 已补齐并复拍"
+    - 通知弹窗层级重叠、Clear all 过大、常驻 Delete 突兀 — 已本地化并收口到 Kit 弹窗
+  scores:
+    visualAesthetic: 8
+    designConsistency: 9
+    interactionLogic: 8
+    deliveryCompleteness: 9
+  correctionRound: 2
+
+pass2:
+  notes: Core Feed / Me / Compose / Detail 均通过可选扩展点复用；Studio 仅保留 mention picker 与通知增量；P1 仍为产品规则未闭合
+
+screenshots:
+  manifest: .monkren/ix-design/moment-structure-liked-mention-2026-10-28/exports/manifest.json
+  captureScript: scripts/capture-moment-liked-mention.mjs
+  highlights:
+    - moment-feed-open-375.png / moment-feed-closed-375.png — 大区 footer 差异
+    - moment-profile-liked-375.png — Core Profile 的本人私密「我赞过的」入口
+    - moment-liked-list-375.png — 我赞过的列表
+    - moment-compose-mention-375.png — @ 半窗
+    - moment-notify-clear-375.png — Clear all 确认
+    - moment-feed-open-466.png / moment-liked-list-466.png — Duo 外屏
+    - moment-feed-open-890.png / moment-liked-list-890.png — Duo 内屏
+
+p0: []
+
+p1:
+  - 位置：mention 多选上限与权限 — brief openQuestions — 影响：错误 @ — 修复：产品 rules + 服务端
+  - 位置：取消点赞与「我赞过的」同步 — brief uncertain — 影响：列表失真 — 修复：定义 sync 策略
+
+p2:
+  - 位置：Profile 入口的计数来源 — 当前使用原型固定值 — 修复：接入点赞历史数据后动态计算
+
+subtractionLog:
+  removed:
+    - 评论专用第二套好友选择 UI
+    - Profile 内嵌完整赞过列表
+    - Me 功能列表中的重复入口
+  kept:
+    - Choose who to remind — 统一 @ 认知
+    - Clear all 二次确认 — 防误清
+
+kitCandidates:
+  - id: mention-picker-sheet
+    verdict: keep-prototype
+    reuseEvidence: 发布 + 评论
+    validationEvidence: moment-compose-mention-375.png
+    blocker: 第二业务场景或 IM @ 复用证据
+
+kitGaps:
+  - PrototypeMentionPickerSheet
+  - PrototypeMentionInline
+  - PrototypeFeedCardRegionActions
+
+nextSteps:
+  - 产品关闭 openQuestions
+  - 确认 @ 上限/权限和取消点赞同步策略后改 verdict 为可交付
+  - 确认后 promotion → specs/features
+
+likedHistoryRedesign:
+  reviewedAt: 2026-10-29T17:30:00+08:00
+  source: TOPTOP-DESIGN.md + matching YAML contracts
+  direction: 摘要列表优先回看效率；移动端进入详情，890 宽屏列表与当前详情同屏
+  implemented:
+    - 按点赞时间排序与仅自己可见的上下文说明
+    - 摘要卡片、明确的已赞操作、200ms 退出和三秒撤销 Toast
+    - 全部移除后的 Kit EmptyState 与去浏览动态操作
+    - 890×626 列表—详情布局，375/466 单列布局
+    - prefers-reduced-motion 下移除位移动效
+  runtimeEvidence:
+    - moment-liked-list-375.png
+    - moment-liked-list-466.png
+    - moment-liked-list-890.png
+  blindReview:
+    rounds: 2
+    p0: []
+    unresolved:
+      - 静态截图无法证明取消点赞后的撤销反馈；以运行时主流程与自动化测试补充
+      - Kit RegularNavigation 副标题和身份标签的既有对比度不在 Studio 局部覆写
+    stopThresholdMet: false
+  validation:
+    - 375 画布卡片宽 343px、列表 gutter 16px、操作高度至少 44px
+    - 取消点赞后卡片移除，撤销后恢复
+    - 890 画布主从列为约 338px / 552px
+    - Dark 主题解析为 canvas #181923、正文 rgba(255,255,255,0.9)
+    - Reduced Motion 下卡片退出不使用位移

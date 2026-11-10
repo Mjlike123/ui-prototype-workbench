@@ -73,6 +73,70 @@ export function resolvePageCanvasTemplate(raw: string): PageCanvasPlan | null {
 
   if (
     includesAny(text, [
+      "moment v3.19",
+      "moment发布入口",
+      "moment 发布入口",
+      "纯文案圈子",
+      "失败草稿恢复",
+      "动态详情吸底互动",
+      "moment-publish-detail",
+    ])
+  ) {
+    return {
+      title: "Moment 发布与动态详情优化",
+      intent: "moment-publish-detail",
+      matched: [
+        "意图模板 · Moment v3.19.0（Studio）",
+        "PrototypeDestinationPage · Feed 与发布 FAB",
+        "regular-navigation · My Moment / New post",
+        "FeedComposePagePrototype · Core 发布页面、媒体、可见范围与草稿",
+        "Prototype community gap · 圈子选择、新圈子红点与后端校验增量",
+        "FeedDetailPagePrototype · 吸顶作者与吸底互动",
+        "SystemIcon · publish / messageFailed / like / comment / chat",
+      ],
+      warnings: [
+        "本模板仅在原型创作（Studio）预览，不影响核心模块。",
+        "圈子是否必须配图由提交后的服务端模拟判断，客户端不提前拦截。",
+        "礼包入口去向、红点跨设备同步与埋点仍待产品确认。",
+      ],
+      blocks: [],
+    };
+  }
+
+  if (
+    includesAny(text, [
+      "tiktok 式搜索",
+      "tiktok搜索",
+      "搜索优化",
+      "搜索前推荐",
+      "输入联想",
+      "分类结果",
+      "相关搜索",
+      "search flow",
+    ])
+  ) {
+    return {
+      title: "全局搜索流程优化",
+      intent: "search-flow",
+      matched: [
+        "SearchPagePrototype · Core 搜索前页面",
+        "SearchControl · 输入、清除、提交与取消",
+        "RegularListItem · 联想词、用户与房间结果",
+        "TextSecondaryTab · Top / Moments / Users / Rooms / Games",
+        "AvatarVisual + ListTag · 用户结果",
+        "Prototype search gaps · Moment 卡片与相关搜索",
+      ],
+      warnings: [
+        "借鉴 TikTok 的流程连续性与信息密度，不复制视频瀑布流和品牌视觉。",
+        "联想、综合排序与相关搜索为 Studio 数据模拟，生产实现需接搜索服务。",
+        "本模板仅在原型创作预览，不修改 Core 搜索页默认行为。",
+      ],
+      blocks: [],
+    };
+  }
+
+  if (
+    includesAny(text, [
       "发布动态",
       "发动态",
       "发帖",
@@ -87,15 +151,16 @@ export function resolvePageCanvasTemplate(raw: string): PageCanvasPlan | null {
       title: "发布动态",
       intent: "feed-compose",
       matched: [
-        "意图模板 · Feed 发布动态（Hybrid）",
-        "regular-navigation · 返回 + Post",
-        "AvatarVisual · 作者头像",
-        "PrototypeFeedMediaPicker · 相册 / 拍照（prototype）",
-        "PrototypeFeedComposeEditor · 文案与话题（prototype）",
+        "意图模板 · Feed 发布动态（Figma 856:71329）",
+        "IosStatusBar · 状态栏",
+        "SystemIcon · close / emoji / hashtag / globe / add",
+        "selector-button · Local 定位开关",
+        "PrototypeFeedMediaPicker · 相册三级页（prototype）",
+        "PrototypeFeedComposeEditor · 文案高亮话题 + 话题条 + 底栏 Dock",
       ],
       warnings: [
         "相册与相机为原型模拟，不代表原生权限与系统 picker 行为。",
-        "可见范围切换为占位交互，完整受众选择页尚未入库。",
+        "Local 定位开关与话题选择器为占位交互。",
       ],
       blocks: [],
     };
@@ -163,10 +228,43 @@ export function resolvePageCanvasTemplate(raw: string): PageCanvasPlan | null {
         "SystemIcon · 底栏 / 闭麦 / 礼物",
       ],
       warnings: [
-        "围桌默认 10 麦，可在舞台区切换 8–12 麦；荷尔蒙氛围为 Studio 探索态。",
-        "真心话题库、换题与公屏投票权重为占位交互。",
-        "男性落座费、排队与淘汰退费规则待产品确认后接入。",
+        "围桌默认 10 麦，可在舞台区切换 8–12 麦；男女专属位交替落座。",
+        "冷启动仅开放 2–3 个官方固定房，AI 机器人补位与三类引导任务为占位。",
+        "真心话题库 Lv.1–3 各 ≥50 题，合规审核后下发，不支持用户出题。",
+        "公屏投票赞率 >60% 仅考核男性留座，女性全程免疫请出。",
         "本模板仅在原型创作（Studio）预览，未进入核心模块目录。",
+      ],
+      blocks: [],
+    };
+  }
+
+  if (
+    includesAny(text, [
+      "在房状态",
+      "语音房在房状态",
+      "voice room status",
+      "room status visibility",
+      "voice room visibility",
+      "非好友可见",
+      "v3.26.0",
+    ])
+  ) {
+    return {
+      title: "语音房在房状态",
+      intent: "voice-room-status",
+      matched: [
+        "意图模板 · 语音房在房状态 v3.26.0（Studio）",
+        "ProfileV3RoomFollow · 客态在房胶囊进房",
+        "PrototypeFeedAvatarInRoom · 动态在房环",
+        "meSecondarySettingsGroup · 隐私设置行",
+        "VoiceRoomVisibilitySheet · iOS 纯文字半窗",
+        "Switch · 隐身于房间",
+        "SystemIcon · voiceStatus / chevronRight",
+      ],
+      warnings: [
+        "本模板仅在原型创作（Studio）预览，未进入核心模块目录。",
+        "可见范围默认值由大区策略决定（后端），原型使用 sessionStorage 模拟。",
+        "动态点头像 vs 点在房标记的分工待产品确认。",
       ],
       blocks: [],
     };

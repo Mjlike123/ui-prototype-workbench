@@ -1,0 +1,41 @@
+schemaVersion: 1
+featureId: group-message-pin
+reviewedAt: 2026-11-10
+result: conditional-pass
+
+figma:
+  rootNodeId: 701:43708
+  statesReviewed: 7
+
+checks:
+  - area: 需求闭环
+    result: pass
+    evidence: 已覆盖单条、多条收起/展开、移除、长按置顶、定位成功和定位失败。
+  - area: TopTop 组件复用
+    result: pass
+    evidence: 复用现有群聊页面、导航、消息布局、输入栏、Action Panel 与图标资产。
+  - area: KU 主题
+    result: pass
+    evidence: 37 个可见 Paint 绑定 KU主色/brandPrimary。
+  - area: 导航背景
+    result: pass
+    evidence: 7 个页面状态的导航均绑定 背景色/bgPrimary。
+  - area: Figma 硬编码颜色扫描
+    result: warning
+    evidence: 检出 193 个可见硬编码 Paint，其中 120 个位于复用组件内部，其余主要来自原页面状态栏、消息文字和图像描边。
+    action: 不阻塞本次原型；正式组件源更新时应继续将语义色迁移到 Token。
+  - area: 权限和数量
+    result: open
+    evidence: 交互已使用“有权限成员”兜底，但最终角色矩阵、数量上限和超限反馈尚未确认。
+
+severity:
+  p0: []
+  p1:
+    - 研发前确认置顶/移除权限矩阵和数量上限。
+  p2:
+    - 后续清理复用源组件中的可行动硬编码颜色。
+
+kitGaps:
+  - PinnedMessageBanner/List
+  - MessageContextMenu
+  - LocateHighlight

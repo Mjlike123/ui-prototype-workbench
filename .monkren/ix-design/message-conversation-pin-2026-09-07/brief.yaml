@@ -1,0 +1,227 @@
+schemaVersion: 1
+feature:
+  id: message-conversation-pin
+  name: Message 会话置顶
+  platform: ios
+  viewport:
+    width: 375
+    height: 812
+  goals:
+    - 让用户把重要或高频会话稳定保留在消息列表顶部，减少反复搜索和滚动查找
+    - 让置顶与取消置顶在 Message 列表内快速完成，无需进入会话设置
+    - 通过排序和状态视觉共同表达置顶结果，避免用户误以为只是最近消息排序
+  personas:
+    - 会话较多、需要持续关注少量重要联系人或群聊的用户
+    - 需要快速找到高频会话的重度消息用户
+
+sources:
+  - type: text
+    ref: 用户对话：Message 新增置顶；参考微信，列表左滑出现按钮；点击置顶；UI 做视觉区分
+    extractedAt: 2026-09-07
+    confidence: high
+  - type: url
+    ref: https://chengdu-expat.com/wechat-hidden-features/
+    extractedAt: 2026-09-07
+    confidence: medium
+  - type: url
+    ref: https://open.work.weixin.qq.com/help2/pc/21681
+    extractedAt: 2026-09-07
+    confidence: medium
+
+scope:
+  newBehavior:
+    - Message 会话行向左滑动后露出“置顶”操作
+    - 点击“置顶”后目标会话立即移动到会话列表顶部的置顶分区
+    - 已置顶会话再次左滑时提供“取消置顶”操作
+    - 点击“取消置顶”后移除置顶状态，并按普通会话排序规则回到非置顶分区
+    - 置顶状态使用视觉差异和非颜色线索共同表达
+    - 同一时间只允许一个会话行保持侧滑操作区展开
+  existingModified:
+    - Message 会话列表由单一时间排序扩展为“置顶分区 + 普通分区”
+    - 会话行新增侧滑中、动作露出、置顶和取消置顶后的重排状态
+    - 常规列表消息类型需要承接置顶视觉和可访问状态；当前 Kit 尚无 pinned 状态
+    - 长按会话行菜单新增“置顶”或“取消置顶”，作为侧滑之外的补充入口
+  existingUnchanged:
+    - item: 点击会话行主体进入对应私聊或群聊
+      evidence: apps/design-system-portal/src/components/prototypes/prototype-destination-page.tsx 中 MessageScreen 现有 onOpenPrivateChat / onAction
+    - item: Message 顶部导航、搜索、在线好友与底部一级导航
+      evidence: 现有 Core message 页面 PrototypeDestinationPage
+    - item: 会话行继续展示头像、用户名、消息摘要、时间和未读数
+      evidence: specs/components/regular-list.yaml 的 message variant 与现有 MessageScreen
+    - item: 未读状态不因置顶或取消置顶而变化
+      evidence: 置顶只改变会话优先级，不改变消息阅读状态
+  uncertain: []
+
+visualDirections:
+  - statement: 置顶会话必须与普通会话形成可感知但不过度抢眼的视觉区别
+    sourceRef: 用户对话“在 UI 上做出视觉区分”
+    confidence: high
+  - statement: 推荐使用低强调度 surface 背景区分，并增加置顶图标或可访问状态文本，不能只依赖颜色
+    sourceRef: 微信置顶聊天视觉模式 + regular-list 无障碍约束
+    confidence: medium
+  - statement: 侧滑操作按钮沿用 TopTop Foundations Token；置顶是可逆整理操作，不使用删除类危险色语义
+    sourceRef: TopTop Kit 一致性原则
+    confidence: medium
+  - statement: 侧滑、回弹与列表重排应快速且克制，并支持 prefers-reduced-motion
+    sourceRef: specs/foundations/motion.yaml 与交互可访问性原则
+    confidence: medium
+
+designImpacts:
+  - sourceType: product
+    sourceRef: 用户对话
+    statement: 用户提出的表层功能是“左滑后点击置顶”
+    impact: 真实任务是持续提高重要会话的可发现性，因此需要同时设计入口、排序、状态识别和取消置顶闭环
+    target: interaction
+    confidence: high
+  - sourceType: product
+    sourceRef: 用户对话
+    statement: 操作入口位于 Message 列表侧滑动作区
+    impact: 需要处理手势阈值、横纵向手势冲突、单行展开、点击外部收起和主体误触防护
+    target: interaction
+    confidence: high
+  - sourceType: visual
+    sourceRef: 用户对话
+    statement: 置顶状态需要 UI 视觉区分
+    impact: 推荐使用低强调度背景加非颜色线索，同时保持未读数、摘要和时间的原有层级
+    target: both
+    confidence: high
+  - sourceType: product
+    sourceRef: 微信 / WeCom 置顶模式参考
+    statement: 置顶较多时会挤压普通会话和未读内容
+    impact: 本期需确认数量上限；未确认前不自动引入折叠置顶能力
+    target: interaction
+    confidence: medium
+  - sourceType: technical
+    sourceRef: 用户确认 2026-09-07
+    statement: 置顶状态需要账号级持久化和跨设备同步
+    impact: 原型采用乐观重排；写入失败时回滚原位置与状态，并提供可重试反馈
+    target: interaction
+    confidence: high
+
+ignoredItems:
+  - item: 逐像素复制微信侧滑按钮颜色、尺寸和动画
+    reason: out-of-release-scope
+    sourceRef: 微信仅作为交互模式参考，TopTop UI 必须复用 Foundations 与 Kit
+  - item: 自动实现折叠置顶聊天
+    reason: out-of-release-scope
+    sourceRef: 用户本次只要求置顶与视觉区分，折叠属于置顶规模治理
+  - item: 修改私聊详情页内容与消息气泡交互
+    reason: out-of-release-scope
+    sourceRef: 本次目标位于 Message 会话列表
+
+pages:
+  - id: message-list
+    name: Message 消息列表
+    description: 在现有 Message Core 页面中为会话列表增加侧滑置顶、取消置顶、排序与状态视觉
+    knownStates:
+      - 默认列表
+      - 会话行左滑跟手
+      - 未置顶行露出“置顶”
+      - 已置顶行露出“取消置顶”
+      - 置顶会话分区
+      - 置顶后即时重排
+      - 取消置顶后即时重排
+      - 点击外部或开始纵向滚动后侧滑行收起
+      - 置顶提交中与失败回滚（待数据契约确认）
+      - 空消息列表
+    sourceRefs:
+      - 用户对话
+      - apps/design-system-portal/src/components/prototypes/prototype-destination-page.tsx
+      - specs/components/regular-list.yaml
+
+flows:
+  - name: 置顶会话
+    type: primary
+    steps:
+      - 用户在 Message 会话列表找到重要会话
+      - 向左滑动该会话行
+      - 会话行跟手左移并露出“置顶”操作
+      - 用户点击“置顶”
+      - 操作区收起，会话进入列表顶部置顶分区
+      - 会话行显示置顶视觉与可访问状态，未读和消息内容保持不变
+  - name: 取消置顶
+    type: secondary
+    steps:
+      - 用户向左滑动已置顶会话
+      - 操作区显示“取消置顶”
+      - 用户点击“取消置顶”
+      - 操作区收起，会话移出置顶分区
+      - 会话按普通排序规则回到非置顶列表并恢复默认视觉
+  - name: 取消侧滑操作
+    type: cancel
+    steps:
+      - 用户左滑会话但不点击操作
+      - 用户反向滑回、点击列表其他区域或开始纵向滚动
+      - 当前会话行回到默认位置，不改变置顶状态
+  - name: 置顶失败回滚
+    type: error
+    steps:
+      - 用户点击“置顶”或“取消置顶”
+      - 本地先展示预期排序和状态
+      - 服务端写入失败
+      - 会话恢复操作前位置与状态
+      - 就近反馈“操作失败，请重试”并向辅助技术播报
+
+rules:
+  - text: 置顶只改变会话在 Message 列表中的优先级，不改变未读、免打扰、消息内容或会话成员关系
+    source: 需求语义推导
+    confidence: high
+  - text: 已置顶会话的侧滑动作必须变为“取消置顶”，形成可逆闭环
+    source: 可逆状态交互补全
+    confidence: high
+  - text: 置顶属于可逆整理动作，点击后直接生效，不弹确认对话框
+    source: 微信模式参考与低风险动作原则
+    confidence: medium
+  - text: 同一时间只展开一个会话操作区；展开新行时自动收起旧行
+    source: 移动列表侧滑模式
+    confidence: medium
+  - text: 侧滑打开时，点击操作按钮不能同时触发会话主体跳转
+    source: specs/interactions/regular-list-action.yaml
+    confidence: high
+  - text: 置顶状态不能只依赖背景色；可访问名称需包含“已置顶”
+    source: specs/components/regular-list.yaml accessibility
+    confidence: high
+  - text: 普通会话继续按现有时间规则排序；置顶分区按置顶时间倒序排列
+    source: 用户确认 2026-09-07
+    confidence: high
+  - text: 新置顶会话固定进入置顶分区首位；后续新消息不改变置顶分区内部顺序
+    source: 用户确认 2026-09-07
+    confidence: high
+  - text: 私聊、普通群聊和 Room Group 支持置顶，系统通知不支持
+    source: 用户确认 2026-09-07
+    confidence: high
+  - text: 置顶数量不设上限，本期不提供折叠置顶能力
+    source: 用户确认 2026-09-07
+    confidence: high
+  - text: 置顶状态账号级同步；列表左滑为主入口，长按菜单为补充入口
+    source: 用户确认 2026-09-07
+    confidence: high
+
+visualReferences:
+  - path: .monkren/references/message-conversation-pin-2026-09-07/report.md
+    interpretation: 参考微信与 WeCom 的置顶任务、即时重排、状态区分和置顶过多治理，不复制具体视觉值
+    linkedPageId: message-list
+
+competitiveInsights:
+  competitors:
+    - 微信
+    - WeCom
+  adopt:
+    - 在会话列表原位完成置顶管理
+    - 置顶后立即进入顶部稳定分区
+    - 以背景和非颜色线索共同表达置顶
+    - 可逆动作不二次确认
+  avoid:
+    - 只改变排序而不显示状态
+    - 照搬未经版本核实的微信手势和颜色
+    - 置顶过多后完全遮挡普通未读会话
+  researchReport: .monkren/references/message-conversation-pin-2026-09-07/report.md
+
+conflicts:
+  - topic: 微信置顶的列表手势入口
+    sources:
+      - 用户明确要求向左滑动出现置顶按钮
+      - 公开资料对微信不同版本描述为左滑更多、右滑、长按或进入会话设置
+    resolution: 以用户指定的左滑作为 TopTop 需求；微信只提供任务与反馈模式参考，不声明完全复刻某一版本
+
+openQuestions: []

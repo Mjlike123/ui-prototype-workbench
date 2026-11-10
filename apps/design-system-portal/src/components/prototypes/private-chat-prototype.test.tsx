@@ -456,4 +456,17 @@ describe("PrivateChatPrototype", () => {
     expect(document.querySelectorAll(".prototypeMessageSticker")).toHaveLength(2);
     expect(screen.getByText("消息已发送")).toBeInTheDocument();
   });
+
+  it("embeds into a Duo pane without a second status bar or back control", () => {
+    const { container } = render(
+      <PrivateChatPrototype friend={friend} embedded />,
+    );
+
+    expect(container.querySelector(".privateChatDevice--embedded")).toBeInTheDocument();
+    expect(container.querySelector(".iosStatusBar")).toBeNull();
+    expect(screen.queryByRole("button", { name: "返回 Message" })).toBeNull();
+    expect(
+      screen.getByRole("textbox", { name: "消息内容" }),
+    ).toBeInTheDocument();
+  });
 });

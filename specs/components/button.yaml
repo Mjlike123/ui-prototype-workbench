@@ -1,10 +1,10 @@
 schemaVersion: 1
 id: button
-version: 1.0.0
+version: 1.1.0
 title: 按钮
 owner: TopTop Design System
 category: Actions
-status: review
+status: stable
 since: 1.0.0
 tags:
   - button
@@ -34,6 +34,7 @@ reference:
     - 主题浅色禁用态使用 10% 主色背景和 #8AECE3 文字；按下态使用 #8AECE3 背景和 #12ADA0 文字
     - 中性灰可点击态使用 color.button.primary 背景和 color.text.secondary 文字
     - 多语言极限情况下文字与边框至少保留 4px，但 32px 与 24px 按钮优先扩宽而非折行
+    - 页面底部主操作放在独立固定操作坞中，不进入内容滚动容器；操作坞使用 color.surface.canvas 并计入底部安全区
 anatomy:
   - id: container
     label: 按钮容器

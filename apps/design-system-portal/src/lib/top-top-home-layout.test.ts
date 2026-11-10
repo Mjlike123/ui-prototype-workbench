@@ -20,6 +20,23 @@ describe("getTopTopFriendStripLayout", () => {
     expect(layout.gap).toBeLessThanOrEqual(16);
   });
 
+  it("fills iPhone Duo inner width with more friend slots instead of stretching gaps", () => {
+    const layout = getTopTopFriendStripLayout(890);
+    expect(layout.columns).toBeGreaterThanOrEqual(10);
+    expect(layout.visibleFriendCount).toBe(layout.columns - 1);
+    expect(layout.gap).toBeGreaterThanOrEqual(8);
+    expect(layout.gap).toBeLessThanOrEqual(16);
+  });
+
+  it("evenly distributes the five friend slots across the iPhone Duo outer canvas", () => {
+    const layout = getTopTopFriendStripLayout(466);
+    expect(layout.columns).toBe(5);
+    expect(layout.visibleFriendCount).toBe(4);
+    expect(
+      layout.columns * 56 + (layout.columns - 1) * layout.gap,
+    ).toBeCloseTo(466 - 32, 1);
+  });
+
   it("keeps message online strip baseline and expands on wide phones", () => {
     const baseline = getMessageOnlineFriendStripLayout(375);
     expect(baseline.columns).toBe(5);
