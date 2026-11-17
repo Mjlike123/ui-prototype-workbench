@@ -29,6 +29,8 @@
 
 发生取舍时按以上顺序决策。原则定义“为什么与如何取舍”，具体值和行为仍以 Foundations、组件与交互 YAML 为准。
 
+面向技术研究与 AI Agent 的结构化流程、任务契约、案例和待研究问题见 [docs/ai-prototype-workflow-technical-brief.md](docs/ai-prototype-workflow-technical-brief.md)。
+
 ## 核心工作流
 
 ```text

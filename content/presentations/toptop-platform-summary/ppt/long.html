@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopTop 原型工作台 · 长图阅读版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kit-visuals.css">
+<style>
+  :root{
+    --ink:#1f1a14;
+    --ink-rgb:31,26,20;
+    --paper:#f0e6d2;
+    --paper-rgb:240,230,210;
+    --paper-tint:#e3d7bf;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --serif-zh:"Noto Serif SC",serif;
+    --sans-zh:"Noto Sans SC",sans-serif;
+    --serif-en:"Playfair Display",Georgia,serif;
+    --max:920px;
+    --pad:clamp(20px,4vw,48px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans-zh);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  code{font-family:var(--mono);font-size:.92em;background:rgba(var(--ink-rgb),.06);padding:.1em .35em;border-radius:3px}
+  a{color:inherit}
+
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    background:rgba(var(--paper-rgb),.94);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(var(--ink-rgb),.12);
+    padding:12px var(--pad);
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  }
+  .topbar nav{display:flex;flex-wrap:wrap;gap:8px 14px}
+  .topbar nav a{text-decoration:none;opacity:.72;padding:4px 0;border-bottom:1px solid transparent}
+  .topbar nav a:hover{opacity:1;border-bottom-color:currentColor}
+  .topbar .deck-link{opacity:.55;font-size:10px}
+
+  .long{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 var(--pad) 80px;
+  }
+
+  .block{
+    padding:clamp(48px,8vw,88px) 0;
+    border-bottom:1px solid rgba(var(--ink-rgb),.1);
+  }
+  .block:last-child{border-bottom:0}
+  .block.dark{
+    background:var(--ink);
+    color:var(--paper);
+    margin-left:calc(-1 * var(--pad));
+    margin-right:calc(-1 * var(--pad));
+    padding-left:var(--pad);
+    padding-right:var(--pad);
+  }
+  .block.dark code{background:rgba(var(--paper-rgb),.12)}
+  .block.dark .callout{background:rgba(var(--paper-rgb),.08);border-color:var(--paper)}
+  .block.dark .card{background:rgba(var(--paper-rgb),.06);border-color:rgba(var(--paper-rgb),.2)}
+  .block.dark .card.muted{opacity:.55}
+  .block.dark .eyebrow{opacity:.82}
+  .block.dark .lead{color:var(--paper);opacity:.95}
+  .block.dark .body{color:rgba(var(--paper-rgb),.9)}
+
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    opacity:.65;margin-bottom:16px;
+  }
+  h1{
+    font-family:var(--serif-zh);font-weight:700;
+    font-size:clamp(2.4rem,6vw,3.6rem);line-height:1.12;letter-spacing:-.02em;
+    margin-bottom:12px;
+  }
+  h2{
+    font-family:var(--serif-zh);font-weight:700;
+    font-size:clamp(1.75rem,4vw,2.35rem);line-height:1.2;margin-bottom:20px;
+  }
+  h3{
+    font-family:var(--serif-zh);font-weight:600;font-size:1.25rem;margin-bottom:12px;
+  }
+  .sub{
+    font-family:var(--serif-zh);font-size:clamp(1.1rem,2.5vw,1.45rem);opacity:.88;margin-bottom:24px;
+  }
+  .lead{
+    font-family:var(--serif-zh);font-size:clamp(1.05rem,2.2vw,1.25rem);line-height:1.55;
+    max-width:42em;margin-bottom:20px;
+  }
+  .body{font-size:1rem;opacity:.9;max-width:42em}
+
+  .callout{
+    margin-top:24px;padding:20px 22px;
+    border-left:3px solid var(--ink);
+    background:rgba(var(--ink-rgb),.08);
+    font-family:var(--serif-zh);font-size:1.05rem;line-height:1.55;max-width:42em;
+  }
+  .callout .src{
+    display:block;margin-top:12px;font-family:var(--mono);font-size:10px;
+    letter-spacing:.2em;text-transform:uppercase;opacity:.6;
+  }
+
+  .cols-2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,40px);margin-top:28px}
+  @media (max-width:640px){.cols-2{grid-template-columns:1fr}}
+
+  ul.plain{padding-left:1.2em;display:flex;flex-direction:column;gap:10px;font-size:.98rem}
+  .block .muted-col{opacity:.58}
+
+  .cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+  @media (max-width:720px){.cards-3{grid-template-columns:1fr}}
+  .card{
+    border:1px solid rgba(var(--ink-rgb),.15);
+    padding:18px 16px;
+    background:rgba(var(--ink-rgb),.04);
+  }
+  .card .label{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;margin-bottom:8px}
+  .card .big{font-family:var(--serif-en);font-weight:700;font-size:1.6rem;line-height:1.1;margin-bottom:6px}
+  .card .note{font-size:.88rem;opacity:.8;line-height:1.45}
+
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-top:24px}
+  .step{
+    border-top:2px solid currentColor;padding-top:12px;
+  }
+  .step .nb{font-family:var(--serif-en);font-style:italic;opacity:.5;font-size:.95rem;margin-bottom:4px}
+  .step .t{font-weight:700;font-size:.95rem;margin-bottom:6px}
+  .step .d{font-size:.85rem;opacity:.88;line-height:1.45}
+
+  .steps-5 .step{min-width:0}
+
+  blockquote.quote{
+    font-family:var(--serif-zh);font-weight:700;
+    font-size:clamp(1.5rem,4vw,2.1rem);line-height:1.35;
+    max-width:16em;margin:20px 0;
+  }
+
+  .hero-cover{
+    padding-top:clamp(56px,10vw,100px);
+    padding-bottom:clamp(48px,8vw,72px);
+    text-align:left;
+  }
+  .meta-row{
+    font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;opacity:.55;margin-top:28px;display:flex;flex-wrap:wrap;gap:8px;
+  }
+
+  .hint{
+    font-family:var(--sans-zh);font-size:.88em;font-weight:400;
+    opacity:.78;letter-spacing:0;
+  }
+
+  @media print{
+    .topbar{position:static}
+    .block.dark{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .block{break-inside:avoid-page}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div>TopTop · 长图版</div>
+  <nav aria-label="章节">
+    <a href="#s-intro">开篇</a>
+    <a href="#s-pain">痛点</a>
+    <a href="#s-platform">平台</a>
+    <a href="#s-howto">怎么用</a>
+    <a href="#s-skills">Skills</a>
+    <a href="#s-case">案例</a>
+    <a href="#s-roles">分工</a>
+    <a href="#s-close">收束</a>
+  </nav>
+  <a class="deck-link" href="index.html">← 翻页演讲版</a>
+</header>
+
+<main class="long">
+
+  <section class="block hero-cover" id="s-intro">
+    <p class="eyebrow">内部分享 · 设计 &amp; 产品 · 2026.11</p>
+    <h1>原型工作台</h1>
+    <p class="sub">让规范可读、协作有边界</p>
+    <p class="lead">
+      Kit 定义边界，Portal<span class="hint">（设计系统网站）</span>承载共识，设计继续在 Figma 出终稿；产品用 Agent<span class="hint">（本机 Cursor AI）</span>做可评审的探索，而不是未对齐 Kit 的非标原型。
+    </p>
+    <div class="meta-row">
+      <span>ui-prototype-workbench</span>
+      <span>·</span>
+      <span>阅读约 8 分钟</span>
+      <span>·</span>
+      <span>纵向滚动 · 可截图长图</span>
+    </div>
+    <figure class="kit-figure" aria-label="语义色彩 Token 示意">
+      <div class="kit-tokens">
+        <div class="sw"><div class="chip brand"></div>brand.primary</div>
+        <div class="sw"><div class="chip canvas"></div>surface.canvas</div>
+        <div class="sw"><div class="chip text"></div>text.primary</div>
+        <div class="sw"><div class="chip sec"></div>text.secondary</div>
+        <div class="sw"><div class="chip neutral"></div>button.secondary</div>
+        <div class="sw"><div class="chip like"></div>state.like</div>
+      </div>
+      <figcaption class="fig-cap">TopTop 语义 Token · 全团队同一套颜色名</figcaption>
+    </figure>
+  </section>
+
+  <section class="block" id="s-pain">
+    <p class="eyebrow">Before / After</p>
+    <h2>规范分散、原型难对齐</h2>
+    <div class="cols-2">
+      <div class="muted-col" style="padding-left:14px;border-left:3px solid rgba(var(--ink-rgb),.35)">
+        <p class="eyebrow" style="margin-bottom:8px">Before · 典型问题</p>
+        <h3>各做各的</h3>
+        <ul class="plain" style="margin-top:14px">
+          <li>产品自绘页面，间距颜色各行其道</li>
+          <li>规范在 Figma 里，没席位的人看不到</li>
+          <li>探索稿被当成研发像素基线</li>
+          <li>Detach<span class="hint">（从 Figma 团队库实例解开）</span>后谁也搜不到标准实例</li>
+        </ul>
+      </div>
+      <div style="padding-left:14px;border-left:3px solid var(--ink)">
+        <p class="eyebrow" style="margin-bottom:8px">After · 我们想要的</p>
+        <h3>同一份可读、可对照</h3>
+        <ul class="plain" style="margin-top:14px">
+          <li>Git + Portal：全员可查 Token<span class="hint">（颜色/间距等语义变量）</span>与组件</li>
+          <li>产品原型明确标 explore<span class="hint">（探索稿，非研发像素基线）</span> / kitGap<span class="hint">（Kit 缺口清单）</span></li>
+          <li>研发排期仍以 Figma 终稿为交付</li>
+          <li>设计回写契约，版本可对齐</li>
+        </ul>
+      </div>
+    </div>
+    <figure class="kit-figure" aria-label="非标原型与 Kit 对比">
+      <div class="kit-phones">
+        <div class="kit-phone chaos">
+          <div class="status">非标探索 · 非基线</div>
+          <div class="body-pad">
+            <div class="fake-title">标题 22px?</div>
+            <div class="fake-tab"><span>Tab A</span><span>tab b</span></div>
+            <div class="fake-btn">确认 #FF00AA</div>
+            <p class="tag-bad">✕ 自绘 · 未绑 Token</p>
+          </div>
+        </div>
+        <div class="kit-phone kit">
+          <div class="status">Kit · secondary-tab + button</div>
+          <div class="body-pad">
+            <div class="tt-tabs">
+              <div class="tab on">推荐</div>
+              <div class="tab">关注</div>
+            </div>
+            <div class="list-line"></div>
+            <div class="list-line" style="width:55%"></div>
+            <div class="tt-btn primary">主操作</div>
+            <p class="tag-ok">✓ 契约组件 · explore 可评审</p>
+          </div>
+        </div>
+      </div>
+      <figcaption class="fig-cap">左：非标探索示意 · 右：二级 Tab + 48 主按钮（specs 对齐）</figcaption>
+    </figure>
+  </section>
+
+  <section class="block dark" id="s-platform">
+    <p class="eyebrow">Platform · 一件事讲清</p>
+    <h2>Kit 可读 · Agent 可搭 · 交付仍走 Figma</h2>
+    <p class="lead">
+      不是低配 Figma，也不是默认把代码交给研发——<code>specs/</code><span class="hint">（契约 YAML）</span> + Portal<span class="hint">（组件 Web 预览）</span> 是全员可读的规范；本机 Cursor 读仓库与 Catalog，按 Skills 搭可评审原型。
+    </p>
+    <div class="callout">
+      「Kit 定义边界，本地 Agent 搭建原型，Skills 负责验收。」
+      <span class="src">— PROJECT.md</span>
+    </div>
+    <figure class="kit-figure">
+      <div class="kit-l123">
+        <div class="layer l1">
+          <div class="badge">L1</div>
+          <div>
+            <h4>Portal / Figma · 给人看</h4>
+            <p>组件真预览、原则、交互说明。</p>
+          </div>
+        </div>
+        <div class="layer l2">
+          <div class="badge">L2</div>
+          <div>
+            <h4>specs · 给 Agent / CI 读</h4>
+            <p>Token、变体、门禁；L3 不得发明新 Token。</p>
+          </div>
+        </div>
+        <div class="layer l3">
+          <div class="badge">L3</div>
+          <div>
+            <h4>Skills + /canvas · 搭与验</h4>
+            <p>探索标 explore · kitGap 回补契约 · 终点 Figma 终稿。</p>
+          </div>
+        </div>
+      </div>
+      <figcaption class="fig-cap">展示 → 契约 → 工作流，一套链；设计 Figma 产稿，产品 Cursor 探索，研发排期认 Figma。</figcaption>
+    </figure>
+    <figure class="kit-figure">
+      <div class="kit-trio">
+        <div class="tile">
+          <h4>Portal</h4>
+          <div class="mock"><span class="dot"></span>/components 预览 · /getting-started</div>
+        </div>
+        <div class="tile">
+          <h4>Git specs</h4>
+          <div class="mock" style="font-family:var(--mono);font-size:10px">GET /api/catalog</div>
+        </div>
+        <div class="tile">
+          <h4>Deliver</h4>
+          <div class="mock">Figma 团队库实例</div>
+        </div>
+      </div>
+    </figure>
+  </section>
+
+  <section class="block" id="s-howto">
+    <p class="eyebrow">How-to · 原型工作台</p>
+    <h2>让 AI 读规范，再读你的需求</h2>
+    <p class="lead">
+      推理在<strong>本机 Cursor</strong>，不依赖 Portal 托管模型。Agent 默认读取本仓库代码、<code>specs/</code>、<code>.agents/skills/</code>；你在浏览器打开 Portal 对照组件真预览。
+    </p>
+    <div class="kit-howto">
+      <div class="row">
+        <div class="n">01</div>
+        <div>
+          <h4>准备环境</h4>
+          <p><code>git clone</code> 仓库 → <code>npm install</code> → <code>npm run portal:dev</code> 打开 <code>localhost:3000</code>（<code>/components</code> 看规范预览，<code>/canvas</code> 看已登记原型）。</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="n">02</div>
+        <div>
+          <h4>在 Cursor 打开同一仓库</h4>
+          <p>对话中 @ 相关文件或说明场景；可先说「用 <code>toptop-design-bundle</code> 路由」。Agent 会查 YAML、MDX、Catalog，而不是猜视觉值。</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="n">03</div>
+        <div>
+          <h4>投喂需求（任选组合）</h4>
+          <p>飞书文档链接或粘贴 PRD 要点 · 截图 / Figma 链接 · 文字用户故事。材料进对话上下文，由你本机 Agent 解析（<span class="hint">非必须飞书机器人</span>）。</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="n">04</div>
+        <div>
+          <h4>自动走 Skill 工作流</h4>
+          <p>映射组件栈 → 实现可运行页面 → 可选 <code>toptop-design-review</code> 输出 P0/P1/P2 → 路由登记 <code>/canvas</code> 评审。进研发前仍由设计 Figma 收口。</p>
+        </div>
+      </div>
+    </div>
+    <figure class="kit-figure">
+      <div class="kit-flow-ui">
+        <div class="steps-mini">
+          <b>需求</b> 飞书 / 截图 / 文案<br>
+          <b>↓</b> Cursor + specs<br>
+          <b>↓</b> Skills 搭原型<br>
+          <b>↓</b> /canvas 预览<br>
+          <b>→</b> <b style="color:var(--tt-brand-dark)">Figma 交付</b>
+        </div>
+        <div class="kit-phone kit" style="max-width:200px;margin:0">
+          <div class="status">Portal 对照</div>
+          <div class="body-pad" style="padding:10px 12px">
+            <div style="font-size:10px;color:var(--tt-text-sec)">浏览器 · 组件预览</div>
+            <div class="tt-btn primary" style="height:36px;font-size:13px;margin-top:8px">对照规范</div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="fig-cap">左：对话与自动化链 · 右：Portal 并行打开做肉眼校对</figcaption>
+    </figure>
+  </section>
+
+  <section class="block dark" id="s-skills">
+    <p class="eyebrow">Skills · 组合运用</p>
+    <h2>入口路由 + 常见串联</h2>
+    <p class="lead">统一从 <code>toptop-design-bundle</code><span class="hint">（选型入口）</span> 进；下表是内部分享最常用组合，可按任务裁剪。</p>
+    <table class="kit-skill-table">
+      <thead>
+        <tr><th>你想做…</th><th>主 Skill</th><th>常配合</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Kit 较全，严格落地一页</td>
+          <td><code>toptop-design-system</code></td>
+          <td><code>toptop-design-review</code> · <code>verify:mvp</code></td>
+        </tr>
+        <tr>
+          <td>Kit 不全，先跑通主流程</td>
+          <td><code>toptop-prototype-studio</code></td>
+          <td>Hybrid + kitGap 清单 → 设计回补 spec</td>
+        </tr>
+        <tr>
+          <td>只有截图，要对齐像素</td>
+          <td><code>yueban-image-to-code</code></td>
+          <td><code>toptop-design-system</code> · review</td>
+        </tr>
+        <tr>
+          <td>评审前自查规范/交互</td>
+          <td><code>toptop-design-review</code></td>
+          <td>附实现路径 + 截图证据</td>
+        </tr>
+        <tr>
+          <td>深度设计质询</td>
+          <td><code>5-dim-review</code></td>
+          <td>评审稿定稿前（monkren-design）</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="kit-combo">
+      <div class="combo">
+        <strong>产品探索 · 默认链</strong>
+        bundle → prototype-studio 或 design-system → 登记 /canvas → design-review
+      </div>
+      <div class="combo">
+        <strong>设计维护 Kit</strong>
+        Figma 实例 → 改 specs/MDX → portal 预览一致 → specs:validate → stable
+      </div>
+      <div class="combo">
+        <strong>验收交付</strong>
+        explore 原型仅评审；进排期 = 门禁 A（Portal+spec）或 B（Figma 实例稿）
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="s-case">
+    <p class="eyebrow">Case Study · 道具商城</p>
+    <h2>从线上截图，到 Kit 对齐方案</h2>
+    <p class="lead">
+      先读取线上 9 个状态，定位类目曝光、预览购买、栅格一致性和续费闭环问题；再在<strong>需求设计文件</strong>内完成两条优化方向，正式 TOP UI Kit 不做变更。
+    </p>
+    <div class="kit-case-grid">
+      <article class="kit-case-panel">
+        <div class="case-head"><strong>线上现状</strong><span>Before · 9 states</span></div>
+        <a href="https://www.figma.com/design/Tc3TmhS6Bi39yfgqDxCaWZ/toptop-ai%E8%B0%83%E7%A0%94?node-id=255-12060" target="_blank" rel="noreferrer">
+          <div class="case-image"><img src="assets/market-case-before.png" alt="道具商城线上现状截图集合"></div>
+        </a>
+      </article>
+      <article class="kit-case-panel">
+        <div class="case-head"><strong>优化方案</strong><span>After · 2 directions</span></div>
+        <a href="https://www.figma.com/design/Tc3TmhS6Bi39yfgqDxCaWZ/toptop-ai%E8%B0%83%E7%A0%94?node-id=264-12045" target="_blank" rel="noreferrer">
+          <div class="case-image"><img src="assets/market-case-after.png" alt="TopTop Kit 道具商城优化方案"></div>
+        </a>
+      </article>
+    </div>
+    <div class="kit-case-summary">
+      <div class="kit-case-note">
+        <h4>01 · 分析与方案</h4>
+        <p>类目从折叠菜单前置；方案 A 保留商城心智，增加实时预览与半屏购买；方案 B 聚合商城 / 我的装扮，并补搜索与过期续费。</p>
+      </div>
+      <div class="kit-case-note">
+        <h4>02 · 实际 Skills</h4>
+        <p><code>figma-design-to-code</code> 读取现状 → <code>figma-generate-design</code> / <code>figma-use</code> 生成并迭代 → <code>toptop-design-system</code> 查组件与 Token。</p>
+      </div>
+      <div class="kit-case-note">
+        <h4>03 · 规范约束</h4>
+        <p>375pt 基准；复用状态栏、导航、Tab、搜索、全局按钮、Half-screen Sheet<span class="hint">（半屏面板）</span>；Surface / Text 绑定变量；卡片 Fill，媒体等比例 Cover；普通组件图标 16pt。</p>
+      </div>
+    </div>
+    <div class="callout">
+      案例价值不是「AI 画得更快」，而是分析、组件选型、Token 与交付边界都能留下可复核证据。
+    </div>
+  </section>
+
+  <section class="block" id="s-roles">
+    <p class="eyebrow">Roles · 设计 &amp; 产品分工</p>
+    <h2>两条产线</h2>
+    <h3 style="margin-top:20px">设计内环 · 效率与规范性</h3>
+    <p class="lead">
+      团队库实例出稿 → 变更回写 <code>specs/</code><span class="hint">（组件契约）</span> 与 MDX<span class="hint">（Portal 组件说明）</span> → Portal 预览一致 → 验证通过后提升为 stable<span class="hint">（正式可用状态）</span>。
+    </p>
+    <ul class="plain" style="max-width:40em">
+      <li>颜色与图标绑定 Token<span class="hint">（语义变量，非手填色值）</span>，减少评审时「以哪版为准」</li>
+      <li><code>npm run specs:validate</code><span class="hint">（校验契约 YAML）</span> / <code>verify:mvp</code><span class="hint">（原型交付自检）</span> 作门禁</li>
+      <li>产品列出的 kitGap<span class="hint">（缺什么组件/规则）</span>，设计按契约回补而非口头对齐</li>
+    </ul>
+    <div class="cards-3" style="margin-top:28px">
+      <div class="card"><div class="label">Figma</div><div class="big">实例</div><div class="note">生产 · 不 Detach<span class="hint">（保持库联动）</span></div></div>
+      <div class="card"><div class="label">Git</div><div class="big">契约</div><div class="note">全员可读</div></div>
+      <div class="card"><div class="label">Lifecycle</div><div class="big">stable</div><div class="note">验证后才 Promote<span class="hint">（提升生命周期）</span></div></div>
+    </div>
+    <figure class="kit-figure">
+      <div class="kit-btn-states">
+        <div class="lbl">button · height48 · primary（specs/components/button.yaml）</div>
+        <div class="row-states">
+          <button type="button" class="tt-btn primary fix">默认</button>
+          <button type="button" class="tt-btn primary fix pressed">按下</button>
+          <button type="button" class="tt-btn primary fix disabled">禁用</button>
+          <button type="button" class="tt-btn neutral fix">中性灰</button>
+        </div>
+      </div>
+      <div class="kit-lifecycle">
+        <span class="pill draft">draft</span>
+        <span class="arrow">→</span>
+        <span class="pill review">review</span>
+        <span class="arrow">→</span>
+        <span class="pill stable">stable</span>
+      </div>
+      <figcaption class="fig-cap">设计回写契约后，组件才能在 Portal 标记 stable</figcaption>
+    </figure>
+
+    <h3 style="margin-top:40px;padding-top:32px;border-top:1px solid rgba(var(--ink-rgb),.12)">产品外环 · 标准探索</h3>
+    <figure class="kit-figure">
+      <div class="kit-phone kit kit-hybrid" style="max-width:300px;margin:0 auto 20px">
+        <div class="status">Hybrid prototype</div>
+        <div class="body-pad">
+          <div class="zone-kit">
+            <div class="tt-tabs" style="margin:0 -8px">
+              <div class="tab on">首页</div>
+              <div class="tab">消息</div>
+            </div>
+            <div class="tt-btn neutral" style="height:32px;font-size:14px;border-radius:16px;margin-top:10px">Kit 列表按钮</div>
+          </div>
+          <div class="zone-proto">
+            <strong>prototype</strong> 业务 Hero 区<br>未入库 · 评审后回补 spec
+          </div>
+          <div class="tt-btn primary" style="margin-top:12px">主流程 CTA</div>
+        </div>
+      </div>
+      <figcaption class="fig-cap">上：稳定 Kit 锚点 · 虚线框：explore 模块（非交付像素）</figcaption>
+    </figure>
+    <div class="cols-2">
+      <div>
+        <h3>可以做好</h3>
+        <ul class="plain" style="margin-top:12px">
+          <li>主流程、状态机、文案结构</li>
+          <li>Kit 组件选型 + 交互规则对齐</li>
+          <li>Hybrid<span class="hint">（Kit 锚点 + 临时模块混搭）</span>：稳定组件为锚点，缺口标 prototype<span class="hint">（待验证模块）</span></li>
+          <li>登记 <code>/canvas</code><span class="hint">（原型预览目录）</span> 可点击预览</li>
+        </ul>
+      </div>
+      <div>
+        <h3>不能替代</h3>
+        <ul class="plain" style="margin-top:12px">
+          <li>未入库的新视觉与动效参数</li>
+          <li>研发像素验收基线（须门禁 A<span class="hint">（Portal+spec）</span> 或 B<span class="hint">（Figma 实例稿）</span>）</li>
+          <li>形似组件的永久 Detach<span class="hint">（自绘冒充 Kit）</span></li>
+          <li><strong>进排期默认：设计 Figma 收口</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block dark" id="s-close" style="padding-bottom:96px">
+    <p class="eyebrow">共识</p>
+    <blockquote class="quote">
+      工作台帮我们把探索和规范对齐；交付研发，仍走 Figma。
+    </blockquote>
+    <p class="lead" style="opacity:.85">
+      Portal 与 Agent 提高产出效率、减少非标堆叠；视觉与组件终局，由设计与 Kit 契约收口。
+    </p>
+    <p class="body" style="margin-top:24px;opacity:.7">交付门禁见 <code>docs/design-roles-handoff.md</code></p>
+  </section>
+
+</main>
+</body>
+</html>
