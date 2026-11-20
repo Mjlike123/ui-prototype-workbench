@@ -1746,7 +1746,7 @@ kbd {
   min-width: 14px;
   padding: 1px 4px 1px 3px;
   gap: 1px;
-  color: #fff;
+  color: var(--color-text-white-primary);
   border-radius: var(--radius-full);
 }
 
@@ -1779,7 +1779,7 @@ kbd {
 }
 
 .listTagAge {
-  color: #fff;
+  color: var(--color-text-white-primary);
   font: 590 9px/12px "SF Pro", var(--font-sans);
   white-space: nowrap;
 }
@@ -2669,7 +2669,7 @@ kbd {
 .regularListMain:focus-visible,
 .regularListButton:focus-visible,
 .regularListTextAction:focus-visible {
-  outline: 2px solid #16d8c8;
+  outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
 }
 
@@ -2740,7 +2740,7 @@ kbd {
 .regularListTitleRow small {
   flex: 0 0 auto;
   padding: 1px 4px;
-  color: #a3a5b1;
+  color: var(--color-text-auxiliary);
   background: #f7f8fa;
   border-radius: 2px;
   font: 590 10px/12px "SF Pro", var(--font-sans);
@@ -2763,7 +2763,7 @@ kbd {
   align-items: center;
   gap: 4px;
   overflow: hidden;
-  color: #8b8c91;
+  color: var(--color-text-secondary);
   font: 400 14px/18px "SF Pro", var(--font-sans);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2771,7 +2771,7 @@ kbd {
 
 .regularListSubtitle em {
   flex: 0 0 auto;
-  color: #ff2e60;
+  color: var(--color-state-like);
   font-style: normal;
 }
 
@@ -3119,7 +3119,7 @@ kbd {
 }
 
 .kitButton--primary {
-  color: #ffffff;
+  color: var(--color-text-white-primary);
   background: var(--color-brand-primary);
 }
 
@@ -6304,7 +6304,7 @@ kbd {
 }
 
 .iosStatusBar--light-content {
-  color: #fff;
+  color: var(--color-text-white-primary);
 }
 
 .iosStatusBarTime {
@@ -10097,7 +10097,7 @@ button.chatBubbleSurface:focus-visible,
 .chatBubbleUnread {
   width: 8px;
   height: 8px;
-  background: var(--color-state-like, #ff2e60);
+  background: var(--color-state-like);
   border-radius: 50%;
   content: "";
 }
@@ -10108,11 +10108,11 @@ button.chatBubbleSurface:focus-visible,
 }
 
 .chatBubbleDelivery--sending .systemIcon {
-  --system-icon-color: #868b94;
+  --system-icon-color: var(--color-empty-state-description);
 }
 
 .chatBubbleDelivery--failed .systemIcon {
-  --system-icon-color: var(--color-state-like, #ff2e60);
+  --system-icon-color: var(--color-state-like);
 }
 
 .chatBubbleVoice {
