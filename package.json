@@ -24,7 +24,7 @@
     "skill:sync-specs": "node scripts/sync-skill-specs.mjs",
     "skill:check": "node scripts/check-skill-specs-drift.mjs",
     "icons:generate-inline": "node scripts/generate-inline-icon-assets.mjs",
-    "check:kit": "npm run specs:validate && npm run skill:check && npm run portal:test",
+    "check:kit": "npm run specs:validate && node scripts/lint-kit-usage.mjs && node --test scripts/lint-kit-usage.test.mjs && npm run skill:check && npm run portal:test",
     "verify:mvp": "bash scripts/verify-design-mvp.sh",
     "verify:screenshot": "python3 scripts/compare-images.py",
     "yueban:preview-bboxes": "python3 scripts/yueban/preview_bboxes.py",
@@ -43,6 +43,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^26.1.0",
+    "postcss": "^8.5.10",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10"
