@@ -13,6 +13,8 @@ import {
   MEMBERSHIP_LEVELS,
 } from "@/components/kit/list-tag";
 import { BottomNavigationIcon } from "@/components/kit/bottom-navigation-icon";
+import { RegularListItem } from "@/components/kit/regular-list-item";
+import type { MessageStatus } from "@/components/kit/message-list-status";
 import { IosStatusBar } from "@/components/kit/ios-status-bar";
 import { SystemIcon } from "@/components/kit/system-icon";
 import {
@@ -170,7 +172,7 @@ export function ComponentPreview({
           </div>
         ) : isRegularList ? (
           <div className="regularListCompact" aria-hidden="true">
-            <RegularListItem
+            <RegularListPreviewItem
               type="action"
               leading="icon"
               trailing="chevron"
@@ -323,7 +325,7 @@ export function ComponentPreview({
                   "text",
                 ] as const
               ).map((trailing) => (
-                <RegularListItem
+                <RegularListPreviewItem
                   key={trailing}
                   type="action"
                   leading={leading}
@@ -362,7 +364,7 @@ export function ComponentPreview({
               [details, trailing, avatarFrame, messageStatus, avatarKind],
               index,
             ) => (
-              <RegularListItem
+              <RegularListPreviewItem
                 key={`${messageStatus}-${trailing}-${index}`}
                 type="message"
                 leading="avatar"
@@ -1200,7 +1202,7 @@ export function ComponentPreview({
   );
 }
 
-function RegularListItem({
+function RegularListPreviewItem({
   type,
   leading,
   trailing,
@@ -1214,36 +1216,24 @@ function RegularListItem({
   trailing: "badge" | "button" | "text-action" | "chevron" | "text" | "none";
   messageDetails: "basic" | "tags" | "rich-status";
   avatarFrame: boolean;
-  messageStatus?:
-    | "default"
-    | "stranger"
-    | "failed"
-    | "loading"
-    | "editing"
-    | "gift";
+  messageStatus?: MessageStatus;
   avatarKind?: "person" | "system";
 }) {
   const isMessage = type === "message";
   const showSubtitle =
     isMessage || trailing === "chevron" || trailing === "text";
+  const title = isMessage ? "Hawkins" : "system information";
+  const subtitle = isMessage ? "Bill.Sanders@example.com" : title;
 
   return (
-    <div
-      className={`regularListItem ${
-        isMessage ? "regularListItem--message" : "regularListItem--action"
-      }`}
-      role="listitem"
-    >
-      <button
-        className="regularListMain"
-        type="button"
-        aria-label={
-          isMessage
-            ? "Hawkins，Bill.Sanders@example.com"
-            : "system information"
-        }
-      >
-        {isMessage && avatarKind === "system" ? (
+    <RegularListItem
+      listType={type}
+      title={title}
+      subtitle={showSubtitle ? subtitle : undefined}
+      ariaLabel={isMessage ? undefined : title}
+      messageStatus={messageStatus}
+      leading={
+        isMessage && avatarKind === "system" ? (
           <span className="regularListSystemIcon" aria-hidden="true">
             <Image
               src="/icons/list/system-notification.png"
@@ -1294,81 +1284,16 @@ function RegularListItem({
               />
             )}
           </>
-        )}
-
-        <span className="regularListContent">
-          <span className="regularListTitleRow">
-            <strong>{isMessage ? "Hawkins" : "system information"}</strong>
-            {isMessage && messageStatus === "stranger" && (
-              <small>Stranger</small>
-            )}
-          </span>
-          {isMessage &&
-            avatarKind === "person" &&
-            messageDetails !== "basic" && (
-            <span className="regularListTags" aria-label="用户身份与等级标签">
-              <ListTag kind="membership" level={9} />
-              <ListTag kind="gender" gender="female" age={28} />
-            </span>
-            )}
-          {showSubtitle && (
-            <span className="regularListSubtitle">
-              {isMessage && <MessageListStatus status={messageStatus} />}
-              {isMessage
-                ? "Bill.Sanders@example.com"
-                : "system information"}
-            </span>
-          )}
-        </span>
-      </button>
-      <RegularListTrailing type={type} trailing={trailing} />
-    </div>
-  );
-}
-
-function MessageListStatus({
-  status,
-}: {
-  status: "default" | "stranger" | "failed" | "loading" | "editing" | "gift";
-}) {
-  if (status === "gift") return <em>[Gifts]</em>;
-  if (status === "default" || status === "stranger") return null;
-
-  if (status === "failed") {
-    return (
-      <span className="regularListStatusIcon" aria-label="发送失败">
-        <Image src="/icons/list/failed-circle.svg" alt="" width={16} height={16} />
-        <Image
-          className="regularListFailedMark"
-          src="/icons/list/failed-mark.svg"
-          alt=""
-          width={2}
-          height={6}
-        />
-        <Image
-          className="regularListFailedDot"
-          src="/icons/list/failed-dot.svg"
-          alt=""
-          width={2}
-          height={2}
-        />
-      </span>
-    );
-  }
-
-  return (
-    <span
-      className={`regularListStatusIcon regularListStatusIcon--${status}`}
-      aria-label={
-        status === "loading" ? "发送中" : "已编辑"
+        )
       }
-    >
-      <SystemIcon
-        name={status === "loading" ? "loading" : "edit"}
-        size={status === "loading" ? 16 : 18}
-        className="regularListStatusSystemIcon"
-      />
-    </span>
+      tags={isMessage && avatarKind === "person" && messageDetails !== "basic" ? (
+        <>
+          <ListTag kind="membership" level={9} />
+          <ListTag kind="gender" gender="female" age={28} />
+        </>
+      ) : undefined}
+      trailing={<RegularListTrailing type={type} trailing={trailing} />}
+    />
   );
 }
 
