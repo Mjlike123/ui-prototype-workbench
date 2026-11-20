@@ -26,6 +26,7 @@ description: |
 
 ## Phase 2：最小化读取 Kit
 
+0. 先查已有实现：搜索 `apps/design-system-portal/src/components/kit/`、`apps/design-system-portal/public/icons/`，以及 `/api/catalog` 的 `variantVisuals`、`kitGaps`、`assets`。组件、状态或图标已存在时必须直接复用，禁止重绘、换色、加底色、加动画。
 1. 读取 `specs/principles/core-design-principles.yaml`，按清晰简单 → 一致规律 → 包容开放确定取舍。
 2. 读取 `specs/foundations/*.yaml` 中与当前页面有关的分类。
 3. 搜索可复用组件，只读取候选 `specs/components/<id>.yaml`。
@@ -75,12 +76,19 @@ description: |
 
 若使用图片还原并需要切图，交给 `yueban-image-to-code` 精修 bitmap/text bbox；组件层仍以 Kit 契约为准。
 
+## 禁止事项
+
+- 禁止使用 `colors.yaml` 之外的颜色或透明度变体。
+- 禁止使用 YAML 未定义的 Variant 值。需求超出时输出 `kitGaps`，暂停对应部分的实现并等待设计决策。
+- 禁止把仓库外的独立 HTML 作为交付物。原型应落在 Portal 原型路由或目标代码库，并由 `lint-kit-usage` 检查。
+
 ## Phase 6：验证
 
 最低检查：
 
 ```bash
 npm run specs:validate
+node scripts/lint-kit-usage.mjs
 npm run portal:test
 npm run portal:build
 ```

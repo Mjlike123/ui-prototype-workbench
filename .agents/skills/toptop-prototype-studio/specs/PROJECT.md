@@ -1,6 +1,6 @@
-# TopTop Agent Design Kit
+# TopTop UI 原型工作台
 
-> 使命：Kit 定义边界，本地 Agent 搭建原型，Skills 负责验收，运行时审计完成落地闭环。
+> 仓库名：`ui-prototype-workbench` · 使命：Kit 定义边界，本地 Agent 搭建原型，Skills 负责验收，运行时审计完成落地闭环。
 
 本仓库不是一个低配 Figma，也不在 Portal 服务器内托管大模型。Portal 可以部署到外网，向设计师、研发和本地 Agent 提供同一套设计资源；推理和代码修改由用户自己的 Cursor 等 Agent IDE 完成。
 
@@ -28,6 +28,10 @@
 3. **包容开放**：在稳定边界内适配多语言、多平台、无障碍和业务差异；Kit 缺口进入 Hybrid Prototype，不伪装成已有组件。
 
 发生取舍时按以上顺序决策。原则定义“为什么与如何取舍”，具体值和行为仍以 Foundations、组件与交互 YAML 为准。
+
+设计师与产品分轨（Figma 可编辑 vs 本地 Portal + Agent 原型）、研发排期交付门槛见 [docs/design-roles-handoff.md](docs/design-roles-handoff.md)。
+
+面向技术研究与 AI Agent 的结构化流程、任务契约、案例和待研究问题见 [docs/ai-prototype-workflow-technical-brief.md](docs/ai-prototype-workflow-technical-brief.md)。
 
 ## 核心工作流
 
@@ -140,3 +144,4 @@ npm run verify:mvp
 2. iOS Lookin 实机验收稳定化。
 3. Figma、Kit、实现三方自动对照。
 4. CI 与飞书问题流转。
+5. 飞书群 @ 机器人 → 设计任务 → Figma（实验：`feat/feishu-design-bot`，见 `services/feishu-bot/`）。

@@ -2,6 +2,8 @@
 
 本文描述当前真实可用的工作流。推理与改码在本地 Cursor 等 Agent IDE 完成，Portal 提供只读 Kit、原型预览和验收说明。
 
+角色分工（设计部 Figma vs 产品本地 Agent 原型）与研发排期门槛见 [design-roles-handoff.md](./design-roles-handoff.md)。
+
 ## 能力现状
 
 | 能力 | 入口 | 当前状态 |

@@ -95,6 +95,8 @@ description: |
 
 ### Phase 2：选择探索强度
 
+0. 先查已有实现：搜索 `apps/design-system-portal/src/components/kit/`、`apps/design-system-portal/public/icons/`，以及 `/api/catalog` 的 `variantVisuals`、`kitGaps`、`assets`。组件、状态或图标已存在时必须直接复用，禁止重绘、换色、加底色、加动画。
+
 - 用户只说“做个功能原型” → Hybrid
 - 用户说“多几个方案 / 更有创意” → Exploratory
 - 用户说“按现有 Kit 落地生产” → Kit Strict
@@ -133,7 +135,15 @@ Hybrid 模式给一个推荐方向；Exploratory 模式给三个：
 
 不要让 `primitive` 和 `prototype` 出现在组件覆盖率统计中。
 
+## 禁止事项
+
+- 禁止使用 `colors.yaml` 之外的颜色或透明度变体。
+- 禁止使用 YAML 未定义的 Variant 值。需求超出时输出 `kitGaps`，暂停对应部分的实现并等待设计决策。
+- 禁止把仓库外的独立 HTML 作为交付物。原型应落在 Portal 原型路由或目标代码库，并由 `lint-kit-usage` 检查。
+
 ### Phase 6：收敛与反哺
+
+交付前必须通过 `node scripts/lint-kit-usage.mjs`。
 
 原型审查后：
 
