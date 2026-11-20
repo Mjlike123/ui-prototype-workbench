@@ -4,7 +4,9 @@ import { join } from "node:path";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormatsImport from "ajv-formats";
 import { parse } from "yaml";
-import { findRepositoryRoot } from "./load.js";
+import { findRepositoryRoot, loadIconAssets } from "./load.js";
+import SYSTEM_ICON_ASSETS from "./system-icon-assets.json" with { type: "json" };
+import type { ComponentSpec, FoundationSpec } from "./types.js";
 
 export type ContractValidationResult = {
   valid: boolean;
@@ -33,6 +35,8 @@ export async function validateDesignSystem(
   let checkedFiles = 0;
   const componentIds = new Set<string>();
   const tokenIds = new Set<string>();
+  const colorTokenIds = new Set<string>();
+  const components: Array<{ spec: ComponentSpec; path: string }> = [];
 
   for (const [relativeDirectory, schemaName] of schemaGroups) {
     const directory = join(repositoryRoot, relativeDirectory);
@@ -66,19 +70,57 @@ export async function validateDesignSystem(
             `${relativePath}${error.instancePath || "/"} ${error.message}`,
           );
         }
+        continue;
       }
       if (relativeDirectory === "specs/components") {
         collectUniqueId(value.id, componentIds, relativePath, errors);
+        components.push({ spec: value as ComponentSpec, path: relativePath });
       }
       if (relativeDirectory === "specs/foundations") {
-        for (const token of (value.tokens ?? []) as Array<
-          Record<string, unknown>
-        >) {
+        const foundation = value as FoundationSpec;
+        for (const token of foundation.tokens) {
           collectUniqueId(token.id, tokenIds, relativePath, errors);
+          if (foundation.category === "color") colorTokenIds.add(token.id);
         }
       }
       if (relativeDirectory === "specs/principles") {
         validatePrincipleOrder(value, relativePath, errors);
+      }
+    }
+  }
+
+  const assets = new Set(Object.values(await loadIconAssets(repositoryRoot)).flat());
+  for (const { spec, path } of components) {
+    const variants = new Map(spec.variants?.map(({ name, values }) => [name, values]));
+    const slots = new Set(spec.anatomy?.flatMap(({ id }) => [id, `${id}-leading`, `${id}-trailing`]));
+    for (const [index, visual] of (spec.variantVisuals ?? []).entries()) {
+      const source = `${path}/variantVisuals/${index}`;
+      const values = variants.get(visual.variant);
+      if (!values) errors.push(`${source} unknown variant "${visual.variant}"`);
+      else if (!values.includes(visual.value)) {
+        errors.push(`${source} unknown value "${visual.value}" for variant "${visual.variant}"`);
+      }
+      if (visual.slot && !slots.has(visual.slot)) {
+        errors.push(`${source} unknown anatomy slot "${visual.slot}"`);
+      }
+      if (visual.gapToken && !tokenIds.has(visual.gapToken)) {
+        errors.push(`${source} unknown gapToken "${visual.gapToken}"`);
+      }
+      for (const token of [visual.colorToken, visual.backgroundToken, ...(visual.assetLayers ?? []).map((layer) => layer.colorToken)]) {
+        if (token && !colorTokenIds.has(token)) {
+          errors.push(`${source} unknown color token "${token}"`);
+        }
+      }
+      for (const asset of [visual.asset, ...(visual.assetLayers ?? []).map((layer) => layer.asset)]) {
+        if (asset && !assets.has(asset)) errors.push(`${source} missing asset "${asset}"`);
+      }
+      if (visual.systemIcon) {
+        const asset = SYSTEM_ICON_ASSETS[visual.systemIcon as keyof typeof SYSTEM_ICON_ASSETS];
+        if (!Object.hasOwn(SYSTEM_ICON_ASSETS, visual.systemIcon)) {
+          errors.push(`${source} unknown systemIcon "${visual.systemIcon}"`);
+        } else if (!assets.has(asset)) {
+          errors.push(`${source} missing systemIcon asset "${asset}"`);
+        }
       }
     }
   }

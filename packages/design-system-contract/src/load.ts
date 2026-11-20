@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 import { parse } from "yaml";
 import type {
   AuditRuleRegistry,
@@ -68,6 +68,30 @@ async function loadFigmaSync(
   >;
 }
 
+export async function loadIconAssets(
+  repositoryRoot: string,
+): Promise<Record<string, string[]>> {
+  const publicDirectory = join(repositoryRoot, "apps/design-system-portal/public");
+  const iconDirectory = join(publicDirectory, "icons");
+  if (!existsSync(iconDirectory)) return {};
+
+  const entries = await readdir(iconDirectory, { recursive: true, withFileTypes: true });
+  const paths = entries
+    .filter((entry) => entry.isFile())
+    .map((entry) =>
+      "/" + join(entry.parentPath, entry.name).slice(publicDirectory.length + 1)
+        .split(sep).join("/"),
+    )
+    .sort();
+
+  const assets: Record<string, string[]> = {};
+  for (const path of paths) {
+    const directory = path.slice(0, path.lastIndexOf("/"));
+    (assets[directory] ??= []).push(path);
+  }
+  return assets;
+}
+
 export async function loadPortalCatalog(
   repositoryRoot = findRepositoryRoot(),
 ): Promise<PortalCatalog> {
@@ -79,6 +103,7 @@ export async function loadPortalCatalog(
     platformMappings,
     auditRegistries,
     figmaSync,
+    assets,
   ] = await Promise.all([
     loadYamlDirectory<ComponentSpec>(
       repositoryRoot,
@@ -105,6 +130,7 @@ export async function loadPortalCatalog(
       "specs/audit",
     ),
     loadFigmaSync(repositoryRoot),
+    loadIconAssets(repositoryRoot),
   ]);
 
   return {
@@ -115,6 +141,7 @@ export async function loadPortalCatalog(
     platformMappings,
     auditRegistries,
     figmaSync,
+    assets,
   };
 }
 

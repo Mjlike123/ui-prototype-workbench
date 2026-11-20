@@ -11,5 +11,6 @@ export async function GET() {
     interactions: catalog.interactions,
     platformMappings: catalog.platformMappings,
     auditRegistries: catalog.auditRegistries,
+    assets: catalog.assets,
   });
 }

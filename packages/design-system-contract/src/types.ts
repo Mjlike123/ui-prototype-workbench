@@ -19,6 +19,28 @@ export type ComponentRule = {
   aggregate: "rule";
 };
 
+export type VariantVisual = {
+  variant: string;
+  value: string;
+  slot?: string | null;
+  asset?: string | null;
+  systemIcon?: string | null;
+  size?: number;
+  containerSize?: [number, number];
+  assetLayers?: Array<{
+    asset: string;
+    size: [number, number];
+    offset: [number, number];
+    colorToken?: string;
+  }>;
+  colorToken?: string | null;
+  backgroundToken?: string;
+  gapToken?: string | null;
+  a11yLabel?: string | null;
+  text?: string | null;
+  notes?: string;
+};
+
 export type ComponentSpec = {
   schemaVersion: 1;
   id: string;
@@ -43,6 +65,8 @@ export type ComponentSpec = {
     values: string[];
     defaultValue?: string;
   }>;
+  variantVisuals?: VariantVisual[];
+  kitGaps?: Array<{ id: string; description: string; requestedBy: string }>;
   props?: Array<{
     name: string;
     type: string;
@@ -194,6 +218,7 @@ export type PortalCatalog = {
   platformMappings: PlatformMappingSpec[];
   auditRegistries: AuditRuleRegistry[];
   figmaSync: Record<string, FigmaSyncEntry>;
+  assets: Record<string, string[]>;
 };
 
 export type ComponentCoverage = {

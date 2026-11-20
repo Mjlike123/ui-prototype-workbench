@@ -72,6 +72,73 @@
         "additionalProperties": false
       }
     },
+    "variantVisuals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["variant", "value"],
+        "properties": {
+          "variant": { "type": "string" },
+          "value": { "type": "string" },
+          "slot": { "type": ["string", "null"] },
+          "asset": { "type": ["string", "null"], "pattern": "^/icons/" },
+          "systemIcon": { "type": ["string", "null"] },
+          "size": { "type": "number", "exclusiveMinimum": 0 },
+          "containerSize": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": { "type": "number", "exclusiveMinimum": 0 }
+          },
+          "assetLayers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["asset", "size", "offset"],
+              "properties": {
+                "asset": { "type": "string", "pattern": "^/icons/" },
+                "size": { "$ref": "#/properties/variantVisuals/items/properties/containerSize" },
+                "offset": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": { "type": "number" }
+                },
+                "colorToken": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "colorToken": { "type": ["string", "null"] },
+          "backgroundToken": { "type": "string" },
+          "gapToken": { "type": ["string", "null"] },
+          "a11yLabel": { "type": ["string", "null"] },
+          "text": { "type": ["string", "null"] },
+          "notes": { "type": "string" }
+        },
+        "not": {
+          "required": ["asset", "systemIcon"],
+          "properties": {
+            "asset": { "type": "string" },
+            "systemIcon": { "type": "string" }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kitGaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "requestedBy"],
+        "properties": {
+          "id": { "type": "string" },
+          "description": { "type": "string" },
+          "requestedBy": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
     "props": {
       "type": "array",
       "items": {

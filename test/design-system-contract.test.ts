@@ -1,5 +1,9 @@
+import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { parseDocument } from "yaml";
 import { describe, expect, it } from "vitest";
-import { loadPortalCatalog } from "@toptop/design-system-contract";
+import { findRepositoryRoot, loadPortalCatalog } from "@toptop/design-system-contract";
 import { validateDesignSystem } from "@toptop/design-system-contract/validate";
 
 describe("design system contract", () => {
@@ -46,6 +50,49 @@ describe("design system contract", () => {
     expect(result.errors).toEqual([]);
     expect(result.checkedFiles).toBeGreaterThanOrEqual(10);
     expect(result.valid).toBe(true);
+  });
+
+  it("loads all six message status visuals and the icon inventory", async () => {
+    const { components, assets } = await loadPortalCatalog();
+    const list = components.find((component) => component.id === "regular-list");
+
+    expect(list?.variantVisuals?.map(({ value }) => value)).toEqual([
+      "default", "stranger", "failed", "loading", "editing", "gift",
+    ]);
+    expect(list?.kitGaps?.map(({ id }) => id)).toEqual(["message-status-mention"]);
+    expect(assets["/icons/list"]).toContain("/icons/list/failed-circle.svg");
+  });
+
+  it("rejects visual references to unknown variants, values, tokens and assets", async () => {
+    const root = findRepositoryRoot();
+    const fixture = await mkdtemp(join(tmpdir(), "kit-contract-"));
+    try {
+      await cp(join(root, "specs"), join(fixture, "specs"), { recursive: true });
+      const publicPath = "apps/design-system-portal/public/icons";
+      await cp(join(root, publicPath), join(fixture, publicPath), { recursive: true });
+      const path = join(fixture, "specs/components/regular-list.yaml");
+      const spec = parseDocument(await readFile(path, "utf8"));
+      spec.setIn(["variantVisuals", 0, "variant"], "unknownVariant");
+      spec.setIn(["variantVisuals", 1, "value"], "mention");
+      spec.setIn(["variantVisuals", 2, "colorToken"], "color.unknown");
+      spec.setIn(["variantVisuals", 2, "gapToken"], "spacing.unknown");
+      spec.setIn(["variantVisuals", 2, "asset"], "/icons/list/missing.svg");
+      spec.setIn(["variantVisuals", 3, "systemIcon"], "unknownIcon");
+      await writeFile(path, spec.toString());
+
+      const { valid, errors } = await validateDesignSystem(fixture);
+      expect(valid).toBe(false);
+      expect(errors).toEqual([
+        expect.stringContaining('unknown variant "unknownVariant"'),
+        expect.stringContaining('unknown value "mention"'),
+        expect.stringContaining('unknown gapToken "spacing.unknown"'),
+        expect.stringContaining('unknown color token "color.unknown"'),
+        expect.stringContaining('missing asset "/icons/list/missing.svg"'),
+        expect.stringContaining('unknown systemIcon "unknownIcon"'),
+      ]);
+    } finally {
+      await rm(fixture, { recursive: true, force: true });
+    }
   });
 
   it("loads TOP UI kit colors with light and dark modes", async () => {

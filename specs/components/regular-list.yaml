@@ -98,6 +98,63 @@ variants:
       - hidden
       - visible
     defaultValue: hidden
+variantVisuals:
+  - variant: messageStatus
+    value: default
+  - variant: messageStatus
+    value: stranger
+    slot: title-trailing
+    text: Stranger
+    colorToken: color.text.auxiliary
+    backgroundToken: color.surface.canvas
+    gapToken: spacing.1
+    notes: 背景固定为浅色值。字重 590、字号 10pt、行高 12pt、内边距 1×4pt、圆角 2pt，缺少完全等值的字型及尺寸组合 Token。
+  - variant: messageStatus
+    value: failed
+    slot: subtitle-leading
+    asset: /icons/list/failed-circle.svg
+    size: 16
+    containerSize: [20, 20]
+    assetLayers:
+      - asset: /icons/list/failed-mark.svg
+        size: [2, 6]
+        offset: [9, 5]
+        colorToken: color.text.white-primary
+      - asset: /icons/list/failed-dot.svg
+        size: [2, 2]
+        offset: [9, 13]
+        colorToken: color.text.white-primary
+    colorToken: color.state.like
+    gapToken: icon.spacing.inline
+    a11yLabel: 发送失败
+  - variant: messageStatus
+    value: loading
+    slot: subtitle-leading
+    systemIcon: loading
+    size: 16
+    containerSize: [20, 20]
+    colorToken: color.text.tertiary
+    gapToken: icon.spacing.inline
+    a11yLabel: 发送中
+  - variant: messageStatus
+    value: editing
+    slot: subtitle-leading
+    systemIcon: edit
+    size: 18
+    containerSize: [24, 20]
+    colorToken: color.text.tertiary
+    gapToken: icon.spacing.inline
+    a11yLabel: 已编辑
+  - variant: messageStatus
+    value: gift
+    slot: subtitle-leading
+    text: "[Gifts]"
+    colorToken: color.state.like
+    gapToken: spacing.1
+kitGaps:
+  - id: message-status-mention
+    description: 群消息 @我 / @所有人 提示；当前 messageStatus 无此值，需设计师定义图形、颜色与位置。
+    requestedBy: 群消息状态图标优化需求
 props:
   - name: title
     type: string

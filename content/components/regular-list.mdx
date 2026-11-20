@@ -35,6 +35,17 @@
 
 消息摘要前可出现发送中、失败、编辑或礼物类型提示。状态图标与摘要保持 4pt 间距，状态切换不能改变列表高度。失败状态必须提供可读说明，不能只显示红色图标。
 
+| 状态 | 位置和资源 | 尺寸（pt） | Token | 可读名称 |
+| --- | --- | --- | --- | --- |
+| `default` | 无前缀 | — | — | — |
+| `stranger` | 标题后 `Stranger` | 10/12、字重 590、内边距 1×4、圆角 2；间距 4 | `color.text.auxiliary`、`color.surface.canvas` 浅色值、`spacing.1` | Stranger |
+| `failed` | 摘要前 `/icons/list/failed-circle.svg`、`/icons/list/failed-mark.svg`、`/icons/list/failed-dot.svg` | 16、2×6、2×2；容器 20×20，叠层左、上偏移分别为 9, 5 和 9, 13；间距 4 | `color.state.like`、`color.text.white-primary`、`icon.spacing.inline` | 发送失败 |
+| `loading` | 摘要前 `SystemIcon` 的 `loading` | 16；容器 20×20；间距 4 | `color.text.tertiary`、`icon.spacing.inline` | 发送中 |
+| `editing` | 摘要前 `SystemIcon` 的 `edit` | 18；容器 24×20；间距 4 | `color.text.tertiary`、`icon.spacing.inline` | 已编辑 |
+| `gift` | 摘要前 `[Gifts]` | 随摘要 14/18；间距 4 | `color.state.like`、`spacing.1` | [Gifts] |
+
+陌生人标签的字型、垂直内边距和圆角待补等值 Token。群消息提及提示记录在 `message-status-mention` 缺口中。
+
 ## 避免
 
 - 在普通操作列表中滥用头像框和大量身份标签。
